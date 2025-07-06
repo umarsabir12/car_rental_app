@@ -13,26 +13,39 @@ export default class extends Controller {
 
   initializeFlatpickr() {
     const bookedDates = JSON.parse(document.querySelector('meta[name="booked-dates"]')?.content || "[]")
-    const dateInputs = this.element.querySelectorAll('.flatpickr')
+    const startInput = this.element.querySelector('#startDateInput')
+    const endInput = this.element.querySelector('#endDateInput')
 
-    console.log('Found flatpickr inputs:', dateInputs.length)
+    // Destroy previous instances if any
+    if (startInput && startInput._flatpickr) startInput._flatpickr.destroy()
+    if (endInput && endInput._flatpickr) endInput._flatpickr.destroy()
 
-    dateInputs.forEach((input, index) => {
-      if (input._flatpickr) {
-        input._flatpickr.destroy()
-      }
-
-      flatpickr(input, {
-        dateFormat: "Y-m-d",
-        minDate: "today",
-        disable: bookedDates,
-        onChange: function(_, dateStr) {
-          const event = new Event('change')
-          input.dispatchEvent(event)
+    // Initialize start date picker
+    flatpickr(startInput, {
+      dateFormat: "Y-m-d",
+      minDate: "today",
+      disable: bookedDates,
+      onChange: function(selectedDates, dateStr) {
+        const event = new Event('change')
+        startInput.dispatchEvent(event)
+        // Update end date picker's minDate
+        if (endInput && endInput._flatpickr) {
+          endInput._flatpickr.set('minDate', dateStr)
         }
-      })
-
-      console.log(`Flatpickr initialized for input ${index}`)
+      }
     })
+
+    // Initialize end date picker
+    flatpickr(endInput, {
+      dateFormat: "Y-m-d",
+      minDate: "today",
+      disable: bookedDates,
+      onChange: function(_, dateStr) {
+        const event = new Event('change')
+        endInput.dispatchEvent(event)
+      }
+    })
+
+    console.log('Flatpickr initialized for start and end date inputs')
   }
 }

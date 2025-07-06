@@ -12,7 +12,6 @@ class Users::RegistrationsController <  Devise::RegistrationsController
   def create
     super do |user|
       if user.persisted? && params[:car_id].present? && params[:start_date].present? && params[:end_date].present?
-        # Create booking for the new user
         booking = Booking.create!(
           user_id: user.id,
           car_id: params[:car_id],
@@ -20,7 +19,7 @@ class Users::RegistrationsController <  Devise::RegistrationsController
           end_date: params[:end_date],
           payment_processed: false
         )
-        # Redirect to payment page
+        sign_in(user) unless user_signed_in?
         redirect_to payment_path(booking) and return
       end
     end

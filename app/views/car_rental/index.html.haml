@@ -64,12 +64,12 @@
       .text-center.mb-12
         %h2.text-3xl.font-bold.text-gray-900.mb-4 Choose a car by brand
         %p.text-gray-600 Select a brand to see all available cars
-      .grid.grid-cols-2.sm:grid-cols-3.md:grid-cols-6.gap-8.justify-items-center
-        - brands = [{ name: 'BMW', logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/bmw/bmw-original.svg' },{ name: 'Mercedes-Benz', logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mercedes/mercedes-original.svg' },{ name: 'Tesla', logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/tesla/tesla-original.svg' },{ name: 'Toyota', logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/toyota/toyota-original.svg' },{ name: 'Honda', logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/honda/honda-original.svg' },{ name: 'Ford', logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/ford/ford-original.svg' }]
+      .flex.flex-wrap.justify-center.gap-8.mt-8
+        - brands = [{ name: 'Toyota' },{ name: 'Honda' },{ name: 'BMW' },{ name: 'Mercedes-Benz' },{ name: 'Audi' },{ name: 'Ford' },{ name: 'Tesla' },{ name: 'Hyundai' },{ name: 'Kia' },{ name: 'Volkswagen' },{ name: 'Nissan' },{ name: 'Chevrolet' },{ name: 'Jeep' }]
         - brands.each do |brand|
           = link_to cars_path(brand: brand[:name]), class: 'group flex flex-col items-center transition hover:scale-105 focus:outline-none' do
             %div.flex.items-center.justify-center.bg-white.rounded-full.shadow-md.border.border-gray-200.w-20.h-20.mb-2.transition-all.group-hover:border-blue-500.group-hover:shadow-lg
-              %img.w-12.h-12.object-contain{ src: brand[:logo], alt: brand[:name], loading: 'lazy' }
+              = image_tag "https://placehold.co/80x80/png?text=#{brand[:name][0..1].upcase}", alt: brand[:name], class: 'w-12 h-12 object-contain', loading: 'lazy'
             %span.text-base.font-semibold.text-gray-700.group-hover:text-blue-700= brand[:name]
 
   / Why Choose Us

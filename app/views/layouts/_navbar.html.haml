@@ -2,8 +2,9 @@
   .max-w-7xl.mx-auto.px-4.sm:px-6.lg:px-8
     .flex.justify-between.items-center.h-16
       .flex.items-center
-        %i.h-8.w-8.text-blue-600.mr-2.fa.fa-car
-        %span.text-xl.font-bold WheelsOnRent
+        = link_to root_path, class: 'flex items-center' do
+          %i.h-8.w-8.text-blue-600.mr-2.fa.fa-car
+          %span.text-xl.font-bold WheelsOnRent
       .hidden.md:flex.space-x-4
         - unless user_signed_in?
           = link_to 'Browse Cars', cars_path, class: 'text-gray-600 hover:text-blue-700 font-medium'
