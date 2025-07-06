@@ -1,0 +1,101 @@
+.w-full.min-h-screen.bg-gradient-to-br.from-blue-50.to-blue-100
+  .px-4.md:px-12.lg:px-32
+    .py-10
+      .relative.bg-blue-700.text-white.rounded-3xl.shadow-xl.overflow-hidden.p-10.flex.flex-col.md:flex-row.items-center.gap-8.mb-12
+        / Background image layer
+        .absolute.inset-0.bg-cover.bg-center.opacity-30.pointer-events-none{ style: "background-image: url('https://images.unsplash.com/photo-1503736334956-4c8f8e92946d?auto=format&fit=crop&w=900&q=80');" }
+        / Content layer
+        .relative.z-10.flex-1
+          %h1.text-4xl.font-extrabold.mb-2 Hello, #{@user.first_name.presence || @user.email.split('@').first}!
+          %p.text-blue-100.mt-1.text-lg Welcome to your dashboard
+        .relative.z-10.flex-shrink-0
+          %i.fas.fa-user-circle.text-7xl.text-blue-200
+
+    .mx-auto
+      .flex.border-b.mb-8.bg-white.rounded-t-2xl.shadow-lg.overflow-hidden
+        %button.tab-btn.py-4.px-8.text-lg.font-semibold.text-blue-700.bg-white.border-b-2.border-blue-600{type: "button", id: "tab-profile", onclick: "showTab('profile')"} Profile
+        %button.tab-btn.py-4.px-8.text-lg.font-semibold.text-gray-500.hover:text-blue-700.bg-white{type: "button", id: "tab-bookings", onclick: "showTab('bookings')"} Bookings
+        %button.tab-btn.py-4.px-8.text-lg.font-semibold.text-gray-500.hover:text-blue-700.bg-white{type: "button", id: "tab-card", onclick: "showTab('card')"} Credit Card
+
+      #tab-content-profile.tab-content.bg-white.rounded-b-2xl.shadow-lg.p-8.mt-0
+        %h2.text-2xl.font-bold.text-blue-700.mb-4 Profile
+        %div.space-y-2
+          %p.text-gray-700.flex.items-center.gap-2
+            %i.fas.fa-user.text-blue-600
+            %strong Name:
+            = [@user.first_name, @user.last_name].compact.join(' ')
+          %p.text-gray-700.flex.items-center.gap-2
+            %i.fas.fa-envelope.text-blue-600
+            %strong Email:
+            = @user.email
+          %p.text-gray-700.flex.items-center.gap-2
+            %i.fas.fa-phone.text-blue-600
+            %strong Phone:
+            = @user.phone.presence || '-'
+          %p.text-gray-700.flex.items-center.gap-2
+            %i.fas.fa-home.text-blue-600
+            %strong Address:
+            = @user.home_address.presence || '-'
+        %div.mt-6
+          = link_to 'Edit Profile', edit_user_registration_path, class: 'inline-block bg-blue-600 text-white font-bold px-6 py-2 rounded-lg shadow hover:bg-blue-700 transition'
+
+      #tab-content-bookings.tab-content.bg-white.rounded-b-2xl.shadow-lg.p-8.mt-0.hidden
+        %h2.text-2xl.font-bold.text-blue-700.mb-4 Bookings
+        - if @bookings.any?
+          .overflow-x-auto
+            %table.w-full.bg-white.rounded-lg.shadow.border
+              %thead.bg-blue-50
+                %tr
+                  %th.px-3.py-2.text-left.text-xs.font-bold.text-blue-700.uppercase Car
+                  %th.px-3.py-2.text-left.text-xs.font-bold.text-blue-700.uppercase Start
+                  %th.px-3.py-2.text-left.text-xs.font-bold.text-blue-700.uppercase End
+                  %th.px-3.py-2.text-left.text-xs.font-bold.text-blue-700.uppercase Status
+                  %th.px-3.py-2.text-left.text-xs.font-bold.text-blue-700.uppercase Payment
+              %tbody
+                - @bookings.each do |booking|
+                  %tr.hover:bg-blue-50.transition
+                    %td.px-3.py-2.font-semibold= booking.car&.model || 'N/A'
+                    %td.px-3.py-2= booking.start_date.strftime('%b %d, %Y')
+                    %td.px-3.py-2= booking.end_date.strftime('%b %d, %Y')
+                    %td.px-3.py-2
+                      - status_classes = {'Available' => 'bg-green-100 text-green-700','Rented' => 'bg-red-100 text-red-700'}[booking.status] || 'bg-blue-100 text-blue-700'
+                      %span.inline-block.rounded-full.text-xs.font-semibold.px-3.py-1{ class: status_classes }= booking.status
+                    %td.px-3.py-2.text-center
+                      - if booking.payment_processed?
+                        %span.inline-block.bg-green-100.text-green-700.px-3.py-1.rounded-full.text-xs.font-semibold Paid
+                      - else
+                        = link_to 'Pay', payment_path(booking), class: 'inline-block bg-yellow-400 text-yellow-900 font-bold px-4 py-1 rounded-full text-xs shadow hover:bg-yellow-500 transition'
+        - else
+          %p.text-gray-500.mt-4 You have no bookings yet.
+
+      #tab-content-card.tab-content.bg-white.rounded-b-2xl.shadow-lg.p-8.mt-0.hidden
+        %h2.text-2xl.font-bold.text-blue-700.mb-4 Card Details
+        = form_for @user, url: user_profile_path, method: :patch, html: { class: "space-y-6" } do |f|
+          .field.space-y-2
+            = f.label :card_number, class: "block text-sm font-medium text-gray-700"
+            = f.text_field :card_number, placeholder: "4242 4242 4242 4242", class: "w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+          .grid.grid-cols-2.gap-4
+            .field.space-y-2
+              = f.label :card_expiry, class: "block text-sm font-medium text-gray-700"
+              = f.text_field :card_expiry, placeholder: "MM/YY", class: "w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+            .field.space-y-2
+              = f.label :card_cvc, class: "block text-sm font-medium text-gray-700"
+              = f.text_field :card_cvc, placeholder: "123", class: "w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+          .actions
+            = f.submit "Update Card", class: "w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition"
+
+:javascript
+  function showTab(tab) {
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.classList.remove('text-blue-700', 'border-b-2', 'border-blue-600');
+      btn.classList.add('text-gray-500');
+    });
+    document.getElementById('tab-' + tab).classList.add('text-blue-700', 'border-b-2', 'border-blue-600');
+    document.getElementById('tab-' + tab).classList.remove('text-gray-500');
+    document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+    document.getElementById('tab-content-' + tab).classList.remove('hidden');
+  }
+  // Show profile tab by default
+  document.addEventListener('DOMContentLoaded', function() {
+    showTab('profile');
+  });

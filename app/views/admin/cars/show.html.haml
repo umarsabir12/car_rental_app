@@ -1,0 +1,41 @@
+.container.mx-auto.px-4.py-8
+  .bg-white.shadow-lg.rounded-xl.overflow-hidden
+    .md:flex
+      / ==== Car Image ====
+      .md:w-1/2
+        %img.w-full.h-64.object-cover.object-center.md:h-full{ src: @car.image_url || image_path('placeholder-car.jpg'), alt: "#{@car.model}" }
+      / ==== Car Details ====
+      .md:w-1/2.p-6
+        %h1.text-2xl.font-bold.text-gray-800.mb-2= @car.brand + " " + @car.model
+        %p.text-sm.text-gray-500.mb-4= "#{@car.year} • #{@car.color} • #{@car.transmission.titleize}"
+
+        / ==== Specs Grid ====
+        .grid.grid-cols-2.gap-4.text-sm.text-gray-700
+          %div
+            %strong Fuel Type:
+            = @car.fuel_type
+          %div
+            %strong Seats:
+            = @car.seating_capacity
+          %div
+            %strong Status:
+            - status_classes = {
+              'Available' => 'bg-green-100 text-green-700',
+              'Rented'    => 'bg-red-100 text-red-700'
+            }[@car.status] || 'bg-blue-100 text-blue-700'
+            %span.inline-block.rounded-full.text-xs.font-semibold.px-2.py-1.ml-1{ class: status_classes }
+              = @car.status
+          %div
+            %strong License Plate:
+            = @car.license_plate if @car.respond_to?(:license_plate)
+
+        / ==== Price and CTA ====
+        .mt-6.flex.items-center.justify-between
+          %span.text-xl.font-semibold.text-blue-700= number_to_currency(@car.price_per_day) + " / day"
+          = link_to "Book Now", new_booking_path(car_id: @car.id), class: "bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded shadow"
+
+        / ==== Description ====
+        - if @car.description.present?
+          .mt-6
+            %h2.text-lg.font-semibold.text-gray-800.mb-2 Description
+            %p.text-gray-600= @car.description

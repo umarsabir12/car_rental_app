@@ -1,0 +1,246 @@
+- content_for :head do
+  %meta{ name: "booked-dates", content: @booked_dates.to_json, "data-turbo-track" => "reload" }
+
+%div.w-full.bg-gradient-to-br.from-blue-50.to-blue-100.min-h-screen.py-12
+  / Hero Section
+  .relative.max-w-6xl.mx-auto.rounded-3xl.overflow-hidden.shadow-2xl.mb-8
+    - if @car.main_image_url.present?
+      %img.w-full.h-96.object-cover.object-center{ src: @car.main_image_url, alt: @car.model }
+    - else
+      %div.w-full.h-96.bg-blue-100.flex.items-center.justify-center
+        %span.text-blue-400.text-3xl.font-bold No Image
+    .absolute.inset-0.bg-gradient-to-t.from-blue-900
+    .absolute.bottom-0.left-0.p-8.z-10
+      %h1.text-4xl.font-extrabold.text-white.mb-2= "#{@car.brand} #{@car.model}"
+      .flex.items-center.gap-4.mb-2
+        - status_classes = {'Available' => 'bg-green-100 text-green-700','Rented' => 'bg-red-100 text-red-700'}[@car.status] || 'bg-blue-100 text-blue-700'
+        %span.inline-block.rounded-full.text-sm.font-semibold.px-5.py-2{ class: status_classes }= @car.status
+        %span.text-2xl.font-bold.text-white= @car.price ? number_to_currency(@car.price) : 'N/A'
+        %span.text-blue-200 /day
+
+  / Main Card
+  .max-w-6xl.mx-auto.bg-white.rounded-2xl.shadow-xl.p-10.grid.grid-cols-1.lg:grid-cols-3.gap-10.relative
+    / Left: Car Details
+    .lg:col-span-2
+      %h2.text-2xl.font-bold.text-blue-800.mb-6 Car Details
+      .grid.grid-cols-1.md:grid-cols-2.gap-6.mb-8
+        %div.flex.items-center.gap-2
+          %span.text-gray-600.font-medium Category:
+          %span.text-blue-800= @car.category
+        %div.flex.items-center.gap-2
+          %span.text-gray-600.font-medium Year:
+          %span.text-blue-800= @car.year
+        %div.flex.items-center.gap-2
+          %span.text-gray-600.font-medium Color:
+          %span.text-blue-800= @car.color
+        %div.flex.items-center.gap-2
+          %span.text-gray-600.font-medium Mileage:
+          %span.text-blue-800= @car.mileage
+        %div.flex.items-center.gap-2
+          %span.text-gray-600.font-medium Engine Size:
+          %span.text-blue-800= @car.engine_size
+        %div.flex.items-center.gap-2
+          %span.text-gray-600.font-medium Transmission:
+          %span.text-blue-800= @car.transmission
+        %div.flex.items-center.gap-2
+          %span.text-gray-600.font-medium Fuel Type:
+          %span.text-blue-800= @car.fuel_type
+        %div.flex.items-center.gap-2
+          %span.text-gray-600.font-medium Seats:
+          %span.text-blue-800= @car.seats
+        %div.flex.items-center.gap-2
+          %span.text-gray-600.font-medium USB Ports:
+          %span.text-blue-800= @car.usb_ports
+        %div.flex.items-center.gap-2
+          %span.text-gray-600.font-medium Featured:
+          %span.text-blue-800= @car.featured ? 'Yes' : 'No'
+    / Right: Booking/Price/Status
+    .lg:col-span-1.lg:sticky.lg:top-24.flex.flex-col.gap-6
+      .bg-blue-50.rounded-xl.p-6.shadow.flex.flex-col.items-center
+        %span.text-3xl.font-bold.text-blue-800= @car.price ? number_to_currency(@car.price) : 'N/A'
+        %span.text-gray-500.mb-4 /day
+        %button.btn.btn-primary.btn-lg.w-full.mt-2{"data-bs-toggle" => "modal", "data-bs-target" => "#bookingModal"}
+          Book This Car
+        = link_to 'Back', cars_path, class: 'inline-block bg-blue-100 text-blue-800 font-semibold px-8 py-3 rounded-lg hover:bg-blue-200 transition text-lg mt-4 w-full text-center'
+
+  / Features Row
+  .max-w-6xl.mx-auto.grid.grid-cols-2.md:grid-cols-4.gap-6.my-10
+    %div.flex.flex-col.items-center
+      %span.text-2xl.mb-1= @car.air_conditioning ? '❄️' : '🚫'
+      %span.text-xs.text-gray-600 Air Conditioning
+    %div.flex.flex-col.items-center
+      %span.text-2xl.mb-1= @car.gps ? '📡' : '🚫'
+      %span.text-xs.text-gray-600 GPS
+    %div.flex.flex-col.items-center
+      %span.text-2xl.mb-1= @car.sunroof ? '🌞' : '🚫'
+      %span.text-xs.text-gray-600 Sunroof
+    %div.flex.flex-col.items-center
+      %span.text-2xl.mb-1= @car.bluetooth ? '🔊' : '🚫'
+      %span.text-xs.text-gray-600 Bluetooth
+
+  / Description
+  - if @car.description.present?
+    .max-w-6xl.mx-auto.bg-white.rounded-2xl.shadow-md.p-8.mb-8
+      %h2.text-2xl.font-semibold.text-blue-800.mb-2 Description
+      %p.text-gray-700.text-lg= @car.description
+
+  / Car Images Gallery
+  .max-w-6xl.mx-auto.bg-white.rounded-2xl.shadow-md.p-8.mb-8
+    %h2.text-2xl.font-semibold.text-blue-800.mb-6 Car Images
+    .test-css-loading
+      %p CSS Loading Test - This should be red background with white text
+    .mb-4
+      %p.text-sm.text-gray-600 Test flatpickr (should show calendar when clicked):
+      %input.test-flatpickr{type: "text", placeholder: "Click to test calendar", readonly: true}
+    - if @car.main_image_url.present?
+      .grid.grid-cols-1.md:grid-cols-2.lg:grid-cols-3.gap-6
+        -# Main image (larger)
+        .md:col-span-2.lg:col-span-2
+          %img.w-full.h-80.object-cover.rounded-xl.shadow-lg{ src: @car.main_image_url, alt: "#{@car.brand} #{@car.model}" }
+        -# Additional images (if they exist in the future)
+        - if @car.respond_to?(:images) && @car.images.present?
+          - @car.images.each do |image|
+            %img.w-full.h-40.object-cover.rounded-xl.shadow-lg{ src: image, alt: "#{@car.brand} #{@car.model}" }
+        - else
+          -# Placeholder for additional images
+          .space-y-4
+            %div.w-full.h-40.bg-gray-100.rounded-xl.flex.items-center.justify-center
+              %span.text-gray-400.text-sm Additional images coming soon
+            %div.w-full.h-40.bg-gray-100.rounded-xl.flex.items-center.justify-center
+              %span.text-gray-400.text-sm Interior view
+            %div.w-full.h-40.bg-gray-100.rounded-xl.flex.items-center.justify-center
+              %span.text-gray-400.text-sm Engine view
+    - else
+      .text-center.py-12
+        %div.text-gray-400.text-6xl.mb-4 📷
+        %h3.text-xl.font-semibold.text-gray-600.mb-2 No Images Available
+        %p.text-gray-500 This car doesn't have any images yet.
+
+/ Bootstrap Modal
+#bookingModal.modal.fade{"aria-hidden" => "true", "aria-labelledby" => "bookingModalLabel", tabindex: "-1", "data-controller" => "modal"}
+  .modal-dialog.modal-dialog-centered.mt-16
+    .modal-content.rounded-2xl.shadow-xl.border.border-blue-100
+      .modal-header.flex.items-center.justify-between.px-6.py-4
+        %h5#bookingModalLabel.modal-title.text-xl.font-bold.text-blue-900 Book This Car
+        %button.text-gray-400.hover:text-gray-600.transition{"aria-label" => "Close", "data-bs-dismiss" => "modal", type: "button"}
+          %i.fas.fa-times
+
+      .modal-body.bg-white.px-6.py-4
+        .mb-4
+          %label.block.text-sm.font-medium.text-blue-700.mb-1 Pickup Date
+          = text_field_tag :start_date, nil, required: true, class: "w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 flatpickr", autocomplete: "off", id: "startDateInput"
+
+        .mb-4
+          %label.block.text-sm.font-medium.text-blue-700.mb-1 Return Date
+          = text_field_tag :end_date, nil, required: true, class: "w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 flatpickr", autocomplete: "off", id: "endDateInput"
+
+      .modal-footer.flex.justify-end.gap-4.px-6.py-4
+        %button.bg-gray-200.text-gray-700.font-semibold.px-5.py-2.rounded-lg.hover:bg-gray-300.transition{ "data-bs-dismiss" => "modal", type: "button" } Close
+        - if user_signed_in?
+          %button.bg-blue-700.text-white.font-semibold.px-6.py-2.rounded-lg.shadow-md.hover:bg-blue-800.transition{ type: "button", id: "createBookingBtn", disabled: true, style: "pointer-events: none; opacity: 0.5;" } Create Booking
+        - else
+          %a.bg-blue-700.text-white.font-semibold.px-6.py-2.rounded-lg.shadow-md.hover:bg-blue-800.transition{ href: "#", id: "continueToLoginLink", disabled: true, style: "pointer-events: none; opacity: 0.5;" } Continue to Sign In
+
+
+:javascript
+  document.addEventListener("DOMContentLoaded", function () {
+    const continueBtn = document.getElementById("continueToLoginLink");
+    const createBookingBtn = document.getElementById("createBookingBtn");
+    const startInput = document.getElementById("startDateInput");
+    const endInput = document.getElementById("endDateInput");
+
+    function updateButtonState() {
+      if (startInput.value && endInput.value) {
+        if (continueBtn) {
+          continueBtn.removeAttribute("disabled");
+          continueBtn.style.pointerEvents = "auto";
+          continueBtn.style.opacity = "1";
+        }
+        if (createBookingBtn) {
+          createBookingBtn.removeAttribute("disabled");
+          createBookingBtn.style.pointerEvents = "auto";
+          createBookingBtn.style.opacity = "1";
+        }
+      } else {
+        if (continueBtn) {
+          continueBtn.setAttribute("disabled", "true");
+          continueBtn.style.pointerEvents = "none";
+          continueBtn.style.opacity = "0.5";
+        }
+        if (createBookingBtn) {
+          createBookingBtn.setAttribute("disabled", "true");
+          createBookingBtn.style.pointerEvents = "none";
+          createBookingBtn.style.opacity = "0.5";
+        }
+      }
+    }
+
+    startInput.addEventListener("change", updateButtonState);
+    endInput.addEventListener("change", updateButtonState);
+
+    // Handle login redirect for non-logged-in users
+    if (continueBtn) {
+      continueBtn.addEventListener("click", function (e) {
+        if (!startInput.value || !endInput.value) {
+          e.preventDefault();
+          alert("Please select both start and end dates.");
+          return;
+        }
+        e.preventDefault();
+        const carId = "#{@car.id}";
+        const startDate = startInput.value;
+        const endDate = endInput.value;
+
+        const queryParams = new URLSearchParams({
+          car_id: carId,
+          start_date: startDate,
+          end_date: endDate
+        });
+
+        window.location.href = "/users/sign_in?" + queryParams.toString();
+      });
+    }
+
+    // Handle direct booking for logged-in users
+    if (createBookingBtn) {
+      createBookingBtn.addEventListener("click", function (e) {
+        if (!startInput.value || !endInput.value) {
+          e.preventDefault();
+          alert("Please select both start and end dates.");
+          return;
+        }
+        e.preventDefault();
+        
+        const formData = new FormData();
+        formData.append('booking[car_id]', "#{@car.id}");
+        formData.append('booking[start_date]', startInput.value);
+        formData.append('booking[end_date]', endInput.value);
+        
+        fetch('/bookings', {
+          method: 'POST',
+          body: formData,
+          headers: {
+            'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+          }
+        })
+        .then(response => {
+          if (response.redirected) {
+            window.location.href = response.url;
+          } else {
+            if (response.ok) {
+              return response.text();
+            } else {
+              throw new Error('Booking creation failed');
+            }
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          alert('There was an error creating your booking. Please check your dates and try again.');
+        });
+      });
+    }
+
+    // Initial state
+    updateButtonState();
+  });

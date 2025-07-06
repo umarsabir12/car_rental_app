@@ -1,0 +1,21 @@
+class BookingsController < ApplicationController
+  before_action :authenticate_user!, only: [:create]
+
+  def create
+    @booking = Booking.new(booking_params)
+    @booking.user_id = current_user.id
+    @booking.payment_processed = false
+    
+    if @booking.save
+      redirect_to payment_path(@booking), notice: 'Booking created! Please complete your payment.'
+    else
+      # Redirect back to car show page with error message
+      redirect_to car_path(params[:booking][:car_id]), alert: @booking.errors.full_messages.join(', ')
+    end
+  end
+
+  private
+  def booking_params
+    params.require(:booking).permit(:car_id, :start_date, :end_date)
+  end
+end 

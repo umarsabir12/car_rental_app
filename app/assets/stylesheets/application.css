@@ -1,0 +1,44 @@
+/*
+ * This is a manifest file that'll be compiled into application.css, which will include all the files
+ * listed below.
+ *
+ * Any CSS (and SCSS, if configured) file within this directory, lib/assets/stylesheets, or any plugin's
+ * vendor/assets/stylesheets directory can be referenced here using a relative path.
+ *
+ * You're free to add application-wide styles to this file and they'll appear at the bottom of the
+ * compiled file so the styles you add here take precedence over styles defined in any other CSS
+ * files in this directory. Styles in this file should be added after the last require_* statement.
+ * It is generally better to create a new file per style scope.
+ *
+ *= require_tree .
+ *= require_self
+ */
+
+/* Flatpickr Calendar Fixes for Modal - More Specific */
+.modal .flatpickr-calendar {
+  z-index: 99999 !important;
+}
+
+/* Ensure modal backdrop doesn't interfere */
+.modal-backdrop {
+  z-index: 9998 !important;
+}
+
+.modal {
+  z-index: 9999 !important;
+}
+
+/* Test style to verify CSS is loading */
+.test-css-loading {
+  background: red !important;
+  color: white !important;
+  padding: 10px !important;
+  margin: 10px !important;
+  border-radius: 5px !important;
+}
+
+/* Only keep cursor and text-decoration for disabled dates */
+.flatpickr-day.flatpickr-disabled {
+  text-decoration: none !important;
+  cursor: not-allowed !important;
+}

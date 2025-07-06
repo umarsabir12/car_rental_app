@@ -1,0 +1,62 @@
+.container.mx-auto.max-w-md.p-6
+  .bg-white.rounded-xl.shadow-lg.overflow-hidden.p-8
+    .text-center.mb-8
+      %i.fas.fa-car.text-4xl.text-indigo-600.mb-4
+      %h2.text-3xl.font-bold.text-gray-800.mb-2 Welcome
+      %p.text-gray-600 Sign in to manage your bookings
+
+    = form_for(resource, as: resource_name, url: session_path(resource_name), html: { class: "space-y-6" }) do |f|
+      - if params[:car_id].present?
+        = hidden_field_tag :car_id, params[:car_id]
+      - if params[:start_date].present?
+        = hidden_field_tag :start_date, params[:start_date]
+      - if params[:end_date].present?
+        = hidden_field_tag :end_date, params[:end_date]
+      .field.space-y-2
+        = f.label :email, class: "block text-sm font-medium text-gray-700"
+        = f.email_field :email, 
+          autofocus: true, 
+          autocomplete: "email",
+          class: "w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition",
+          placeholder: "your@email.com"
+
+      .field.space-y-2
+        = f.label :password, class: "block text-sm font-medium text-gray-700"
+        .relative
+          = f.password_field :password, 
+            autocomplete: "current-password",
+            class: "w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition",
+            placeholder: "••••••••"
+          %button.absolute.right-3.top-3.text-gray-400.hover:text-gray-600{type: "button", onclick: "togglePassword(this)"}
+            %i.fas.fa-eye
+
+      - if devise_mapping.rememberable?
+        .field.flex.items-center
+          = f.check_box :remember_me, 
+            class: "h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
+          = f.label :remember_me, class: "ml-2 block text-sm text-gray-700"
+
+      .actions
+        = f.submit "Log in", 
+          class: "w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition"
+
+    .mt-6.text-center
+      = render "users/shared/links"
+
+    - if alert
+      .mt-4.p-3.bg-red-50.text-red-700.rounded.text-sm= alert
+    - if notice
+      .mt-4.p-3.bg-green-50.text-green-700.rounded.text-sm= notice
+
+:javascript
+  function togglePassword(button) {
+    const input = button.previousElementSibling
+    const icon = button.querySelector('i')
+    if (input.type === 'password') {
+      input.type = 'text'
+      icon.classList.replace('fa-eye', 'fa-eye-slash')
+    } else {
+      input.type = 'password'
+      icon.classList.replace('fa-eye-slash', 'fa-eye')
+    }
+  }

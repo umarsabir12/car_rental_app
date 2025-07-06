@@ -1,0 +1,171 @@
+-# !!!
+-# %html{:lang => "en"}
+-#   %head
+-#     %meta{:content => "text/html; charset=UTF-8", "http-equiv" => "Content-Type"}/
+-#     %meta{:charset => "UTF-8"}/
+-#     %meta{:content => "width=device-width, initial-scale=1.0", :name => "viewport"}/
+-#     %title Admin Dashboard
+-#     %script{:src => "https://cdn.tailwindcss.com"}
+-#     %script{:src => "https://unpkg.com/@popperjs/core@2"}
+-#     %script{:src => "https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"}
+-#   %body.bg-gray-50.min-h-screen
+-#     .flex.min-h-screen
+-#       / Sidebar
+-#       %aside.w-16.md:w-60.bg-gradient-to-b.from-blue-800.to-blue-600.shadow-lg.flex.flex-col.items-center.md:items-stretch.py-4
+-#         .flex.items-center.justify-center.md:justify-start.h-16.px-2.md:px-6.mb-6
+-#           %svg.w-8.h-8.text-white.mr-0.md:mr-2{:fill => "none", :stroke => "currentColor", "stroke-width" => "2", :viewbox => "0 0 24 24"}
+-#             %path{:d => "M3 13l2-2m0 0l7-7 7 7M13 5v6h6", "stroke-linecap" => "round", "stroke-linejoin" => "round"}
+-#           %span.hidden.md:inline.text-xl.font-bold.text-white CarRental
+-#         %nav.flex-1.space-y-2
+-#           %a.flex.items-center.md:px-6.px-0.py-3.text-white.rounded-lg.hover:bg-blue-500.transition{:href => "#"}
+-#             %svg.w-6.h-6.md:mr-3.mx-auto.md:mx-0{:fill => "none", :stroke => "currentColor", "stroke-width" => "2", :viewbox => "0 0 24 24"}
+-#               %path{:d => "M3 12l2-2m0 0l7-7 7 7M13 5v6h6", "stroke-linecap" => "round", "stroke-linejoin" => "round"}
+-#             %span.hidden.md:inline Dashboard
+-#           %a.flex.items-center.md:px-6.px-0.py-3.text-white.rounded-lg.hover:bg-blue-500.transition{:href => "#"}
+-#             %svg.w-6.h-6.md:mr-3.mx-auto.md:mx-0{:fill => "none", :stroke => "currentColor", "stroke-width" => "2", :viewbox => "0 0 24 24"}
+-#               %path{:d => "M5.121 17.804A13.937 13.937 0 0112 15c2.5 0 4.847.655 6.879 1.804M15 11a3 3 0 11-6 0 3 3 0 016 0z", "stroke-linecap" => "round", "stroke-linejoin" => "round"}
+-#             %span.hidden.md:inline Customers
+-#           %a.flex.items-center.md:px-6.px-0.py-3.text-white.rounded-lg.hover:bg-blue-500.transition{:href => "#"}
+-#             %svg.w-6.h-6.md:mr-3.mx-auto.md:mx-0{:fill => "none", :stroke => "currentColor", "stroke-width" => "2", :viewbox => "0 0 24 24"}
+-#               %path{:d => "M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z", "stroke-linecap" => "round", "stroke-linejoin" => "round"}
+-#             %span.hidden.md:inline Bookings
+-#           %a.flex.items-center.md:px-6.px-0.py-3.text-white.rounded-lg.hover:bg-blue-500.transition{:href => "#"}
+-#             %svg.w-6.h-6.md:mr-3.mx-auto.md:mx-0{:fill => "none", :stroke => "currentColor", "stroke-width" => "2", :viewbox => "0 0 24 24"}
+-#               %path{:d => "M12 4v16m8-8H4", "stroke-linecap" => "round", "stroke-linejoin" => "round"}
+-#             %span.hidden.md:inline Listings
+-#           %a.flex.items-center.md:px-6.px-0.py-3.text-white.rounded-lg.hover:bg-blue-500.transition{:href => "#"}
+-#             %svg.w-6.h-6.md:mr-3.mx-auto.md:mx-0{:fill => "none", :stroke => "currentColor", "stroke-width" => "2", :viewbox => "0 0 24 24"}
+-#               %path{:d => "M16 7a4 4 0 01-8 0", "stroke-linecap" => "round", "stroke-linejoin" => "round"}
+-#               %circle{:cx => "12", :cy => "3", :r => "2"}
+-#             %span.hidden.md:inline Vendors
+-#           %a.flex.items-center.md:px-6.px-0.py-3.text-white.rounded-lg.hover:bg-blue-700.transition{:href => "#"}
+-#             %svg.w-6.h-6.md:mr-3.mx-auto.md:mx-0{:fill => "none", :stroke => "currentColor", "stroke-width" => "2", :viewbox => "0 0 24 24"}
+-#               %path{:d => "M17 16l4-4m0 0l-4-4m4 4H7", "stroke-linecap" => "round", "stroke-linejoin" => "round"}
+-#             %span.hidden.md:inline Logout
+-#       / Main content
+-#       .flex-1.flex.flex-col.md:ml-60
+-#         / Top navbar
+-#         %header.flex.items-center.justify-between.h-16.bg-white.shadow.px-6.sticky.top-0.z-20
+-#           .flex.items-center
+-#             %span.text-lg.font-bold.text-blue-700.md:hidden CarRental
+-#           .relative
+-#             %button#profileDropdownBtn.flex.items-center.focus:outline-none
+-#               %img.w-8.h-8.rounded-full.mr-2{:alt => "Profile", :src => "https://randomuser.me/api/portraits/men/32.jpg"}/
+-#               %span.hidden.md:block.font-medium.text-gray-700 Admin
+-#               %svg.w-4.h-4.ml-1.text-gray-500{:fill => "none", :stroke => "currentColor", "stroke-width" => "2", :viewbox => "0 0 24 24"}
+-#                 %path{:d => "M19 9l-7 7-7-7", "stroke-linecap" => "round", "stroke-linejoin" => "round"}
+-#             #profileDropdown.hidden.absolute.right-0.mt-2.w-40.bg-white.rounded.shadow-lg.py-2
+-#               %a.block.px-4.py-2.text-gray-700.hover:bg-gray-100{:href => "#"} Profile
+-#               %a.block.px-4.py-2.text-gray-700.hover:bg-gray-100{:href => "#"} Settings
+-#               .border-t.my-1
+-#               %a.block.px-4.py-2.text-red-600.hover:bg-gray-100{:href => "#"} Logout
+-#         / Main area
+-#         %main.flex-1.p-6.md:p-10
+-#           .mb-6
+-#             %h1.text-2xl.md:text-3xl.font-bold.text-gray-800.mb-1 Welcome back, Admin!
+-#             %p.text-gray-500 Here's what's happening with your car rental business today.
+-#           / Section cards
+-#           .grid.grid-cols-1.md:grid-cols-2.xl:grid-cols-2.gap-8.mb-8
+-#             / Customers Card
+-#             .bg-white.rounded-xl.shadow.p-6
+-#               .flex.items-center.mb-4
+-#                 .bg-blue-100.p-3.rounded-full.mr-3
+-#                   %svg.w-6.h-6.text-blue-600{:fill => "none", :stroke => "currentColor", "stroke-width" => "2", :viewbox => "0 0 24 24"}
+-#                     %path{:d => "M5.121 17.804A13.937 13.937 0 0112 15c2.5 0 4.847.655 6.879 1.804M15 11a3 3 0 11-6 0 3 3 0 016 0z", "stroke-linecap" => "round", "stroke-linejoin" => "round"}
+-#                 %h2.text-xl.font-bold.text-blue-700 Customers
+-#               %table.min-w-full.divide-y.divide-gray-200.text-sm
+-#                 %thead.bg-blue-50
+-#                   %tr
+-#                     %th.px-4.py-2.text-left.font-semibold.text-blue-700 Name
+-#                     %th.px-4.py-2.text-left.font-semibold.text-blue-700 Email
+-#                 %tbody.bg-white.divide-y.divide-gray-100
+-#                   %tr.hover:bg-blue-50.transition
+-#                     %td.px-4.py-2.font-medium.text-gray-800 Alice Smith
+-#                     %td.px-4.py-2.text-gray-600 alice@example.com
+-#                   %tr.hover:bg-blue-50.transition
+-#                     %td.px-4.py-2.font-medium.text-gray-800 Bob Johnson
+-#                     %td.px-4.py-2.text-gray-600 bob@example.com
+-#             / Bookings Card
+-#             .bg-white.rounded-xl.shadow.p-6
+-#               .flex.items-center.mb-4
+-#                 .bg-blue-100.p-3.rounded-full.mr-3
+-#                   %svg.w-6.h-6.text-blue-600{:fill => "none", :stroke => "currentColor", "stroke-width" => "2", :viewbox => "0 0 24 24"}
+-#                     %path{:d => "M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z", "stroke-linecap" => "round", "stroke-linejoin" => "round"}
+-#                 %h2.text-xl.font-bold.text-blue-700 Bookings
+-#               %table.min-w-full.divide-y.divide-gray-200.text-sm
+-#                 %thead.bg-blue-50
+-#                   %tr
+-#                     %th.px-4.py-2.text-left.font-semibold.text-blue-700 Booking ID
+-#                     %th.px-4.py-2.text-left.font-semibold.text-blue-700 Customer
+-#                     %th.px-4.py-2.text-left.font-semibold.text-blue-700 Status
+-#                 %tbody.bg-white.divide-y.divide-gray-100
+-#                   %tr.hover:bg-blue-50.transition
+-#                     %td.px-4.py-2.font-medium.text-gray-800 #1001
+-#                     %td.px-4.py-2.text-gray-600 Alice Smith
+-#                     %td.px-4.py-2
+-#                       %span.inline-block.px-2.py-1.text-xs.font-semibold.bg-green-100.text-green-700.rounded Confirmed
+-#                   %tr.hover:bg-blue-50.transition
+-#                     %td.px-4.py-2.font-medium.text-gray-800 #1002
+-#                     %td.px-4.py-2.text-gray-600 Bob Johnson
+-#                     %td.px-4.py-2
+-#                       %span.inline-block.px-2.py-1.text-xs.font-semibold.bg-yellow-100.text-yellow-700.rounded Pending
+-#             / Listings Card
+-#             .bg-white.rounded-xl.shadow.p-6
+-#               .flex.items-center.mb-4
+-#                 .bg-blue-100.p-3.rounded-full.mr-3
+-#                   %svg.w-6.h-6.text-blue-600{:fill => "none", :stroke => "currentColor", "stroke-width" => "2", :viewbox => "0 0 24 24"}
+-#                     %path{:d => "M12 4v16m8-8H4", "stroke-linecap" => "round", "stroke-linejoin" => "round"}
+-#                 %h2.text-xl.font-bold.text-blue-700 Listings
+-#               %table.min-w-full.divide-y.divide-gray-200.text-sm
+-#                 %thead.bg-blue-50
+-#                   %tr
+-#                     %th.px-4.py-2.text-left.font-semibold.text-blue-700 Car
+-#                     %th.px-4.py-2.text-left.font-semibold.text-blue-700 Vendor
+-#                     %th.px-4.py-2.text-left.font-semibold.text-blue-700 Status
+-#                 %tbody.bg-white.divide-y.divide-gray-100
+-#                   %tr.hover:bg-blue-50.transition
+-#                     %td.px-4.py-2.font-medium.text-gray-800 Toyota Camry
+-#                     %td.px-4.py-2.text-gray-600 Speedy Rentals
+-#                     %td.px-4.py-2
+-#                       %span.inline-block.px-2.py-1.text-xs.font-semibold.bg-green-100.text-green-700.rounded Available
+-#                   %tr.hover:bg-blue-50.transition
+-#                     %td.px-4.py-2.font-medium.text-gray-800 Honda Civic
+-#                     %td.px-4.py-2.text-gray-600 City Cars
+-#                     %td.px-4.py-2
+-#                       %span.inline-block.px-2.py-1.text-xs.font-semibold.bg-red-100.text-red-700.rounded Rented
+-#             / Vendors Card
+-#             .bg-white.rounded-xl.shadow.p-6
+-#               .flex.items-center.mb-4
+-#                 .bg-blue-100.p-3.rounded-full.mr-3
+-#                   %svg.w-6.h-6.text-blue-600{:fill => "none", :stroke => "currentColor", "stroke-width" => "2", :viewbox => "0 0 24 24"}
+-#                     %path{:d => "M16 7a4 4 0 01-8 0", "stroke-linecap" => "round", "stroke-linejoin" => "round"}
+-#                     %circle{:cx => "12", :cy => "3", :r => "2"}
+-#                 %h2.text-xl.font-bold.text-blue-700 Vendors
+-#               %table.min-w-full.divide-y.divide-gray-200.text-sm
+-#                 %thead.bg-blue-50
+-#                   %tr
+-#                     %th.px-4.py-2.text-left.font-semibold.text-blue-700 Name
+-#                     %th.px-4.py-2.text-left.font-semibold.text-blue-700 Email
+-#                 %tbody.bg-white.divide-y.divide-gray-100
+-#                   %tr.hover:bg-blue-50.transition
+-#                     %td.px-4.py-2.font-medium.text-gray-800 Speedy Rentals
+-#                     %td.px-4.py-2.text-gray-600 contact@speedy.com
+-#                   %tr.hover:bg-blue-50.transition
+-#                     %td.px-4.py-2.font-medium.text-gray-800 City Cars
+-#                     %td.px-4.py-2.text-gray-600 info@citycars.com
+-#           .bg-red-500.text-white.p-4 If this is red, Tailwind is working!
+-#     :javascript
+-#       // Profile dropdown toggle
+-#       document.addEventListener('DOMContentLoaded', function() {
+-#         var btn = document.getElementById('profileDropdownBtn');
+-#         var menu = document.getElementById('profileDropdown');
+-#         if (btn && menu) {
+-#           btn.addEventListener('click', function(e) {
+-#             e.stopPropagation();
+-#             menu.classList.toggle('hidden');
+-#           });
+-#           document.addEventListener('click', function() {
+-#             menu.classList.add('hidden');
+-#           });
+-#         }
+-#       });

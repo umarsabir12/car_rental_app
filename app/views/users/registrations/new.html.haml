@@ -1,0 +1,118 @@
+.container.mx-auto.max-w-md.p-6
+  .bg-white.rounded-xl.shadow-lg.overflow-hidden.p-8
+    .text-center.mb-8
+      %i.fas.fa-car.text-4xl.text-indigo-600.mb-4
+      %h2.text-3xl.font-bold.text-gray-800.mb-2 Sign Up
+      %p.text-gray-600 Create an account to rent your next ride
+
+    = form_for(resource, as: resource_name, url: registration_path(resource_name), html: { class: "space-y-6" }) do |f|
+      - if params[:car_id].present?
+        = hidden_field_tag :car_id, params[:car_id]
+      - if params[:start_date].present?
+        = hidden_field_tag :start_date, params[:start_date]
+      - if params[:end_date].present?
+        = hidden_field_tag :end_date, params[:end_date]
+      .field.space-y-2
+        = f.label :first_name, class: "block text-sm font-medium text-gray-700"
+        = f.text_field :first_name,
+          autofocus: true,
+          class: "w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition",
+          placeholder: "John"
+
+      .field.space-y-2
+        = f.label :last_name, class: "block text-sm font-medium text-gray-700"
+        = f.text_field :last_name,
+          class: "w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition",
+          placeholder: "Doe"
+
+      .field.space-y-2
+        = f.label :phone, class: "block text-sm font-medium text-gray-700"
+        = f.text_field :phone,
+          class: "w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition",
+          placeholder: "+1 555 123 4567"
+
+      .field.space-y-2
+        = f.label :home_address, class: "block text-sm font-medium text-gray-700"
+        = f.text_field :home_address,
+          class: "w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition",
+          placeholder: "123 Main St, City, Country"
+
+      .field.space-y-2
+        = f.label :email, class: "block text-sm font-medium text-gray-700"
+        = f.email_field :email,
+          class: "w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition",
+          placeholder: "your@email.com"
+
+      .field.space-y-2
+        = f.label :password, class: "block text-sm font-medium text-gray-700"
+        .relative
+          = f.password_field :password,
+            autocomplete: "new-password",
+            class: "w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition",
+            placeholder: "••••••••"
+          %button.absolute.right-3.top-3.text-gray-400.hover:text-gray-600{type: "button", onclick: "togglePassword(this)"}
+            %i.fas.fa-eye
+
+      .field.space-y-2
+        = f.label :password_confirmation, class: "block text-sm font-medium text-gray-700"
+        = f.password_field :password_confirmation,
+          class: "w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition",
+          placeholder: "Confirm password"
+
+      %hr.border-t.my-4
+
+      %h3.text-lg.font-semibold.text-gray-700.mb-2 Payment Info
+
+      .field.space-y-2
+        = f.label :card_number, class: "block text-sm font-medium text-gray-700"
+        = f.text_field :card_number,
+          placeholder: "1234 5678 9012 3456",
+          class: "w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition"
+
+      .grid.grid-cols-2.gap-4
+        .field.space-y-2
+          = f.label :card_expiry, class: "block text-sm font-medium text-gray-700"
+          = f.text_field :card_expiry,
+            placeholder: "MM/YY",
+            class: "w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition"
+
+        .field.space-y-2
+          = f.label :card_cvc, class: "block text-sm font-medium text-gray-700"
+          = f.text_field :card_cvc,
+            placeholder: "123",
+            class: "w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition"
+
+      .field.flex.items-center
+        = f.check_box :terms_accepted, required: true, class: "h-4 w-4 text-indigo-600 border-gray-300 rounded"
+        = f.label :terms_accepted, class: "ml-2 block text-sm text-gray-700" do
+          | I agree to the
+          %a.text-indigo-600.underline{href: "#", target: "_blank"} Terms & Conditions
+
+      .actions
+        = f.submit "Create Account",
+          class: "w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition"
+
+    .mt-6.text-center
+      Already have an account?
+      - login_url = new_session_path(resource_name)
+      - if params[:car_id].present? || params[:start_date].present? || params[:end_date].present?
+        - login_url += "?#{request.query_string}"
+      = link_to "Log in", login_url, class: "text-indigo-600 font-medium hover:underline"
+
+    - if alert
+      .mt-4.p-3.bg-red-50.text-red-700.rounded.text-sm= alert
+    - if notice
+      .mt-4.p-3.bg-green-50.text-green-700.rounded.text-sm= notice
+
+:javascript
+  function togglePassword(button) {
+    const input = button.previousElementSibling
+    const icon = button.querySelector('i')
+    if (input.type === 'password') {
+      input.type = 'text'
+      icon.classList.replace('fa-eye', 'fa-eye-slash')
+    } else {
+      input.type = 'password'
+      icon.classList.replace('fa-eye-slash', 'fa-eye')
+    }
+  }

@@ -1,0 +1,26 @@
+.container.mx-auto.max-w-2xl.p-8
+  .bg-white.rounded-2xl.shadow-2xl.overflow-hidden
+    .bg-blue-600.p-8.text-white
+      %h1.text-3xl.font-extrabold.mb-2 Profile
+      %p.text-blue-100.mt-1.text-lg View and manage your account details
+
+    .p-8
+      .space-y-6
+        .flex.items-center.gap-6
+          %i.fas.fa-user-circle.text-6xl.text-blue-400
+          %div
+            %h2.text-2xl.font-bold.text-gray-800= [@user.first_name, @user.last_name].compact.join(' ')
+            %p.text-gray-600.mt-1= @user.email
+        %hr
+        %dl.grid.grid-cols-1.md:grid-cols-2.gap-x-8.gap-y-4
+          %dt.font-semibold.text-gray-700 Phone
+          %dd.text-gray-800= @user.phone.presence || '-'
+          %dt.font-semibold.text-gray-700 Address
+          %dd.text-gray-800= @user.home_address.presence || '-'
+          %dt.font-semibold.text-gray-700 Terms Accepted
+          %dd.text-gray-800= @user.terms_accepted ? 'Yes' : 'No'
+          %dt.font-semibold.text-gray-700 Payment Done
+          %dd.text-gray-800= @user.payment_done ? 'Yes' : 'No'
+      .mt-8.text-center
+        = link_to 'Edit Profile', edit_user_registration_path, class: 'inline-block bg-blue-600 text-white font-semibold px-8 py-3 rounded-lg hover:bg-blue-700 transition text-lg'
+        = link_to 'My Bookings', user_bookings_path, class: 'inline-block ml-4 bg-gray-100 text-blue-700 font-semibold px-8 py-3 rounded-lg hover:bg-blue-100 transition text-lg' 

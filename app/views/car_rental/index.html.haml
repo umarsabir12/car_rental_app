@@ -1,0 +1,128 @@
+%div.min-h-screen.bg-background
+  / Hero Section
+  %section.bg-gradient-to-r.from-blue-600.to-purple-700.text-white.py-20
+    .max-w-7xl.mx-auto.px-4.sm:px-6.lg:px-8.text-center
+      %h1.text-4xl.md:text-6xl.font-bold.mb-6 Rent Your Perfect Car
+      %p.text-xl.mb-8.max-w-2xl.mx-auto
+        Choose from hundreds of vehicles at the best prices. Book instantly and drive away in minutes.
+      .bg-white.rounded-lg.p-6.max-w-4xl.mx-auto.shadow-lg
+        .grid.grid-cols-1.md:grid-cols-4.gap-4
+          .relative
+            %i.absolute.left-3.top-3.h-4.w-4.text-gray-400.fa.fa-map-pin
+            %input{ placeholder: "Pick-up location", class: "pl-10 text-gray-900 w-full rounded border py-2" }
+          .relative
+            %i.absolute.left-3.top-3.h-4.w-4.text-gray-400.fa.fa-calendar
+            %input{ type: "date", class: "pl-10 text-gray-900 w-full rounded border py-2" }
+          .relative
+            %i.absolute.left-3.top-3.h-4.w-4.text-gray-400.fa.fa-calendar
+            %input{ type: "date", class: "pl-10 text-gray-900 w-full rounded border py-2" }
+          = button_tag 'Search Cars', class: 'btn btn-primary w-full'
+
+  %section.py-16.bg-gray-100
+    .max-w-7xl.mx-auto.px-4.sm:px-6.lg:px-8
+      .grid.grid-cols-2.md:grid-cols-4.gap-8
+        .text-center
+          %div.text-4xl.md:text-5xl.font-bold.text-blue-600.mb-2 50,000+
+          %div.text-gray-600.font-medium Happy Customers
+
+        .text-center
+          %div.text-4xl.md:text-5xl.font-bold.text-blue-600.mb-2 500+
+          %div.text-gray-600.font-medium Premium Vehicles
+
+        .text-center
+          %div.text-4xl.md:text-5xl.font-bold.text-blue-600.mb-2 25+
+          %div.text-gray-600.font-medium Locations
+
+        .text-center
+          %div.text-4xl.md:text-5xl.font-bold.text-blue-600.mb-2 99.9%
+          %div.text-gray-600.font-medium Uptime
+
+  / Featured Cars Section
+  %section.py-16.bg-gray-50
+    .max-w-7xl.mx-auto.px-4.sm:px-6.lg:px-8
+      .text-center.mb-12
+        %h2.text-3xl.font-bold.text-gray-900.mb-4 Featured Vehicles
+        %p.text-gray-600 Discover our most popular rental cars
+      .grid.grid-cols-1.md:grid-cols-3.gap-8
+        - @featured_cars.each do |car|
+          .bg-white.rounded-lg.shadow-md.p-4.hover:shadow-lg.transition-shadow
+            %img.w-full.h-48.object-cover.rounded-t-lg{ src: car[:image_url], alt: car[:name] }
+            .p-6
+              .flex.justify-between.items-start.mb-2
+                %h3.text-xl.font-semibold= car[:car_type]
+                -# %span.text-sm.text-gray-500.bg-gray-100.px-2.py-1.rounded= car[:car_type]
+              %p.text-gray-600.mb-4= car[:features].join(' • ')
+              .flex.justify-between.items-center
+                %div
+                  %span.text-2xl.font-bold.text-primary= "$#{car[:price]}"
+                  %span.text-gray-500 /day
+                = link_to 'Book Now', cars_path, class: 'btn btn-primary'
+
+  / Choose a car by brand section
+  %section.py-16.bg-gray-100
+    .max-w-7xl.mx-auto.px-4.sm:px-6.lg:px-8
+      .text-center.mb-12
+        %h2.text-3xl.font-bold.text-gray-900.mb-4 Choose a car by brand
+        %p.text-gray-600 Select a brand to see all available cars
+      .grid.grid-cols-2.sm:grid-cols-3.md:grid-cols-6.gap-8.justify-items-center
+        - brands = [{ name: 'BMW', logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/bmw/bmw-original.svg' },{ name: 'Mercedes-Benz', logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mercedes/mercedes-original.svg' },{ name: 'Tesla', logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/tesla/tesla-original.svg' },{ name: 'Toyota', logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/toyota/toyota-original.svg' },{ name: 'Honda', logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/honda/honda-original.svg' },{ name: 'Ford', logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/ford/ford-original.svg' }]
+        - brands.each do |brand|
+          = link_to cars_path(brand: brand[:name]), class: 'group flex flex-col items-center transition hover:scale-105 focus:outline-none' do
+            %div.flex.items-center.justify-center.bg-white.rounded-full.shadow-md.border.border-gray-200.w-20.h-20.mb-2.transition-all.group-hover:border-blue-500.group-hover:shadow-lg
+              %img.w-12.h-12.object-contain{ src: brand[:logo], alt: brand[:name], loading: 'lazy' }
+            %span.text-base.font-semibold.text-gray-700.group-hover:text-blue-700= brand[:name]
+
+  / Why Choose Us
+  %section.py-16
+    .max-w-7xl.mx-auto.px-4.sm:px-6.lg:px-8
+      .text-center.mb-12
+        %h2.text-3xl.font-bold.text-gray-900.mb-4 Why Choose DriveAway?
+      .grid.grid-cols-1.md:grid-cols-3.gap-8
+        .text-center
+          .bg-blue-100.w-16.h-16.rounded-full.flex.items-center.justify-center.mx-auto.mb-4
+            %i.fa.fa-users.h-8.w-8.text-blue-600
+          %h3.text-xl.font-semibold.mb-2 Trusted by Thousands
+          %p.text-gray-600 Join thousands of satisfied customers who trust us.
+        .text-center
+          .bg-green-100.w-16.h-16.rounded-full.flex.items-center.justify-center.mx-auto.mb-4
+            %i.fa.fa-shield-alt.h-8.w-8.text-green-600
+          %h3.text-xl.font-semibold.mb-2 Safe & Insured
+          %p.text-gray-600 All vehicles are fully insured and regularly maintained.
+        .text-center
+          .bg-purple-100.w-16.h-16.rounded-full.flex.items-center.justify-center.mx-auto.mb-4
+            %i.fa.fa-clock.h-8.w-8.text-purple-600
+          %h3.text-xl.font-semibold.mb-2 24/7 Support
+          %p.text-gray-600 Round-the-clock customer support whenever you need it.
+
+  / Footer
+  %footer.bg-gray-800.text-white.py-12
+    .max-w-7xl.mx-auto.px-4.sm:px-6.lg:px-8
+      .grid.grid-cols-1.md:grid-cols-4.gap-8
+        .mb-4
+          .flex.items-center.mb-4
+            %i.h-8.w-8.text-primary.mr-2.fa.fa-car
+            %span.text-xl.font-bold DriveAway
+          %p.text-gray-300 Your trusted partner for car rentals.
+        .mb-4
+          %h4.font-semibold.mb-4 Quick Links
+          %ul.space-y-2.text-gray-300
+            %li= link_to 'Browse Cars', "customer_path", class: 'hover:text-white'
+            %li= link_to 'List Your Car', "vendor_path", class: 'hover:text-white'
+            %li= link_to 'About Us', '#', class: 'hover:text-white'
+            %li= link_to 'Contact', '#', class: 'hover:text-white'
+        .mb-4
+          %h4.font-semibold.mb-4 Support
+          %ul.space-y-2.text-gray-300
+            %li= link_to 'Help Center', '#', class: 'hover:text-white'
+            %li= link_to 'Terms of Service', '#', class: 'hover:text-white'
+            %li= link_to 'Privacy Policy', '#', class: 'hover:text-white'
+            %li= link_to 'Insurance', '#', class: 'hover:text-white'
+        .mb-4
+          %h4.font-semibold.mb-4 Contact Info
+          .space-y-2.text-gray-300
+            %p 📞 1-800-DRIVEAWAY
+            %p 📧 support@driveaway.com
+            %p 📍 123 Rental Street, City, State 12345
+      .border-t.border-gray-700.mt-8.pt-8.text-center.text-gray-300
+        %p &copy; 2024 DriveAway. All rights reserved.
+

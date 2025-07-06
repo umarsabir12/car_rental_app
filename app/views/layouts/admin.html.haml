@@ -1,0 +1,59 @@
+!!! 5
+%html{ lang: "en" }
+  %head
+    %meta{ charset: "UTF-8" }
+    %meta{ name: "viewport", content: "width=device-width, initial-scale=1.0" }
+    %title Admin Dashboard
+    %script{ src: "https://cdn.tailwindcss.com" }
+  %body.bg-gray-50.min-h-screen
+    .flex.min-h-screen
+      / Sidebar
+      .w-64.bg-gradient-to-b.from-blue-800.to-purple-600.text-white.flex.flex-col.py-8.px-4
+        .flex.items-center.mb-10
+          %span.text-2xl.font-extrabold.tracking-wide.ml-2 Wheels on Rent
+        %nav.flex-1.space-y-2
+          - nav_links = [{name: 'Dashboard', path: '/dashboard', icon: 'M3 12l2-2m0 0l7-7 7 7M13 5v6h6'},{name: 'Vehicles', path: '/admin/cars', icon: 'M4 17v-5a2 2 0 012-2h8a2 2 0 012 2v5'},{name: 'Customers', path: '/admin/customers', icon: 'M5.121 17.804A13.937 13.937 0 0112 15c2.5 0 4.847.655 6.879 1.804M15 11a3 3 0 11-6 0 3 3 0 016 0z'},{name: 'Bookings', path: '/admin/bookings', icon: 'M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z'},{name: 'Analytics', path: '#', icon: 'M11 17a2.5 2.5 0 005 0V7a2.5 2.5 0 00-5 0v10zM5 17a2.5 2.5 0 005 0V7a2.5 2.5 0 00-5 0v10z'},{name: 'Settings', path: '#', icon: 'M12 8c-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4-1.79-4-4-4zm0 0V4m0 16v-4'}]
+          - nav_links.each do |link|
+            - active = request.path == link[:path]
+            %a.flex.items-center.gap-3.py-2.5.px-4.rounded-lg.font-medium.transition{ href: link[:path], class: (active ? 'bg-white/20 text-white shadow' : 'hover:bg-white/10 hover:text-white') }
+              %svg.w-5.h-5{ fill: "none", stroke: "currentColor", stroke_width: "2", viewBox: "0 0 24 24" }
+                %path{ stroke_linecap: "round", stroke_linejoin: "round", d: link[:icon] }
+              = link[:name]
+      / Main content
+      .flex-1.flex.flex-col
+        %header.flex.items-center.justify-between.h-16.bg-white.shadow.px-6.sticky.top-0.z-20
+          .flex.items-center
+            %span.text-lg.font-bold.text-blue-700.md:hidden CarRental
+          .relative
+            %button#profileDropdownBtn.flex.items-center.focus:outline-none
+              %img.w-8.h-8.rounded-full.mr-2{:alt => "Profile", :src => "https://randomuser.me/api/portraits/men/32.jpg"}/
+              %span.hidden.md:block.font-medium.text-gray-700 Admin
+              %svg.w-4.h-4.ml-1.text-gray-500{:fill => "none", :stroke => "currentColor", "stroke-width" => "2", :viewbox => "0 0 24 24"}
+                %path{:d => "M19 9l-7 7-7-7", "stroke-linecap" => "round", "stroke-linejoin" => "round"}
+            #profileDropdown.hidden.absolute.right-0.mt-2.w-40.bg-white.rounded.shadow-lg.py-2
+              %a.block.px-4.py-2.text-gray-700.hover:bg-gray-100{:href => "#"} Profile
+              %a.block.px-4.py-2.text-gray-700.hover:bg-gray-100{:href => "#"} Settings
+              .border-t.my-1
+              = link_to destroy_admin_user_session_path, method: :delete, class: "block px-4 py-2 text-red-600 hover:bg-gray-100" do
+                Logout
+        / Main content area
+        .flex-1.bg-gray-50.p-8
+          .max-w-7xl.mx-auto
+            = yield
+
+
+:javascript
+    // Profile dropdown toggle
+  document.addEventListener('DOMContentLoaded', function() {
+    var btn = document.getElementById('profileDropdownBtn');
+    var menu = document.getElementById('profileDropdown');
+    if (btn && menu) {
+      btn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        menu.classList.toggle('hidden');
+      });
+      document.addEventListener('click', function() {
+        menu.classList.add('hidden');
+      });
+    }
+  });

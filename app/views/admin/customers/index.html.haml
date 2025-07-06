@@ -1,0 +1,23 @@
+%div.mx-auto.mt-10
+  %div.bg-white.rounded-xl.shadow.p-8
+    %h1.text-2xl.font-bold.text-blue-900.mb-6 Customers
+    %div.overflow-x-auto
+      %table.min-w-full.border-separate{ style: "border-spacing: 0 0.75rem;" }
+        %thead
+          %tr
+            %th.px-6.py-3.text-left.text-xs.font-bold.text-blue-700.uppercase.bg-blue-50.rounded-l-lg #
+            %th.px-6.py-3.text-left.text-xs.font-bold.text-blue-700.uppercase.bg-blue-50 Name
+            %th.px-6.py-3.text-left.text-xs.font-bold.text-blue-700.uppercase.bg-blue-50 Email
+            %th.px-6.py-3.text-left.text-xs.font-bold.text-blue-700.uppercase.bg-blue-50 Phone
+            %th.px-6.py-3.text-left.text-xs.font-bold.text-blue-700.uppercase.bg-blue-50.rounded-r-lg Status
+        %tbody
+          - customers = [{ name: 'Alice Smith', email: 'alice@example.com', phone: '555-1234', status: 'Active' },{ name: 'Bob Johnson', email: 'bob@example.com', phone: '555-5678', status: 'Inactive' },{ name: 'Charlie Lee', email: 'charlie@example.com', phone: '555-9012', status: 'Banned' }]
+          - customers.each_with_index do |customer, index|
+            %tr.bg-blue-50.rounded-lg.shadow.hover:bg-blue-100.transition
+              %td.px-6.py-4.font-semibold.text-blue-900.rounded-l-lg= index + 1
+              %td.px-6.py-4.text-gray-900.font-medium= customer[:name]
+              %td.px-6.py-4.text-gray-700= customer[:email]
+              %td.px-6.py-4.text-gray-700= customer[:phone]
+              %td.px-6.py-4.rounded-r-lg
+                - status_classes = {'Active' => 'bg-green-100 text-green-700','Inactive' => 'bg-gray-100 text-gray-700','Banned' => 'bg-red-100 text-red-700'}[customer[:status]] || 'bg-blue-100 text-blue-700'
+                %span.inline-block.rounded-full.text-xs.font-semibold.px-4.py-1{ class: status_classes }= customer[:status] 

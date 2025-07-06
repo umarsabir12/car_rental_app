@@ -1,0 +1,13 @@
+%h2 Vendors
+%table.table.table-striped
+  %thead
+    %tr
+      %th ID
+      %th Name
+      %th Email
+  %tbody
+    - @vendors.each do |vendor|
+      %tr
+        %td= vendor[:id]
+        %td= vendor[:name]
+        %td= vendor[:email]
