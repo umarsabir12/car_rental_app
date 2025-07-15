@@ -1,9 +1,13 @@
 class Admin::BookingsController < ApplicationController
   layout "admin"
+  before_action :authenticate_admin!
+
   def index
-    @bookings = [
-      { id: 1, customer: "Alice Smith", car: "Toyota Camry", date: "2024-06-01" },
-      { id: 2, customer: "Bob Johnson", car: "Honda Civic", date: "2024-06-02" }
-    ]
+    @bookings = Booking.includes(:user, car: :vendor).all
+    # Add filter logic here if needed
+  end
+
+  def show
+    @booking = Booking.includes(:user, car: :vendor).find(params[:id])
   end
 end 

@@ -1,4 +1,5 @@
 class Car < ApplicationRecord
-    has_many_attached :images
-    has_many :bookings
+  belongs_to :vendor, optional: true
+  has_many_attached :images
+  has_many :bookings
 end

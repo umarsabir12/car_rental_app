@@ -1,41 +1,66 @@
 .container.mx-auto.px-4.py-8
+  / ==== Static Vendor Info ====
+  .flex.items-center.bg-white.shadow.mb-6.p-4.rounded-lg.gap-4
+    %img.w-14.h-14.rounded-full.object-cover{ src: 'https://randomuser.me/api/portraits/men/32.jpg', alt: 'Vendor Avatar' }
+    .flex-1
+      %div.text-lg.font-bold.text-gray-800 Vendor: Speedy Rentals
+      %div.text-sm.text-gray-500 Contact: speedy@rentals.com | +1-555-123-4567
+
   .bg-white.shadow-lg.rounded-xl.overflow-hidden
-    .md:flex
-      / ==== Car Image ====
-      .md:w-1/2
-        %img.w-full.h-64.object-cover.object-center.md:h-full{ src: @car.image_url || image_path('placeholder-car.jpg'), alt: "#{@car.model}" }
+    %div{ class: "md:flex" }
+      / ==== Car Images ====
+      %div{ class: "md:w-1/2 bg-gray-100 flex flex-col items-center justify-center p-4" }
+        - if @car.images.attached?
+          .flex.flex-wrap.gap-2.justify-center.mb-4
+            - @car.images.each do |img|
+              = image_tag img.variant(resize_to_limit: [400, 250]), class: 'rounded-lg shadow w-40 h-28 object-cover', alt: @car.model
+        - else
+          = image_tag(@car.main_image_url.presence || image_path('placeholder-car.jpg'), class: 'rounded-lg shadow w-full h-64 object-cover', alt: @car.model)
+
       / ==== Car Details ====
-      .md:w-1/2.p-6
-        %h1.text-2xl.font-bold.text-gray-800.mb-2= @car.brand + " " + @car.model
-        %p.text-sm.text-gray-500.mb-4= "#{@car.year} • #{@car.color} • #{@car.transmission.titleize}"
+      %div{ class: "md:w-1/2 p-6 flex flex-col" }
+        %h1.text-3xl.font-bold.text-gray-800.mb-2= "#{@car.brand} #{@car.model}"
+        %p.text-lg.text-gray-500.mb-2= "#{@car.year} • #{@car.color} • #{@car.transmission&.titleize} • #{@car.category}"
+        %span.inline-block.rounded-full.text-xs.font-semibold.px-2.py-1.mb-4{ class: @car.status == 'Available' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700' }
+          = @car.status
+        %p.text-gray-700.mb-4= @car.description
 
         / ==== Specs Grid ====
-        .grid.grid-cols-2.gap-4.text-sm.text-gray-700
+        .grid.grid-cols-2.gap-4.text-sm.text-gray-700.mb-4
           %div
             %strong Fuel Type:
             = @car.fuel_type
           %div
             %strong Seats:
-            = @car.seating_capacity
+            = @car.seats
           %div
-            %strong Status:
-            - status_classes = {
-              'Available' => 'bg-green-100 text-green-700',
-              'Rented'    => 'bg-red-100 text-red-700'
-            }[@car.status] || 'bg-blue-100 text-blue-700'
-            %span.inline-block.rounded-full.text-xs.font-semibold.px-2.py-1.ml-1{ class: status_classes }
-              = @car.status
+            %strong Mileage:
+            = @car.mileage
           %div
-            %strong License Plate:
-            = @car.license_plate if @car.respond_to?(:license_plate)
+            %strong Engine Size:
+            = @car.engine_size
+          %div
+            %strong Air Conditioning:
+            = @car.air_conditioning ? 'Yes' : 'No'
+          %div
+            %strong GPS:
+            = @car.gps ? 'Yes' : 'No'
+          %div
+            %strong Sunroof:
+            = @car.sunroof ? 'Yes' : 'No'
+          %div
+            %strong Bluetooth:
+            = @car.bluetooth ? 'Yes' : 'No'
+          %div
+            %strong USB Ports:
+            = @car.usb_ports
+          %div
+            %strong Featured:
+            = @car.featured ? 'Yes' : 'No'
 
         / ==== Price and CTA ====
         .mt-6.flex.items-center.justify-between
-          %span.text-xl.font-semibold.text-blue-700= number_to_currency(@car.price_per_day) + " / day"
-          = link_to "Book Now", new_booking_path(car_id: @car.id), class: "bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded shadow"
+          %span.text-2xl.font-semibold.text-blue-700= number_to_currency(@car.price) + " / day"
+          = link_to "Book Now", new_booking_path(car_id: @car.id), class: "bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded shadow text-lg font-bold"
 
-        / ==== Description ====
-        - if @car.description.present?
-          .mt-6
-            %h2.text-lg.font-semibold.text-gray-800.mb-2 Description
-            %p.text-gray-600= @car.description
+        %p.text-xs.text-gray-400.mt-4 Last updated: #{@car.updated_at.strftime('%b %d, %Y')}

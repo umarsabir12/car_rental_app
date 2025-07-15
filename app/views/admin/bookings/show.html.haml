@@ -1,0 +1,83 @@
+-# Admin Booking Show Page
+.container.mx-auto.px-4.py-8
+  %h1.text-3xl.font-bold.text-blue-900.mb-6 Booking Details
+  .bg-white.shadow-lg.rounded-xl.overflow-hidden.p-8.mb-8
+    %h2.text-xl.font-bold.text-blue-900.mb-4 Booking Info
+    %div.flex.flex-wrap.gap-8
+      .flex-1
+        %div.text-gray-700.mb-2
+          %span.font-semibold.text-gray-800 Booking ID:
+          = @booking.id
+        %div.text-gray-700.mb-2
+          %span.font-semibold.text-gray-800 Status:
+          = @booking.status
+        %div.text-gray-700.mb-2
+          %span.font-semibold.text-gray-800 Payment:
+          - if @booking.payment_processed?
+            %span.inline-block.bg-green-100.text-green-700.rounded-full.px-3.py-1.text-xs.font-semibold Paid
+          - else
+            %span.inline-block.bg-red-100.text-red-700.rounded-full.px-3.py-1.text-xs.font-semibold Unpaid
+        %div.text-gray-700.mb-2
+          %span.font-semibold.text-gray-800 Start Date:
+          = @booking.start_date
+        %div.text-gray-700.mb-2
+          %span.font-semibold.text-gray-800 End Date:
+          = @booking.end_date
+
+  .grid.grid-cols-1.md:grid-cols-2.gap-8
+    / Car Info
+    .bg-white.shadow-lg.rounded-xl.overflow-hidden.p-8
+      %h2.text-xl.font-bold.text-blue-900.mb-4 Car Info
+      - car = @booking.car
+      - if car
+        %div.flex.items-center.gap-4.mb-4
+          = image_tag(car.main_image_url.presence || image_path('placeholder-car.jpg'), class: 'w-24 h-16 object-cover rounded')
+          %div
+            %div.font-semibold.text-lg= car.brand + ' ' + car.model
+            %div.text-gray-500= car.year
+        %div.text-gray-700.mb-2
+          %span.font-semibold.text-gray-800 Category:
+          = car.category
+        %div.text-gray-700.mb-2
+          %span.font-semibold.text-gray-800 Color:
+          = car.color
+        %div.text-gray-700.mb-2
+          %span.font-semibold.text-gray-800 Price per day:
+          = number_to_currency(car.price)
+      - else
+        %div.text-gray-500 Car not found.
+
+    / Vendor Info
+    .bg-white.shadow-lg.rounded-xl.overflow-hidden.p-8
+      %h2.text-xl.font-bold.text-blue-900.mb-4 Car Owner (Vendor)
+      - vendor = @booking.car&.vendor
+      - if vendor
+        %div.flex.items-center.gap-4.mb-4
+          = image_tag(vendor.company_logo.presence || image_path('placeholder-avatar.png'), class: 'w-16 h-16 object-cover rounded')
+          %div
+            %div.font-semibold.text-lg= vendor.company_name
+            %div.text-gray-500= vendor.name
+        %div.text-gray-700.mb-2
+          %span.font-semibold.text-gray-800 Email:
+          = vendor.email
+        %div.text-gray-700.mb-2
+          %span.font-semibold.text-gray-800 Phone:
+          = vendor.phone
+        %div.text-gray-700.mb-2
+          %span.font-semibold.text-gray-800 Address:
+          = vendor.address
+      - else
+        %div.text-gray-500 Vendor not found.
+
+  .mt-8.bg-white.shadow-lg.rounded-xl.overflow-hidden.p-8
+    %h2.text-xl.font-bold.text-blue-900.mb-4 Customer Info
+    - user = @booking.user
+    - if user
+      %div.font-semibold.text-lg= user.full_name.presence || user.email
+      %div.text-gray-500.mb-2= user.email
+      %div.text-gray-500.mb-2= user.phone
+      %div.text-gray-500.mb-2= user.home_address
+      %div.text-gray-500.mb-2= user.nationality
+      %div.text-gray-500.mb-2= user.created_at.strftime('%b %d, %Y')
+    - else
+      %div.text-gray-500 User not found. 

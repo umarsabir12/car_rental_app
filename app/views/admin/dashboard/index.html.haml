@@ -1,55 +1,47 @@
-.row.mb-4
-  .col-12
-    .p-4.bg-white.rounded.shadow-sm.d-flex.align-items-center.justify-content-between
-      %div
-        %h2.fw-bold.mb-1 Welcome, Admin!
-        %p.mb-0.text-secondary Here's a quick overview of your car rental platform.
-      %svg.bi.bi-car-front{:fill => "#0d6efd", :height => "48", :viewbox => "0 0 16 16", :width => "48", :xmlns => "http://www.w3.org/2000/svg"}
-        %path{:d => "M4 9a1 1 0 1 0 0 2 1 1 0 0 0 0-2zm8 0a1 1 0 1 0 0 2 1 1 0 0 0 0-2z"}
-        %path{:d => "M2 6.5V7c0 .828.895 1.5 2 1.5h8c1.105 0 2-.672 2-1.5v-.5c0-.828-.895-1.5-2-1.5H4c-1.105 0-2 .672-2 1.5zM4 5h8a2.5 2.5 0 0 1 2.5 2.5v.5a2.5 2.5 0 0 1-2.5 2.5H4A2.5 2.5 0 0 1 1.5 8v-.5A2.5 2.5 0 0 1 4 5z"}
-.row.g-4.mb-4
-  .col-md-3.col-6
-    .card.border-0.shadow-sm.rounded.text-center.py-3
-      .mb-2
-        %svg.bi.bi-people{:fill => "#0d6efd", :height => "32", :viewbox => "0 0 16 16", :width => "32", :xmlns => "http://www.w3.org/2000/svg"}
-          %path{:d => "M13 7a2 2 0 1 0-4 0 2 2 0 0 0 4 0zM7 7a2 2 0 1 0-4 0 2 2 0 0 0 4 0z"}
-          %path{:d => "M13 9c-1.105 0-2 .672-2 1.5v.5a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-.5c0-.828-.895-1.5-2-1.5zM7 9c-1.105 0-2 .672-2 1.5v.5a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-.5c0-.828-.895-1.5-2-1.5z", "fill-rule" => "evenodd"}
-      %h5.fw-bold Customers
-      .display-6 2
-  .col-md-3.col-6
-    .card.border-0.shadow-sm.rounded.text-center.py-3
-      .mb-2
-        %svg.bi.bi-building{:fill => "#198754", :height => "32", :viewbox => "0 0 16 16", :width => "32", :xmlns => "http://www.w3.org/2000/svg"}
-          %path{:d => "M6.5 15V1h-2v14h2zm5 0V1h-2v14h2zM2 15V1h2v14H2zm12 0V1h-2v14h2z"}
-      %h5.fw-bold Vendors
-      .display-6 2
-  .col-md-3.col-6
-    .card.border-0.shadow-sm.rounded.text-center.py-3
-      .mb-2
-        %svg.bi.bi-calendar-check{:fill => "#ffc107", :height => "32", :viewbox => "0 0 16 16", :width => "32", :xmlns => "http://www.w3.org/2000/svg"}
-          %path{:d => "M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 3a1 1 0 0 0-1 1v11a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1H1zm10.854 5.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L9 10.293l2.646-2.647a.5.5 0 0 1 .708 0z"}
-      %h5.fw-bold Bookings
-      .display-6 2
-  .col-md-3.col-6
-    .card.border-0.shadow-sm.rounded.text-center.py-3
-      .mb-2
-        %svg.bi.bi-truck-front{:fill => "#0dcaf0", :height => "32", :viewbox => "0 0 16 16", :width => "32", :xmlns => "http://www.w3.org/2000/svg"}
-          %path{:d => "M4 9a1 1 0 1 0 0 2 1 1 0 0 0 0-2zm8 0a1 1 0 1 0 0 2 1 1 0 0 0 0-2z"}
-          %path{:d => "M2 6.5V7c0 .828.895 1.5 2 1.5h8c1.105 0 2-.672 2-1.5v-.5c0-.828-.895-1.5-2-1.5H4c-1.105 0-2 .672-2 1.5zM4 5h8a2.5 2.5 0 0 1 2.5 2.5v.5a2.5 2.5 0 0 1-2.5 2.5H4A2.5 2.5 0 0 1 1.5 8v-.5A2.5 2.5 0 0 1 4 5z"}
-      %h5.fw-bold Cars
-      .display-6 2
-.row
-  .col-lg-6
-    .card.border-0.shadow-sm.rounded.mb-4
-      .card-body
-        %h5.card-title.fw-bold.mb-3 Recent Activity
-        %ul.list-group.list-group-flush
-          %li.list-group-item Alice Smith booked a Toyota Camry.
-          %li.list-group-item Bob Johnson registered as a customer.
-          %li.list-group-item Speedy Rentals added a new car.
-  .col-lg-6
-    .card.border-0.shadow-sm.rounded.mb-4
-      .card-body
-        %h5.card-title.fw-bold.mb-3 Quick Actions
-        %a.btn.btn-primary.me-2.mb-2{:href => "#"} Add New Car
-        %a.btn.btn-outline-secondary.mb-2{:href => "#"} View All Bookings
+%div.max-w-5xl.mx-auto.mt-10
+  %div.mb-8
+    %h1.text-2xl.font-bold.text-blue-900.mb-2 Overview
+    %p.text-gray-600 Here is a summary of your platform activity.
+  %div.grid.grid-cols-1.md:grid-cols-4.gap-6.mb-10
+    - @stats.each do |label, value|
+      %div.bg-white.rounded-xl.shadow.p-6.text-center.border-t-4.border-blue-900
+        %div.text-3xl.font-bold.text-blue-900.mb-1
+          = value
+        %div.text-gray-600.font-semibold
+          = label.to_s.titleize
+
+  / ==== Pending Documents Section ====
+  - pending_docs = Document.includes(:user).where(status: 'pending')
+  - if pending_docs.any?
+    .bg-white.rounded-xl.shadow.p-8.mb-8
+      %h2.text-xl.font-bold.text-blue-900.mb-4 Pending Documents
+      %table.min-w-full.border-separate{ style: "border-spacing: 0 0.75rem;" }
+        %thead
+          %tr
+            %th.px-6.py-3.text-left.text-xs.font-bold.text-blue-700.uppercase.bg-blue-50.rounded-l-lg User
+            %th.px-6.py-3.text-left.text-xs.font-bold.text-blue-700.uppercase.bg-blue-50 Document
+            %th.px-6.py-3.text-left.text-xs.font-bold.text-blue-700.uppercase.bg-blue-50 Type
+            %th.px-6.py-3.text-left.text-xs.font-bold.text-blue-700.uppercase.bg-blue-50.rounded-r-lg Status
+        %tbody
+          - pending_docs.each do |doc|
+            %tr.bg-blue-50.rounded-lg.shadow.hover:bg-blue-100.transition
+              %td.px-6.py-4.font-medium.text-gray-900.rounded-l-lg= doc.user&.full_name.presence || doc.user&.email
+              %td.px-6.py-4.text-gray-700= doc.doc_name
+              %td.px-6.py-4.text-gray-700= doc.document_type.titleize
+              %td.px-6.py-4.text-yellow-700.rounded-r-lg Pending
+  - else
+    .bg-white.rounded-xl.shadow.p-8.mb-8
+      %h2.text-xl.font-bold.text-blue-900.mb-4 Pending Documents
+      %p.text-gray-500 No pending documents found.
+
+  %div.bg-white.rounded-xl.shadow.p-8
+    %h2.text-xl.font-bold.text-blue-900.mb-4 Recent Activity
+    %ul.divide-y.divide-gray-100
+      - @recent_activity.each do |activity|
+        %li.py-3.flex.justify-between
+          %span.font-medium.text-blue-900
+            = activity[:name]
+          %span.text-gray-600
+            = activity[:action]
+          %span.text-gray-400
+            = activity[:date] 

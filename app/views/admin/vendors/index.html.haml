@@ -1,13 +1,19 @@
-%h2 Vendors
-%table.table.table-striped
-  %thead
-    %tr
-      %th ID
-      %th Name
-      %th Email
-  %tbody
-    - @vendors.each do |vendor|
-      %tr
-        %td= vendor[:id]
-        %td= vendor[:name]
-        %td= vendor[:email]
+-# Admin Vendors Index Page
+.container.mx-auto.px-4.py-8
+  %h1.text-3xl.font-bold.text-blue-900.mb-8 Vendors
+  - if @vendors.any?
+    .grid.grid-cols-1.md:grid-cols-2.lg:grid-cols-3.gap-8
+      - @vendors.each do |vendor|
+        .bg-white.rounded-xl.shadow.p-6.flex.flex-col.items-center
+          = link_to admin_vendor_path(vendor) do
+            = image_tag(vendor.company_logo.presence || image_path('placeholder-avatar.png'), class: 'w-20 h-20 rounded-full object-cover mb-3')
+            %div.font-semibold.text-xl.text-blue-900= vendor.company_name
+          %div.text-gray-600.mb-1= vendor.name
+          %div.text-gray-500.mb-1= vendor.email
+          %div.text-gray-500.mb-1= vendor.phone
+          %div.text-gray-500.mb-1= vendor.address
+          %div.text-gray-500.mb-1= vendor.website
+          %p.text-gray-700.mt-2.truncate= vendor.description
+          = link_to 'View Details', admin_vendor_path(vendor), class: 'mt-4 inline-block bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded shadow text-sm font-bold'
+  - else
+    %p.text-gray-500 No vendors found.

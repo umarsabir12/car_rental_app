@@ -1,21 +1,27 @@
 Rails.application.routes.draw do
+  devise_for :vendors
   devise_for :users, controllers: {
     sessions: 'users/sessions',
     registrations: 'users/registrations'
   }
-  devise_for :admin_users, controllers: { sessions: 'admin_users/sessions' }
+  devise_for :admins, controllers: { sessions: 'admins/sessions' }
   
-  get 'dashboard', to: 'admin#dashboard'
   namespace :admin do
-    resources :customers, only: [:index]
-    resources :vendors, only: [:index]
-    resources :bookings, only: [:index]
+    resources :dashboard, only: [:index]
+    resources :analytics, only: [:index]
+    resources :customers, only: [:index, :show]
+    resources :vendors, only: [:index, :show]
+    resources :bookings, only: [:index, :show]
     resources :cars, only: [:index, :show]
   end
-  
+
+
+
+  resources :documents, only: [:create]
   resources :cars
   resources :bookings, only: [:new, :create]
   resources :payments, only: [:create, :show]
+
 
   get 'user/home', to: 'users#home', as: :user_home
   get 'user/profile', to: 'users#profile', as: :user_profile

@@ -1,9 +1,12 @@
 class Admin::VendorsController < ApplicationController
   layout "admin"
+  before_action :authenticate_admin!
+
   def index
-    @vendors = [
-      { id: 1, name: "Speedy Rentals", email: "contact@speedy.com" },
-      { id: 2, name: "City Cars", email: "info@citycars.com" }
-    ]
+    @vendors = Vendor.all
+  end
+
+  def show
+    @vendor = Vendor.find(params[:id])
   end
 end 

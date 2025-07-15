@@ -3,17 +3,20 @@ class ApplicationController < ActionController::Base
   allow_browser versions: :modern
 
   def after_sign_out_path_for(resource_or_scope)
-    if resource_or_scope == :admin_user || (resource_or_scope.respond_to?(:mapping) && resource_or_scope.mapping == :admin_user)
-      new_admin_user_session_path
+    if resource_or_scope == :admin || (resource_or_scope.respond_to?(:mapping) && resource_or_scope.mapping == :admin)
+      new_admin_session_path
     else
       root_path
     end
   end
 
   def after_sign_in_path_for(resource)
-    user_home_path
+    if resource.is_a?(Admin)  # Checks if the signed-in resource is an Admin
+      admin_dashboard_index_path
+    else
+      user_home_path
+    end
   end
-
   def after_sign_up_path_for(resource)
     user_home_path
   end

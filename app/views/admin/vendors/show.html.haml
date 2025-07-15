@@ -1,0 +1,26 @@
+-# Vendor show page
+.container.mx-auto.px-4.py-8
+  .bg-white.shadow-lg.rounded-xl.overflow-hidden.p-8.flex.flex-col.md:flex-row.gap-8
+    %img.w-32.h-32.rounded-full.object-cover.shadow.mb-4.md:mb-0{ src: @vendor.company_logo.presence || image_path('placeholder-avatar.png'), alt: @vendor.company_name }
+    .flex-1
+      %h1.text-3xl.font-bold.text-gray-800.mb-2= @vendor.company_name
+      %div.text-lg.text-gray-600.mb-2= @vendor.name
+      %div.text-gray-500.mb-2= @vendor.address
+      %div.text-gray-500.mb-2= @vendor.phone
+      %div.text-gray-500.mb-2= @vendor.email
+      %div.text-gray-500.mb-2= @vendor.website
+      %p.text-gray-700.mt-4= @vendor.description
+
+  .mt-8
+    %h2.text-2xl.font-bold.mb-4 Cars by this Vendor
+    - if @vendor.cars.any?
+      .grid.grid-cols-1.md:grid-cols-2.lg:grid-cols-3.gap-6
+        - @vendor.cars.each do |car|
+          .bg-white.rounded-lg.shadow.p-4.flex.flex-col
+            -# = image_tag(car.main_image_url.presence || image_path('placeholder-car.jpg'), class: 'w-full h-40 object-cover rounded mb-2')
+            %div.font-semibold.text-lg= "#{car.brand} #{car.model}"
+            %div.text-gray-500= "#{car.year} • #{car.color} • #{car.transmission&.titleize}"
+            %div.text-blue-700.font-bold.mt-2= number_to_currency(car.price) + " / day"
+            = link_to 'View Car', admin_car_path(car), class: 'mt-3 inline-block bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded shadow text-sm font-bold'
+    - else
+      %p.text-gray-500 No cars listed by this vendor yet. 

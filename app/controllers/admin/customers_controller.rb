@@ -1,11 +1,15 @@
 class Admin::CustomersController < ApplicationController
   layout "admin"
+  before_action :authenticate_admin!
+
   def index
-    @customers = [
-      { name: "Liam Johnson", car_type: "Honda Brio", car_number: "010 MOR", status: "On Going", avatar_url: "https://i.pravatar.cc/40?img=1" },
-      { name: "Noah Anderson", car_type: "Pajero Sport", car_number: "696 TON", status: "Finished", avatar_url: "https://i.pravatar.cc/40?img=2" },
-      { name: "Ethan Smith", car_type: "Agya", car_number: "665 KIT", status: "Finished", avatar_url: "https://i.pravatar.cc/40?img=3" },
-      { name: "Mason Davis", car_type: nil, car_number: nil, status: "Canceled", avatar_url: "https://i.pravatar.cc/40?img=4" }
-    ]
+    @users = User.all
+    @users = @users.where("first_name ILIKE ? OR last_name ILIKE ?", "%#{params[:name]}%", "%#{params[:name]}%") if params[:name].present?
+    @users = @users.where("email ILIKE ?", "%#{params[:email]}%") if params[:email].present?
+    @users = @users.where("phone ILIKE ?", "%#{params[:phone]}%") if params[:phone].present?
+  end
+
+  def show
+    @user = User.find(params[:id])
   end
 end 

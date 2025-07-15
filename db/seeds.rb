@@ -511,10 +511,69 @@ Booking.create!([
 
 puts "Created #{Booking.count} bookings"
 
+# === VENDORS ===
+puts "Creating vendors..."
+vendor1 = Vendor.create!(
+  name: "Speedy Rentals",
+  email: "speedy@rentals.com",
+  password: "password123",
+  phone: "+1-555-123-4567",
+  company_name: "Speedy Rentals Inc.",
+  company_logo: "https://randomuser.me/api/portraits/men/32.jpg",
+  address: "123 Fast Lane, New York, NY 10001",
+  website: "https://speedyrentals.com",
+  description: "Fast and reliable car rentals for all your needs."
+)
+vendor2 = Vendor.create!(
+  name: "City Cars",
+  email: "info@citycars.com",
+  password: "password123",
+  phone: "+1-555-987-6543",
+  company_name: "City Cars LLC",
+  company_logo: "https://randomuser.me/api/portraits/women/44.jpg",
+  address: "456 Urban Ave, Los Angeles, CA 90210",
+  website: "https://citycars.com",
+  description: "Your trusted partner for city driving."
+)
+vendor3 = Vendor.create!(
+  name: "Luxury Wheels",
+  email: "contact@luxurywheels.com",
+  password: "password123",
+  phone: "+1-555-222-3333",
+  company_name: "Luxury Wheels Group",
+  company_logo: "https://randomuser.me/api/portraits/men/55.jpg",
+  address: "789 Elite Rd, Miami, FL 33101",
+  website: "https://luxurywheels.com",
+  description: "Premium and luxury vehicles for special occasions."
+)
+vendor4 = Vendor.create!(
+  name: "Eco Drive",
+  email: "hello@ecodrive.com",
+  password: "password123",
+  phone: "+1-555-444-5555",
+  company_name: "Eco Drive Solutions",
+  company_logo: "https://randomuser.me/api/portraits/women/65.jpg",
+  address: "321 Green St, San Francisco, CA 94105",
+  website: "https://ecodrive.com",
+  description: "Eco-friendly and hybrid car rentals."
+)
+
+# Assign cars to vendors (first 12 cars evenly)
+cars = Car.all.to_a
+cars[0..2].each { |car| car.update!(vendor: vendor1) }
+cars[3..5].each { |car| car.update!(vendor: vendor2) }
+cars[6..8].each { |car| car.update!(vendor: vendor3) }
+cars[9..11].each { |car| car.update!(vendor: vendor4) }
+
+puts "Created #{Vendor.count} vendors and assigned cars."
+
 puts "\n=== SEEDING COMPLETE ==="
 puts "Users: #{User.count}"
 puts "Cars: #{Car.count}"
 puts "Bookings: #{Booking.count}"
+puts "Vendors: #{Vendor.count}"
 puts "\nSample user credentials:"
 puts "Email: john@example.com, Password: password123"
 puts "Email: jane@example.com, Password: password123"
+puts "Vendor: speedy@rentals.com, Password: password123"
+puts "Vendor: info@citycars.com, Password: password123"

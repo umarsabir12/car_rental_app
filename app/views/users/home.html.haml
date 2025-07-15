@@ -1,6 +1,6 @@
 .w-full.min-h-screen.bg-gradient-to-br.from-blue-50.to-blue-100
   .px-4.md:px-12.lg:px-32
-    .py-10
+    .pt-10
       .relative.bg-blue-700.text-white.rounded-3xl.shadow-xl.overflow-hidden.p-10.flex.flex-col.md:flex-row.items-center.gap-8.mb-12
         / Background image layer
         .absolute.inset-0.bg-cover.bg-center.opacity-30.pointer-events-none{ style: "background-image: url('https://images.unsplash.com/photo-1503736334956-4c8f8e92946d?auto=format&fit=crop&w=900&q=80');" }
@@ -11,11 +11,19 @@
         .relative.z-10.flex-shrink-0
           %i.fas.fa-user-circle.text-7xl.text-blue-200
 
+    - documents = [{ name: 'License Photo', type: 'license', field: 'license_photo' },{ name: 'Selfie with License', type: 'selfie', field: 'selfie_with_license' },{ name: 'Passport Photo', type: 'passport', field: 'passport_photo' },{ name: 'Utility Bill', type: 'utility_bill', field: 'utility_bill' }]
+    - user_docs = current_user.documents.group_by(&:document_type)
+    - missing_docs = documents.any? { |doc| !(user_docs[doc[:type]]&.first&.images&.attached?) }
+    - if missing_docs
+      .mb-8.p-4.bg-red-100.border-l-4.border-red-500.rounded.text-red-700.font-semibold.text-center
+        Please submit your documents in order to proceed with the payment and booking.
+
     .mx-auto
       .flex.border-b.mb-8.bg-white.rounded-t-2xl.shadow-lg.overflow-hidden
         %button.tab-btn.py-4.px-8.text-lg.font-semibold.text-blue-700.bg-white.border-b-2.border-blue-600{type: "button", id: "tab-profile", onclick: "showTab('profile')"} Profile
         %button.tab-btn.py-4.px-8.text-lg.font-semibold.text-gray-500.hover:text-blue-700.bg-white{type: "button", id: "tab-bookings", onclick: "showTab('bookings')"} Bookings
-        %button.tab-btn.py-4.px-8.text-lg.font-semibold.text-gray-500.hover:text-blue-700.bg-white{type: "button", id: "tab-card", onclick: "showTab('card')"} Credit Card
+        %button.tab-btn.py-4.px-8.text-lg.font-semibold.text-gray-500.hover:text-blue-700.bg-white{type: "button", id: "tab-documents", onclick: "showTab('documents')"} Documents
+        -# %button.tab-btn.py-4.px-8.text-lg.font-semibold.text-gray-500.hover:text-blue-700.bg-white{type: "button", id: "tab-card", onclick: "showTab('card')"} Credit Card
 
       #tab-content-profile.tab-content.bg-white.rounded-b-2xl.shadow-lg.p-8.mt-0
         %h2.text-2xl.font-bold.text-blue-700.mb-4 Profile
@@ -42,47 +50,109 @@
       #tab-content-bookings.tab-content.bg-white.rounded-b-2xl.shadow-lg.p-8.mt-0.hidden
         %h2.text-2xl.font-bold.text-blue-700.mb-4 Bookings
         - if @bookings.any?
-          .overflow-x-auto
-            %table.w-full.bg-white.rounded-lg.shadow.border
-              %thead.bg-blue-50
-                %tr
-                  %th.px-3.py-2.text-left.text-xs.font-bold.text-blue-700.uppercase Car
-                  %th.px-3.py-2.text-left.text-xs.font-bold.text-blue-700.uppercase Start
-                  %th.px-3.py-2.text-left.text-xs.font-bold.text-blue-700.uppercase End
-                  %th.px-3.py-2.text-left.text-xs.font-bold.text-blue-700.uppercase Status
-                  %th.px-3.py-2.text-left.text-xs.font-bold.text-blue-700.uppercase Payment
-              %tbody
-                - @bookings.each do |booking|
-                  %tr.hover:bg-blue-50.transition
-                    %td.px-3.py-2.font-semibold= booking.car&.model || 'N/A'
-                    %td.px-3.py-2= booking.start_date.strftime('%b %d, %Y')
-                    %td.px-3.py-2= booking.end_date.strftime('%b %d, %Y')
-                    %td.px-3.py-2
-                      - status_classes = {'Available' => 'bg-green-100 text-green-700','Rented' => 'bg-red-100 text-red-700'}[booking.status] || 'bg-blue-100 text-blue-700'
-                      %span.inline-block.rounded-full.text-xs.font-semibold.px-3.py-1{ class: status_classes }= booking.status
-                    %td.px-3.py-2.text-center
-                      - if booking.payment_processed?
-                        %span.inline-block.bg-green-100.text-green-700.px-3.py-1.rounded-full.text-xs.font-semibold Paid
-                      - else
-                        = link_to 'Pay', payment_path(booking), class: 'inline-block bg-yellow-400 text-yellow-900 font-bold px-4 py-1 rounded-full text-xs shadow hover:bg-yellow-500 transition'
+          .grid.grid-cols-1.md:grid-cols-2.gap-8
+            - @bookings.each do |booking|
+              .bg-white.rounded-xl.shadow-md.p-6.flex.flex-lg-fill.justify-between.relative
+                / Car Info
+                .flex.items-center.gap-4.mb-4
+                  - if booking.car&.main_image_url.present?
+                    %img.w-100.h-24.object-cover.rounded.shadow{src: booking.car.main_image_url, alt: booking.car.model}
+                  - else
+                    %span.inline-block.w-20.h-14.bg-blue-100.flex.items-center.justify-center.rounded.text-blue-400 N/A
+                  .flex-1
+                    %div.font-bold.text-blue-900= booking.car&.model || 'N/A'
+                    %div.text-sm.text-gray-500= booking.car&.brand || '-'
+                    %div.text-xs.text-gray-400= booking.car&.year || '-'
+                / Booking Dates & Status
+                .flex.items-center.justify-between.mb-2
+                  %div
+                    %span.text-xs.text-gray-500 Start:
+                    %span.font-semibold= booking.start_date.strftime('%b %d, %Y')
+                    %span.text-xs.text-gray-500.ml-2 End:
+                    %span.font-semibold= booking.end_date.strftime('%b %d, %Y')
+                  -# %div
+                    - status_classes = {'Available' => 'bg-green-100 text-green-700','Rented' => 'bg-red-100 text-red-700'}[booking.status] || 'bg-blue-100 text-blue-700'
+                    %span.inline-block.rounded-full.text-xs.font-semibold.px-3.py-1{ class: status_classes }= booking.status
+                / Payment
+                .flex.items-center.justify-between
+                  %div
+                    - if booking.payment_processed?
+                      %span.inline-block.bg-green-100.text-green-700.px-3.py-1.rounded-full.text-xs.font-semibold Paid
+                    - else
+                      = link_to 'Pay', payment_path(booking), class: 'inline-block bg-yellow-400 text-yellow-900 font-bold px-4 py-1 rounded-full text-xs shadow hover:bg-yellow-500 transition'
+                / Progress Bar / Stepper
+                -# - steps = [{ name: 'Booking Created', complete: true },{ name: 'Documents Uploaded', complete: (booking.respond_to?(:documents) && booking.documents.attached?) rescue false },{ name: 'Payment', complete: booking.payment_processed? },{ name: 'Confirmed', complete: booking.status == 'Available' }]
+                -# .flex.flex-col.gap-2.mt-2
+                  .flex.items-center.justify-between.mb-1
+                    - steps.each_with_index do |step, i|
+                      .flex.items-center.gap-1
+                        %span{ class: step[:complete] ? 'text-green-600' : 'text-gray-400' }
+                          = step[:complete] ? '✔️' : (i+1)
+                        %span.text-xs.font-semibold= step[:name]
+                        - unless i == steps.size - 1
+                          %span.mx-2.text-gray-300 &rarr;
+                  / Document upload button if not uploaded
+                  - unless booking.documents.attached? rescue true
+                    = form_with url: upload_documents_booking_path(booking), method: :post, local: true, html: {multipart: true, class: 'mt-2'} do |f|
+                      = f.file_field :documents, multiple: true, class: 'block w-full text-xs text-gray-700 border border-gray-300 rounded-lg p-2 mb-2'
+                      = f.submit 'Upload Documents', class: 'bg-blue-600 text-white px-4 py-1 rounded text-xs font-semibold hover:bg-blue-700 transition'
         - else
           %p.text-gray-500.mt-4 You have no bookings yet.
 
-      #tab-content-card.tab-content.bg-white.rounded-b-2xl.shadow-lg.p-8.mt-0.hidden
-        %h2.text-2xl.font-bold.text-blue-700.mb-4 Card Details
-        = form_for @user, url: user_profile_path, method: :patch, html: { class: "space-y-6" } do |f|
-          .field.space-y-2
-            = f.label :card_number, class: "block text-sm font-medium text-gray-700"
-            = f.text_field :card_number, placeholder: "4242 4242 4242 4242", class: "w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
-          .grid.grid-cols-2.gap-4
-            .field.space-y-2
-              = f.label :card_expiry, class: "block text-sm font-medium text-gray-700"
-              = f.text_field :card_expiry, placeholder: "MM/YY", class: "w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
-            .field.space-y-2
-              = f.label :card_cvc, class: "block text-sm font-medium text-gray-700"
-              = f.text_field :card_cvc, placeholder: "123", class: "w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
-          .actions
-            = f.submit "Update Card", class: "w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition"
+      #tab-content-documents.tab-content.flex.justify-start.bg-white.rounded-b-2xl.shadow-2xl.p-12.mt-0
+        .w-full.max-w-2xl
+          %h2.text-3xl.font-extrabold.text-blue-700.mb-6.flex.items-center.gap-2
+            %i.fas.fa-file-upload.text-blue-400
+            Upload Documents
+          .grid.grid-cols-1.sm:grid-cols-2.gap-6
+            - documents = [{ name: 'License Photo', type: 'license', field: 'license_photo' },{ name: 'Selfie with License', type: 'selfie', field: 'selfie_with_license' },{ name: 'Passport Photo', type: 'passport', field: 'passport_photo' },{ name: 'Utility Bill', type: 'utility_bill', field: 'utility_bill' }]
+            - user_docs = current_user.documents.group_by(&:document_type)
+            - documents.each do |doc|
+              - uploaded_doc = (user_docs[doc[:type]] || []).first
+              .bg-white.rounded-xl.shadow-md.p-5.flex.flex-col.items-center.border-2{ class: uploaded_doc&.status == 'approved' ? 'border-green-400' : uploaded_doc&.status == 'not uploaded' ? 'border-red-300' : 'border-yellow-300' }
+                %i.fas.fa-file-alt.text-3xl.mb-2{ class: uploaded_doc&.status == 'approved' ? 'text-green-600' : uploaded_doc&.status == 'not uploaded' ? 'text-red-600' : 'text-yellow-600' }
+                %span.font-semibold.text-blue-900.mb-1= doc[:name]
+                - if uploaded_doc
+                  - status_color = uploaded_doc.status == 'not uploaded' ? 'text-red-600 bg-red-100' : uploaded_doc.status == 'approved' ? 'text-green-700 bg-green-100' : 'text-yellow-700 bg-yellow-100'
+                  %span.inline-block.rounded-full.px-3.py-1.text-xs.font-semibold.mb-2{class: status_color}= uploaded_doc.status.titleize
+                - else
+                  %span.inline-block.rounded-full.px-3.py-1.text-xs.font-semibold.text-red-600.bg-red-100.mb-2 Not Uploaded
+                - if uploaded_doc && uploaded_doc.images.attached?
+                  %button.bg-green-600.text-white.px-4.py-2.rounded-lg.hover:bg-green-700.transition.font-semibold.text-xs{type: "button", onclick: "openPreviewModal('#{doc[:field]}')"} Preview
+                - else
+                  %button.bg-blue-600.text-white.px-4.py-2.rounded-lg.hover:bg-blue-700.transition.font-semibold.text-xs{type: "button", onclick: "openUploadModal('#{doc[:field]}', '#{doc[:name]}')"} Upload
+
+  / Upload Modals
+  - documents.each do |doc|
+    %div{ id: "modal-#{doc[:field]}", class: "fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40 hidden" }
+      .bg-white.rounded-lg.shadow-lg.p-8.max-w-md.w-full.mx-4
+        %h3.text-xl.font-bold.text-blue-700.mb-4
+          = "Upload #{doc[:name]}"
+        = form_with url: documents_path, method: :post, local: true, html: {multipart: true, class: 'space-y-4'} do |f|
+          = f.file_field doc[:field], class: 'block w-full text-sm text-gray-700 border border-gray-300 rounded-lg p-3 bg-blue-50 focus:ring-2 focus:ring-blue-400 focus:border-blue-400 transition', required: true
+          .flex.gap-3
+            = f.submit 'Upload', class: 'flex-1 bg-blue-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-blue-700 transition'
+            %button.flex-1.bg-gray-300.text-gray-700.px-4.py-2.rounded-lg.font-semibold.hover:bg-gray-400.transition{type: "button", onclick: "closeUploadModal('#{doc[:field]}')"} Cancel
+
+  / Preview Modals
+  - documents.each do |doc|
+    - uploaded_doc = (user_docs[doc[:type]] || []).first
+    - if uploaded_doc && uploaded_doc.images.attached?
+      %div{ id: "preview-modal-#{doc[:field]}", class: "fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40 hidden" }
+        .bg-white.rounded-lg.shadow-lg.p-8.max-w-md.w-full.mx-4
+          %h3.text-xl.font-bold.text-blue-700.mb-4= "#{doc[:name]} Preview"
+          .mb-4.flex.flex-wrap.gap-4
+            - uploaded_doc.images.each do |img|
+              %img.w-32.h-24.object-cover.rounded.shadow{ src: url_for(img), alt: doc[:name] }
+          %div.text-sm.text-gray-600.mb-2
+            | Status:
+            %span.font-semibold= uploaded_doc.status
+          - if uploaded_doc.reason.present?
+            %div.text-sm.text-red-600.mb-2
+              | Reason:
+              %span.font-semibold= uploaded_doc.reason
+          .flex.gap-3.mt-4
+            %button.flex-1.bg-gray-300.text-gray-700.px-4.py-2.rounded-lg.font-semibold.hover:bg-gray-400.transition{type: "button", onclick: "closePreviewModal('#{doc[:field]}')"} Close
 
 :javascript
   function showTab(tab) {
@@ -99,3 +169,41 @@
   document.addEventListener('DOMContentLoaded', function() {
     showTab('profile');
   });
+
+  document.addEventListener('DOMContentLoaded', function() {
+    var select = document.getElementById('has-license-select');
+    var yesSection = document.querySelector('.yes-section');
+    var noSection = document.querySelector('.no-section');
+    // Show yes-section by default
+    yesSection.classList.remove('hidden');
+    noSection.classList.add('hidden');
+    if (select) {
+      select.addEventListener('change', function() {
+        if (this.value === 'yes') {
+          yesSection.classList.remove('hidden');
+          noSection.classList.add('hidden');
+        } else if (this.value === 'no') {
+          noSection.classList.remove('hidden');
+          yesSection.classList.add('hidden');
+        } else {
+          yesSection.classList.add('hidden');
+          noSection.classList.add('hidden');
+        }
+      });
+    }
+  });
+
+  function openUploadModal(field, name) {
+    document.getElementById('modal-' + field).classList.remove('hidden');
+  }
+  
+  function closeUploadModal(field) {
+    document.getElementById('modal-' + field).classList.add('hidden');
+  }
+
+  function openPreviewModal(field) {
+    document.getElementById('preview-modal-' + field).classList.remove('hidden');
+  }
+  function closePreviewModal(field) {
+    document.getElementById('preview-modal-' + field).classList.add('hidden');
+  }

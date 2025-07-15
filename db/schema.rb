@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_07_05_151819) do
+ActiveRecord::Schema[7.2].define(version: 2025_07_11_162801) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -42,7 +42,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_07_05_151819) do
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
 
-  create_table "admin_users", force: :cascade do |t|
+  create_table "admins", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "email", default: "", null: false
@@ -50,8 +50,8 @@ ActiveRecord::Schema[7.2].define(version: 2025_07_05_151819) do
     t.string "reset_password_token"
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
-    t.index ["email"], name: "index_admin_users_on_email", unique: true
-    t.index ["reset_password_token"], name: "index_admin_users_on_reset_password_token", unique: true
+    t.index ["email"], name: "index_admins_on_email", unique: true
+    t.index ["reset_password_token"], name: "index_admins_on_reset_password_token", unique: true
   end
 
   create_table "bookings", force: :cascade do |t|
@@ -90,6 +90,19 @@ ActiveRecord::Schema[7.2].define(version: 2025_07_05_151819) do
     t.boolean "featured", default: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "vendor_id"
+    t.index ["vendor_id"], name: "index_cars_on_vendor_id"
+  end
+
+  create_table "documents", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "doc_name"
+    t.string "document_type"
+    t.string "status", default: "not uploaded"
+    t.string "reason", default: ""
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_documents_on_user_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -111,12 +124,34 @@ ActiveRecord::Schema[7.2].define(version: 2025_07_05_151819) do
     t.string "card_expiry"
     t.string "card_cvc"
     t.boolean "payment_done"
+    t.string "nationality"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
+  end
+
+  create_table "vendors", force: :cascade do |t|
+    t.string "email", default: "", null: false
+    t.string "encrypted_password", default: "", null: false
+    t.string "reset_password_token"
+    t.datetime "reset_password_sent_at"
+    t.datetime "remember_created_at"
+    t.string "name"
+    t.string "phone"
+    t.string "company_name"
+    t.string "company_logo"
+    t.string "address"
+    t.string "website"
+    t.text "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["email"], name: "index_vendors_on_email", unique: true
+    t.index ["reset_password_token"], name: "index_vendors_on_reset_password_token", unique: true
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "bookings", "cars"
   add_foreign_key "bookings", "users"
+  add_foreign_key "cars", "vendors"
+  add_foreign_key "documents", "users"
 end
