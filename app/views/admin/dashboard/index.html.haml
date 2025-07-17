@@ -24,7 +24,7 @@
             %th.px-6.py-3.text-left.text-xs.font-bold.text-blue-700.uppercase.bg-blue-50.rounded-r-lg Status
         %tbody
           - pending_docs.each do |doc|
-            %tr.bg-blue-50.rounded-lg.shadow.hover:bg-blue-100.transition
+            %tr.bg-blue-50.rounded-lg.shadow.hover:bg-blue-100.transition.cursor-pointer{ onclick: "window.location='#{admin_document_path(doc)}'" }
               %td.px-6.py-4.font-medium.text-gray-900.rounded-l-lg= doc.user&.full_name.presence || doc.user&.email
               %td.px-6.py-4.text-gray-700= doc.doc_name
               %td.px-6.py-4.text-gray-700= doc.document_type.titleize

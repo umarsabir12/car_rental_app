@@ -61,6 +61,6 @@
         / ==== Price and CTA ====
         .mt-6.flex.items-center.justify-between
           %span.text-2xl.font-semibold.text-blue-700= number_to_currency(@car.price) + " / day"
-          = link_to "Book Now", new_booking_path(car_id: @car.id), class: "bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded shadow text-lg font-bold"
+          -# = link_to "Book Now", new_booking_path(car_id: @car.id), class: "bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded shadow text-lg font-bold"
 
         %p.text-xs.text-gray-400.mt-4 Last updated: #{@car.updated_at.strftime('%b %d, %Y')}

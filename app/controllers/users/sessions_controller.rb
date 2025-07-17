@@ -20,7 +20,7 @@ class Users::SessionsController < Devise::SessionsController
             payment_processed: false
           )
           # Redirect to payment page
-          redirect_to payment_path(booking) and return
+          redirect_to  user_home_path and return
         end
      end
     end

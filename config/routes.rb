@@ -13,14 +13,23 @@ Rails.application.routes.draw do
     resources :vendors, only: [:index, :show]
     resources :bookings, only: [:index, :show]
     resources :cars, only: [:index, :show]
+    resources :documents, only: [:show] do
+      member do
+        patch :approve
+        post :reject
+      end
+    end
   end
-
 
 
   resources :documents, only: [:create]
   resources :cars
   resources :bookings, only: [:new, :create]
   resources :payments, only: [:create, :show]
+
+  resource :user, only: [] do
+    patch :update_nationality
+  end
 
 
   get 'user/home', to: 'users#home', as: :user_home

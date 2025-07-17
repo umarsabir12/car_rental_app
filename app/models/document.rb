@@ -1,15 +1,20 @@
 class Document < ApplicationRecord
   belongs_to :user
   has_many_attached :images
+  before_create :set_pending_status
+
+  TOURIST =  ["Home country driving license and IDP", "Passport Copy", "Copy of visa Entry Stamp"]
+  RESIDENT = ["A Valid UAE driving license", "Emirates ID front and back", "Passport and Visa copy"]
 
   DOC_FIELDS = {
-    'passport_photo' => ['Passport Photo', 'passport'],
-    'utility_bill' => ['Utility Bill', 'utility_bill'],
-    'license_photo' => ['License Photo', 'license'],
-    'selfie_with_license' => ['Selfie with License', 'selfie']
+    'uae_license' => ['A Valid UAE driving license', 'uae_license'],
+    'emirates_id' => ['Emirates ID front and back', 'emirates_id'],
+    'passport_visa' => ['Passport and Visa copy', 'passport_visa'],
+    'foreign_license_idp' => ['Home country driving license and IDP', 'foreign_license_idp'],
+    'visa_entry_stamp' => ['Copy of visa Entry Stamp', 'visa_entry_stamp'],
+    'passport_copy' => ['Passport Copy', 'passport_copy']
   }.freeze
 
-  before_create :set_pending_status
 
   def self.doc_info_for_field(field)
     DOC_FIELDS[field]

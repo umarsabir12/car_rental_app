@@ -13,4 +13,13 @@ class UsersController < ApplicationController
   def bookings
     @bookings = current_user.bookings.includes(:car)
   end
+
+  def update_nationality
+    if current_user.update!(nationality: params[:nationality])
+      render json: { success: true, nationality: current_user.nationality }
+    else
+      render json: { success: false, errors: current_user.errors.full_messages }, status: :unprocessable_entity
+    end
+  end
+
 end 
