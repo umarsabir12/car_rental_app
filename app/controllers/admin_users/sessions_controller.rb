@@ -1,10 +1,10 @@
-class Admins::SessionsController < Devise::SessionsController
-  layout :resolve_layout
-  # You can add custom logic here if needed
+# class Admins::SessionsController < Devise::SessionsController
+#   layout :resolve_layout
+#   # You can add custom logic here if needed
 
-  private
+#   private
 
-  def resolve_layout
-    action_name == 'new' ? false : 'admin'
-  end
-end 
+#   def resolve_layout
+#     action_name == 'new' ? false : 'admin'
+#   end
+# end 

@@ -11,13 +11,20 @@ class ApplicationController < ActionController::Base
   end
 
   def after_sign_in_path_for(resource)
-    if resource.is_a?(Admin)  # Checks if the signed-in resource is an Admin
+    if resource.is_a?(Admin)
       admin_dashboard_index_path
+    elsif resource.is_a?(Vendor)
+      vendors_dashboard_path
     else
       user_home_path
     end
   end
+
   def after_sign_up_path_for(resource)
-    user_home_path
+    if resource.is_a?(Vendor)
+      vendors_dashboard_path
+    else
+      user_home_path
+    end
   end
 end
