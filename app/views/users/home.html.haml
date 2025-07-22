@@ -60,7 +60,6 @@
                     - if booking.payment_processed?
                       %span.inline-block.bg-green-100.text-green-700.px-3.py-1.rounded-full.text-xs.font-semibold Paid
                     - else
-                      -# - debugger
                       = link_to 'Pay', payment_path(booking), 
                           class: 'inline-block bg-yellow-400 text-yellow-900 font-bold px-4 py-1 rounded-full text-xs shadow hover:bg-yellow-500 transition pay-btn',
                           data: { pending_docs: (current_user.has_required_pending_document? ? 'true' : 'false') }

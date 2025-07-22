@@ -4,10 +4,10 @@ class Admin::DashboardController < ApplicationController
   
   def index
     @stats = {
-      users: 1245,
-      bookings: 87,
-      vendors: 12,
-      cars: 34
+      users: User.count,
+      bookings: Booking.count,
+      vendors: Vendor.count,
+      cars: Car.count
     }
     @recent_activity = [
       { name: 'Alice Smith', action: 'Booked a car', date: '2024-06-01' },

@@ -1,9 +1,6 @@
 Rails.application.routes.draw do
-  devise_for :vendors
-  devise_for :users, controllers: {
-    sessions: 'users/sessions',
-    registrations: 'users/registrations'
-  }
+  devise_for :vendors, controllers: { sessions: 'vendors/sessions', registrations: 'vendors/registrations' }
+  devise_for :users, controllers: {sessions: 'users/sessions',registrations: 'users/registrations'}
   devise_for :admins, controllers: { sessions: 'admins/sessions' }
   
   namespace :admin do
@@ -19,6 +16,15 @@ Rails.application.routes.draw do
         post :reject
       end
     end
+  end
+
+  namespace :vendors do
+    get 'dashboard', to: 'dashboard#index'
+    resources :cars
+    resources :bookings
+    resources :documents
+    resource :profile, only: [:show, :edit, :update]
+    resources :payments, only: [:index, :show]
   end
 
 

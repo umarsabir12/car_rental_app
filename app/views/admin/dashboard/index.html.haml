@@ -10,6 +10,19 @@
         %div.text-gray-600.font-semibold
           = label.to_s.titleize
 
+
+  %div.bg-white.rounded-xl.shadow.p-8.mb-10
+    %h2.text-xl.font-bold.text-blue-900.mb-4 Recent Activity
+    %ul.divide-y.divide-gray-100
+      - @recent_activity.each do |activity|
+        %li.py-3.flex.justify-between
+          %span.font-medium.text-blue-900
+            = activity[:name]
+          %span.text-gray-600
+            = activity[:action]
+          %span.text-gray-400
+            = activity[:date] 
+
   / ==== Pending Documents Section ====
   - pending_docs = Document.includes(:user).where(status: 'pending')
   - if pending_docs.any?
@@ -33,15 +46,3 @@
     .bg-white.rounded-xl.shadow.p-8.mb-8
       %h2.text-xl.font-bold.text-blue-900.mb-4 Pending Documents
       %p.text-gray-500 No pending documents found.
-
-  %div.bg-white.rounded-xl.shadow.p-8
-    %h2.text-xl.font-bold.text-blue-900.mb-4 Recent Activity
-    %ul.divide-y.divide-gray-100
-      - @recent_activity.each do |activity|
-        %li.py-3.flex.justify-between
-          %span.font-medium.text-blue-900
-            = activity[:name]
-          %span.text-gray-600
-            = activity[:action]
-          %span.text-gray-400
-            = activity[:date] 

@@ -1,0 +1,22 @@
+.container.mx-auto.max-w-5xl
+  = render partial: "vendors/navbar"
+  .bg-white.rounded-3xl.shadow-xl.p-10.mb-8
+    %h1.text-3xl.font-extrabold.text-blue-900.mb-2 Welcome, #{current_vendor.company_name}!
+    %p.text-blue-700.text-lg.mb-6 This is your vendor dashboard. Here you can manage your cars, bookings, documents, and more.
+    .grid.grid-cols-1.md:grid-cols-4.gap-8.mt-8
+      .bg-blue-50.rounded-xl.p-6.shadow.flex.flex-col.items-center
+        %i.fas.fa-car.text-3xl.text-blue-600.mb-2
+        %span.text-lg.font-bold= current_vendor.cars.count
+        %span.text-gray-700.mt-1 Cars Listed
+      .bg-blue-50.rounded-xl.p-6.shadow.flex.flex-col.items-center
+        %i.fas.fa-calendar-check.text-3xl.text-blue-600.mb-2
+        %span.text-lg.font-bold= Booking.where(car_id: current_vendor.cars.pluck(:id)).count
+        %span.text-gray-700.mt-1 Total Bookings
+      .bg-blue-50.rounded-xl.p-6.shadow.flex.flex-col.items-center
+        %i.fas.fa-clock.text-3xl.text-yellow-500.mb-2
+        %span.text-lg.font-bold= Booking.where(car_id: current_vendor.cars.pluck(:id), status: 'pending').count
+        %span.text-gray-700.mt-1 Pending Bookings
+      .bg-blue-50.rounded-xl.p-6.shadow.flex.flex-col.items-center
+        %i.fas.fa-wallet.text-3xl.text-blue-600.mb-2
+        %span.text-lg.font-bold $0
+        %span.text-gray-700.mt-1 Earnings (Coming Soon) 
