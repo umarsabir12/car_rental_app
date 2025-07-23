@@ -2,22 +2,18 @@ class DocumentsController < ApplicationController
   before_action :authenticate_user!
 
   def create
-    uploaded_field = nil
-    Document::DOC_FIELDS.keys.each do |field|
-      if params[field].present?
-        uploaded_field = field
-        doc_name, doc_type = Document.doc_info_for_field(field)
-        doc = current_user.documents.new(doc_name: doc_name, document_type: doc_type)
-        doc.images.attach(params[field])
-        if doc.save
-          redirect_to user_home_path, notice: "#{doc_name} uploaded successfully."
-        else
-          redirect_to user_home_path, alert: "Failed to upload #{doc_name}."
-        end
-        return
+    doc = current_user.documents.find_by(id: params[:id])
+    if doc && params[:images].present?
+      doc.images.attach(params[:images].reject(&:blank?))
+      doc.status = 'pending'
+      if doc.save
+        redirect_to user_home_path, notice: "#{doc.doc_name} uploaded successfully and is now pending review."
+      else
+        redirect_to user_home_path, alert: "Failed to upload #{doc.doc_name}."
       end
+    else
+      redirect_to user_home_path, alert: "Document not found or no image selected."
     end
-    redirect_to user_home_path, alert: "No document selected."
   end
 
   private

@@ -12,6 +12,17 @@
         = hidden_field_tag :start_date, params[:start_date]
       - if params[:end_date].present?
         = hidden_field_tag :end_date, params[:end_date]
+
+      .field.space-y-2
+        = f.label :nationality, 'Are you a Resident or a Tourist?', class: "block text-sm font-medium text-gray-700"
+        .flex.gap-6.items-center
+          %label.flex.items-center.gap-2.cursor-pointer.text-black-50
+            = f.radio_button :nationality, 'resident', required: true, class: "form-radio text-blue-600 h-4 w-4"
+            %span Resident (UAE Resident)
+          %label.flex.items-center.gap-2.cursor-pointer.text-black-50
+            = f.radio_button :nationality, 'tourist', required: true, class: "form-radio text-blue-600 h-4 w-4"
+            %span Tourist (Foreign Tourist)
+
       .field.space-y-2
         = f.label :first_name, class: "block text-sm font-medium text-gray-700"
         = f.text_field :first_name,

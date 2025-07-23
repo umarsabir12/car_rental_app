@@ -1,7 +1,7 @@
 class Document < ApplicationRecord
   belongs_to :user
   has_many_attached :images
-  before_create :set_pending_status
+  # before_create :set_pending_status
 
   TOURIST =  ["Home country driving license and IDP", "Passport Copy", "Copy of visa Entry Stamp"]
   RESIDENT = ["A Valid UAE driving license", "Emirates ID front and back", "Passport and Visa copy"]
