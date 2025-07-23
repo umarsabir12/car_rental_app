@@ -4,6 +4,9 @@ class UsersController < ApplicationController
   def home
     @user = current_user
     @bookings = @user.bookings.includes(:car)
+    if (msg = @user.document_alert_message)
+      flash.now[:alert] = msg
+    end
   end
 
   def profile

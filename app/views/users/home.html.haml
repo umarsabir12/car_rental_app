@@ -11,13 +11,6 @@
       .relative.z-10.flex-shrink-0
         %i.fas.fa-user-circle.text-7xl.text-blue-200
 
-    -# - documents = [{ name: 'License Photo', type: 'license', field: 'license_photo' },{ name: 'Selfie with License', type: 'selfie', field: 'selfie_with_license' },{ name: 'Passport Photo', type: 'passport', field: 'passport_photo' },{ name: 'Utility Bill', type: 'utility_bill', field: 'utility_bill' }]
-    -# - user_docs = current_user.documents.group_by(&:document_type)
-    -# - missing_docs = documents.any? { |doc| !(user_docs[doc[:type]]&.first&.images&.attached?) }
-    -# - if missing_docs
-    -#   .mb-8.p-4.bg-red-100.border-l-4.border-red-500.rounded.text-red-700.font-semibold.text-center
-    -#     Please submit your documents in order to proceed with the payment and booking.
-
     .mx-auto
       .flex.border-b.mb-8.bg-white.rounded-t-2xl.shadow-lg.overflow-hidden
         %button.tab-btn.py-4.px-8.text-lg.font-semibold.text-blue-700.bg-white.border-b-2.border-blue-600{type: "button", id: "tab-bookings", onclick: "showTab('bookings')"} Bookings
@@ -26,9 +19,8 @@
         -# %button.tab-btn.py-4.px-8.text-lg.font-semibold.text-gray-500.hover:text-blue-700.bg-white{type: "button", id: "tab-card", onclick: "showTab('card')"} Credit Card
 
       #tab-content-bookings.tab-content.bg-white.rounded-b-2xl.shadow-lg.p-8.mt-0
-        - if current_user.booking_alert
-          .mb-8.p-4.bg-red-100.border-l-4.border-red-500.rounded.text-red-700.font-semibold.text-center
-            Please submit all required documents to proceed with your payment and complete the booking process.
+        - if flash[:alert]
+          .mb-8.p-4.bg-red-100.border-l-4.border-red-500.rounded.text-red-700.font-semibold.text-center= flash[:alert]
         %h2.text-xl.font-semibold.text-gray-600.mb-4 Bookings
         - if @bookings.any?
           .grid.grid-cols-1.md:grid-cols-2.gap-8
@@ -72,52 +64,18 @@
           %h2.text-xl.font-semibold.text-gray-600.mb-6.flex.items-center.gap-2
             %i.fas.fa-file-upload.text-blue-400
             Upload Documents
-          / Radio button group for user type
-          .mb-8.flex.flex-col.items-start.pl-4
-            .flex.gap-6
-              %label.flex.items-center.gap-2.cursor-pointer.text-black-50
-                %input{type: "radio", name: "user_type", value: "uae_resident", checked: @user.nationality == 'local', class: "form-radio text-blue-600 h-4 w-4", onchange: "handleNationalityChange()"}
-                %span Emiratis and UAE Resident
-              %label.flex.items-center.gap-2.cursor-pointer.text-black-50
-                %input{type: "radio", name: "user_type", value: "foreign_tourist", checked: @user.nationality == 'tourist', class: "form-radio text-blue-600 h-4 w-4", onchange: "handleNationalityChange()"}
-                %span Foreign Tourist
-
-          - uae_docs = [{ name: 'A Valid UAE driving license', type: 'uae_license', field: 'uae_license' },{ name: 'Emirates ID front and back', type: 'emirates_id', field: 'emirates_id' },{ name: 'Passport and Visa copy', type: 'passport_visa', field: 'passport_visa' }]
-          - foreign_docs = [{ name: 'Home country driving license and IDP', type: 'foreign_license_idp', field: 'foreign_license_idp' },{ name: 'Copy of visa Entry Stamp', type: 'visa_entry_stamp', field: 'visa_entry_stamp' },{ name: 'Passport Copy', type: 'passport_copy', field: 'passport_copy' }]
-          - user_docs = current_user.documents.group_by(&:document_type)
-
           / Document cards row
-          .grid.grid-cols-1.sm:grid-cols-2.md:grid-cols-3.lg:grid-cols-3.xl:grid-cols-3.gap-8.w-full#uae-docs-set
-            - uae_docs.each do |doc|
-              - uploaded_doc = (user_docs[doc[:type]] || []).first
+          .grid.grid-cols-1.sm:grid-cols-2.md:grid-cols-3.lg:grid-cols-3.xl:grid-cols-3.gap-8.w-full
+            - current_user.documents.each do |doc|
               .bg-gray-50.rounded-xl.shadow-sm.p-6.flex.flex-col.items-center.border.border-gray-200.w-full.min-h-260
                 %i.fas.fa-file-alt.text-2xl.mb-2.text-gray-400
-                %span.font-semibold.text-gray-800.mb-1= doc[:name]
-                - if uploaded_doc
-                  - status_color = uploaded_doc.status == 'not uploaded' ? 'text-red-600' : uploaded_doc.status == 'approved' ? 'text-green-700' : 'text-yellow-700'
-                  %span.inline-block.rounded-full.px-3.py-1.text-xs.font-semibold.mb-2{class: status_color}= uploaded_doc.status.titleize
+                %span.font-semibold.text-gray-800.mb-1= doc.doc_name
+                - status_color = doc.status == 'not uploaded' ? 'text-red-600' : doc.status == 'approved' ? 'text-green-700' : 'text-yellow-700'
+                %span.inline-block.rounded-full.px-3.py-1.text-xs.font-semibold.mb-2{class: status_color}= doc.status.titleize
+                - if doc.images.attached?
+                  %button.bg-gray-200.text-gray-800.px-4.py-2.rounded-lg.hover:bg-gray-300.transition.font-semibold.text-xs{type: "button", onclick: "openPreviewModal('#{doc.doc_name.parameterize}')"} Preview
                 - else
-                  %span.inline-block.rounded-full.px-3.py-1.text-xs.font-semibold.text-red-600.mb-2 Not Uploaded
-                - if uploaded_doc && uploaded_doc.images.attached?
-                  %button.bg-gray-200.text-gray-800.px-4.py-2.rounded-lg.hover:bg-gray-300.transition.font-semibold.text-xs{type: "button", onclick: "openPreviewModal('#{doc[:field]}')"} Preview
-                - else
-                  %button.bg-blue-600.text-white.px-4.py-2.rounded-lg.hover:bg-blue-700.transition.font-semibold.text-xs{type: "button", onclick: "openUploadModal('#{doc[:field]}', '#{doc[:name]}')"} Upload
-
-          .flex.gap-6.overflow-x-auto.pb-2.hidden#foreign-docs-set
-            - foreign_docs.each do |doc|
-              - uploaded_doc = (user_docs[doc[:type]] || []).first
-              .bg-gray-50.rounded-xl.shadow-sm.p-6.flex.flex-col.items-center.border.border-gray-200.w-full.min-h-260px
-                %i.fas.fa-file-alt.text-2xl.mb-2.text-gray-400
-                %span.font-semibold.text-gray-800.mb-1= doc[:name]
-                - if uploaded_doc
-                  - status_color = uploaded_doc.status == 'not uploaded' ? 'text-red-600' : uploaded_doc.status == 'approved' ? 'text-green-700' : 'text-yellow-700'
-                  %span.inline-block.rounded-full.px-3.py-1.text-xs.font-semibold.mb-2{class: status_color}= uploaded_doc.status.titleize
-                - else
-                  %span.inline-block.rounded-full.px-3.py-1.text-xs.font-semibold.text-red-600.mb-2 Not Uploaded
-                - if uploaded_doc && uploaded_doc.images.attached?
-                  %button.bg-gray-200.text-gray-800.px-4.py-2.rounded-lg.hover:bg-gray-300.transition.font-semibold.text-xs{type: "button", onclick: "openPreviewModal('#{doc[:field]}')"} Preview
-                - else
-                  %button.bg-blue-600.text-white.px-4.py-2.rounded-lg.hover:bg-blue-700.transition.font-semibold.text-xs{type: "button", onclick: "openUploadModal('#{doc[:field]}', '#{doc[:name]}')"} Upload
+                  %button.bg-blue-600.text-white.px-4.py-2.rounded-lg.hover:bg-blue-700.transition.font-semibold.text-xs{type: "button", onclick: "openUploadModal('#{doc.doc_name.parameterize}', '#{doc.doc_name}')"} Upload
 
       #tab-content-profile.hidden.tab-content.bg-white.rounded-b-2xl.shadow-lg.p-8.mt-0
         %h2.text-xl.font-semibold.text-gray-600.mb-4 Profile
@@ -142,36 +100,33 @@
           = link_to 'Edit Profile', edit_user_registration_path, class: 'inline-block bg-blue-600 text-white font-bold px-6 py-2 rounded-lg shadow hover:bg-blue-700 transition'
 
   / Upload Modals
-  - (uae_docs + foreign_docs).uniq { |d| d[:field] }.each do |doc|
-    %div{ id: "modal-#{doc[:field]}", class: "fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40 hidden" }
+  - current_user.documents.each do |doc|
+    %div{ id: "modal-#{doc.doc_name.parameterize}", class: "fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40 hidden" }
       .bg-white.rounded-2xl.shadow-2xl.p-12.max-w-2xl.w-full.mx-4.min-h-400
         %h3.text-xl.font-bold.text-blue-700.mb-4
-          = "Upload #{doc[:name]}"
+          = "Upload #{doc.doc_name}"
         = form_with url: documents_path, method: :post, local: true, html: {multipart: true, class: 'space-y-4'} do |f|
-          = f.file_field doc[:field], class: 'block w-full text-sm text-gray-700 border border-gray-300 rounded-lg p-3 bg-blue-50 focus:ring-2 focus:ring-blue-400 focus:border-blue-400 transition', required: true
+          = f.file_field :images, multiple: true, class: 'block w-full text-sm text-gray-700 border border-gray-300 rounded-lg p-3 bg-blue-50 focus:ring-2 focus:ring-blue-400 focus:border-blue-400 transition', required: true
+          = f.hidden_field :id, value: doc.id
           .flex.gap-3
             = f.submit 'Upload', class: 'flex-1 bg-blue-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-blue-700 transition'
-            %button.flex-1.bg-gray-300.text-gray-700.px-4.py-2.rounded-lg.font-semibold.hover:bg-gray-400.transition{type: "button", onclick: "closeUploadModal('#{doc[:field]}')"} Cancel
+            %button.flex-1.bg-gray-300.text-gray-700.px-4.py-2.rounded-lg.font-semibold.hover:bg-gray-400.transition{type: "button", onclick: "closeUploadModal('#{doc.doc_name.parameterize}')"} Cancel
 
   / Preview Modals
-  - (uae_docs + foreign_docs).uniq { |d| d[:field] }.each do |doc|
-    - uploaded_doc = (user_docs[doc[:type]] || []).first
-    - if uploaded_doc && uploaded_doc.images.attached?
-      %div{ id: "preview-modal-#{doc[:field]}", class: "fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40 hidden" }
-        .bg-white.rounded-lg.shadow-lg.p-8.max-w-md.w-full.mx-4
-          %h3.text-xl.font-bold.text-blue-700.mb-4= "#{doc[:name]} Preview"
-          .mb-4.flex.flex-wrap.gap-4
-            - uploaded_doc.images.each do |img|
-              %img.w-32.h-24.object-cover.rounded.shadow{ src: url_for(img), alt: doc[:name] }
-          %div.text-sm.text-gray-600.mb-2
-            | Status:
-            %span.font-semibold= uploaded_doc.status
-          - if uploaded_doc.reason.present?
-            %div.text-sm.text-red-600.mb-2
-              | Reason:
-              %span.font-semibold= uploaded_doc.reason
-          .flex.gap-3.mt-4
-            %button.flex-1.bg-gray-300.text-gray-700.px-4.py-2.rounded-lg.font-semibold.hover:bg-gray-400.transition{type: "button", onclick: "closePreviewModal('#{doc[:field]}')"} Close
+  - current_user.documents.each do |doc|
+    - if doc.images.attached?
+      %div{ id: "preview-modal-#{doc.doc_name.parameterize}", class: "fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40 hidden", onclick: "closePreviewModalOnOutside(event, '#{doc.doc_name.parameterize}')" }
+        .bg-white.rounded-2xl.shadow-2xl.overflow-hidden.max-w-4xl.w-full.h-80.mx-4.relative.flex.flex-col.items-center.justify-center{onclick: "event.stopPropagation();"}
+          -# Modal Title (optional)
+          -# %h3.text-2xl.font-bold.text-blue-700.mb-6= "#{doc.doc_name} Preview"
+          .flex-1.flex.items-center.justify-center.w-full.h-full
+            - doc.images.each do |img|
+              %img.w-full.h-full.object-contain{ src: url_for(img), alt: doc.doc_name, style: "max-height: 80vh; max-width: 100%;" }
+          - if doc.reason.present?
+            .absolute.bottom-0.left-0.right-0.bg-red-600.bg-opacity-80.text-white.text-center.p-4.text-lg.font-semibold.rounded-b-2xl
+              | Reason: 
+              %span.font-semibold= doc.reason
+
 :javascript
   function showTab(tab) {
     document.querySelectorAll('.tab-btn').forEach(btn => {
@@ -255,6 +210,12 @@
   }
   function closePreviewModal(field) {
     document.getElementById('preview-modal-' + field).classList.add('hidden');
+  }
+
+  function closePreviewModalOnOutside(event, field) {
+    if (event.target.classList.contains('bg-black') || event.target.classList.contains('bg-opacity-40')) {
+      closePreviewModal(field);
+    }
   }
 
   document.addEventListener('DOMContentLoaded', function() {

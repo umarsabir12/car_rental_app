@@ -30,11 +30,11 @@ class Users::RegistrationsController <  Devise::RegistrationsController
   def configure_permitted_parameters
     devise_parameter_sanitizer.permit(:sign_up, keys: [
       :first_name, :last_name, :phone, :home_address, :terms_accepted,
-      :card_number, :card_expiry, :card_cvc
+      :card_number, :card_expiry, :card_cvc, :nationality
     ])
     devise_parameter_sanitizer.permit(:account_update, keys: [
       :first_name, :last_name, :phone, :home_address, :terms_accepted,
-      :card_number, :card_expiry, :card_cvc
+      :card_number, :card_expiry, :card_cvc, :nationality
     ])
   end
 end

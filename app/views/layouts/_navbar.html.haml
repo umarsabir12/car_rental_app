@@ -3,7 +3,7 @@
     .flex.justify-between.items-center.h-16
       .flex.items-center
         = link_to root_path, class: 'flex items-center' do
-          %i.h-8.w-8.text-blue-600.mr-2.fa.fa-car
+          %i.w-6.text-blue-600.fa.fa-car
           %span.text-xl.font-bold WheelsOnRent
       .hidden.md:flex.space-x-4
         - unless user_signed_in? || vendor_signed_in?
