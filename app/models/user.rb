@@ -34,7 +34,11 @@ class User < ApplicationRecord
 
   def document_alert_message
     docs = documents.to_a
-    if docs.any? { |d| d.status == 'not uploaded' }
+    has_pending_booking = bookings.where(status: 'Pending').exists?
+    return nil unless has_pending_booking
+    if docs.any? { |d| d.status == 'rejected' }
+      'Some of your documents have been rejected. Please review and re-upload them to proceed with your booking.'
+    elsif docs.any? { |d| d.status == 'not uploaded' }
       'Please submit all required documents to proceed with your payment and complete the booking process.'
     elsif docs.any? { |d| d.status == 'pending' }
       'Your documents are in review. Once they are approved, you are good to go with the payment.'

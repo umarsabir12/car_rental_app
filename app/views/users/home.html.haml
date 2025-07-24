@@ -13,12 +13,30 @@
 
     .mx-auto
       .flex.border-b.mb-8.bg-white.rounded-t-2xl.shadow-lg.overflow-hidden
-        %button.tab-btn.py-4.px-8.text-lg.font-semibold.text-blue-700.bg-white.border-b-2.border-blue-600{type: "button", id: "tab-bookings", onclick: "showTab('bookings')"} Bookings
-        %button.tab-btn.py-4.px-8.text-lg.font-semibold.text-gray-500.hover:text-blue-700.bg-white{type: "button", id: "tab-documents", onclick: "showTab('documents')"} Documents
+        %button.tab-btn.py-4.px-8.text-lg.font-semibold.text-blue-700.bg-white.border-b-2.border-blue-600{type: "button", id: "tab-documents", onclick: "showTab('documents')"} Documents
+        %button.tab-btn.py-4.px-8.text-lg.font-semibold.text-gray-500.hover:text-blue-700.bg-white{type: "button", id: "tab-bookings", onclick: "showTab('bookings')"} Bookings
         %button.tab-btn.py-4.px-8.text-lg.font-semibold.text-gray-500.hover:text-blue-700.bg-white{type: "button", id: "tab-profile", onclick: "showTab('profile')"} Profile
         -# %button.tab-btn.py-4.px-8.text-lg.font-semibold.text-gray-500.hover:text-blue-700.bg-white{type: "button", id: "tab-card", onclick: "showTab('card')"} Credit Card
+      
+      #tab-content-documents.tab-content.flex.justify-start.bg-white.rounded-b-2xl.shadow-2xl.p-8.mt-0
+        .w-full
+          %h2.text-xl.font-semibold.text-gray-600.mb-6.flex.items-center.gap-2
+            %i.fas.fa-file-upload.text-blue-400
+            Upload Documents
+          / Document cards row
+          .grid.grid-cols-1.sm:grid-cols-2.md:grid-cols-3.lg:grid-cols-3.xl:grid-cols-3.gap-8.w-full
+            - current_user.documents.each do |doc|
+              .bg-gray-50.rounded-xl.shadow-sm.p-6.flex.flex-col.items-center.border.border-gray-200.w-full.min-h-260
+                %i.fas.fa-file-alt.text-2xl.mb-2.text-gray-400
+                %span.font-semibold.text-gray-800.mb-1= doc.doc_name
+                - status_color = doc.status == 'not uploaded' ? 'text-red-600' : doc.status == 'approved' ? 'text-green-700' : 'text-yellow-700'
+                %span.inline-block.rounded-full.px-3.py-1.text-xs.font-semibold.mb-2{class: status_color}= doc.status.titleize
+                - if doc.images.attached?
+                  %button.bg-gray-200.text-gray-800.px-4.py-2.rounded-lg.hover:bg-gray-300.transition.font-semibold.text-xs{type: "button", onclick: "openPreviewModal('#{doc.doc_name.parameterize}')"} Preview
+                - else
+                  %button.bg-blue-600.text-white.px-4.py-2.rounded-lg.hover:bg-blue-700.transition.font-semibold.text-xs{type: "button", onclick: "openUploadModal('#{doc.doc_name.parameterize}', '#{doc.doc_name}')"} Upload
 
-      #tab-content-bookings.tab-content.bg-white.rounded-b-2xl.shadow-lg.p-8.mt-0
+      #tab-content-bookings.hidden.tab-content.bg-white.rounded-b-2xl.shadow-lg.p-8.mt-0
         - if flash[:alert]
           .mb-8.p-4.bg-red-100.border-l-4.border-red-500.rounded.text-red-700.font-semibold.text-center= flash[:alert]
         %h2.text-xl.font-semibold.text-gray-600.mb-4 Bookings
@@ -51,6 +69,8 @@
                   %div
                     - if booking.payment_processed?
                       %span.inline-block.bg-green-100.text-green-700.px-3.py-1.rounded-full.text-xs.font-semibold Paid
+                    - elsif flash[:alert]
+                      %span.inline-block.bg-yellow-200.text-yellow-700.font-bold.px-4.py-1.rounded-full.text-xs.shadow.cursor-not-allowed(title='Please complete your documents to proceed with payment.') Pay
                     - else
                       = link_to 'Pay', payment_path(booking), 
                           class: 'inline-block bg-yellow-400 text-yellow-900 font-bold px-4 py-1 rounded-full text-xs shadow hover:bg-yellow-500 transition pay-btn',
@@ -58,24 +78,6 @@
               
         - else
           %p.text-gray-500.mt-4 You have no bookings yet.
-
-      #tab-content-documents.hidden.tab-content.flex.justify-start.bg-white.rounded-b-2xl.shadow-2xl.p-8.mt-0
-        .w-full
-          %h2.text-xl.font-semibold.text-gray-600.mb-6.flex.items-center.gap-2
-            %i.fas.fa-file-upload.text-blue-400
-            Upload Documents
-          / Document cards row
-          .grid.grid-cols-1.sm:grid-cols-2.md:grid-cols-3.lg:grid-cols-3.xl:grid-cols-3.gap-8.w-full
-            - current_user.documents.each do |doc|
-              .bg-gray-50.rounded-xl.shadow-sm.p-6.flex.flex-col.items-center.border.border-gray-200.w-full.min-h-260
-                %i.fas.fa-file-alt.text-2xl.mb-2.text-gray-400
-                %span.font-semibold.text-gray-800.mb-1= doc.doc_name
-                - status_color = doc.status == 'not uploaded' ? 'text-red-600' : doc.status == 'approved' ? 'text-green-700' : 'text-yellow-700'
-                %span.inline-block.rounded-full.px-3.py-1.text-xs.font-semibold.mb-2{class: status_color}= doc.status.titleize
-                - if doc.images.attached?
-                  %button.bg-gray-200.text-gray-800.px-4.py-2.rounded-lg.hover:bg-gray-300.transition.font-semibold.text-xs{type: "button", onclick: "openPreviewModal('#{doc.doc_name.parameterize}')"} Preview
-                - else
-                  %button.bg-blue-600.text-white.px-4.py-2.rounded-lg.hover:bg-blue-700.transition.font-semibold.text-xs{type: "button", onclick: "openUploadModal('#{doc.doc_name.parameterize}', '#{doc.doc_name}')"} Upload
 
       #tab-content-profile.hidden.tab-content.bg-white.rounded-b-2xl.shadow-lg.p-8.mt-0
         %h2.text-xl.font-semibold.text-gray-600.mb-4 Profile
@@ -105,12 +107,27 @@
       .bg-white.rounded-2xl.shadow-2xl.p-12.max-w-2xl.w-full.mx-4.min-h-400
         %h3.text-xl.font-bold.text-blue-700.mb-4
           = "Upload #{doc.doc_name}"
-        = form_with url: documents_path, method: :post, local: true, html: {multipart: true, class: 'space-y-4'} do |f|
-          = f.file_field :images, multiple: true, class: 'block w-full text-sm text-gray-700 border border-gray-300 rounded-lg p-3 bg-blue-50 focus:ring-2 focus:ring-blue-400 focus:border-blue-400 transition', required: true
-          = f.hidden_field :id, value: doc.id
-          .flex.gap-3
-            = f.submit 'Upload', class: 'flex-1 bg-blue-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-blue-700 transition'
-            %button.flex-1.bg-gray-300.text-gray-700.px-4.py-2.rounded-lg.font-semibold.hover:bg-gray-400.transition{type: "button", onclick: "closeUploadModal('#{doc.doc_name.parameterize}')"} Cancel
+        - if ['Home country driving license and IDP', 'A Valid UAE driving license', 'Emirates ID front and back'].include?(doc.doc_name)
+          %p.text-sm.text-gray-600.mb-4 You need to upload front and back pictures of your document.
+          = form_with url: documents_path, method: :post, local: true, html: {multipart: true, class: 'space-y-4', onsubmit: 'return validateLicenseUpload(this);'} do |f|
+            .flex-col.md:flex-row.gap-4
+              .flex-1
+                %label.text-sm.font-semibold.text-gray-700.mb-2 Front Side
+                = f.file_field :front_image, class: 'block w-full text-sm text-gray-700 border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-blue-400 focus:border-blue-400 transition', required: true
+              .flex-1
+                %label.text-sm.font-semibold.text-gray-700.mb-2 Back Side
+                = f.file_field :back_image, class: 'block w-full text-sm text-gray-700 border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-blue-400 focus:border-blue-400 transition', required: true
+            = f.hidden_field :id, value: doc.id
+            .flex.gap-3
+              = f.submit 'Upload', class: 'flex-1 bg-blue-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-blue-700 transition'
+              %button.flex-1.bg-gray-300.text-gray-700.px-4.py-2.rounded-lg.font-semibold.hover:bg-gray-400.transition{type: "button", onclick: "closeUploadModal('#{doc.doc_name.parameterize}')"} Cancel
+        - else
+          = form_with url: documents_path, method: :post, local: true, html: {multipart: true, class: 'space-y-4'} do |f|
+            = f.file_field :images, multiple: true, class: 'block w-full text-sm text-gray-700 border border-gray-300 rounded-lg p-3 bg-blue-50 focus:ring-2 focus:ring-blue-400 focus:border-blue-400 transition', required: true
+            = f.hidden_field :id, value: doc.id
+            .flex.gap-3
+              = f.submit 'Upload', class: 'flex-1 bg-blue-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-blue-700 transition'
+              %button.flex-1.bg-gray-300.text-gray-700.px-4.py-2.rounded-lg.font-semibold.hover:bg-gray-400.transition{type: "button", onclick: "closeUploadModal('#{doc.doc_name.parameterize}')"} Cancel
 
   / Preview Modals
   - current_user.documents.each do |doc|
@@ -119,9 +136,19 @@
         .bg-white.rounded-2xl.shadow-2xl.overflow-hidden.max-w-4xl.w-full.h-80.mx-4.relative.flex.flex-col.items-center.justify-center{onclick: "event.stopPropagation();"}
           -# Modal Title (optional)
           -# %h3.text-2xl.font-bold.text-blue-700.mb-6= "#{doc.doc_name} Preview"
-          .flex-1.flex.items-center.justify-center.w-full.h-full
-            - doc.images.each do |img|
-              %img.w-full.h-full.object-contain{ src: url_for(img), alt: doc.doc_name, style: "max-height: 80vh; max-width: 100%;" }
+          - if doc.images.count == 2 && (doc.doc_name == 'Home country driving license and IDP' || doc.doc_name == 'A Valid UAE driving license' || doc.doc_name == 'Emirates ID front and back')
+            .flex.gap-8.items-center.justify-center
+              .flex.flex-col.items-center.mx-4
+                %img.w-full.h-full.max-h-80.object-contain.rounded-2xl.shadow-lg{ src: url_for(doc.images[0]), alt: 'Front Side' }
+                %span.mt-2.text-sm.text-gray-700.font-semibold Front Side
+              .flex.flex-col.items-center.mx-4
+                %img.w-full.h-full.max-h-80.object-contain.rounded-2xl.shadow-lg{ src: url_for(doc.images[1]), alt: 'Back Side' }
+                %span.mt-2.text-sm.text-gray-700.font-semibold Back Side
+          - else
+            .flex-1.flex.items-center.justify-center.w-full.h-full.my-4
+              - doc.images.each do |img|
+                .p-4
+                  %img.w-full.h-full.object-contain.rounded-2xl.shadow-lg{ src: url_for(img), alt: doc.doc_name, style: "max-height: 80vh; max-width: 100%;" }
           - if doc.reason.present?
             .absolute.bottom-0.left-0.right-0.bg-red-600.bg-opacity-80.text-white.text-center.p-4.text-lg.font-semibold.rounded-b-2xl
               | Reason: 
@@ -138,9 +165,9 @@
     document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
     document.getElementById('tab-content-' + tab).classList.remove('hidden');
   }
-  // Show bookings tab by default
+  // Show documents tab by default
   document.addEventListener('DOMContentLoaded', function() {
-    showTab('bookings');
+    showTab('documents');
   });
   document.addEventListener('DOMContentLoaded', function() {
     var select = document.getElementById('has-license-select');
@@ -228,5 +255,15 @@
       });
     });
   });
+
+  function validateLicenseUpload(form) {
+    var front = form.querySelector('input[name="front_image"]');
+    var back = form.querySelector('input[name="back_image"]');
+    if (!front.files.length || !back.files.length) {
+      alert('Both front and back images are required.');
+      return false;
+    }
+    return true;
+  }
 
 

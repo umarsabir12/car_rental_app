@@ -5,19 +5,19 @@
     %meta{ name: "viewport", content: "width=device-width, initial-scale=1.0" }
     %title Admin Dashboard
     %script{ src: "https://cdn.tailwindcss.com" }
+    %link{ rel: "stylesheet", href: "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" }
   %body.bg-gray-50.min-h-screen
     .flex.min-h-screen
       / Sidebar
       .w-64.bg-gradient-to-b.from-blue-800.to-purple-600.text-white.flex.flex-col.py-8.px-4
         .flex.items-center.mb-10
-          %span.text-2xl.font-extrabold.tracking-wide.ml-2 Wheels on Rent
+          %span.text-2xl.font-extrabold.tracking-wide.ml-2 WheelsOnRent
         %nav.flex-1.space-y-2
-          - nav_links = [{name: 'Dashboard', path: admin_dashboard_index_path, icon: 'M3 12l2-2m0 0l7-7 7 7M13 5v6h6'},{name: 'Vehicles', path: '/admin/cars', icon: 'M4 17v-5a2 2 0 012-2h8a2 2 0 012 2v5'},{name: 'Vendors', path: admin_vendors_path, icon: 'M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14c-4.418 0-8 2.239-8 5v1h16v-1c0-2.761-3.582-5-8-5z'},{name: 'Customers', path: '/admin/customers', icon: 'M5.121 17.804A13.937 13.937 0 0112 15c2.5 0 4.847.655 6.879 1.804M15 11a3 3 0 11-6 0 3 3 0 016 0z'},{name: 'Bookings', path: '/admin/bookings', icon: 'M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z'},{name: 'Analytics', path: admin_analytics_path, icon: 'M11 17a2.5 2.5 0 005 0V7a2.5 2.5 0 00-5 0v10zM5 17a2.5 2.5 0 005 0V7a2.5 2.5 0 00-5 0v10z'},{name: 'Settings', path: '#', icon: 'M12 8c-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4-1.79-4-4-4zm0 0V4m0 16v-4'}]
+          - nav_links = [{name: 'Dashboard', path: admin_dashboard_index_path, icon: 'fas fa-tachometer-alt'},{name: 'Vehicles', path: '/admin/cars', icon: 'fas fa-car'},{name: 'Vendors', path: admin_vendors_path, icon: 'fas fa-store'},{name: 'Customers', path: '/admin/customers', icon: 'fas fa-users'},{name: 'Bookings', path: '/admin/bookings', icon: 'fas fa-calendar-check'},{name: 'Analytics', path: admin_analytics_path, icon: 'fas fa-chart-bar'},{name: 'Settings', path: '#', icon: 'fas fa-cog'}]
           - nav_links.each do |link|
             - active = request.path == link[:path]
             %a.flex.items-center.gap-3.py-2.5.px-4.rounded-lg.font-medium.transition{ href: link[:path], class: (active ? 'bg-white/20 text-white shadow' : 'hover:bg-white/10 hover:text-white') }
-              %svg.w-5.h-5{ fill: "none", stroke: "currentColor", stroke_width: "2", viewBox: "0 0 24 24" }
-                %path{ stroke_linecap: "round", stroke_linejoin: "round", d: link[:icon] }
+              %i{class: link[:icon]}
               = link[:name]
       / Main content
       .flex-1.flex.flex-col

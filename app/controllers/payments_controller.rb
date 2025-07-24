@@ -8,7 +8,7 @@ class PaymentsController < ApplicationController
 
   def create
     @booking = current_user.bookings.find(params[:booking_id])
-    @booking.update(payment_processed: true)
+    @booking.update(payment_processed: true, status: 'confirmed')
     redirect_to user_home_path, notice: 'Payment successful! Your booking is now confirmed.'
   end
 end 

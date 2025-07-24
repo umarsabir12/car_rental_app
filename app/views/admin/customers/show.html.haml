@@ -40,5 +40,29 @@
                     %span.inline-block.bg-red-100.text-red-700.rounded-full.px-3.py-1.text-xs.font-semibold Unpaid
                 %td.px-6.py-4.rounded-r-lg
                   = link_to 'View Car', admin_car_path(booking.car), class: 'inline-block bg-blue-100 text-blue-800 font-semibold px-4 py-1 rounded-lg hover:bg-blue-200 transition'
+  .mt-10
+    %h2.text-2xl.font-bold.text-blue-900.mb-4 Documents
+    - if @user.documents.any?
+      .overflow-x-auto
+        %table.min-w-full.border-separate{ style: "border-spacing: 0 0.75rem;" }
+          %thead
+            %tr
+              %th.px-6.py-3.text-left.text-xs.font-bold.text-blue-700.uppercase.bg-blue-50.rounded-l-lg Name
+              %th.px-6.py-3.text-left.text-xs.font-bold.text-blue-700.uppercase.bg-blue-50 Uploaded At
+              %th.px-6.py-3.text-left.text-xs.font-bold.text-blue-700.uppercase.bg-blue-50 Status
+              %th.px-6.py-3.text-left.text-xs.font-bold.text-blue-700.uppercase.bg-blue-50.rounded-r-lg View
+          %tbody
+            - @user.documents.each do |doc|
+              %tr.bg-blue-50.rounded-lg.shadow.hover:bg-blue-100.transition
+                %td.px-6.py-4.font-medium.text-gray-900.rounded-l-lg= doc.doc_name
+                %td.px-6.py-4.text-gray-700= doc.updated_at.strftime('%b %d, %Y')
+                %td.px-6.py-4.text-gray-700
+                  - status_color = doc.status == 'approved' ? 'bg-green-100 text-green-700' : doc.status == 'pending' ? 'bg-yellow-100 text-yellow-700' : 'bg-red-100 text-red-700'
+                  %span.inline-block.rounded-full.px-4.py-1.text-xs.font-semibold{class: status_color}= doc.status.titleize
+                %td.px-6.py-4.rounded-r-lg
+                  - if doc.images.attached?
+                    = link_to 'View', admin_document_path(doc), class: 'inline-block bg-blue-100 text-blue-800 font-semibold px-4 py-1 rounded-lg hover:bg-blue-200 transition', target: '_blank'
+                  - else
+                    %span.text-gray-400 Not Uploaded
     - else
-      %p.text-gray-500 No bookings found for this user. 
+      %p.text-gray-500 No documents found for this user. 

@@ -20,7 +20,7 @@ class Users::RegistrationsController <  Devise::RegistrationsController
           payment_processed: false
         )
         sign_in(user) unless user_signed_in?
-        redirect_to payment_path(booking) and return
+        redirect_to user_home_path and return
       end
     end
   end

@@ -1,39 +1,35 @@
 %nav.bg-white.shadow-sm.border-b
   .max-w-7xl.mx-auto.px-4.sm:px-6.lg:px-8
     .flex.justify-between.items-center.h-16
+      / Logo left
       .flex.items-center
         = link_to root_path, class: 'flex items-center' do
           %i.w-6.text-blue-600.fa.fa-car
-          %span.text-xl.font-bold WheelsOnRent
-      .hidden.md:flex.space-x-4
-        - unless user_signed_in? || vendor_signed_in?
-          = link_to 'Browse Cars', cars_path, class: 'text-gray-600 hover:text-blue-700 font-medium'
-          = link_to 'Become a Vendor', '#', class: 'text-gray-600 hover:text-blue-700 font-medium'
-          = link_to 'Admin', '/admin/dashboard', class: 'text-gray-600 hover:text-blue-700 font-medium'
-      .flex.space-x-2
-        .flex.space-x-2
+          %span.text-xl.font-bold.ml-2 WheelsOnRent
+      / Nav links and auth right
+      .flex.items-center.space-x-6
+        .hidden.md:flex.space-x-4
+          - unless user_signed_in? || vendor_signed_in?
+            = link_to 'Browse Cars', cars_path, class: 'text-gray-600 hover:text-blue-700 font-medium'
+            = link_to 'Car with Driver', '#', class: 'text-gray-600 hover:text-blue-700 font-medium'
+            -# = link_to 'Admin', '/admin/dashboard', class: 'text-gray-600 hover:text-blue-700 font-medium'
         - if user_signed_in?
-          / User dropdown menu
+          / User dropdown menu (as before)
           .relative.hidden.md:block
-            %button#user-menu-button.flex.items-center.space-x-3.px-4.py-2.rounded-xl.border-gray-200.bg-white.hover:bg-gray-50.hover:border-gray-300.transition-all.duration-200.shadow-sm{type: "button", onclick: "toggleUserMenu()"}
+            %button#user-menu-button.flex.items-center.space-x-3.px-4.py-2.rounded-xl.hover:bg-gray-50.hover:border-gray-300.transition-all.duration-200{type: "button", onclick: "toggleUserMenu()"}
               .w-9.h-9.bg-gradient-to-br.from-blue-500.to-blue-600.rounded-full.flex.items-center.justify-center.shadow-sm
                 %span.text-white.font-bold.text-sm= current_user.first_name&.first&.upcase || current_user.email.first.upcase
               .flex.flex-col.items-start
                 %span.text-sm.font-semibold.text-gray-900= current_user.first_name&.presence || current_user.email.split('@').first
-                -# %span.text-xs.text-gray-500 User
               %svg.w-4.h-4.text-gray-400.ml-2{fill: "none", stroke: "currentColor", viewBox: "0 0 24 24", "stroke-width" => "2"}
                 %path{"stroke-linecap" => "round", "stroke-linejoin" => "round", d: "M19 9l-7 7-7-7"}
-            / Dropdown menu
-            #user-dropdown.absolute.right-0.mt-3.w-56.bg-white.rounded-xl.shadow-xl.border.border-gray-100.hidden.z-50.overflow-hidden
-              / Header
+            #user-dropdown.absolute.right-0.mt-1.w-56.bg-white.rounded-xl.shadow-xl.border.border-gray-100.hidden.z-50.overflow-hidden
               .bg-gradient-to-r.from-blue-50.to-indigo-50.px-4.py-3.border-b.border-gray-100
                 .flex.items-center.space-x-3
-                  -# .w-10.h-10.bg-gradient-to-br.from-blue-500.to-blue-600.rounded-full.flex.items-center.justify-center
-                    %span.text-white.font-bold.text-sm= current_user.first_name&.first&.upcase || current_user.email.first.upcase
+                  %span.text-white.font-bold.text-sm= current_user.first_name&.first&.upcase || current_user.email.first.upcase
                   .flex-1
                     %p.text-sm.font-semibold.text-gray-900= current_user.first_name&.presence || current_user.email.split('@').first
                     %p.text-xs.text-gray-500= current_user.email
-              / Menu items
               .py-2
                 = link_to cars_path, class: "flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-700 transition-all duration-150" do
                   %i.fas.fa-car.mr-3.text-blue-500.w-4
@@ -45,10 +41,21 @@
                 = link_to destroy_user_session_path, method: :delete, data: { turbo_method: :delete }, class: "flex items-center px-4 py-3 text-sm text-red-600 hover:bg-red-50 hover:text-red-700 transition-all duration-150" do
                   %i.fas.fa-sign-out-alt.mr-3.text-red-500.w-4
                   Sign Out
-
-        -# - else
-          = link_to 'Sign In', new_user_session_path, class: 'bg-white border border-blue-700 text-blue-700 font-semibold px-4 py-2 rounded-lg hover:bg-blue-50 transition hidden md:inline-block'
-          = link_to 'Sign Up', new_user_registration_path, class: 'bg-blue-700 text-white font-semibold px-4 py-2 rounded-lg hover:bg-blue-800 transition hidden md:inline-block'
+        - else
+          / Sign In dropdown for unauthenticated users
+          .relative.hidden.md:block
+            %button#signin-menu-button.flex.items-center.space-x-2.px-4.py-2.rounded-xl.bg-blue-700.text-white.font-semibold.hover:bg-blue-800.transition{type: "button", onclick: "toggleSigninMenu()"}
+              %span Sign In
+              %svg.w-4.h-4.text-white.ml-1{fill: "none", stroke: "currentColor", viewBox: "0 0 24 24", "stroke-width" => "2"}
+                %path{"stroke-linecap" => "round", "stroke-linejoin" => "round", d: "M19 9l-7 7-7-7"}
+            #signin-dropdown.absolute.right-0.mt-1.w-56.bg-white.rounded-xl.shadow-xl.border.border-gray-100.hidden.z-50.overflow-hidden
+              .py-2
+                = link_to new_user_session_path, class: "flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-700 transition-all duration-150" do
+                  %i.fas.fa-user.mr-3.text-blue-500.w-4
+                  Sign in as Customer
+                = link_to new_vendor_session_path, class: "flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-700 transition-all duration-150" do
+                  %i.fas.fa-store.mr-3.text-blue-500.w-4
+                  Sign in as Vendor
       / Mobile menu button (optional, not functional here)
       %button.md:hidden.flex.items-center.px-3.py-2.border.rounded.text-blue-700.border-blue-700
         %svg.h-6.w-6{ fill: 'none', stroke: 'currentColor', viewBox: '0 0 24 24', 'stroke-width' => '2' }
@@ -59,13 +66,20 @@
     const dropdown = document.getElementById('user-dropdown');
     dropdown.classList.toggle('hidden');
   }
-
-  // Close dropdown when clicking outside
+  function toggleSigninMenu() {
+    const dropdown = document.getElementById('signin-dropdown');
+    dropdown.classList.toggle('hidden');
+  }
+  // Close dropdowns when clicking outside
   document.addEventListener('click', function(event) {
-    const dropdown = document.getElementById('user-dropdown');
-    const button = document.getElementById('user-menu-button');
-    
-    if (!button.contains(event.target) && !dropdown.contains(event.target)) {
-      dropdown.classList.add('hidden');
+    const userDropdown = document.getElementById('user-dropdown');
+    const userButton = document.getElementById('user-menu-button');
+    const signinDropdown = document.getElementById('signin-dropdown');
+    const signinButton = document.getElementById('signin-menu-button');
+    if (userDropdown && userButton && !userButton.contains(event.target) && !userDropdown.contains(event.target)) {
+      userDropdown.classList.add('hidden');
+    }
+    if (signinDropdown && signinButton && !signinButton.contains(event.target) && !signinDropdown.contains(event.target)) {
+      signinDropdown.classList.add('hidden');
     }
   }); 

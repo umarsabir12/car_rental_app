@@ -1,4 +1,4 @@
-.container.mx-auto.max-w-md.p-6
+.container.mx-auto.w-50.p-6
   .bg-white.rounded-xl.shadow-lg.overflow-hidden.p-8
     .text-center.mb-8
       %i.fas.fa-car.text-4xl.text-indigo-600.mb-4
@@ -13,15 +13,6 @@
       - if params[:end_date].present?
         = hidden_field_tag :end_date, params[:end_date]
 
-      .field.space-y-2
-        = f.label :nationality, 'Are you a Resident or a Tourist?', class: "block text-sm font-medium text-gray-700"
-        .flex.gap-6.items-center
-          %label.flex.items-center.gap-2.cursor-pointer.text-black-50
-            = f.radio_button :nationality, 'resident', required: true, class: "form-radio text-blue-600 h-4 w-4"
-            %span Resident (UAE Resident)
-          %label.flex.items-center.gap-2.cursor-pointer.text-black-50
-            = f.radio_button :nationality, 'tourist', required: true, class: "form-radio text-blue-600 h-4 w-4"
-            %span Tourist (Foreign Tourist)
 
       .field.space-y-2
         = f.label :first_name, class: "block text-sm font-medium text-gray-700"
@@ -37,22 +28,26 @@
           placeholder: "Doe"
 
       .field.space-y-2
+        = f.label :email, class: "block text-sm font-medium text-gray-700"
+        = f.email_field :email,
+          class: "w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition",
+          placeholder: "your@email.com"
+
+      .field.space-y-2
         = f.label :phone, class: "block text-sm font-medium text-gray-700"
         = f.text_field :phone,
           class: "w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition",
           placeholder: "+1 555 123 4567"
 
-      -# .field.space-y-2
-        = f.label :home_address, class: "block text-sm font-medium text-gray-700"
-        = f.text_field :home_address,
-          class: "w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition",
-          placeholder: "123 Main St, City, Country"
-
       .field.space-y-2
-        = f.label :email, class: "block text-sm font-medium text-gray-700"
-        = f.email_field :email,
-          class: "w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition",
-          placeholder: "your@email.com"
+        = f.label :nationality, 'Are you a Resident or a Tourist?', class: "block text-sm font-medium text-gray-700"
+        .flex.gap-6.items-center
+          %label.flex.items-center.gap-2.cursor-pointer.text-black-50.text-black-50
+            = f.radio_button :nationality, 'resident', required: true, class: "form-radio text-blue-600 h-4 w-4"
+            %span Resident (UAE Resident)
+          %label.flex.items-center.gap-2.cursor-pointer.text-black-50
+            = f.radio_button :nationality, 'tourist', required: true, class: "form-radio text-blue-600 h-4 w-4"
+            %span Tourist (Foreign Tourist)
 
       .field.space-y-2
         = f.label :password, class: "block text-sm font-medium text-gray-700"
@@ -143,3 +138,14 @@
       icon.classList.replace('fa-eye-slash', 'fa-eye')
     }
   }
+
+  document.addEventListener('DOMContentLoaded', function() {
+    var modal = document.getElementById('terms-modal');
+    if (modal) {
+      modal.addEventListener('click', function(e) {
+        if (e.target === modal) {
+          modal.classList.add('hidden');
+        }
+      });
+    }
+  });
