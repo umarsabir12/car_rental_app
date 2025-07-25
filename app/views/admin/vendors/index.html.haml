@@ -6,7 +6,7 @@
       = link_to download_report_admin_vendors_path(format: :csv), class: "items-center px-4 bg-blue-50 py-2 font-medium text-blue-600 hover:text-blue-800 hover:bg-blue-50 rounded-md transition-colors duration-200" do
         %i.fas.fa-download.mr-2
         Download Report
-      = link_to new_invite_admin_vendors_path, class: "items-center px-4 bg-green-50 py-2 font-medium text-green-700 hover:text-green-800 hover:bg-green-100 rounded-md transition-colors duration-200 flex gap-2" do
+      = link_to new_admin_invited_vendor_path, class: "items-center px-4 bg-green-50 py-2 font-medium text-green-700 hover:text-green-800 hover:bg-green-100 rounded-md transition-colors duration-200 flex gap-2" do
         %i.fas.fa-user-plus.mr-2
         Invite Vendor
   - if @vendors.any?

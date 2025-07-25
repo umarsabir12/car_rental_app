@@ -17,10 +17,9 @@ Rails.application.routes.draw do
     resources :vendors do
       collection do
         get :download_report
-        get :new_invite
-        post :create_invite
       end
     end
+    resources :invited_vendors, only: [:index, :new, :create]
     resources :bookings do
       collection do
         get :download_report

@@ -1,0 +1,2 @@
+class InvitedVendor < ApplicationRecord
+end
