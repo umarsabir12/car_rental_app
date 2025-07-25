@@ -6,5 +6,9 @@ class Vendor < ApplicationRecord
 
   has_many :cars, dependent: :destroy
 
-  validates :name, :email, :company_name, presence: true
+  validates :email, :company_name, presence: true
+
+  def name
+    "#{first_name} #{last_name}"
+  end
 end

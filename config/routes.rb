@@ -1,4 +1,7 @@
 Rails.application.routes.draw do
+  if Rails.env.development?
+    mount LetterOpenerWeb::Engine, at: "/letter_opener"
+  end
   devise_for :vendors, controllers: { sessions: 'vendors/sessions', registrations: 'vendors/registrations' }
   devise_for :users, controllers: {sessions: 'users/sessions',registrations: 'users/registrations'}
   devise_for :admins, controllers: { sessions: 'admins/sessions' }
@@ -6,10 +9,28 @@ Rails.application.routes.draw do
   namespace :admin do
     resources :dashboard, only: [:index]
     resources :analytics, only: [:index]
-    resources :customers, only: [:index, :show]
-    resources :vendors, only: [:index, :show]
-    resources :bookings, only: [:index, :show]
-    resources :cars, only: [:index, :show]
+    resources :customers do
+      collection do
+        get :download_report
+      end
+    end
+    resources :vendors do
+      collection do
+        get :download_report
+        get :new_invite
+        post :create_invite
+      end
+    end
+    resources :bookings do
+      collection do
+        get :download_report
+      end
+    end
+    resources :cars do
+      collection do
+        get :download_report
+      end
+    end
     resources :documents, only: [:show] do
       member do
         patch :approve

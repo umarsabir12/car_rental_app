@@ -3,6 +3,11 @@
   .bg-white.shadow-lg.rounded-xl.overflow-hidden.p-8.flex.flex-col.md:flex-row.gap-8
     -# %img.w-32.h-32.rounded-full.object-cover.shadow.mb-4.md:mb-0{ src: image_path('placeholder-avatar.png'), alt: @user.full_name.presence || @user.email }
     .flex-1
+      .flex.justify-between.items-center.mb-6
+        %h1.text-3xl.font-extrabold.text-blue-900.mb-2 Customer Details
+        = button_tag type: 'button', class: 'items-center px-4 bg-blue-50 py-2 font-medium text-blue-600 hover:text-blue-800 hover:bg-blue-50 rounded-md transition-colors duration-200 flex gap-2', disabled: true do
+          %i.fas.fa-envelope.mr-2
+          Send Email
       %h1.text-3xl.font-bold.text-gray-800.mb-2= @user.full_name.presence || @user.email
       %div.text-lg.text-gray-600.mb-2= @user.email
       %div.text-gray-500.mb-2= @user.phone

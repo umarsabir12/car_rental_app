@@ -514,7 +514,8 @@ puts "Created #{Booking.count} bookings"
 # === VENDORS ===
 puts "Creating vendors..."
 vendor1 = Vendor.create!(
-  name: "Speedy Rentals",
+  first_name: "Speedy",
+  last_name: "Rentals",
   email: "speedy@rentals.com",
   password: "password123",
   phone: "+1-555-123-4567",
@@ -525,7 +526,8 @@ vendor1 = Vendor.create!(
   description: "Fast and reliable car rentals for all your needs."
 )
 vendor2 = Vendor.create!(
-  name: "City Cars",
+  first_name: "City",
+  last_name: "Cars",
   email: "info@citycars.com",
   password: "password123",
   phone: "+1-555-987-6543",
@@ -536,7 +538,8 @@ vendor2 = Vendor.create!(
   description: "Your trusted partner for city driving."
 )
 vendor3 = Vendor.create!(
-  name: "Luxury Wheels",
+  first_name: "Luxury",
+  last_name: "Wheels",
   email: "contact@luxurywheels.com",
   password: "password123",
   phone: "+1-555-222-3333",
@@ -547,7 +550,8 @@ vendor3 = Vendor.create!(
   description: "Premium and luxury vehicles for special occasions."
 )
 vendor4 = Vendor.create!(
-  name: "Eco Drive",
+  first_name: "Eco",
+  last_name: "Drive",
   email: "hello@ecodrive.com",
   password: "password123",
   phone: "+1-555-444-5555",

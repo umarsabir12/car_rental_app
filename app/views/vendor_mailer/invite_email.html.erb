@@ -1,0 +1,11 @@
+<h1>Welcome to WheelsOnRent!</h1>
+<p>Hello <strong><%= @vendor.first_name %> <%= @vendor.last_name %></strong>,</p>
+<p>You have been invited to join WheelsOnRent as a vendor. Here are your login credentials:</p>
+<ul>
+  <li><strong>Email:</strong> <%= @vendor.email %></li>
+  <li><strong>Password:</strong> <%= @password %></li>
+</ul>
+<p>You can log in using the following link:</p>
+<p><a href="<%= @login_url %>"><%= @login_url %></a></p>
+<p>After logging in, we recommend changing your password for security.</p>
+<p>Best regards,<br>WheelsOnRent Team</p> 

@@ -1,6 +1,10 @@
 %div.max-w-7xl.mx-auto.mt-10
   %div.bg-white.rounded-xl.shadow.p-8
-    %h1.text-2xl.font-bold.text-blue-900.mb-6 Cars
+    %div.flex.justify-between.items-center.mb-6
+      %h1.text-3xl.font-extrabold.text-blue-900.mb-2 Cars
+      = link_to download_report_admin_cars_path(format: :csv), class: "items-center px-4 bg-blue-50 py-2 font-medium text-blue-600 hover:text-blue-800 hover:bg-blue-50 rounded-md transition-colors duration-200" do
+        %i.fas.fa-download.mr-2
+        Download Report
     .flex.gap-8
       / Table section (left)
       .flex-1

@@ -12,4 +12,16 @@ class Admin::CustomersController < ApplicationController
   def show
     @user = User.find(params[:id])
   end
+
+  def download_report
+    require 'csv'
+    @users = User.all
+    csv_data = CSV.generate(headers: true) do |csv|
+      csv << ["ID", "Name", "Email", "Phone", "Created At"]
+      @users.each do |user|
+        csv << [user.id, "#{user.first_name} #{user.last_name}", user.email, user.phone, user.created_at]
+      end
+    end
+    send_data csv_data, filename: "customers_report_ #{Date.today}.csv"
+  end
 end 
