@@ -1,0 +1,171 @@
+.container.mx-auto.max-w-6xl.p-6
+  = render partial: "vendors/navbar"
+  
+  / Header Section
+  .bg-white.rounded-2xl.shadow-xl.p-8.mb-8
+    .flex.flex-col.md:flex-row.md:items-center.md:justify-between.gap-4
+      .flex-1
+        %h1.text-4xl.font-extrabold.text-blue-900.mb-2 Booking ##{@booking.id}
+        .flex.items-center.gap-4.mb-4
+          - status_classes = {'Pending' => 'bg-yellow-100 text-yellow-700', 'Confirmed' => 'bg-green-100 text-green-700', 'Cancelled' => 'bg-red-100 text-red-700'}
+          %span.inline-block.rounded-full.text-sm.font-semibold.px-4.py-2{class: status_classes[@booking.status] || 'bg-gray-100 text-gray-700'}= @booking.status
+          - if @booking.payment_processed?
+            %span.inline-block.bg-green-100.text-green-700.px-4.py-2.rounded-full.text-sm.font-semibold Paid
+          - else
+            %span.inline-block.bg-yellow-100.text-yellow-700.px-4.py-2.rounded-full.text-sm.font-semibold Payment Pending
+        %p.text-lg.text-gray-600= "Created on #{@booking.created_at.strftime('%B %d, %Y at %I:%M %p')}"
+      .flex.gap-3
+        = link_to vendors_bookings_path, class: 'bg-gray-600 hover:bg-gray-700 text-white font-semibold px-6 py-3 rounded-lg transition flex items-center gap-2' do
+          %i.fas.fa-arrow-left
+          Back to Bookings
+        - if @booking.status == 'Pending'
+          = link_to vendors_booking_path(@booking), method: :patch, data: { confirm: 'Are you sure you want to confirm this booking?' }, class: 'bg-green-600 hover:bg-green-700 text-white font-semibold px-6 py-3 rounded-lg transition flex items-center gap-2' do
+            %i.fas.fa-check
+            Confirm Booking
+
+  / Main Content Grid
+  .grid.grid-cols-1.lg:grid-cols-3.gap-8
+    / Left Column - Booking Details
+    .lg:col-span-2.space-y-6
+      / Customer Information Card
+      .bg-white.rounded-xl.shadow-lg.p-6
+        %h2.text-xl.font-bold.text-blue-900.mb-4.flex.items-center.gap-2
+          %i.fas.fa-user.text-blue-500
+          Customer Information
+        .grid.grid-cols-1.md:grid-cols-2.gap-4
+          .flex.justify-between.py-2.border-b.border-gray-100
+            %span.font-medium.text-gray-600 Name
+            %span.text-gray-900= @booking.user&.full_name || 'N/A'
+          .flex.justify-between.py-2.border-b.border-gray-100
+            %span.font-medium.text-gray-600 Email
+            %span.text-gray-900= @booking.user&.email || 'N/A'
+          .flex.justify-between.py-2.border-b.border-gray-100
+            %span.font-medium.text-gray-600 Phone
+            %span.text-gray-900= @booking.user&.phone || 'N/A'
+          .flex.justify-between.py-2.border-b.border-gray-100
+            %span.font-medium.text-gray-600 Address
+            %span.text-gray-900= @booking.user&.home_address || 'N/A'
+          .flex.justify-between.py-2.border-b.border-gray-100
+            %span.font-medium.text-gray-600 Nationality
+            %span.text-gray-900= @booking.user&.nationality&.titleize || 'N/A'
+          .flex.justify-between.py-2.border-b.border-gray-100
+            %span.font-medium.text-gray-600 Member Since
+            %span.text-gray-900= @booking.user&.created_at&.strftime('%B %d, %Y') || 'N/A'
+
+      / Car Information Card
+      .bg-white.rounded-xl.shadow-lg.p-6
+        %h2.text-xl.font-bold.text-blue-900.mb-4.flex.items-center.gap-2
+          %i.fas.fa-car.text-blue-500
+          Car Information
+        .grid.grid-cols-1.md:grid-cols-2.gap-4
+          .flex.justify-between.py-2.border-b.border-gray-100
+            %span.font-medium.text-gray-600 Car
+            %span.text-gray-900= "#{@booking.car.brand} #{@booking.car.model}"
+          .flex.justify-between.py-2.border-b.border-gray-100
+            %span.font-medium.text-gray-600 Year
+            %span.text-gray-900= @booking.car.year
+          .flex.justify-between.py-2.border-b.border-gray-100
+            %span.font-medium.text-gray-600 Color
+            %span.text-gray-900= @booking.car.color
+          .flex.justify-between.py-2.border-b.border-gray-100
+            %span.font-medium.text-gray-600 Category
+            %span.text-gray-900= @booking.car.category.presence || 'N/A'
+          .flex.justify-between.py-2.border-b.border-gray-100
+            %span.font-medium.text-gray-600 Daily Rate
+            %span.text-gray-900= @booking.car.price ? number_to_currency(@booking.car.price) : 'N/A'
+          .flex.justify-between.py-2.border-b.border-gray-100
+            %span.font-medium.text-gray-600 Car Status
+            - car_status_classes = {'available' => 'bg-green-100 text-green-700', 'rented' => 'bg-red-100 text-red-700', 'maintenance' => 'bg-yellow-100 text-yellow-700'}
+            %span.inline-block.rounded-full.text-xs.font-semibold.px-3.py-1{class: car_status_classes[@booking.car.status] || 'bg-gray-100 text-gray-700'}= @booking.car.status.titleize
+
+      / Booking Details Card
+      .bg-white.rounded-xl.shadow-lg.p-6
+        %h2.text-xl.font-bold.text-blue-900.mb-4.flex.items-center.gap-2
+          %i.fas.fa-calendar-alt.text-blue-500
+          Booking Details
+        .grid.grid-cols-1.md:grid-cols-2.gap-4
+          .flex.justify-between.py-2.border-b.border-gray-100
+            %span.font-medium.text-gray-600 Start Date
+            %span.text-gray-900= @booking.start_date.strftime('%B %d, %Y')
+          .flex.justify-between.py-2.border-b.border-gray-100
+            %span.font-medium.text-gray-600 End Date
+            %span.text-gray-900= @booking.end_date.strftime('%B %d, %Y')
+          .flex.justify-between.py-2.border-b.border-gray-100
+            %span.font-medium.text-gray-600 Duration
+            %span.text-gray-900= "#{(@booking.end_date - @booking.start_date).to_i} days"
+          .flex.justify-between.py-2.border-b.border-gray-100
+            %span.font-medium.text-gray-600 Total Amount
+            - if @booking.car.price
+              - total_days = (@booking.end_date - @booking.start_date).to_i
+              - total_amount = @booking.car.price * total_days
+              %span.font-semibold.text-lg.text-blue-600= number_to_currency(total_amount)
+            - else
+              %span.text-gray-400 N/A
+          .flex.justify-between.py-2.border-b.border-gray-100
+            %span.font-medium.text-gray-600 Booking Status
+            - status_classes = {'Pending' => 'bg-yellow-100 text-yellow-700', 'Confirmed' => 'bg-green-100 text-green-700', 'Cancelled' => 'bg-red-100 text-red-700'}
+            %span.inline-block.rounded-full.text-xs.font-semibold.px-3.py-1{class: status_classes[@booking.status] || 'bg-gray-100 text-gray-700'}= @booking.status
+          .flex.justify-between.py-2.border-b.border-gray-100
+            %span.font-medium.text-gray-600 Payment Status
+            - if @booking.payment_processed?
+              %span.inline-block.bg-green-100.text-green-700.px-3.py-1.rounded-full.text-xs.font-semibold Paid
+            - else
+              %span.inline-block.bg-yellow-100.text-yellow-700.px-3.py-1.rounded-full.text-xs.font-semibold Pending
+
+    / Right Column - Sidebar
+    .space-y-6
+      / Booking Stats Card
+      .bg-white.rounded-xl.shadow-lg.p-6
+        %h2.text-xl.font-bold.text-blue-900.mb-4.flex.items-center.gap-2
+          %i.fas.fa-chart-bar.text-blue-500
+          Booking Summary
+        .space-y-4
+          .flex.justify-between.items-center.py-2.border-b.border-gray-100
+            %span.font-medium.text-gray-600 Booking ID
+            %span.font-mono.text-gray-900 ##{@booking.id}
+          .flex.justify-between.items-center.py-2.border-b.border-gray-100
+            %span.font-medium.text-gray-600 Created
+            %span.text-gray-900= @booking.created_at.strftime('%b %d, %Y')
+          .flex.justify-between.items-center.py-2.border-b.border-gray-100
+            %span.font-medium.text-gray-600 Last Updated
+            %span.text-gray-900= @booking.updated_at.strftime('%b %d, %Y')
+          - if @booking.car.price
+            - total_days = (@booking.end_date - @booking.start_date).to_i
+            - total_amount = @booking.car.price * total_days
+            .flex.justify-between.items-center.py-2.border-b.border-gray-100
+              %span.font-medium.text-gray-600 Daily Rate
+              %span.text-gray-900= number_to_currency(@booking.car.price)
+            .flex.justify-between.items-center.py-2.border-b.border-gray-100
+              %span.font-medium.text-gray-600 Days
+              %span.text-gray-900= total_days
+            .flex.justify-between.items-center.py-2
+              %span.font-bold.text-gray-900 Total
+              %span.font-bold.text-lg.text-blue-600= number_to_currency(total_amount)
+
+      / Quick Actions Card
+      .bg-white.rounded-xl.shadow-lg.p-6
+        %h2.text-xl.font-bold.text-blue-900.mb-4.flex.items-center.gap-2
+          %i.fas.fa-bolt.text-blue-500
+          Quick Actions
+        .space-y-3
+          = link_to vendors_car_path(@booking.car), class: 'w-full bg-blue-50 hover:bg-blue-100 text-blue-700 font-medium px-4 py-3 rounded-lg transition flex items-center justify-center gap-2' do
+            %i.fas.fa-car
+            View Car Details
+          - if @booking.status == 'Pending'
+            = link_to vendors_booking_path(@booking), method: :patch, data: { confirm: 'Are you sure you want to confirm this booking?' }, class: 'w-full bg-green-50 hover:bg-green-100 text-green-700 font-medium px-4 py-3 rounded-lg transition flex items-center justify-center gap-2' do
+              %i.fas.fa-check
+              Confirm Booking
+          = link_to vendors_bookings_path, class: 'w-full bg-gray-50 hover:bg-gray-100 text-gray-700 font-medium px-4 py-3 rounded-lg transition flex items-center justify-center gap-2' do
+            %i.fas.fa-arrow-left
+            Back to Bookings
+
+  / Car Images Section (if available)
+  - if @booking.car.images.attached?
+    .mt-8
+      .bg-white.rounded-xl.shadow-lg.p-6
+        %h2.text-xl.font-bold.text-blue-900.mb-4.flex.items-center.gap-2
+          %i.fas.fa-images.text-blue-500
+          Car Images
+        .flex.gap-4.overflow-x-auto
+          - @booking.car.images.each do |img|
+            %img.w-48.h-32.object-cover.rounded-lg.shadow{src: url_for(img), alt: @booking.car.model} 

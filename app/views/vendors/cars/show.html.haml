@@ -1,129 +1,215 @@
-.container.mx-auto.max-w-5xl
+.container.mx-auto.max-w-6xl.p-6
   = render partial: "vendors/navbar"
-  .bg-white.rounded-3xl.shadow-xl.p-10.mb-8
-    .flex.justify-between.items-start
-      .flex-1
-        %h1.text-4xl.font-extrabold.text-blue-900.mb-2= "#{@car.brand} #{@car.model}"
-        %p.text-lg.text-gray-600.mb-4= @car.category.presence || '—'
-      .flex.gap-2
-        = link_to 'Edit', edit_vendors_car_path(@car), class: 'border border-yellow-400 text-yellow-700 font-semibold px-4 py-1 rounded hover:bg-yellow-50 transition text-lg'
-        = link_to 'Delete', vendors_car_path(@car), method: :delete, data: { confirm: 'Are you sure?' }, class: 'border border-red-400 text-red-700 font-semibold px-4 py-1 rounded hover:bg-red-50 transition text-lg'
-    %hr.border-t.border-blue-100.mb-8
-    .flex.flex-col.md:flex-row.gap-8.mb-6
-      .w-full
-        %table.w-full.text-base.text-left.mb-6
-          %tbody
-            %tr
-              %th.pr-4.text-gray-700.font-semibold Model
-              %td= @car.model
-            %tr
-              %th.pr-4.text-gray-700.font-semibold Brand
-              %td= @car.brand
-            %tr
-              %th.pr-4.text-gray-700.font-semibold Category
-              %td= @car.category.presence || '—'
-            %tr
-              %th.pr-4.text-gray-700.font-semibold Year
-              %td= @car.year
-            %tr
-              %th.pr-4.text-gray-700.font-semibold Color
-              %td= @car.color
-            %tr
-              %th.pr-4.text-gray-700.font-semibold Price
-              %td= @car.price ? number_to_currency(@car.price) : 'N/A'
-            %tr
-              %th.pr-4.text-gray-700.font-semibold Status
-              %td= @car.status
-            %tr
-              %th.pr-4.text-gray-700.font-semibold Transmission
-              %td= @car.transmission.presence || '—'
-            %tr
-              %th.pr-4.text-gray-700.font-semibold Fuel Type
-              %td= @car.fuel_type.presence || '—'
-      .w-full
-        %table.w-full.text-base.text-left.mb-6
-          %tbody
-            %tr
-              %th.pr-4.text-gray-700.font-semibold Seats
-              %td= @car.seats.presence || '—'
-            %tr
-              %th.pr-4.text-gray-700.font-semibold Mileage
-              %td= @car.mileage.presence || '—'
-            %tr
-              %th.pr-4.text-gray-700.font-semibold Engine Size
-              %td= @car.engine_size.presence || '—'
-            %tr
-              %th.pr-4.text-gray-700.font-semibold Air Conditioning
-              %td= @car.air_conditioning ? 'Yes' : 'No'
-            %tr
-              %th.pr-4.text-gray-700.font-semibold GPS
-              %td= @car.gps ? 'Yes' : 'No'
-            %tr
-              %th.pr-4.text-gray-700.font-semibold Sunroof
-              %td= @car.sunroof ? 'Yes' : 'No'
-            %tr
-              %th.pr-4.text-gray-700.font-semibold Bluetooth
-              %td= @car.bluetooth ? 'Yes' : 'No'
-            %tr
-              %th.pr-4.text-gray-700.font-semibold USB Ports
-              %td= @car.usb_ports.presence || '—'
-            %tr
-              %th.pr-4.text-gray-700.font-semibold Featured
-              %td= @car.featured ? 'Yes' : 'No'
-            %tr
-              %th.pr-4.text-gray-700.font-semibold Created At
-              %td= @car.created_at.strftime('%b %d, %Y')
-            %tr
-              %th.pr-4.text-gray-700.font-semibold Last Updated
-              %td= @car.updated_at.strftime('%b %d, %Y')
-            %tr
-              %th.pr-4.text-gray-700.font-semibold Description
-              %td= @car.description.presence || '—'
-  / Car Documents Section (if available)
-  - if @car.respond_to?(:documents) && @car.documents.any?
-    .bg-gray-50.rounded-xl.shadow-md.p-6.mb-8
-      %h2.text-lg.font-bold.text-blue-900.mb-2 Car Documents
-      %table.min-w-full.bg-white.rounded-lg.shadow
-        %thead.bg-blue-50
-          %tr
-            %th.px-4.py-3.text-left.text-xs.font-bold.text-blue-700.uppercase Document
-            %th.px-4.py-3.text-left.text-xs.font-bold.text-blue-700.uppercase Status
-            %th.px-4.py-3.text-left.text-xs.font-bold.text-blue-700.uppercase Uploaded At
-        %tbody
-          - @car.documents.each do |doc|
-            %tr
-              %td.px-4.py-3= doc.doc_name.titleize
-              %td.px-4.py-3= doc.status.titleize
-              %td.px-4.py-3= doc.created_at.strftime('%b %d, %Y')
-  - if @car.images.attached?
-    .mt-10
-      %h2.text-xl.font-bold.text-blue-900.mb-4 Car Images
-      .flex.gap-4.overflow-x-auto.w-full.mb-4
-        - @car.images.each do |img|
-          %img.w-40.h-32.object-cover.rounded-xl.shadow{src: url_for(img), alt: @car.model}
-  .mt-10
-    %h2.text-xl.font-bold.text-blue-900.mb-4 Bookings for this Car
-    - if @bookings.any?
-      .bg-white.rounded-xl.shadow-md.p-6
-        %table.min-w-full.bg-white.rounded-lg.shadow-lg
-          %thead.bg-blue-50
-            %tr
-              %th.px-4.py-3.text-left.text-xs.font-bold.text-blue-700.uppercase User
-              %th.px-4.py-3.text-left.text-xs.font-bold.text-blue-700.uppercase Start Date
-              %th.px-4.py-3.text-left.text-xs.font-bold.text-blue-700.uppercase End Date
-              %th.px-4.py-3.text-left.text-xs.font-bold.text-blue-700.uppercase Status
-              %th.px-4.py-3.text-left.text-xs.font-bold.text-blue-700.uppercase Payment
-          %tbody
-            - @bookings.each do |booking|
-              %tr.hover:bg-blue-50.transition
-                %td.px-4.py-3= booking.user&.full_name || booking.user&.email
-                %td.px-4.py-3= booking.start_date.strftime('%b %d, %Y')
-                %td.px-4.py-3= booking.end_date.strftime('%b %d, %Y')
-                %td.px-4.py-3= booking.status
-                %td.px-4.py-3
-                  - if booking.payment_processed?
-                    %span.inline-block.bg-green-100.text-green-700.px-3.py-1.rounded-full.text-xs.font-semibold Paid
-                  - else
-                    %span.inline-block.bg-yellow-100.text-yellow-700.px-3.py-1.rounded-full.text-xs.font-semibold Pending
-    - else
-      %p.text-gray-500.mt-4 No bookings for this car yet.
+  
+  / Hero Section with Car Images
+  .bg-white.rounded-2xl.shadow-xl.overflow-hidden.mb-8
+    .relative.h-96.bg-gradient-to-r.from-blue-50.to-indigo-50
+      - if @car.images.attached?
+        .flex.gap-4.p-6.overflow-x-auto.h-full.items-center
+          - @car.images.each do |img|
+            %img.w-80.h-64.object-cover.rounded-xl.shadow-lg{src: url_for(img), alt: @car.model}
+      - else
+        .flex.items-center.justify-center.h-full
+          .text-center
+            %i.fas.fa-car.text-6xl.text-blue-300.mb-4
+            %p.text-xl.text-blue-400.font-semibold No Images Available
+    
+    / Car Title and Actions
+    .p-8
+      .flex.flex-col.md:flex-row.md:items-center.md:justify-between.gap-4
+        .flex-1
+          %h1.text-4xl.font-extrabold.text-blue-900.mb-2= "#{@car.brand} #{@car.model}"
+          .flex.items-center.gap-4.mb-4
+            %span.text-lg.text-gray-600= @car.year
+            %span.text-lg.text-gray-600= @car.color
+            %span.text-lg.text-gray-600= @car.category.presence || '—'
+          .flex.items-center.gap-4
+            - status_classes = {'available' => 'bg-green-100 text-green-700', 'rented' => 'bg-red-100 text-red-700', 'maintenance' => 'bg-yellow-100 text-yellow-700'}
+            %span.inline-block.rounded-full.text-sm.font-semibold.px-4.py-2{class: status_classes[@car.status] || 'bg-blue-100 text-blue-700'}= @car.status.titleize
+            %span.text-2xl.font-bold.text-blue-600= @car.price ? number_to_currency(@car.price) : 'N/A'
+            %span.text-gray-500 /day
+        .flex.gap-3
+          = link_to edit_vendors_car_path(@car), class: 'bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded-lg transition flex items-center gap-2' do
+            %i.fas.fa-edit
+            Edit Car
+          = link_to vendors_car_path(@car), method: :delete, data: { confirm: 'Are you sure you want to delete this car?' }, class: 'bg-red-600 hover:bg-red-700 text-white font-semibold px-6 py-3 rounded-lg transition flex items-center gap-2' do
+            %i.fas.fa-trash
+            Delete
+
+  / Main Content Grid
+  .grid.grid-cols-1.lg:grid-cols-3.gap-8
+    / Left Column - Car Details
+    .lg:col-span-2.space-y-6
+      / Basic Information Card
+      .bg-white.rounded-xl.shadow-lg.p-6
+        %h2.text-xl.font-bold.text-blue-900.mb-4.flex.items-center.gap-2
+          %i.fas.fa-info-circle.text-blue-500
+          Basic Information
+        .grid.grid-cols-1.md:grid-cols-2.gap-4
+          .flex.justify-between.py-2.border-b.border-gray-100
+            %span.font-medium.text-gray-600 Model
+            %span.text-gray-900= @car.model
+          .flex.justify-between.py-2.border-b.border-gray-100
+            %span.font-medium.text-gray-600 Brand
+            %span.text-gray-900= @car.brand
+          .flex.justify-between.py-2.border-b.border-gray-100
+            %span.font-medium.text-gray-600 Year
+            %span.text-gray-900= @car.year
+          .flex.justify-between.py-2.border-b.border-gray-100
+            %span.font-medium.text-gray-600 Color
+            %span.text-gray-900= @car.color
+          .flex.justify-between.py-2.border-b.border-gray-100
+            %span.font-medium.text-gray-600 Category
+            %span.text-gray-900= @car.category.presence || '—'
+          .flex.justify-between.py-2.border-b.border-gray-100
+            %span.font-medium.text-gray-600 Price
+            %span.text-gray-900= @car.price ? number_to_currency(@car.price) : 'N/A'
+
+      / Specifications Card
+      .bg-white.rounded-xl.shadow-lg.p-6
+        %h2.text-xl.font-bold.text-blue-900.mb-4.flex.items-center.gap-2
+          %i.fas.fa-cogs.text-blue-500
+          Specifications
+        .grid.grid-cols-1.md:grid-cols-2.gap-4
+          .flex.justify-between.py-2.border-b.border-gray-100
+            %span.font-medium.text-gray-600 Transmission
+            %span.text-gray-900= @car.transmission.presence || '—'
+          .flex.justify-between.py-2.border-b.border-gray-100
+            %span.font-medium.text-gray-600 Fuel Type
+            %span.text-gray-900= @car.fuel_type.presence || '—'
+          .flex.justify-between.py-2.border-b.border-gray-100
+            %span.font-medium.text-gray-600 Seats
+            %span.text-gray-900= @car.seats.presence || '—'
+          .flex.justify-between.py-2.border-b.border-gray-100
+            %span.font-medium.text-gray-600 Mileage
+            %span.text-gray-900= @car.mileage.presence || '—'
+          .flex.justify-between.py-2.border-b.border-gray-100
+            %span.font-medium.text-gray-600 Engine Size
+            %span.text-gray-900= @car.engine_size.presence || '—'
+          .flex.justify-between.py-2.border-b.border-gray-100
+            %span.font-medium.text-gray-600 USB Ports
+            %span.text-gray-900= @car.usb_ports.presence || '—'
+
+      / Features Card
+      .bg-white.rounded-xl.shadow-lg.p-6
+        %h2.text-xl.font-bold.text-blue-900.mb-4.flex.items-center.gap-2
+          %i.fas.fa-star.text-blue-500
+          Features
+        .grid.grid-cols-2.md:grid-cols-3.gap-4
+          .flex.items-center.gap-2
+            - if @car.air_conditioning
+              %i.fas.fa-check-circle.text-green-500
+              %span.text-gray-700 Air Conditioning
+            - else
+              %i.fas.fa-times-circle.text-red-400
+              %span.text-gray-500 Air Conditioning
+          .flex.items-center.gap-2
+            - if @car.gps
+              %i.fas.fa-check-circle.text-green-500
+              %span.text-gray-700 GPS
+            - else
+              %i.fas.fa-times-circle.text-red-400
+              %span.text-gray-500 GPS
+          .flex.items-center.gap-2
+            - if @car.sunroof
+              %i.fas.fa-check-circle.text-green-500
+              %span.text-gray-700 Sunroof
+            - else
+              %i.fas.fa-times-circle.text-red-400
+              %span.text-gray-500 Sunroof
+          .flex.items-center.gap-2
+            - if @car.bluetooth
+              %i.fas.fa-check-circle.text-green-500
+              %span.text-gray-700 Bluetooth
+            - else
+              %i.fas.fa-times-circle.text-red-400
+              %span.text-gray-500 Bluetooth
+          .flex.items-center.gap-2
+            - if @car.featured
+              %i.fas.fa-check-circle.text-green-500
+              %span.text-gray-700 Featured
+            - else
+              %i.fas.fa-times-circle.text-red-400
+              %span.text-gray-500 Featured
+
+      / Description Card
+      - if @car.description.present?
+        .bg-white.rounded-xl.shadow-lg.p-6
+          %h2.text-xl.font-bold.text-blue-900.mb-4.flex.items-center.gap-2
+            %i.fas.fa-align-left.text-blue-500
+            Description
+          %p.text-gray-700.leading-relaxed= @car.description
+
+    / Right Column - Sidebar
+    .space-y-6
+      / Car Stats Card
+      .bg-white.rounded-xl.shadow-lg.p-6
+        %h2.text-xl.font-bold.text-blue-900.mb-4.flex.items-center.gap-2
+          %i.fas.fa-chart-bar.text-blue-500
+          Car Stats
+        .space-y-4
+          .flex.justify-between.items-center.py-2.border-b.border-gray-100
+            %span.font-medium.text-gray-600 Created
+            %span.text-gray-900= @car.created_at.strftime('%b %d, %Y')
+          .flex.justify-between.items-center.py-2.border-b.border-gray-100
+            %span.font-medium.text-gray-600 Updated
+            %span.text-gray-900= @car.updated_at.strftime('%b %d, %Y')
+          .flex.justify-between.items-center.py-2.border-b.border-gray-100
+            %span.font-medium.text-gray-600 Total Bookings
+            %span.text-gray-900= @bookings.count
+          .flex.justify-between.items-center.py-2
+            %span.font-medium.text-gray-600 Active Bookings
+            %span.text-gray-900= @bookings.where(status: 'Pending').count
+
+      / Quick Actions Card
+      .bg-white.rounded-xl.shadow-lg.p-6
+        %h2.text-xl.font-bold.text-blue-900.mb-4.flex.items-center.gap-2
+          %i.fas.fa-bolt.text-blue-500
+          Quick Actions
+        .space-y-3
+          = link_to edit_vendors_car_path(@car), class: 'w-full bg-blue-50 hover:bg-blue-100 text-blue-700 font-medium px-4 py-3 rounded-lg transition flex items-center justify-center gap-2' do
+            %i.fas.fa-edit
+            Edit Car Details
+          = link_to vendors_cars_path, class: 'w-full bg-gray-50 hover:bg-gray-100 text-gray-700 font-medium px-4 py-3 rounded-lg transition flex items-center justify-center gap-2' do
+            %i.fas.fa-arrow-left
+            Back to Cars
+
+  / Bookings Section
+  .mt-8
+    .bg-white.rounded-xl.shadow-lg.p-6
+      %h2.text-xl.font-bold.text-blue-900.mb-6.flex.items-center.gap-2
+        %i.fas.fa-calendar-alt.text-blue-500
+        Bookings for this Car
+      
+      - if @bookings.any?
+        .overflow-x-auto
+          %table.min-w-full
+            %thead
+              %tr.border-b.border-gray-200
+                %th.px-4.py-3.text-left.text-xs.font-semibold.text-gray-600.uppercase.tracking-wider User
+                %th.px-4.py-3.text-left.text-xs.font-semibold.text-gray-600.uppercase.tracking-wider Start Date
+                %th.px-4.py-3.text-left.text-xs.font-semibold.text-gray-600.uppercase.tracking-wider End Date
+                %th.px-4.py-3.text-left.text-xs.font-semibold.text-gray-600.uppercase.tracking-wider Status
+                %th.px-4.py-3.text-left.text-xs.font-semibold.text-gray-600.uppercase.tracking-wider Payment
+            %tbody.divide-y.divide-gray-200
+              - @bookings.each do |booking|
+                %tr.hover:bg-gray-50.transition
+                  %td.px-4.py-4.whitespace-nowrap
+                    .flex.flex-col
+                      %span.font-medium.text-gray-900= booking.user&.full_name || 'N/A'
+                      %span.text-sm.text-gray-500= booking.user&.email
+                  %td.px-4.py-4.whitespace-nowrap.text-gray-900= booking.start_date.strftime('%b %d, %Y')
+                  %td.px-4.py-4.whitespace-nowrap.text-gray-900= booking.end_date.strftime('%b %d, %Y')
+                  %td.px-4.py-4.whitespace-nowrap
+                    - status_classes = {'Pending' => 'bg-yellow-100 text-yellow-700', 'Confirmed' => 'bg-green-100 text-green-700', 'Cancelled' => 'bg-red-100 text-red-700'}
+                    %span.inline-block.rounded-full.text-xs.font-semibold.px-3.py-1{class: status_classes[booking.status] || 'bg-gray-100 text-gray-700'}= booking.status
+                  %td.px-4.py-4.whitespace-nowrap
+                    - if booking.payment_processed?
+                      %span.inline-block.bg-green-100.text-green-700.px-3.py-1.rounded-full.text-xs.font-semibold Paid
+                    - else
+                      %span.inline-block.bg-yellow-100.text-yellow-700.px-3.py-1.rounded-full.text-xs.font-semibold Pending
+      - else
+        .text-center.py-8
+          %i.fas.fa-calendar-times.text-4xl.text-gray-300.mb-4
+          %p.text-gray-500.text-lg No bookings for this car yet.
+          %p.text-gray-400.text-sm This car is available for new bookings.
