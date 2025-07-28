@@ -1,0 +1,123 @@
+.container.mx-auto.max-w-7xl.p-6
+  = render partial: "vendors/navbar"
+  
+  / Header Section
+  .bg-white.rounded-2xl.shadow-xl.p-8.mb-8
+    .flex.flex-col.md:flex-row.md:items-center.md:justify-between.gap-4
+      .flex-1
+        %h1.text-4xl.font-extrabold.text-blue-900.mb-2 Bookings Management
+        %p.text-lg.text-gray-600 Manage all bookings for your cars
+      .flex.gap-3
+        .bg-blue-50.rounded-lg.p-4.text-center
+          %div.text-2xl.font-bold.text-blue-600= @bookings.count
+          %div.text-sm.text-gray-600 Total Bookings
+        .bg-green-50.rounded-lg.p-4.text-center
+          %div.text-2xl.font-bold.text-green-600= @bookings.where(payment_processed: true).count
+          %div.text-sm.text-gray-600 Paid Bookings
+        .bg-yellow-50.rounded-lg.p-4.text-center
+          %div.text-2xl.font-bold.text-yellow-600= @bookings.where(payment_processed: false).count
+          %div.text-sm.text-gray-600 Pending Payments
+
+  / Filters Section
+  .bg-white.rounded-xl.shadow-lg.p-6.mb-8
+    %h2.text-xl.font-bold.text-blue-900.mb-4.flex.items-center.gap-2
+      %i.fas.fa-filter.text-blue-500
+      Filter & Search
+    = form_with url: vendors_bookings_path, method: :get, local: true, class: 'flex flex-wrap items-end gap-4' do |f|
+      .field.flex-1.min-w-48
+        = f.label :search, 'Search Customer', class: 'block text-sm font-medium text-gray-700 mb-1'
+        = f.text_field :search, value: params[:search], placeholder: 'Name or email...', class: 'w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500'
+      
+      .field.flex-1.min-w-48
+        = f.label :status, 'Status', class: 'block text-sm font-medium text-gray-700 mb-1'
+        = f.select :status, options_for_select([['All Statuses', ''], ['Pending', 'Pending'], ['Confirmed', 'Confirmed'], ['Cancelled', 'Cancelled']], params[:status]), {}, { class: 'w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500' }
+      
+      .field.flex-1.min-w-48
+        = f.label :payment_status, 'Payment', class: 'block text-sm font-medium text-gray-700 mb-1'
+        = f.select :payment_status, options_for_select([['All Payments', ''], ['Paid', 'paid'], ['Pending', 'pending']], params[:payment_status]), {}, { class: 'w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500' }
+      
+      .field.flex-1.min-w-48
+        = f.label :start_date, 'From Date', class: 'block text-sm font-medium text-gray-700 mb-1'
+        = f.date_field :start_date, value: params[:start_date], class: 'w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500'
+      
+      .field.flex-1.min-w-48
+        = f.label :end_date, 'To Date', class: 'block text-sm font-medium text-gray-700 mb-1'
+        = f.date_field :end_date, value: params[:end_date], class: 'w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500'
+      
+      .field.flex-shrink-0.flex.gap-2
+        = f.submit 'Apply Filters', class: 'bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-2 rounded-lg transition flex items-center gap-2'
+        = link_to 'Clear Filters', vendors_bookings_path, class: 'bg-gray-500 hover:bg-gray-600 text-white font-semibold px-6 py-2 rounded-lg transition flex items-center gap-2'
+
+  / Bookings Table
+  .bg-white.rounded-xl.shadow-lg.overflow-hidden
+    .p-6.border-b.border-gray-200
+      %h2.text-xl.font-bold.text-blue-900.flex.items-center.gap-2
+        %i.fas.fa-calendar-alt.text-blue-500
+        Bookings List
+        - if params[:search].present? || params[:status].present? || params[:car_id].present?
+          %span.text-sm.font-normal.text-gray-500.ml-2 (#{@bookings.count} results)
+    
+    - if @bookings.any?
+      .overflow-x-auto
+        %table.min-w-full
+          %thead.bg-gray-50
+            %tr
+              %th.px-6.py-4.text-left.text-xs.font-semibold.text-gray-600.uppercase.tracking-wider Booking ID
+              %th.px-6.py-4.text-left.text-xs.font-semibold.text-gray-600.uppercase.tracking-wider Customer
+              %th.px-6.py-4.text-left.text-xs.font-semibold.text-gray-600.uppercase.tracking-wider Car
+              %th.px-6.py-4.text-left.text-xs.font-semibold.text-gray-600.uppercase.tracking-wider Dates
+              %th.px-6.py-4.text-left.text-xs.font-semibold.text-gray-600.uppercase.tracking-wider Status
+              %th.px-6.py-4.text-left.text-xs.font-semibold.text-gray-600.uppercase.tracking-wider Payment
+              %th.px-6.py-4.text-left.text-xs.font-semibold.text-gray-600.uppercase.tracking-wider Total
+              %th.px-6.py-4.text-left.text-xs.font-semibold.text-gray-600.uppercase.tracking-wider Actions
+          %tbody.divide-y.divide-gray-200
+            - @bookings.each do |booking|
+              %tr.hover:bg-gray-50.transition
+                %td.px-6.py-4.whitespace-nowrap
+                  %span.font-mono.text-sm.text-gray-900 ##{booking.id}
+                %td.px-6.py-4.whitespace-nowrap
+                  .flex.flex-col
+                    %span.font-medium.text-gray-900= booking.user&.full_name || 'N/A'
+                    %span.text-sm.text-gray-500= booking.user&.email
+                    %span.text-xs.text-gray-400= booking.user&.phone
+                %td.px-6.py-4.whitespace-nowrap
+                  .flex.flex-col
+                    %span.font-medium.text-gray-900= "#{booking.car.brand} #{booking.car.model}"
+                    %span.text-sm.text-gray-500= booking.car.year
+                    %span.text-xs.text-gray-400= booking.car.color
+                %td.px-6.py-4.whitespace-nowrap
+                  .flex.flex-col
+                    %span.text-sm.text-gray-900= booking.start_date.strftime('%b %d, %Y')
+                    %span.text-sm.text-gray-900= booking.end_date.strftime('%b %d, %Y')
+                    %span.text-xs.text-gray-500= "#{(booking.end_date - booking.start_date).to_i} days"
+                %td.px-6.py-4.whitespace-nowrap
+                  - status_classes = {'Pending' => 'bg-yellow-100 text-yellow-700', 'Confirmed' => 'bg-green-100 text-green-700', 'Cancelled' => 'bg-red-100 text-red-700'}
+                  %span.inline-block.rounded-full.text-xs.font-semibold.px-3.py-1{class: status_classes[booking.status] || 'bg-gray-100 text-gray-700'}= booking.status
+                %td.px-6.py-4.whitespace-nowrap
+                  - if booking.payment_processed?
+                    %span.inline-block.bg-green-100.text-green-700.px-3.py-1.rounded-full.text-xs.font-semibold Paid
+                  - else
+                    %span.inline-block.bg-yellow-100.text-yellow-700.px-3.py-1.rounded-full.text-xs.font-semibold Pending
+                %td.px-6.py-4.whitespace-nowrap
+                  - if booking.car.price
+                    - total_days = (booking.end_date - booking.start_date).to_i
+                    - total_amount = booking.car.price * total_days
+                    %span.font-semibold.text-gray-900= number_to_currency(total_amount)
+                  - else
+                    %span.text-gray-400 N/A
+                %td.px-6.py-4.whitespace-nowrap
+                  .flex.gap-2
+                    = link_to vendors_booking_path(booking), class: 'text-blue-600 hover:text-blue-800 transition' do
+                      %i.fas.fa-eye
+                    - if booking.status == 'Pending'
+                      = link_to vendors_booking_path(booking), method: :patch, data: { confirm: 'Confirm this booking?' }, class: 'text-green-600 hover:text-green-800 transition' do
+                        %i.fas.fa-check
+    - else
+      .text-center.py-12
+        %i.fas.fa-calendar-times.text-4xl.text-gray-300.mb-4
+        %p.text-gray-500.text-lg No bookings found.
+        - if params[:search].present? || params[:status].present? || params[:car_id].present?
+          %p.text-gray-400.text-sm Try adjusting your filters.
+          = link_to 'Clear all filters', vendors_bookings_path, class: 'text-blue-600 hover:text-blue-800 font-medium'
+        - else
+          %p.text-gray-400.text-sm When customers book your cars, they will appear here. 

@@ -45,6 +45,11 @@ class Vendors::CarsController < ApplicationController
     end
 
     def car_params
-      params.require(:car).permit(:model, :brand, :year, :color, :price, :status, images: [])
+      params.require(:car).permit(
+        :model, :brand, :category, :color, :year, :price, :status, :description,
+        :transmission, :fuel_type, :seats, :mileage, :engine_size,
+        :air_conditioning, :gps, :sunroof, :bluetooth, :usb_ports, :featured,
+        :main_image_url, images: []
+      )
     end
 end 
