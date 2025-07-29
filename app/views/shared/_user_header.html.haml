@@ -1,0 +1,9 @@
+.relative.bg-blue-700.text-white.rounded-b-3xl.shadow-xl.overflow-hidden.p-10.flex.flex-col.md:flex-row.items-center.gap-8.mb-12
+  / Background image layer
+  -# .absolute.inset-0.bg-cover.bg-center.opacity-30.pointer-events-none{ style: "background-image: url('https://images.unsplash.com/photo-1503736334956-4c8f8e92946d?auto=format&fit=crop&w=900&q=80');" }
+  / Content layer
+  .relative.z-10.flex-1
+    %h1.text-4xl.font-extrabold.mb-2 Hello, #{current_user.first_name.presence || current_user.email.split('@').first}!
+    %p.text-blue-100.mt-1.text-lg Welcome to your dashboard
+  .relative.z-10.flex-shrink-0
+    %i.fas.fa-user-circle.text-7xl.text-blue-200 

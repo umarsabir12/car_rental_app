@@ -38,7 +38,7 @@
                     - if booking.payment_processed?
                       %span.inline-block.bg-green-100.text-green-700.px-3.py-1.rounded-full.text-xs.font-semibold Paid
                     - else
-                      = link_to 'Pay Now', payment_path(booking), class: 'inline-block bg-blue-600 text-white font-semibold px-4 py-2 rounded-lg hover:bg-blue-700 transition text-xs'
+                      = link_to 'Pay Noda.dw incorrect', create_checkout_users_payments_path(booking), method: :post, class: 'inline-block bg-blue-600 text-white font-semibold px-4 py-2 rounded-lg hover:bg-blue-700 transition text-xs'
       - else
         %p.text-gray-500.mt-4 You have no bookings yet.
 

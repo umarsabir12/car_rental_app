@@ -26,7 +26,8 @@
             #user-dropdown.absolute.right-0.mt-1.w-56.bg-white.rounded-xl.shadow-xl.border.border-gray-100.hidden.z-50.overflow-hidden
               .bg-gradient-to-r.from-blue-50.to-indigo-50.px-4.py-3.border-b.border-gray-100
                 .flex.items-center.space-x-3
-                  %span.text-white.font-bold.text-sm= current_user.first_name&.first&.upcase || current_user.email.first.upcase
+                  .w-10.h-10.bg-gradient-to-br.from-blue-500.to-blue-600.rounded-full.flex.items-center.justify-center
+                    %span.text-white.font-bold.text-sm= current_user.first_name&.first&.upcase || current_user.email.first.upcase
                   .flex-1
                     %p.text-sm.font-semibold.text-gray-900= current_user.first_name&.presence || current_user.email.split('@').first
                     %p.text-xs.text-gray-500= current_user.email
@@ -37,25 +38,35 @@
                 = link_to user_home_path, class: "flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-700 transition-all duration-150" do
                   %i.fas.fa-home.mr-3.text-blue-500.w-4
                   My Dashboard
+                = link_to users_documents_path, class: "flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-700 transition-all duration-150" do
+                  %i.fas.fa-file-upload.mr-3.text-blue-500.w-4
+                  Documents
+                = link_to users_bookings_path, class: "flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-700 transition-all duration-150" do
+                  %i.fas.fa-calendar-check.mr-3.text-blue-500.w-4
+                  Bookings
+                = link_to users_profile_path, class: "flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-700 transition-all duration-150" do
+                  %i.fas.fa-user.mr-3.text-blue-500.w-4
+                  Profile
                 .border-t.border-gray-100.my-1
                 = link_to destroy_user_session_path, method: :delete, data: { turbo_method: :delete }, class: "flex items-center px-4 py-3 text-sm text-red-600 hover:bg-red-50 hover:text-red-700 transition-all duration-150" do
                   %i.fas.fa-sign-out-alt.mr-3.text-red-500.w-4
                   Sign Out
         - else
-          / Sign In dropdown for unauthenticated users
-          .relative.hidden.md:block
-            %button#signin-menu-button.flex.items-center.space-x-2.px-4.py-2.rounded-xl.bg-blue-700.text-white.font-semibold.hover:bg-blue-800.transition{type: "button", onclick: "toggleSigninMenu()"}
-              %span Sign In
-              %svg.w-4.h-4.text-white.ml-1{fill: "none", stroke: "currentColor", viewBox: "0 0 24 24", "stroke-width" => "2"}
-                %path{"stroke-linecap" => "round", "stroke-linejoin" => "round", d: "M19 9l-7 7-7-7"}
-            #signin-dropdown.absolute.right-0.mt-1.w-56.bg-white.rounded-xl.shadow-xl.border.border-gray-100.hidden.z-50.overflow-hidden
-              .py-2
-                = link_to new_user_session_path, class: "flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-700 transition-all duration-150" do
-                  %i.fas.fa-user.mr-3.text-blue-500.w-4
-                  Sign in as Customer
-                = link_to new_vendor_session_path, class: "flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-700 transition-all duration-150" do
-                  %i.fas.fa-store.mr-3.text-blue-500.w-4
-                  Sign in as Vendor
+          - unless user_signed_in? || vendor_signed_in?
+            / Sign In dropdown for unauthenticated users
+            .relative.hidden.md:block
+              %button#signin-menu-button.flex.items-center.space-x-2.px-4.py-2.rounded-xl.bg-blue-700.text-white.font-semibold.hover:bg-blue-800.transition{type: "button", onclick: "toggleSigninMenu()"}
+                %span Sign In
+                %svg.w-4.h-4.text-white.ml-1{fill: "none", stroke: "currentColor", viewBox: "0 0 24 24", "stroke-width" => "2"}
+                  %path{"stroke-linecap" => "round", "stroke-linejoin" => "round", d: "M19 9l-7 7-7-7"}
+              #signin-dropdown.absolute.right-0.mt-1.w-56.bg-white.rounded-xl.shadow-xl.border.border-gray-100.hidden.z-50.overflow-hidden
+                .py-2
+                  = link_to new_user_session_path, class: "flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-700 transition-all duration-150" do
+                    %i.fas.fa-user.mr-3.text-blue-500.w-4
+                    Sign in as Customer
+                  = link_to new_vendor_session_path, class: "flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-700 transition-all duration-150" do
+                    %i.fas.fa-store.mr-3.text-blue-500.w-4
+                    Sign in as Vendor
       / Mobile menu button (optional, not functional here)
       %button.md:hidden.flex.items-center.px-3.py-2.border.rounded.text-blue-700.border-blue-700
         %svg.h-6.w-6{ fill: 'none', stroke: 'currentColor', viewBox: '0 0 24 24', 'stroke-width' => '2' }

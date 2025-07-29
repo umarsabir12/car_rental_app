@@ -29,6 +29,7 @@ gem 'haml-rails'
 gem 'jquery-rails'
 gem 'aws-sdk-s3'
 gem 'dotenv-rails'
+gem 'stripe'
 # Use Kredis to get higher-level data types in Redis [https://github.com/rails/kredis]
 # gem "kredis"
 

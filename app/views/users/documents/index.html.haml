@@ -1,0 +1,170 @@
+.w-full.min-h-screen.bg-gradient-to-br.from-blue-50.to-blue-100
+  .px-4.md:px-12.lg:px-32
+    
+    = render 'shared/user_header'
+    
+    .mx-auto
+      / Back Button
+      .mb-6
+        = link_to user_home_path, class: 'inline-flex items-center text-blue-600 hover:text-blue-800 font-semibold transition-colors' do
+          %i.fas.fa-arrow-left.mr-2
+          Back to Dashboard
+    
+      .bg-white.rounded-2xl.shadow-xl.p-8
+        .w-full
+          %h2.text-2xl.font-bold.text-gray-800.mb-6.flex.items-center.gap-3
+            %i.fas.fa-file-upload.text-blue-600
+            Required Documents
+          %p.text-gray-600.mb-8 Please upload all required documents to complete your profile and proceed with bookings.
+          
+          / Document cards grid
+          .grid.grid-cols-1.md:grid-cols-2.lg:grid-cols-3.gap-6
+            - current_user.documents.each do |doc|
+              .bg-white.rounded-xl.shadow-md.border.border-gray-200.hover:shadow-lg.transition-all.duration-200.overflow-hidden
+                / Card Header
+                .bg-gray-50.p-4.border-b.border-gray-200
+                  .flex.items-center.justify-between
+                    .flex.items-center.gap-3
+                      - if doc.status == 'approved'
+                        %i.fas.fa-check-circle.text-green-500.text-lg
+                      - elsif doc.status == 'pending'
+                        %i.fas.fa-clock.text-yellow-500.text-lg
+                      - elsif doc.status == 'rejected'
+                        %i.fas.fa-times-circle.text-red-500.text-lg
+                      - else
+                        %i.fas.fa-file-alt.text-gray-400.text-lg
+                      %h3.font-semibold.text-gray-800= doc.doc_name
+                    - status_color = doc.status == 'not uploaded' ? 'bg-red-100 text-red-700' : doc.status == 'approved' ? 'bg-green-100 text-green-700' : doc.status == 'rejected' ? 'bg-red-100 text-red-700' : 'bg-yellow-100 text-yellow-700'
+                    %span.inline-flex.items-center.px-2.py-1.rounded-full.text-xs.font-medium{class: status_color}
+                      = doc.status.titleize
+                
+                / Card Body
+                .p-6
+                  / Document Description
+                  .mb-4
+                    - case doc.doc_name
+                    - when 'Home country driving license and IDP'
+                      %p.text-sm.text-gray-600.mb-2 Upload your home country driving license along with an International Driving Permit (IDP).
+                    - when 'A Valid UAE driving license'
+                      %p.text-sm.text-gray-600.mb-2 Upload your valid UAE driving license (front and back required).
+                    - when 'Emirates ID front and back'
+                      %p.text-sm.text-gray-600.mb-2 Upload both front and back sides of your Emirates ID.
+                    - when 'Passport and Visa copy'
+                      %p.text-sm.text-gray-600.mb-2 Upload clear copies of your passport and visa pages.
+                    - when 'Copy of visa Entry Stamp'
+                      %p.text-sm.text-gray-600.mb-2 Upload the entry stamp page from your passport.
+                    - when 'Passport Copy'
+                      %p.text-sm.text-gray-600.mb-2 Upload a clear copy of your passport's main page.
+                    - else
+                      %p.text-sm.text-gray-600.mb-2 Please upload the required document for verification.
+                  
+                  / Upload Date (if uploaded)
+                  - if doc.updated_at != doc.created_at && doc.status != 'not uploaded'
+                    .mb-4.p-2.bg-blue-50.rounded.text-xs.text-blue-600
+                      %i.fas.fa-calendar.mr-1
+                      Uploaded: #{doc.updated_at.strftime('%b %d, %Y')}
+                  
+                  / Rejection Reason (if rejected)
+                  - if doc.status == 'rejected' && doc.reason.present?
+                    .mb-4.p-3.bg-red-50.rounded.border-l-3.border-red-400
+                      %p.text-xs.text-red-600
+                        %i.fas.fa-exclamation-triangle.mr-1
+                        Reason: #{doc.reason}
+                  
+                  / Action Buttons
+                  .flex.gap-2
+                    - if doc.images.attached?
+                      %button.bg-blue-600.hover:bg-blue-700.text-white.px-3.py-2.rounded.text-sm.font-medium.transition{type: "button", onclick: "openPreviewModal('#{doc.doc_name.parameterize}')"}
+                        %i.fas.fa-eye.mr-1
+                        Preview
+                      %button.bg-gray-600.hover:bg-gray-700.text-white.px-3.py-2.rounded.text-sm.font-medium.transition{type: "button", onclick: "openUploadModal('#{doc.doc_name.parameterize}', '#{doc.doc_name}')"}
+                        %i.fas.fa-edit.mr-1
+                        Update
+                    - else
+                      %button.bg-green-600.hover:bg-green-700.text-white.px-3.py-2.rounded.text-sm.font-medium.transition{type: "button", onclick: "openUploadModal('#{doc.doc_name.parameterize}', '#{doc.doc_name}')"}
+                        %i.fas.fa-upload.mr-1
+                        Upload
+
+  / Upload Modals
+  - current_user.documents.each do |doc|
+    %div{ id: "modal-#{doc.doc_name.parameterize}", class: "fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40 hidden" }
+      .bg-white.rounded-2xl.shadow-2xl.p-12.max-w-2xl.w-full.mx-4.min-h-400
+        %h3.text-xl.font-bold.text-blue-700.mb-4
+          = "Upload #{doc.doc_name}"
+        - if ['Home country driving license and IDP', 'A Valid UAE driving license', 'Emirates ID front and back'].include?(doc.doc_name)
+          %p.text-sm.text-gray-600.mb-4 You need to upload front and back pictures of your document.
+          = form_with url: documents_path, method: :post, local: true, html: {multipart: true, class: 'space-y-4', onsubmit: 'return validateLicenseUpload(this);'} do |f|
+            .flex.flex-col.md:flex-row.gap-4
+              .flex-1
+                %label.text-sm.font-semibold.text-gray-700.mb-2 Front Side
+                = f.file_field :front_image, class: 'block w-full text-sm text-gray-700 border border-gray-300 rounded-lg p-3 bg-blue-50 focus:ring-2 focus:ring-blue-400 focus:border-blue-400 transition', required: true
+              .flex-1
+                %label.text-sm.font-semibold.text-gray-700.mb-2 Back Side
+                = f.file_field :back_image, class: 'block w-full text-sm text-gray-700 border border-gray-300 rounded-lg p-3 bg-blue-50 focus:ring-2 focus:ring-blue-400 focus:border-blue-400 transition', required: true
+            = f.hidden_field :id, value: doc.id
+            .flex.gap-3
+              = f.submit 'Upload', class: 'flex-1 bg-blue-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-blue-700 transition'
+              %button.flex-1.bg-gray-300.text-gray-700.px-4.py-2.rounded-lg.font-semibold.hover:bg-gray-400.transition{type: "button", onclick: "closeUploadModal('#{doc.doc_name.parameterize}')"} Cancel
+        - else
+          = form_with url: documents_path, method: :post, local: true, html: {multipart: true, class: 'space-y-4'} do |f|
+            = f.file_field :images, multiple: true, class: 'block w-full text-sm text-gray-700 border border-gray-300 rounded-lg p-3 bg-blue-50 focus:ring-2 focus:ring-blue-400 focus:border-blue-400 transition', required: true
+            = f.hidden_field :id, value: doc.id
+            .flex.gap-3
+              = f.submit 'Upload', class: 'flex-1 bg-blue-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-blue-700 transition'
+              %button.flex-1.bg-gray-300.text-gray-700.px-4.py-2.rounded-lg.font-semibold.hover:bg-gray-400.transition{type: "button", onclick: "closeUploadModal('#{doc.doc_name.parameterize}')"} Cancel
+
+  / Preview Modals
+  - current_user.documents.each do |doc|
+    - if doc.images.attached?
+      %div{ id: "preview-modal-#{doc.doc_name.parameterize}", class: "fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40 hidden", onclick: "closePreviewModalOnOutside(event, '#{doc.doc_name.parameterize}')" }
+        .bg-white.rounded-2xl.shadow-2xl.overflow-hidden.max-w-4xl.w-full.h-80.mx-4.relative.flex.flex-col.items-center.justify-center{onclick: "event.stopPropagation();"}
+          - if doc.images.count == 2 && (doc.doc_name == 'Home country driving license and IDP' || doc.doc_name == 'A Valid UAE driving license' || doc.doc_name == 'Emirates ID front and back')
+            .flex.gap-8.items-center.justify-center
+              .flex.flex-col.items-center.mx-4
+                %img.w-full.h-full.max-h-80.object-contain.rounded-2xl.shadow-lg{ src: url_for(doc.images[0]), alt: 'Front Side' }
+                %span.mt-2.text-sm.text-gray-700.font-semibold Front Side
+              .flex.flex-col.items-center.mx-4
+                %img.w-full.h-full.max-h-80.object-contain.rounded-2xl.shadow-lg{ src: url_for(doc.images[1]), alt: 'Back Side' }
+                %span.mt-2.text-sm.text-gray-700.font-semibold Back Side
+          - else
+            .flex-1.flex.items-center.justify-center.w-full.h-full.my-4
+              - doc.images.each do |img|
+                .p-4
+                  %img.w-full.h-full.object-contain.rounded-2xl.shadow-lg{ src: url_for(img), alt: doc.doc_name, style: "max-height: 80vh; max-width: 100%;" }
+          - if doc.reason.present?
+            .absolute.bottom-0.left-0.right-0.bg-red-600.bg-opacity-80.text-white.text-center.p-4.text-lg.font-semibold.rounded-b-2xl
+              | Reason: 
+              %span.font-semibold= doc.reason
+
+:javascript
+  function openUploadModal(field, name) {
+    document.getElementById('modal-' + field).classList.remove('hidden');
+  }
+  
+  function closeUploadModal(field) {
+    document.getElementById('modal-' + field).classList.add('hidden');
+  }
+
+  function openPreviewModal(field) {
+    document.getElementById('preview-modal-' + field).classList.remove('hidden');
+  }
+  
+  function closePreviewModal(field) {
+    document.getElementById('preview-modal-' + field).classList.add('hidden');
+  }
+
+  function closePreviewModalOnOutside(event, field) {
+    if (event.target.classList.contains('bg-black') || event.target.classList.contains('bg-opacity-40')) {
+      closePreviewModal(field);
+    }
+  }
+
+  function validateLicenseUpload(form) {
+    var front = form.querySelector('input[name="front_image"]');
+    var back = form.querySelector('input[name="back_image"]');
+    if (!front.files.length || !back.files.length) {
+      alert('Both front and back images are required.');
+      return false;
+    }
+    return true;
+  }

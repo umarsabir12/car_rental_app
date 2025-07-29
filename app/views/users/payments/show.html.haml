@@ -1,0 +1,92 @@
+.container.mx-auto.max-w-6xl.p-4.md:p-8
+  .bg-white.rounded-3xl.shadow-2xl.overflow-hidden
+    / Header
+    .bg-blue-600.p-8.text-white.text-center
+      %h1.text-3xl.font-bold Payment Details
+      %p.text-blue-100 Complete your booking securely
+
+    .p-8
+      .grid.grid-cols-1.lg:grid-cols-2.gap-8
+        / Left Half - Car Details
+        .space-y-6
+          / Car Information
+          .bg-gray-50.rounded-2xl.p-6
+            %h2.text-2xl.font-bold.text-gray-800.mb-4
+              %i.fas.fa-car.mr-3.text-blue-600
+              Car Information
+            
+            .flex.items-center.space-x-4.mb-4
+              - if @car.main_image_url.present?
+                %img.w-20.h-16.object-cover.rounded-lg{src: @car.main_image_url, alt: @car.model}
+              - else
+                .w-20.h-16.bg-blue-100.rounded-lg.flex.items-center.justify-center
+                  %i.fas.fa-car.text-blue-400.text-2xl
+              
+              .flex-1
+                %h3.text-xl.font-bold.text-gray-800= "#{@car.brand} #{@car.model}"
+                %p.text-gray-600= "#{@car.year} • #{@car.color}"
+                %p.text-2xl.font-bold.text-blue-600= number_to_currency(@car.price)
+                %span.text-sm.text-gray-500 per day
+
+          / Rental Period
+          .bg-green-50.rounded-2xl.p-6
+            %h3.text-lg.font-semibold.text-gray-800.mb-4
+              %i.fas.fa-calendar.mr-2.text-green-600
+              Rental Period
+            .space-y-3
+              .flex.justify-between.items-center.py-2.border-b.border-green-200
+                %span.text-gray-600 Start Date
+                %span.font-semibold= @booking.start_date.strftime('%B %d, %Y')
+              .flex.justify-between.items-center.py-2.border-b.border-green-200
+                %span.text-gray-600 End Date
+                %span.font-semibold= @booking.end_date.strftime('%B %d, %Y')
+              .flex.justify-between.items-center.py-2
+                %span.text-gray-600 Duration
+                %span.font-semibold.text-green-600= pluralize(@days, 'day')
+
+        / Right Half - Payment Summary
+        .space-y-6
+          / Payment Summary
+          .bg-blue-50.rounded-2xl.p-6
+            %h2.text-2xl.font-bold.text-gray-800.mb-6
+              %i.fas.fa-receipt.mr-3.text-blue-600
+              Payment Summary
+            
+            .space-y-4
+              .flex.justify-between.items-center.py-3.border-b.border-blue-200
+                %span.text-gray-700 Daily Rate
+                %span.font-semibold= number_to_currency(@car.price)
+              .flex.justify-between.items-center.py-3.border-b.border-blue-200
+                %span.text-gray-700 Number of Days
+                %span.font-semibold= @days
+              .flex.justify-between.items-center.py-3.border-b.border-blue-200
+                %span.text-gray-700 Subtotal
+                %span.font-semibold= number_to_currency(@car.price * @days)
+              .flex.justify-between.items-center.py-3.border-b.border-blue-200
+                %span.text-gray-700 Tax
+                %span.text-green-600 Free
+              .flex.justify-between.items-center.py-4
+                %span.text-xl.font-bold.text-gray-800 Total Amount
+                %span.text-2xl.font-bold.text-blue-600= number_to_currency(@total_amount)
+
+      / Pay Button - Full Width Below
+      .mt-8
+        .rounded-2xl.p-6.text-center
+          %h3.text-xl.font-semibold.mb-2
+          %p.mb-6
+            Your payment will be processed securely by Stripe
+          .div.flex.justify-center.p-3.bg-dark.rounded-2xl
+            = button_to create_checkout_users_payment_path(@booking.id), method: :post, data: { turbo: false },
+              class: 'text-white' do
+              %i.fas.fa-lock
+              %span Pay #{number_to_currency(@total_amount)}
+
+    / Footer
+    .bg-gray-50.p-6.border-t.border-gray-200
+      .text-center.text-sm.text-gray-600
+        %p
+          %i.fas.fa-info-circle.mr-1
+          By proceeding with payment, you agree to our 
+          = link_to 'Terms of Service', '#', class: 'text-blue-600 hover:underline'
+          and 
+          = link_to 'Privacy Policy', '#', class: 'text-blue-600 hover:underline' 

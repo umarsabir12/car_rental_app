@@ -6,6 +6,19 @@ Rails.application.routes.draw do
   devise_for :users, controllers: {sessions: 'users/sessions',registrations: 'users/registrations'}
   devise_for :admins, controllers: { sessions: 'admins/sessions' }
   
+  namespace :users do
+    get 'documents', to: 'documents#index'
+    get 'bookings', to: 'bookings#index'
+    get 'profile', to: 'profiles#index'
+    resources :payments, only: [:show] do
+      member do
+        get :success
+        get :cancel
+        post :create_checkout
+      end
+    end
+  end
+
   namespace :admin do
     resources :dashboard, only: [:index]
     resources :analytics, only: [:index]
@@ -51,16 +64,15 @@ Rails.application.routes.draw do
   resources :documents, only: [:create]
   resources :cars
   resources :bookings, only: [:new, :create]
-  resources :payments, only: [:create, :show]
 
   resource :user, only: [] do
     patch :update_nationality
   end
 
+  # Stripe webhook
+  post 'webhooks/stripe', to: 'webhooks#stripe'
 
   get 'user/home', to: 'users#home', as: :user_home
-  get 'user/profile', to: 'users#profile', as: :user_profile
-  get 'user/bookings', to: 'users#bookings', as: :user_bookings
 
   root "car_rental#index"
 end

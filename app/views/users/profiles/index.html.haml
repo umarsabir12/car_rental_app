@@ -1,0 +1,99 @@
+.w-full.min-h-screen.bg-gradient-to-br.from-blue-50.to-blue-100
+  .px-4.md:px-12.lg:px-32
+    
+    = render 'shared/user_header'
+    
+    .mx-auto
+      / Back Button
+      .mb-6
+        = link_to user_home_path, class: 'inline-flex items-center text-blue-600 hover:text-blue-800 font-semibold transition-colors' do
+          %i.fas.fa-arrow-left.mr-2
+          Back to Dashboard
+    
+      .bg-white.rounded-2xl.shadow-xl.p-8
+        .flex.items-center.justify-between.mb-8
+          %h2.text-2xl.font-bold.text-gray-800.flex.items-center.gap-3
+            %i.fas.fa-user-circle.text-blue-600
+            Profile Information
+          = link_to edit_user_registration_path, class: 'bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded-lg shadow-lg hover:shadow-xl transition-all duration-200 flex items-center gap-2' do
+            %i.fas.fa-edit
+            Edit Profile
+        
+        .grid.grid-cols-1.md:grid-cols-2.gap-8
+          / Personal Information
+          .space-y-6
+            %h3.text-lg.font-semibold.text-gray-700.mb-4.flex.items-center.gap-2
+              %i.fas.fa-user.text-blue-500
+              Personal Information
+            
+            .bg-gray-50.rounded-xl.p-6.space-y-4
+              .flex.items-center.justify-between.py-3.border-b.border-gray-200
+                %span.font-medium.text-gray-600 Name
+                %span.text-gray-900.font-semibold= [@user.first_name, @user.last_name].compact.join(' ') || 'Not provided'
+              
+              .flex.items-center.justify-between.py-3.border-b.border-gray-200
+                %span.font-medium.text-gray-600 Email
+                %span.text-gray-900.font-semibold= @user.email
+              
+              .flex.items-center.justify-between.py-3.border-b.border-gray-200
+                %span.font-medium.text-gray-600 Phone
+                %span.text-gray-900.font-semibold= @user.phone.presence || 'Not provided'
+              
+              .flex.items-center.justify-between.py-3
+                %span.font-medium.text-gray-600 Address
+                %span.text-gray-900.font-semibold= @user.home_address.presence || 'Not provided'
+          
+          / Account Information
+          .space-y-6
+            %h3.text-lg.font-semibold.text-gray-700.mb-4.flex.items-center.gap-2
+              %i.fas.fa-shield-alt.text-green-500
+              Account Information
+            
+            .bg-gray-50.rounded-xl.p-6.space-y-4
+              .flex.items-center.justify-between.py-3.border-b.border-gray-200
+                %span.font-medium.text-gray-600 Member Since
+                %span.text-gray-900.font-semibold= @user.created_at.strftime('%B %d, %Y')
+              
+              .flex.items-center.justify-between.py-3.border-b.border-gray-200
+                %span.font-medium.text-gray-600 Nationality
+                %span.text-gray-900.font-semibold= @user.nationality&.titleize || 'Not set'
+              
+              .flex.items-center.justify-between.py-3.border-b.border-gray-200
+                %span.font-medium.text-gray-600 Documents Status
+                - doc_status = @user.documents.where(status: 'approved').count
+                - total_docs = @user.documents.count
+                %span.text-gray-900.font-semibold= "#{doc_status}/#{total_docs} Approved"
+              
+              .flex.items-center.justify-between.py-3
+                %span.font-medium.text-gray-600 Account Status
+                %span.inline-flex.items-center.px-3.py-1.rounded-full.text-xs.font-semibold.bg-green-100.text-green-800
+                  %i.fas.fa-check-circle.mr-1
+                  Active
+        
+        / Quick Actions
+        .mt-8.pt-8.border-t.border-gray-200
+          %h3.text-lg.font-semibold.text-gray-700.mb-4.flex.items-center.gap-2
+            %i.fas.fa-bolt.text-yellow-500
+            Quick Actions
+          
+          .grid.grid-cols-1.md:grid-cols-3.gap-4
+            = link_to users_documents_path, class: 'bg-blue-50 hover:bg-blue-100 rounded-xl p-4 transition-colors border border-blue-200' do
+              .flex.items-center.gap-3
+                %i.fas.fa-file-upload.text-blue-600.text-xl
+                %div
+                  %div.font-semibold.text-gray-800 Manage Documents
+                  %div.text-sm.text-gray-600 Upload and review your documents
+            
+            = link_to users_bookings_path, class: 'bg-green-50 hover:bg-green-100 rounded-xl p-4 transition-colors border border-green-200' do
+              .flex.items-center.gap-3
+                %i.fas.fa-calendar-check.text-green-600.text-xl
+                %div
+                  %div.font-semibold.text-gray-800 View Bookings
+                  %div.text-sm.text-gray-600 Check your rental history
+            
+            = link_to cars_path, class: 'bg-purple-50 hover:bg-purple-100 rounded-xl p-4 transition-colors border border-purple-200' do
+              .flex.items-center.gap-3
+                %i.fas.fa-car.text-purple-600.text-xl
+                %div
+                  %div.font-semibold.text-gray-800 Browse Cars
+                  %div.text-sm.text-gray-600 Find your next rental
