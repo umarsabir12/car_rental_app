@@ -53,13 +53,18 @@ Rails.application.routes.draw do
 
   namespace :vendors do
     get 'dashboard', to: 'dashboard#index'
-    resources :cars
+    resources :cars do
+      member do
+        delete :remove_image
+      end
+    end
     resources :bookings
     resources :documents
-    resource :profile, only: [:show, :edit, :update]
     resources :payments, only: [:index, :show]
   end
 
+  # Vendor profile routes (outside namespace for simpler URLs)
+  resource :vendor, only: [:show, :edit, :update]
 
   resources :documents, only: [:create]
   resources :cars

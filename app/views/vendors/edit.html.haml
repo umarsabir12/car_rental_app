@@ -1,0 +1,100 @@
+.container.mx-auto.max-w-4xl.p-6
+  = render partial: "vendors/navbar"
+  
+  .bg-white.rounded-2xl.shadow-xl.p-8
+    %h1.text-4xl.font-extrabold.text-blue-900.mb-6 Edit Profile
+    %p.text-lg.text-gray-700.mb-8 Update your vendor profile information below.
+
+    / Flash Messages
+    - if notice
+      .mb-6.p-4.bg-green-50.border.border-green-200.rounded-lg
+        %p.text-green-700.font-medium= notice
+    - if alert
+      .mb-6.p-4.bg-red-50.border.border-red-200.rounded-lg
+        %p.text-red-700.font-medium= alert
+
+    = form_with model: @vendor, local: true, class: 'space-y-8' do |f|
+      / Personal Information Section
+      %h2.text-xl.font-bold.text-blue-800.mb-6 Personal Information
+      .grid.grid-cols-1.md:grid-cols-2.gap-6
+        .field.space-y-2
+          = f.label :first_name, 'First Name *', class: 'block text-sm font-medium text-gray-700'
+          = f.text_field :first_name, required: true, class: 'w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition', placeholder: 'Enter your first name'
+          - if @vendor.errors[:first_name].any?
+            %p.text-red-600.text-sm.mt-1= @vendor.errors[:first_name].join(', ')
+        
+        .field.space-y-2
+          = f.label :last_name, 'Last Name *', class: 'block text-sm font-medium text-gray-700'
+          = f.text_field :last_name, required: true, class: 'w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition', placeholder: 'Enter your last name'
+          - if @vendor.errors[:last_name].any?
+            %p.text-red-600.text-sm.mt-1= @vendor.errors[:last_name].join(', ')
+        
+        .field.space-y-2
+          = f.label :email, 'Email Address *', class: 'block text-sm font-medium text-gray-700'
+          = f.email_field :email, required: true, class: 'w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition', placeholder: 'your.email@example.com'
+          - if @vendor.errors[:email].any?
+            %p.text-red-600.text-sm.mt-1= @vendor.errors[:email].join(', ')
+        
+        .field.space-y-2
+          = f.label :phone, 'Phone Number', class: 'block text-sm font-medium text-gray-700'
+          = f.telephone_field :phone, class: 'w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition', placeholder: '+1 (555) 123-4567'
+          - if @vendor.errors[:phone].any?
+            %p.text-red-600.text-sm.mt-1= @vendor.errors[:phone].join(', ')
+
+      / Company Information Section
+      %h2.text-xl.font-bold.text-blue-800.mb-6.mt-8 Company Information
+      .grid.grid-cols-1.md:grid-cols-2.gap-6
+        .field.space-y-2.md:col-span-2
+          = f.label :company_name, 'Company Name *', class: 'block text-sm font-medium text-gray-700'
+          = f.text_field :company_name, required: true, class: 'w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition', placeholder: 'Your Company Name'
+          - if @vendor.errors[:company_name].any?
+            %p.text-red-600.text-sm.mt-1= @vendor.errors[:company_name].join(', ')
+        
+        .field.space-y-2
+          = f.label :website, 'Website', class: 'block text-sm font-medium text-gray-700'
+          = f.url_field :website, class: 'w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition', placeholder: 'https://www.yourcompany.com'
+          - if @vendor.errors[:website].any?
+            %p.text-red-600.text-sm.mt-1= @vendor.errors[:website].join(', ')
+        
+        .field.space-y-2
+          = f.label :company_logo, 'Company Logo URL', class: 'block text-sm font-medium text-gray-700'
+          = f.url_field :company_logo, class: 'w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition', placeholder: 'https://example.com/logo.png'
+          - if @vendor.errors[:company_logo].any?
+            %p.text-red-600.text-sm.mt-1= @vendor.errors[:company_logo].join(', ')
+        
+        .field.space-y-2.md:col-span-2
+          = f.label :address, 'Business Address', class: 'block text-sm font-medium text-gray-700'
+          = f.text_area :address, rows: 3, class: 'w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition', placeholder: 'Enter your business address'
+          - if @vendor.errors[:address].any?
+            %p.text-red-600.text-sm.mt-1= @vendor.errors[:address].join(', ')
+        
+        .field.space-y-2.md:col-span-2
+          = f.label :description, 'Company Description', class: 'block text-sm font-medium text-gray-700'
+          = f.text_area :description, rows: 4, class: 'w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition', placeholder: 'Tell customers about your company, services, and what makes you unique...'
+          - if @vendor.errors[:description].any?
+            %p.text-red-600.text-sm.mt-1= @vendor.errors[:description].join(', ')
+
+      / Account Information Section
+      %h2.text-xl.font-bold.text-blue-800.mb-6.mt-8 Account Information
+      .bg-gray-50.rounded-lg.p-6
+        .grid.grid-cols-1.md:grid-cols-2.gap-6
+          .field.space-y-2
+            %label.block.text-sm.font-medium.text-gray-700 Created
+            %p.text-gray-900= @vendor.created_at.strftime('%B %d, %Y')
+          
+          .field.space-y-2
+            %label.block.text-sm.font-medium.text-gray-700 Last Updated
+            %p.text-gray-900= @vendor.updated_at.strftime('%B %d, %Y')
+          
+          .field.space-y-2
+            %label.block.text-sm.font-medium.text-gray-700 Total Cars
+            %p.text-gray-900= @vendor.cars.count
+          
+          .field.space-y-2
+            %label.block.text-sm.font-medium.text-gray-700 Active Cars
+            %p.text-gray-900= @vendor.cars.where(status: 'available').count
+
+      / Action Buttons
+      .flex.flex-col.sm:flex-row.gap-4.pt-8
+        = f.submit 'Update Profile', class: 'bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg shadow-lg hover:shadow-xl transition-all duration-200'
+        = link_to 'Cancel', vendor_path(@vendor), class: 'bg-gray-500 hover:bg-gray-600 text-white font-bold py-3 px-8 rounded-lg shadow-lg hover:shadow-xl transition-all duration-200 text-center' 

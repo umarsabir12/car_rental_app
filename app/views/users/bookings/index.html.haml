@@ -100,11 +100,17 @@
                             %i.fas.fa-check-circle.mr-2
                             Payment Confirmed
                         - else
-                          = link_to users_payment_path(booking.id), 
-                              class: 'bg-gradient-to-r from-blue-600 to-blue-700 text-white px-6 py-3 rounded-lg font-semibold hover:from-blue-700 hover:to-blue-800 transition-all duration-200 shadow-md hover:shadow-lg flex items-center justify-center min-w-40',
-                              data: { turbo: false } do
-                            %i.fas.fa-credit-card.mr-2
-                            Pay Now
+                          - has_flash_alert = flash[:alert].present?
+                          - if has_flash_alert
+                            .payment-disabled.bg-gray-300.text-gray-500.px-6.py-3.rounded-lg.font-semibold.cursor-not-allowed.flex.items-center.justify-center.min-w-40.opacity-60{ title: 'Payment is disabled until your documents are approved' }
+                              %i.fas.fa-lock.mr-2
+                              Payment
+                          - else
+                            = link_to users_payment_path(booking.id), 
+                                class: 'bg-gradient-to-r from-blue-600 to-blue-700 text-white px-6 py-3 rounded-lg font-semibold hover:from-blue-700 hover:to-blue-800 transition-all duration-200 shadow-md hover:shadow-lg flex items-center justify-center min-w-40',
+                                data: { turbo: false } do
+                              %i.fas.fa-credit-card.mr-2
+                              Pay Now
 
       - else
         .text-center.py-16
@@ -119,6 +125,39 @@
                 %span Explore Cars
 :javascript
   document.addEventListener('DOMContentLoaded', function() {
+    // Check if there's a flash alert (indicating pending documents)
+    const hasFlashAlert = document.querySelector('.bg-red-50') !== null;
+    
+    if (hasFlashAlert) {
+      // Disable all payment buttons when documents are pending
+      document.querySelectorAll('a[href*="/payments"]').forEach(function(link) {
+        // Replace the link with a disabled button
+        const disabledButton = document.createElement('div');
+        disabledButton.className = 'payment-disabled bg-gray-300 text-gray-500 px-6 py-3 rounded-lg font-semibold cursor-not-allowed flex items-center justify-center min-w-40 opacity-60';
+        disabledButton.innerHTML = '<i class="fas fa-lock mr-2"></i>Payment Disabled';
+        disabledButton.title = 'Payment is disabled until your documents are approved';
+        
+        // Add click handler to show message
+        disabledButton.addEventListener('click', function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          alert("Payment is currently disabled. Please wait for your documents to be approved before proceeding with payment.");
+        });
+        
+        link.parentNode.replaceChild(disabledButton, link);
+      });
+      
+      // Also handle any payment-disabled elements that might already exist
+      document.querySelectorAll('.payment-disabled').forEach(function(disabledBtn) {
+        disabledBtn.addEventListener('click', function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          alert("Payment is currently disabled. Please wait for your documents to be approved before proceeding with payment.");
+        });
+      });
+    }
+    
+    // Original pay button logic for other cases
     document.querySelectorAll('.pay-btn').forEach(function(btn) {
       btn.addEventListener('click', function(e) {
         if (btn.dataset.pendingDocs === 'true') {

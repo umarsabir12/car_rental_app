@@ -8,7 +8,7 @@
         %h1.text-4xl.font-extrabold.text-blue-900.mb-2 Welcome, #{current_vendor.company_name}!
         %p.text-lg.text-gray-600 Manage your car rental business from this dashboard
       .flex.gap-3
-        = link_to edit_vendors_profile_path, class: 'bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded-lg transition flex items-center gap-2' do
+        = link_to edit_vendor_path, class: 'bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded-lg transition flex items-center gap-2' do
           %i.fas.fa-edit
           Edit Profile
 
@@ -66,7 +66,7 @@
             %span.text-gray-400 Not provided
       
       .mt-6.pt-4.border-t.border-gray-100
-        = link_to edit_vendors_profile_path, class: 'w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 rounded-lg transition flex items-center justify-center gap-2' do
+        = link_to edit_vendor_path, class: 'w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 rounded-lg transition flex items-center justify-center gap-2' do
           %i.fas.fa-edit
           Edit Company Information
 
