@@ -6,9 +6,20 @@ class Vendor < ApplicationRecord
 
   has_many :cars, dependent: :destroy
 
-  validates :email, :company_name, presence: true
+  validates :email, :company_name, :first_name, :last_name, presence: true
+  validates :email, format: { with: URI::MailTo::EMAIL_REGEXP }, if: :email?
+  validates :website, format: { with: URI::regexp(%w[http https]) }, allow_blank: true
+  validates :company_logo, format: { with: URI::regexp(%w[http https]) }, allow_blank: true
 
   def name
     "#{first_name} #{last_name}"
+  end
+
+  def full_name
+    name
+  end
+
+  def display_name
+    company_name.present? ? company_name : name
   end
 end

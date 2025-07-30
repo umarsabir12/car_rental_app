@@ -61,7 +61,7 @@
         
         .field.space-y-2
           = f.label :price, 'Daily Price (USD) *', class: 'block text-sm font-medium text-gray-700'
-          = f.number_field :price, required: true, step: 5, min: 0, class: 'w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition', placeholder: 'e.g., 50.00'
+          = f.number_field :price, required: true, step: 1, min: 0, class: 'w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition', placeholder: 'e.g., 50.00'
         
         .field.space-y-2
           = f.label :status, 'Status *', class: 'block text-sm font-medium text-gray-700'
@@ -137,51 +137,116 @@
         = f.text_field :main_image_url, class: 'w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition', placeholder: 'https://example.com/car-image.jpg'
 
       / Images Section
-      %h2.text-lg.font-bold.text-blue-800.mb-4.mt-8 Car Images
+      %h2.text-lg.font-bold.text-blue-800.mb-4.mt-8 Car Images *
+      - if @car.errors[:images].any?
+        .mb-4.p-4.bg-red-50.border.border-red-200.rounded-lg
+          %p.text-red-600.font-medium= @car.errors[:images].join(', ')
+      
       .flex.gap-6.mb-4
         - 5.times do |i|
           .relative.group
-            %div.flex.items-center.justify-center.w-32.h-24.bg-blue-50.rounded-xl.shadow.border-2.border-dashed.border-blue-300.group-hover:border-blue-500.transition-all.duration-200{ id: "plus-card-#{i}" }
+            %div.flex.items-center.justify-center.w-32.h-24.bg-blue-50.rounded-xl.shadow.border-2.border-dashed.border-blue-300.group-hover:border-blue-500.transition-all.duration-200{ id: "plus-card-#{i}", class: i == 0 ? 'border-red-400 bg-red-50' : '' }
               %i.fas.fa-plus.text-3xl.text-blue-400{ id: "plus-icon-#{i}" }
               %img.hidden.absolute.inset-0.w-full.h-full.object-cover.rounded-xl{ id: "preview-img-#{i}" }
-            = f.file_field :images, name: "car[images][]", id: "car_image_#{i}", accept: 'image/*', class: 'hidden', data: { image_index: i }
+              - if i == 0
+                .absolute.-top-2.-right-2.bg-red-500.text-white.text-xs.px-2.py-1.rounded-full.font-bold Required
+            = f.file_field :images, name: "car[images][]", id: "car_image_#{i}", accept: 'image/*', class: 'hidden', data: { image_index: i, required: i == 0 }
 
       .text-sm.text-gray-600.mb-8
-        %p Upload up to 5 high-quality images of your car. First image will be used as the main display image.
+        %p.text-red-600.font-medium At least one image is required. Upload up to 5 high-quality images of your car. First image will be used as the main display image.
 
       / Submit Button
       .flex.justify-end.pt-6
         = f.submit 'Create Car', class: 'bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg shadow-lg hover:shadow-xl transition-all duration-200'
 
 :javascript
-  document.addEventListener('DOMContentLoaded', function() {
+  // Initialize image upload functionality
+  function initializeImageUploads() {
+    const form = document.querySelector('form');
+    let hasImage = false;
+    
+    // Track if any image is selected
+    function checkImageSelection() {
+      hasImage = false;
+      for (let i = 0; i < 5; i++) {
+        const fileInput = document.getElementById('car_image_' + i);
+        if (fileInput && fileInput.files && fileInput.files[0]) {
+          hasImage = true;
+          break;
+        }
+      }
+    }
+    
+    // Form validation
+    if (form) {
+      form.addEventListener('submit', function(e) {
+        checkImageSelection();
+        if (!hasImage) {
+          e.preventDefault();
+          alert('Please upload at least one image for the car.');
+          return false;
+        }
+      });
+    }
+    
+    // Initialize file inputs
     for (let i = 0; i < 5; i++) {
       const fileInput = document.getElementById('car_image_' + i);
       const previewImg = document.getElementById('preview-img-' + i);
       const plusIcon = document.getElementById('plus-icon-' + i);
       const plusCard = document.getElementById('plus-card-' + i);
+      
       if (fileInput && previewImg && plusIcon && plusCard) {
-        fileInput.addEventListener('change', function(e) {
-          if (fileInput.files && fileInput.files[0]) {
-            const reader = new FileReader();
-            reader.onload = function(ev) {
-              previewImg.src = ev.target.result;
-              previewImg.classList.remove('hidden');
-              plusIcon.classList.add('hidden');
-            };
-            reader.readAsDataURL(fileInput.files[0]);
-          } else {
-            previewImg.src = '';
-            previewImg.classList.add('hidden');
-            plusIcon.classList.remove('hidden');
-          }
-        });
-        plusCard.addEventListener('click', function() {
-          fileInput.click();
-        });
-        previewImg.addEventListener('click', function(e) {
-          e.stopPropagation();
-        });
+        // Remove existing event listeners to prevent duplicates
+        const newFileInput = fileInput.cloneNode(true);
+        fileInput.parentNode.replaceChild(newFileInput, fileInput);
+        
+        const newPlusCard = plusCard.cloneNode(true);
+        plusCard.parentNode.replaceChild(newPlusCard, plusCard);
+        
+        // Re-get elements after cloning
+        const newFileInputElement = document.getElementById('car_image_' + i);
+        const newPlusCardElement = document.getElementById('plus-card-' + i);
+        const newPreviewImg = document.getElementById('preview-img-' + i);
+        const newPlusIcon = document.getElementById('plus-icon-' + i);
+        
+        if (newFileInputElement && newPreviewImg && newPlusIcon && newPlusCardElement) {
+          newFileInputElement.addEventListener('change', function(e) {
+            if (newFileInputElement.files && newFileInputElement.files[0]) {
+              const reader = new FileReader();
+              reader.onload = function(ev) {
+                newPreviewImg.src = ev.target.result;
+                newPreviewImg.classList.remove('hidden');
+                newPlusIcon.classList.add('hidden');
+              };
+              reader.readAsDataURL(newFileInputElement.files[0]);
+              checkImageSelection();
+            } else {
+              newPreviewImg.src = '';
+              newPreviewImg.classList.add('hidden');
+              newPlusIcon.classList.remove('hidden');
+              checkImageSelection();
+            }
+          });
+          
+          newPlusCardElement.addEventListener('click', function() {
+            newFileInputElement.click();
+          });
+          
+          newPreviewImg.addEventListener('click', function(e) {
+            e.stopPropagation();
+          });
+        }
       }
     }
-  }); 
+  }
+
+  // Initialize on multiple events to ensure it works
+  document.addEventListener('DOMContentLoaded', initializeImageUploads);
+  document.addEventListener('turbo:load', initializeImageUploads);
+  document.addEventListener('turbo:render', initializeImageUploads);
+  
+  // Also initialize immediately if DOM is already ready
+  if (document.readyState !== 'loading') {
+    setTimeout(initializeImageUploads, 100);
+  } 

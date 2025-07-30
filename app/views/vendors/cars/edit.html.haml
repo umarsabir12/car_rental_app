@@ -86,55 +86,138 @@
 
       / Images Section
       %h2.text-lg.font-bold.text-blue-800.mb-4.mt-8 Car Images
+      
+      / Existing Images Display
+      - if @car.images.attached? && @car.images.any?
+        .mb-6
+          %h3.text-md.font-semibold.text-gray-700.mb-3 Current Images (#{@car.images.count})
+          .flex.flex-wrap.gap-4.mb-4
+            - @car.images.each_with_index do |image, index|
+              .relative.group
+                .w-32.h-24.rounded-lg.overflow-hidden.shadow-md
+                  %img.w-full.h-full.object-cover{ src: url_for(image), alt: "Car image #{index + 1}" }
+                .absolute.top-1.right-1
+                  %button.text-red-500.hover:text-red-700.bg-white.rounded-full.w-6.h-6.flex.items-center.justify-center.shadow-sm{ type: "button", onclick: "removeImage(#{index})" }
+                    %i.fas.fa-times.text-xs
+      
+      / Add New Images
+      %h3.text-md.font-semibold.text-gray-700.mb-3 Add New Images
       .flex.gap-6.mb-4
-        - existing_images = @car.images.to_a
         - 5.times do |i|
           .relative.group
             %div.flex.items-center.justify-center.w-32.h-24.bg-blue-50.rounded-xl.shadow.border-2.border-dashed.border-blue-300.group-hover:border-blue-500.transition-all.duration-200{ id: "plus-card-#{i}" }
-              - if existing_images[i]
-                %img.absolute.inset-0.w-full.h-full.object-cover.rounded-xl{ id: "preview-img-#{i}", src: url_for(existing_images[i]) }
-                %i.fas.fa-plus.text-3xl.text-blue-400.hidden{ id: "plus-icon-#{i}" }
-              - else
-                %i.fas.fa-plus.text-3xl.text-blue-400{ id: "plus-icon-#{i}" }
-                %img.hidden.absolute.inset-0.w-full.h-full.object-cover.rounded-xl{ id: "preview-img-#{i}" }
+              %i.fas.fa-plus.text-3xl.text-blue-400{ id: "plus-icon-#{i}" }
+              %img.hidden.absolute.inset-0.w-full.h-full.object-cover.rounded-xl{ id: "preview-img-#{i}" }
             = f.file_field :images, name: "car[images][]", id: "car_image_#{i}", accept: 'image/*', class: 'hidden', data: { image_index: i }
 
       .text-sm.text-gray-600.mb-8
-        %p Upload up to 5 high-quality images of your car. First image will be used as the main display image.
+        %p Upload additional images to add to your car. You can upload up to 5 images total.
 
       / Submit Button
       .flex.justify-end.pt-6
         = f.submit 'Update Car', class: 'bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg shadow-lg hover:shadow-xl transition-all duration-200'
 
 :javascript
-  document.addEventListener('DOMContentLoaded', function() {
+  // Function to remove existing images
+  function removeImage(imageIndex) {
+    if (confirm('Are you sure you want to remove this image?')) {
+      const carId = window.location.pathname.split('/').pop();
+      const imageContainer = event.target.closest('.relative');
+      
+      fetch(`/vendors/cars/${carId}/remove_image`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        },
+        body: JSON.stringify({ image_index: imageIndex })
+      })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json();
+      })
+      .then(data => {
+        if (data.success) {
+          // Hide the image element
+          if (imageContainer) {
+            imageContainer.style.display = 'none';
+          }
+          // Update the image count
+          const countElement = document.querySelector('h3');
+          if (countElement) {
+            const currentCount = parseInt(countElement.textContent.match(/\((\d+)\)/)[1]);
+            countElement.textContent = `Current Images (${currentCount - 1})`;
+          }
+        } else {
+          alert('Failed to remove image: ' + data.message);
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        alert('Failed to remove image. Please try again.');
+      });
+    }
+  }
+
+  // Initialize image upload functionality
+  function initializeImageUploads() {
     for (let i = 0; i < 5; i++) {
       const fileInput = document.getElementById('car_image_' + i);
       const previewImg = document.getElementById('preview-img-' + i);
       const plusIcon = document.getElementById('plus-icon-' + i);
       const plusCard = document.getElementById('plus-card-' + i);
+      
       if (fileInput && previewImg && plusIcon && plusCard) {
-        fileInput.addEventListener('change', function(e) {
-          if (fileInput.files && fileInput.files[0]) {
-            const reader = new FileReader();
-            reader.onload = function(ev) {
-              previewImg.src = ev.target.result;
-              previewImg.classList.remove('hidden');
-              plusIcon.classList.add('hidden');
-            };
-            reader.readAsDataURL(fileInput.files[0]);
-          } else {
-            previewImg.src = '';
-            previewImg.classList.add('hidden');
-            plusIcon.classList.remove('hidden');
-          }
-        });
-        plusCard.addEventListener('click', function() {
-          fileInput.click();
-        });
-        previewImg.addEventListener('click', function(e) {
-          e.stopPropagation();
-        });
+        // Remove existing event listeners to prevent duplicates
+        const newFileInput = fileInput.cloneNode(true);
+        fileInput.parentNode.replaceChild(newFileInput, fileInput);
+        
+        const newPlusCard = plusCard.cloneNode(true);
+        plusCard.parentNode.replaceChild(newPlusCard, plusCard);
+        
+        // Re-get elements after cloning
+        const newFileInputElement = document.getElementById('car_image_' + i);
+        const newPlusCardElement = document.getElementById('plus-card-' + i);
+        const newPreviewImg = document.getElementById('preview-img-' + i);
+        const newPlusIcon = document.getElementById('plus-icon-' + i);
+        
+        if (newFileInputElement && newPreviewImg && newPlusIcon && newPlusCardElement) {
+          newFileInputElement.addEventListener('change', function(e) {
+            if (newFileInputElement.files && newFileInputElement.files[0]) {
+              const reader = new FileReader();
+              reader.onload = function(ev) {
+                newPreviewImg.src = ev.target.result;
+                newPreviewImg.classList.remove('hidden');
+                newPlusIcon.classList.add('hidden');
+              };
+              reader.readAsDataURL(newFileInputElement.files[0]);
+            } else {
+              newPreviewImg.src = '';
+              newPreviewImg.classList.add('hidden');
+              newPlusIcon.classList.remove('hidden');
+            }
+          });
+          
+          newPlusCardElement.addEventListener('click', function() {
+            newFileInputElement.click();
+          });
+          
+          newPreviewImg.addEventListener('click', function(e) {
+            e.stopPropagation();
+          });
+        }
       }
     }
-  }); 
+  }
+
+  // Initialize on multiple events to ensure it works
+  document.addEventListener('DOMContentLoaded', initializeImageUploads);
+  document.addEventListener('turbo:load', initializeImageUploads);
+  document.addEventListener('turbo:render', initializeImageUploads);
+  
+  // Also initialize immediately if DOM is already ready
+  if (document.readyState !== 'loading') {
+    setTimeout(initializeImageUploads, 100);
+  } 
