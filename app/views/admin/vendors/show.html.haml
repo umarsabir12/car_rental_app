@@ -28,8 +28,8 @@
               
               / Status Badge
               .absolute.top-2.right-2
-                - status_classes = {'Available' => 'bg-green-500 text-white','Rented' => 'bg-red-500 text-white'}[car.status] || 'bg-blue-500 text-white'
-                %span.inline-block.rounded-full.text-xs.font-semibold.px-2.py-1{ class: status_classes }= car.status
+                - status_classes = {'available' => 'bg-blue-500 text-white','rented' => 'bg-red-500 text-white'}[car.booking_status] || 'bg-blue-500 text-white'
+                %span.inline-block.rounded-full.text-xs.font-semibold.px-2.py-1{ class: status_classes }= car.booking_status
             
             %div.font-semibold.text-lg= "#{car.brand} #{car.model}"
             %div.text-gray-500= "#{car.year} • #{car.color} • #{car.transmission&.titleize}"
