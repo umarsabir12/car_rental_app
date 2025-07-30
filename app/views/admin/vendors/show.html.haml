@@ -1,7 +1,7 @@
 -# Vendor show page
 .container.mx-auto.px-4.py-8
   .bg-white.shadow-lg.rounded-xl.overflow-hidden.p-8.flex.flex-col.md:flex-row.gap-8
-    %img.w-32.h-32.rounded-full.object-cover.shadow.mb-4.md:mb-0{ src: @vendor.company_logo.presence || image_path('placeholder-avatar.png'), alt: @vendor.company_name }
+    -# %img.w-32.h-32.rounded-full.object-cover.shadow.mb-4.md:mb-0{ src: @vendor.company_logo.presence || image_path('placeholder-avatar.png'), alt: @vendor.company_name }
     .flex-1
       .flex.justify-between.items-center.mb-6
         %h1.text-3xl.font-extrabold.text-blue-900.mb-2 Vendor Details
@@ -22,10 +22,18 @@
       .grid.grid-cols-1.md:grid-cols-2.lg:grid-cols-3.gap-6
         - @vendor.cars.each do |car|
           .bg-white.rounded-lg.shadow.p-4.flex.flex-col
-            -# = image_tag(car.main_image_url.presence || image_path('placeholder-car.jpg'), class: 'w-full h-40 object-cover rounded mb-2')
+            / Car Image with Uniform Size
+            .relative.h-40.bg-gray-100.rounded-lg.overflow-hidden.mb-3
+              = car_main_image(car, size: [400, 300])
+              
+              / Status Badge
+              .absolute.top-2.right-2
+                - status_classes = {'Available' => 'bg-green-500 text-white','Rented' => 'bg-red-500 text-white'}[car.status] || 'bg-blue-500 text-white'
+                %span.inline-block.rounded-full.text-xs.font-semibold.px-2.py-1{ class: status_classes }= car.status
+            
             %div.font-semibold.text-lg= "#{car.brand} #{car.model}"
             %div.text-gray-500= "#{car.year} • #{car.color} • #{car.transmission&.titleize}"
-            %div.text-blue-700.font-bold.mt-2= number_to_currency(car.price) + " / day"
+            -# %div.text-blue-700.font-bold.mt-2= number_to_currency(car.price) + " / day"
             = link_to 'View Car', admin_car_path(car), class: 'mt-3 inline-block bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded shadow text-sm font-bold'
     - else
       %p.text-gray-500 No cars listed by this vendor yet. 

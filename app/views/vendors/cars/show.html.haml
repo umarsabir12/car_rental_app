@@ -4,15 +4,7 @@
   / Hero Section with Car Images
   .bg-white.rounded-2xl.shadow-xl.overflow-hidden.mb-8
     .relative.h-96.bg-gradient-to-r.from-blue-50.to-indigo-50
-      - if @car.images.attached?
-        .flex.gap-4.p-6.overflow-x-auto.h-full.items-center
-          - @car.images.each do |img|
-            %img.w-80.h-64.object-cover.rounded-xl.shadow-lg{src: url_for(img), alt: @car.model}
-      - else
-        .flex.items-center.justify-center.h-full
-          .text-center
-            %i.fas.fa-car.text-6xl.text-blue-300.mb-4
-            %p.text-xl.text-blue-400.font-semibold No Images Available
+      = car_image_slider(@car, height: 'h-96', show_counter: true, show_navigation: true, show_pagination: true)
     
     / Car Title and Actions
     .p-8
@@ -213,3 +205,66 @@
           %i.fas.fa-calendar-times.text-4xl.text-gray-300.mb-4
           %p.text-gray-500.text-lg No bookings for this car yet.
           %p.text-gray-400.text-sm This car is available for new bookings.
+
+:javascript
+  // Initialize Swiper with better timing and Turbo support
+  function initializeSwiper() {
+    // Wait for Swiper to be available
+    if (typeof Swiper === 'undefined') {
+      setTimeout(initializeSwiper, 50);
+      return;
+    }
+    
+    const swiperContainer = document.querySelector('.swiper-container');
+    if (!swiperContainer) {
+      return;
+    }
+    
+    // Destroy existing swiper instance if it exists
+    if (swiperContainer.swiper) {
+      swiperContainer.swiper.destroy(true, true);
+    }
+    
+    const swiper = new Swiper('.swiper-container', {
+      loop: true,
+      navigation: {
+        nextEl: '.swiper-button-next',
+        prevEl: '.swiper-button-prev',
+      },
+      pagination: {
+        el: '.swiper-pagination',
+        clickable: true,
+        dynamicBullets: true,
+      },
+      slidesPerView: 1,
+      spaceBetween: 0,
+      centeredSlides: true,
+      autoHeight: true,
+      effect: 'fade',
+      fadeEffect: {
+        crossFade: true
+      },
+      on: {
+        slideChange: function() {
+          // Update image counter
+          const currentSlide = this.realIndex + 1;
+          const totalSlides = this.slides.length;
+          const counter = document.querySelector('.current-slide');
+          if (counter) {
+            counter.textContent = currentSlide;
+          }
+        }
+      }
+    });
+  }
+
+  // Multiple initialization triggers for different scenarios
+  document.addEventListener('DOMContentLoaded', initializeSwiper);
+  document.addEventListener('turbo:load', initializeSwiper);
+  document.addEventListener('turbo:render', initializeSwiper);
+  
+  // Immediate initialization if DOM is already ready
+  if (document.readyState !== 'loading') {
+    setTimeout(initializeSwiper, 100);
+  }
+

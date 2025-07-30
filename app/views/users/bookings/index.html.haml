@@ -10,46 +10,113 @@
           %i.fas.fa-arrow-left.mr-2
           Back to Dashboard
     
-      .bg-white.rounded-2xl.shadow-lg.p-8.mt-0
-        - if flash[:alert]
-          .mb-8.p-4.bg-red-100.border-l-4.border-red-500.rounded.text-red-700.font-semibold.text-center= flash[:alert]
-        %h2.text-xl.font-semibold.text-gray-600.mb-4 Bookings
-        - if @bookings.any?
-          .grid.grid-cols-1.md:grid-cols-2.gap-8
-            - @bookings.each do |booking|
-              .bg-white.rounded-xl.shadow-md.p-6.flex.flex-lg-fill.justify-between.relative
-                / Car Info
-                .flex.items-center.gap-4.mb-4
-                  - if booking.car&.main_image_url.present?
-                    %img.w-100.h-24.object-cover.rounded.shadow{src: booking.car.main_image_url, alt: booking.car.model}
-                  - else
-                    %span.inline-block.w-20.h-14.bg-blue-100.flex.items-center.justify-center.rounded.text-blue-400 N/A
-                  .flex-1
-                    %div.font-bold.text-blue-900= booking.car&.model || 'N/A'
-                    %div.text-sm.text-gray-500= booking.car&.brand || '-'
-                    %div.text-xs.text-gray-400= booking.car&.year || '-'
-                / Booking Dates & Status
-                .flex.items-center.justify-between.mb-2
-                  %div
-                    %span.text-xs.text-gray-500 Start:
-                    %span.font-semibold= booking.start_date.strftime('%b %d, %Y')
-                    %span.text-xs.text-gray-500.ml-2 End:
-                    %span.font-semibold= booking.end_date.strftime('%b %d, %Y')
-                / Payment
-                .flex.items-center.justify-between
-                  %div
-                    - if booking.payment_processed?
-                      %span.inline-block.bg-green-100.text-green-700.px-3.py-1.rounded-full.text-xs.font-semibold Paid
-                    - elsif flash[:alert]
-                      %span.inline-block.bg-yellow-200.text-yellow-700.font-bold.px-4.py-1.rounded-full.text-xs.shadow.cursor-not-allowed(title='Please complete your documents to proceed with payment.') Pay
-                    - else
-                      = link_to 'Pay', users_payment_path(booking.id), 
-                          class: 'inline-block bg-yellow-400 text-yellow-900 font-bold px-4 py-1 rounded-full text-xs shadow hover:bg-yellow-500 transition pay-btn',
-                          data: { pending_docs: (current_user.has_required_pending_document? ? 'true' : 'false') }
-              
-        - else
-          %p.text-gray-500.mt-4 You have no bookings yet.
+  .bg-white.rounded-3xl.shadow-xl.p-8.mt-0.mx-auto
+    / Flash messages
+    - if flash[:alert]
+      .mb-8.p-4.bg-red-50.border-l-4.border-red-500.rounded-lg.text-red-700.font-medium.flex.items-center
+        %i.fas.fa-exclamation-circle.mr-3.text-lg
+        = flash[:alert]
 
+    / Header
+    .container
+      .flex.items-center.justify-between.mb-8
+        %h2.text-3xl.font-bold.text-gray-900.flex.items-center
+          %i.fas.fa-calendar-alt.mr-4.text-blue-600.text-2xl
+          My Bookings
+        = link_to root_path, class: 'flex items-center text-blue-600 hover:text-blue-800 transition-colors' do
+          %i.fas.fa-car.mr-2
+          Browse More Cars
+
+      / Bookings List
+      - if @bookings.any?
+        .space-y-8
+          - @bookings.each do |booking|
+            .bg-white.rounded-2xl.shadow-md.hover:shadow-lg.transition-shadow.duration-300.border.border-gray-100.overflow-hidden
+              .flex.flex-col.lg:flex-row
+                / Car Image Section
+                .relative.w-full.lg.bg-gray-50.flex.items-center.justify-center.p-6.w-50
+                  .w-full.h-48.bg-gray-100.rounded-lg.overflow-hidden
+                    = car_main_image(booking.car, size: [400, 300])
+                  / Status Badge
+                  .absolute.top-4.right-4
+                    - badge_class = case booking.status
+                    - when 'confirmed' then 'bg-green-100 text-green-800'
+                    - when 'pending' then 'bg-yellow-100 text-yellow-800'
+                    - when 'cancelled' then 'bg-red-100 text-red-800'
+                    - else 'bg-gray-100 text-gray-800'
+                    %span.inline-flex.items-center.px-3.py-1.rounded-full.text-sm.font-medium.shadow-sm{class: badge_class}
+                      - if booking.status == 'confirmed'
+                        %i.fas.fa-check-circle.mr-2
+                      - elsif booking.status == 'pending'
+                        %i.fas.fa-clock.mr-2
+                      = booking.status.titleize
+
+                / Details Section
+                .flex-1.p-6
+                  .flex.flex-col.h-full
+                    / Car Info
+                    %div
+                      %h3.text-2xl.font-bold.text-gray-900.mb-2= "#{booking.car&.brand} #{booking.car&.model}"
+                      .flex.flex-wrap.items-center.gap-x-6.gap-y-3.mb-4
+                        .flex.items-center.text-gray-600
+                          %i.fas.fa-calendar.mr-2.text-blue-500
+                          = booking.car&.year
+                        .flex.items-center.text-gray-600
+                          %i.fas.fa-palette.mr-2.text-purple-500
+                          = booking.car&.color
+                        .flex.items-center.text-gray-600
+                          %i.fas.fa-tag.mr-2.text-green-500
+                          = booking.car&.category
+                      .text-xl.font-semibold.text-blue-600.mb-4
+                        = number_to_currency(booking.car&.price)
+                        %span.text-sm.font-normal.text-gray-500.ml-1 per day
+
+                    / Rental Period
+                    .bg-gray-50.rounded-xl.mb-6.flex.items-center.justify-between
+                      
+                      .bg-gray-50.rounded-xl.p-3.flex.items-center.justify-between.text-sm
+                        .flex.items-center.space-x-4
+                          .flex.items-center
+                            %i.fas.fa-calendar-day.mr-2.text-blue-500
+                            %span.font-medium= booking.start_date.strftime('%b %d')
+                          %i.fas.fa-arrow-right.text-gray-400
+                          .flex.items-center
+                            %i.fas.fa-calendar-day.mr-2.text-blue-500
+                            %span.font-medium= booking.end_date.strftime('%b %d, %Y')
+                          .flex.items-center.border-l.border-gray-200.pl-4.ml-2
+                            %i.fas.fa-clock.mr-2.text-blue-500
+                            %span.font-bold.text-blue-600= pluralize((booking.end_date - booking.start_date).to_i, 'day')
+
+                    / Payment Section
+                    .mt-auto.pt-4.border-t.border-gray-200
+                      .flex.flex-col.sm:flex-row.items-start.sm:items-center.justify-between.gap-4
+                        .flex-1
+                          %p.text-sm.text-gray-500 Total Amount
+                          %p.text-2xl.font-bold.text-green-600
+                            = number_to_currency(booking.car&.price * (booking.end_date - booking.start_date).to_i)
+
+                        - if booking.payment_processed?
+                          .bg-green-50.text-green-700.px-5.py-2.rounded-lg.font-medium.border.border-green-200.flex.items-center
+                            %i.fas.fa-check-circle.mr-2
+                            Payment Confirmed
+                        - else
+                          = link_to users_payment_path(booking.id), 
+                              class: 'bg-gradient-to-r from-blue-600 to-blue-700 text-white px-6 py-3 rounded-lg font-semibold hover:from-blue-700 hover:to-blue-800 transition-all duration-200 shadow-md hover:shadow-lg flex items-center justify-center min-w-40',
+                              data: { turbo: false } do
+                            %i.fas.fa-credit-card.mr-2
+                            Pay Now
+
+      - else
+        .text-center.py-16
+          .max-w-md.mx-auto
+            .bg-gray-50.rounded-3xl.p-8.flex.flex-col.items-center
+              .w-20.h-20.rounded-full.bg-blue-50.flex.items-center.justify-center.mb-6
+                %i.fas.fa-calendar-times.text-3xl.text-blue-400
+              %h3.text-xl.font-semibold.text-gray-800.mb-3 No Bookings Yet
+              %p.text-gray-600.mb-6 It looks like you haven't made any bookings yet. Browse our collection to find your perfect car.
+              = link_to root_path, class: 'bg-gradient-to-r from-blue-600 to-blue-700 text-white font-semibold py-3 px-8 rounded-lg shadow hover:from-blue-700 hover:to-blue-800 transition-all duration-200 inline-flex items-center space-x-2' do
+                %i.fas.fa-car
+                %span Explore Cars
 :javascript
   document.addEventListener('DOMContentLoaded', function() {
     document.querySelectorAll('.pay-btn').forEach(function(btn) {

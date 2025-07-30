@@ -2,33 +2,45 @@
   %meta{ name: "booked-dates", content: @booked_dates.to_json, "data-turbo-track" => "reload" }
 
 %div.w-full.bg-gradient-to-br.from-blue-50.to-blue-100.min-h-screen.py-12
-  / Hero Section
+  / Hero Section with Image Slider
   .relative.max-w-6xl.mx-auto.rounded-3xl.overflow-hidden.shadow-2xl.mb-8
-    - images = []
-    - images << @car.main_image_url if @car.main_image_url.present?
-    - if @car.respond_to?(:images) && @car.images.present?
-      - @car.images.each do |img|
-        - images << img unless images.include?(img)
-    - if images.any?
-      .swiper-container
-        .swiper-wrapper
-          - images.each do |img|
-            .swiper-slide.flex.items-center.justify-center
-              %img.w-full.h-96.object-contain.object-center.rounded-3xl{ src: img, alt: "#{@car.brand} #{@car.model}" }
-        .swiper-button-prev
-        .swiper-button-next
-        .swiper-pagination.mt-4
+    - if @car.images.attached? && @car.images.any?
+      .relative.h-96.bg-gray-100
+        / Image Slider
+        .swiper-container.h-full
+          .swiper-wrapper
+            - @car.images.each do |image|
+              .swiper-slide.flex.items-center.justify-center
+                %img.w-full.h-full.object-cover{ src: url_for(image), alt: "#{@car.brand} #{@car.model}" }
+          
+          / Navigation Buttons
+          .swiper-button-prev.swiper-button-white.bg-transparent
+          .swiper-button-next.swiper-button-white.bg-transparent
+          
+          / Pagination
+          .swiper-pagination.swiper-pagination-white
+          
+          / Image Counter
+          .absolute.top-4.right-4.bg-black.bg-opacity-50.text-white.px-3.py-1.rounded-full.text-sm.font-medium
+            %span.current-slide 1
+            %span /
+            %span.total-slides= @car.images.count
     - else
-      %div.w-full.h-96.bg-blue-100.flex.items-center.justify-center
-        %span.text-blue-400.text-3xl.font-bold No Image
-    .absolute.inset-0.bg-gradient-to-t.from-blue-900
-    .absolute.bottom-0.left-0.p-8.z-10
-      %h1.text-4xl.font-extrabold.text-white.mb-2= "#{@car.brand} #{@car.model}"
-      .flex.items-center.mb-2
-        - status_classes = {'Available' => 'bg-green-100 text-green-700','Rented' => 'bg-red-100 text-red-700'}[@car.status] || 'bg-blue-100 text-blue-700'
-        %span.inline-block.rounded-full.text-sm.font-semibold.px-5.py-2{ class: status_classes }= @car.status
-        %span.text-2xl.font-bold.text-white.ml-2= @car.price ? number_to_currency(@car.price) : 'N/A'
-        %span.text-blue-200 /day
+      .h-96.bg-gradient-to-br.from-gray-100.to-gray-200.flex.items-center.justify-center
+        .text-center
+          %i.fas.fa-car.text-gray-400.text-6xl.mb-4
+          %p.text-gray-500.text-lg No Images Available
+    
+    / Car Info Overlay
+    .bottom-0.left-0.right-0.p-8.bg-gray-100
+      .flex.items-center.justify-between
+        .text-blue-900
+          %h1.text-4xl.font-extrabold.mb-2= "#{@car.brand} #{@car.model}"
+          .flex.items-center.space-x-4
+            - status_classes = {'Available' => 'bg-green-500','Rented' => 'bg-red-500'}[@car.status] || 'bg-blue-500'
+            %span.text-white.inline-block.rounded-full.text-sm.font-semibold.px-4.py-2{ class: status_classes }= @car.status
+            %span.text-2xl.font-bold= @car.price ? number_to_currency(@car.price) : 'N/A'
+            %span.text-blue-200 /day
 
   / Main Card
   .max-w-6xl.mx-auto.bg-white.rounded-2xl.shadow-xl.p-10.grid.grid-cols-1.lg:grid-cols-3.gap-10.relative

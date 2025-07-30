@@ -143,14 +143,3 @@
           = link_to vendors_payments_path, class: 'w-full bg-gray-50 hover:bg-gray-100 text-gray-700 font-medium px-4 py-3 rounded-lg transition flex items-center justify-center gap-2' do
             %i.fas.fa-arrow-left
             Back to Payments
-
-  / Car Images Section (if available)
-  - if @booking.car.images.attached?
-    .mt-8
-      .bg-white.rounded-xl.shadow-lg.p-6
-        %h2.text-xl.font-bold.text-blue-900.mb-4.flex.items-center.gap-2
-          %i.fas.fa-images.text-blue-500
-          Car Images
-        .flex.gap-4.overflow-x-auto
-          - @booking.car.images.each do |img|
-            %img.w-48.h-32.object-cover.rounded-lg.shadow{src: url_for(img), alt: @booking.car.model} 

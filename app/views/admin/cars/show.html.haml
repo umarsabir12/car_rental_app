@@ -8,14 +8,9 @@
 
   .bg-white.shadow-lg.rounded-xl.overflow-hidden
     %div{ class: "md:flex" }
-      / ==== Car Images ====
-      %div{ class: "md:w-1/2 bg-gray-100 flex flex-col items-center justify-center p-4" }
-        - if @car.images.attached?
-          .flex.flex-wrap.gap-2.justify-center.mb-4
-            - @car.images.each do |img|
-              = image_tag img.variant(resize_to_limit: [400, 250]), class: 'rounded-lg shadow w-40 h-28 object-cover', alt: @car.model
-        - else
-          = image_tag(@car.main_image_url.presence || image_path('placeholder-car.jpg'), class: 'rounded-lg shadow w-full h-64 object-cover', alt: @car.model)
+      / ==== Car Images Slider ====
+      %div{ class: "md:w-1/2" }
+        = car_image_slider(@car, height: 'h-96', show_counter: true, show_navigation: true, show_pagination: true)
 
       / ==== Car Details ====
       %div{ class: "md:w-1/2 p-6 flex flex-col" }
@@ -64,3 +59,41 @@
           -# = link_to "Book Now", new_booking_path(car_id: @car.id), class: "bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded shadow text-lg font-bold"
 
         %p.text-xs.text-gray-400.mt-4 Last updated: #{@car.updated_at.strftime('%b %d, %Y')}
+
+:javascript
+  document.addEventListener('DOMContentLoaded', function() {
+    // Initialize Swiper for admin car image slider
+    if (window.Swiper) {
+      const swiper = new Swiper('.swiper-container', {
+        loop: true,
+        navigation: {
+          nextEl: '.swiper-button-next',
+          prevEl: '.swiper-button-prev',
+        },
+        pagination: {
+          el: '.swiper-pagination',
+          clickable: true,
+          dynamicBullets: true,
+        },
+        slidesPerView: 1,
+        spaceBetween: 0,
+        centeredSlides: true,
+        autoHeight: true,
+        effect: 'fade',
+        fadeEffect: {
+          crossFade: true
+        },
+        on: {
+          slideChange: function() {
+            // Update image counter
+            const currentSlide = this.realIndex + 1;
+            const totalSlides = this.slides.length;
+            const counter = document.querySelector('.current-slide');
+            if (counter) {
+              counter.textContent = currentSlide;
+            }
+          }
+        }
+      });
+    }
+  });

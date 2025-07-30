@@ -15,12 +15,8 @@
               %i.fas.fa-car.mr-3.text-blue-600
               Car Information
             
-            .flex.items-center.space-x-4.mb-4
-              - if @car.main_image_url.present?
-                %img.w-20.h-16.object-cover.rounded-lg{src: @car.main_image_url, alt: @car.model}
-              - else
-                .w-20.h-16.bg-blue-100.rounded-lg.flex.items-center.justify-center
-                  %i.fas.fa-car.text-blue-400.text-2xl
+            .mb-4.p-2
+              = car_main_image(@car, size: [400, 400])
               
               .flex-1
                 %h3.text-xl.font-bold.text-gray-800= "#{@car.brand} #{@car.model}"
