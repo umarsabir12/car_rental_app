@@ -51,6 +51,44 @@
                 = link_to destroy_user_session_path, method: :delete, data: { turbo_method: :delete }, class: "flex items-center px-4 py-3 text-sm text-red-600 hover:bg-red-50 hover:text-red-700 transition-all duration-150" do
                   %i.fas.fa-sign-out-alt.mr-3.text-red-500.w-4
                   Sign Out
+        - elsif vendor_signed_in?
+          / Vendor dropdown menu
+          .relative.hidden.md:block
+            %button#vendor-menu-button.flex.items-center.space-x-3.px-4.py-2.rounded-xl.hover:bg-gray-50.hover:border-gray-300.transition-all.duration-200{type: "button", onclick: "toggleVendorMenu()"}
+              .w-9.h-9.bg-gradient-to-br.from-blue-500.to-blue-600.rounded-full.flex.items-center.justify-center.shadow-sm
+                %span.text-white.font-bold.text-sm= current_vendor.first_name&.first&.upcase || current_vendor.email.first.upcase
+              .flex.flex-col.items-start
+                %span.text-sm.font-semibold.text-gray-900= current_vendor.first_name&.presence || current_vendor.email.split('@').first
+              %svg.w-4.h-4.text-gray-400.ml-2{fill: "none", stroke: "currentColor", viewBox: "0 0 24 24", "stroke-width" => "2"}
+                %path{"stroke-linecap" => "round", "stroke-linejoin" => "round", d: "M19 9l-7 7-7-7"}
+            #vendor-dropdown.absolute.right-0.mt-1.w-56.bg-white.rounded-xl.shadow-xl.border.border-gray-100.hidden.z-50.overflow-hidden
+              .bg-gradient-to-r.from-blue-50.to-indigo-50.px-4.py-3.border-b.border-gray-100
+                .flex.items-center.space-x-3
+                  .w-10.h-10.bg-gradient-to-br.from-blue-500.to-blue-600.rounded-full.flex.items-center.justify-center
+                    %span.text-white.font-bold.text-sm= current_vendor.first_name&.first&.upcase || current_vendor.email.first.upcase
+                  .flex-1
+                    %p.text-sm.font-semibold.text-gray-900= current_vendor.first_name&.presence || current_vendor.email.split('@').first
+                    %p.text-xs.text-gray-500= current_vendor.email
+              .py-2
+                = link_to vendors_dashboard_path, class: "flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-700 transition-all duration-150" do
+                  %i.fas.fa-tachometer-alt.mr-3.text-blue-500.w-4
+                  Dashboard
+                -# = link_to vendors_cars_path, class: "flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-700 transition-all duration-150" do
+                -#   %i.fas.fa-car.mr-3.text-blue-500.w-4
+                -#   My Cars
+                -# = link_to vendors_bookings_path, class: "flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-700 transition-all duration-150" do
+                -#   %i.fas.fa-calendar-check.mr-3.text-blue-500.w-4
+                -#   Bookings
+                -# = link_to vendors_payments_path, class: "flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-700 transition-all duration-150" do
+                -#   %i.fas.fa-credit-card.mr-3.text-blue-500.w-4
+                -#   Payments
+                = link_to vendor_path(current_vendor), class: "flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-700 transition-all duration-150" do
+                  %i.fas.fa-user.mr-3.text-blue-500.w-4
+                  Profile
+                .border-t.border-gray-100.my-1
+                = link_to destroy_vendor_session_path, method: :delete, data: { turbo_method: :delete }, class: "flex items-center px-4 py-3 text-sm text-red-600 hover:bg-red-50 hover:text-red-700 transition-all duration-150" do
+                  %i.fas.fa-sign-out-alt.mr-3.text-red-500.w-4
+                  Sign Out
         - else
           - unless user_signed_in? || vendor_signed_in?
             / Sign In dropdown for unauthenticated users
@@ -77,6 +115,10 @@
     const dropdown = document.getElementById('user-dropdown');
     dropdown.classList.toggle('hidden');
   }
+  function toggleVendorMenu() {
+    const dropdown = document.getElementById('vendor-dropdown');
+    dropdown.classList.toggle('hidden');
+  }
   function toggleSigninMenu() {
     const dropdown = document.getElementById('signin-dropdown');
     dropdown.classList.toggle('hidden');
@@ -85,10 +127,16 @@
   document.addEventListener('click', function(event) {
     const userDropdown = document.getElementById('user-dropdown');
     const userButton = document.getElementById('user-menu-button');
+    const vendorDropdown = document.getElementById('vendor-dropdown');
+    const vendorButton = document.getElementById('vendor-menu-button');
     const signinDropdown = document.getElementById('signin-dropdown');
     const signinButton = document.getElementById('signin-menu-button');
+
     if (userDropdown && userButton && !userButton.contains(event.target) && !userDropdown.contains(event.target)) {
       userDropdown.classList.add('hidden');
+    }
+    if (vendorDropdown && vendorButton && !vendorButton.contains(event.target) && !vendorDropdown.contains(event.target)) {
+      vendorDropdown.classList.add('hidden');
     }
     if (signinDropdown && signinButton && !signinButton.contains(event.target) && !signinDropdown.contains(event.target)) {
       signinDropdown.classList.add('hidden');
