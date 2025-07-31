@@ -18,10 +18,6 @@
         = link_to vendors_bookings_path, class: 'bg-gray-600 hover:bg-gray-700 text-white font-semibold px-6 py-3 rounded-lg transition flex items-center gap-2' do
           %i.fas.fa-arrow-left
           Back to Bookings
-        - if @booking.status == 'Pending'
-          = link_to vendors_booking_path(@booking), method: :patch, data: { confirm: 'Are you sure you want to confirm this booking?' }, class: 'bg-green-600 hover:bg-green-700 text-white font-semibold px-6 py-3 rounded-lg transition flex items-center gap-2' do
-            %i.fas.fa-check
-            Confirm Booking
 
   / Main Content Grid
   .grid.grid-cols-1.lg:grid-cols-3.gap-8
@@ -151,10 +147,6 @@
           = link_to vendors_car_path(@booking.car), class: 'w-full bg-blue-50 hover:bg-blue-100 text-blue-700 font-medium px-4 py-3 rounded-lg transition flex items-center justify-center gap-2' do
             %i.fas.fa-car
             View Car Details
-          - if @booking.status == 'Pending'
-            = link_to vendors_booking_path(@booking), method: :patch, data: { confirm: 'Are you sure you want to confirm this booking?' }, class: 'w-full bg-green-50 hover:bg-green-100 text-green-700 font-medium px-4 py-3 rounded-lg transition flex items-center justify-center gap-2' do
-              %i.fas.fa-check
-              Confirm Booking
           = link_to vendors_bookings_path, class: 'w-full bg-gray-50 hover:bg-gray-100 text-gray-700 font-medium px-4 py-3 rounded-lg transition flex items-center justify-center gap-2' do
             %i.fas.fa-arrow-left
             Back to Bookings
