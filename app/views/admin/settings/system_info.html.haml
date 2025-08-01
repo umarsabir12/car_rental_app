@@ -1,0 +1,112 @@
+.container.mx-auto.px-4.py-8
+  .flex.items-center.justify-between.mb-8
+    %h1.text-3xl.font-bold.text-gray-900 System Information
+    .flex.items-center.space-x-4
+      = link_to admin_settings_path, class: 'bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg transition' do
+        %i.fas.fa-arrow-left.mr-2
+        Back to Settings
+
+  .grid.grid-cols-1.lg:grid-cols-2.gap-8
+    / Application Information
+    .bg-white.rounded-lg.shadow-md.p-6
+      %h2.text-xl.font-semibold.text-gray-900.mb-4 Application Information
+      .space-y-4
+        .flex.items-center.justify-between
+          %span.text-sm.font-medium.text-gray-600 Rails Version
+          %span.text-sm.text-gray-900= @system_info[:rails_version]
+        
+        .flex.items-center.justify-between
+          %span.text-sm.font-medium.text-gray-600 Ruby Version
+          %span.text-sm.text-gray-900= @system_info[:ruby_version]
+        
+        .flex.items-center.justify-between
+          %span.text-sm.font-medium.text-gray-600 Database
+          %span.text-sm.text-gray-900= @system_info[:database]
+        
+        .flex.items-center.justify-between
+          %span.text-sm.font-medium.text-gray-600 Environment
+          %span.inline-flex.items-center.px-2.py-1.rounded-full.text-xs.font-medium{class: @system_info[:environment] == 'production' ? 'bg-red-100 text-red-800' : 'bg-yellow-100 text-yellow-800'}
+            = @system_info[:environment].titleize
+        
+        .flex.items-center.justify-between
+          %span.text-sm.font-medium.text-gray-600 Timezone
+          %span.text-sm.text-gray-900= @system_info[:timezone]
+        
+        .flex.items-center.justify-between
+          %span.text-sm.font-medium.text-gray-600 Server Time
+          %span.text-sm.text-gray-900= @system_info[:server_time].strftime('%Y-%m-%d %H:%M:%S %Z')
+
+    / System Resources
+    .bg-white.rounded-lg.shadow-md.p-6
+      %h2.text-xl.font-semibold.text-gray-900.mb-4 System Resources
+      .space-y-4
+        .flex.items-center.justify-between
+          %span.text-sm.font-medium.text-gray-600 Memory Usage
+          %span.text-sm.text-gray-900= @system_info[:memory_usage]
+        
+        .flex.items-center.justify-between
+          %span.text-sm.font-medium.text-gray-600 Uptime
+          %span.text-sm.text-gray-900= @system_info[:uptime]
+        
+        .flex.items-center.justify-between
+          %span.text-sm.font-medium.text-gray-600 Process ID
+          %span.text-sm.text-gray-900= Process.pid
+
+    / Database Statistics
+    .bg-white.rounded-lg.shadow-md.p-6
+      %h2.text-xl.font-semibold.text-gray-900.mb-4 Database Statistics
+      .space-y-4
+        - stats = ActiveRecord::Base.connection.execute("SELECT schemaname, tablename, n_tup_ins as inserts, n_tup_upd as updates, n_tup_del as deletes FROM pg_stat_user_tables ORDER BY n_tup_ins DESC LIMIT 10")
+        - if stats.any?
+          - stats.each do |row|
+            .flex.items-center.justify-between.p-3.bg-gray-50.rounded-lg
+              %div
+                %p.text-sm.font-medium.text-gray-900= row['tablename']
+                %p.text-xs.text-gray-500= "Inserts: #{row['inserts']} | Updates: #{row['updates']} | Deletes: #{row['deletes']}"
+        - else
+          %p.text-sm.text-gray-500 No database statistics available
+
+    / Recent Logs
+    .bg-white.rounded-lg.shadow-md.p-6
+      %h2.text-xl.font-semibold.text-gray-900.mb-4 Recent Logs
+      .space-y-2
+        - log_file = Rails.root.join('log', "#{Rails.env}.log")
+        - if File.exist?(log_file)
+          - recent_logs = File.readlines(log_file).last(10).reverse
+          - recent_logs.each do |log_line|
+            .p-2.bg-gray-50.rounded.text-xs.font-mono.text-gray-700= log_line.strip
+        - else
+          %p.text-sm.text-gray-500 No log file found
+
+  / System Health Check
+  .mt-8.bg-white.rounded-lg.shadow-md.p-6
+    %h2.text-xl.font-semibold.text-gray-900.mb-4 System Health Check
+    .grid.grid-cols-1.md:grid-cols-3.gap-6
+      .text-center.p-4.bg-green-50.rounded-lg
+        %i.fas.fa-database.text-3xl.text-green-600.mb-2
+        %h3.text-lg.font-semibold.text-green-800 Database
+        %p.text-sm.text-green-600 Connected
+      
+      .text-center.p-4.bg-blue-50.rounded-lg
+        %i.fas.fa-memory.text-3xl.text-blue-600.mb-2
+        %h3.text-lg.font-semibold.text-blue-800 Memory
+        %p.text-sm.text-blue-600= @system_info[:memory_usage]
+      
+      .text-center.p-4.bg-yellow-50.rounded-lg
+        %i.fas.fa-clock.text-3xl.text-yellow-600.mb-2
+        %h3.text-lg.font-semibold.text-yellow-800 Uptime
+        %p.text-sm.text-yellow-600= @system_info[:uptime].split(',').first
+
+  / Quick Actions
+  .mt-8.flex.items-center.justify-center.space-x-4
+    = link_to clear_cache_admin_settings_path, method: :post, class: 'bg-yellow-600 hover:bg-yellow-700 text-white px-6 py-3 rounded-lg transition flex items-center' do
+      %i.fas.fa-broom.mr-2
+      Clear Cache
+    
+    = link_to test_webhook_admin_settings_path, method: :post, class: 'bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg transition flex items-center' do
+      %i.fas.fa-plug.mr-2
+      Test Webhook
+    
+    = link_to admin_settings_path, class: 'bg-gray-600 hover:bg-gray-700 text-white px-6 py-3 rounded-lg transition flex items-center' do
+      %i.fas.fa-cog.mr-2
+      Back to Settings 

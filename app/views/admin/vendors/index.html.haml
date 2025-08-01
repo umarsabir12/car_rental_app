@@ -3,25 +3,20 @@
   %div.flex.justify-between.items-center.mb-6
     %h1.text-3xl.font-extrabold.text-blue-900.mb-2 Vendors
     .flex.gap-3
-      = link_to download_report_admin_vendors_path(format: :csv), class: "items-center px-4 bg-blue-50 py-2 font-medium text-blue-600 hover:text-blue-800 hover:bg-blue-50 rounded-md transition-colors duration-200" do
+      = link_to download_report_admin_vendors_path(format: :csv), class: "items-center px-4 bg-blue-600 py-2 font-medium text-white hover:text-blue-800 hover:bg-blue-50 rounded-md transition-colors duration-200" do
         %i.fas.fa-download.mr-2
         Download Report
-      = link_to new_admin_invited_vendor_path, class: "items-center px-4 bg-green-50 py-2 font-medium text-green-700 hover:text-green-800 hover:bg-green-100 rounded-md transition-colors duration-200 flex gap-2" do
-        %i.fas.fa-user-plus.mr-2
-        Invite Vendor
   - if @vendors.any?
     .grid.grid-cols-1.md:grid-cols-2.lg:grid-cols-3.gap-8
       - @vendors.each do |vendor|
-        .bg-white.rounded-xl.shadow.p-6.flex.flex-col.items-center
-          = link_to admin_vendor_path(vendor) do
-            -# = image_tag(vendor.company_logo.presence || image_path('placeholder-avatar.png'), class: 'w-20 h-20 rounded-full object-cover mb-3')
-            %div.font-semibold.text-xl.text-blue-900= vendor.company_name
+        .bg-white.rounded-xl.shadow.p-6.flex.flex-col.h-80 
+          %div.font-semibold.text-xl.text-blue-900= vendor.company_name
           %div.text-gray-600.mb-1= vendor.name
           %div.text-gray-500.mb-1= vendor.email
           %div.text-gray-500.mb-1= vendor.phone
           %div.text-gray-500.mb-1= vendor.address
           %div.text-gray-500.mb-1= vendor.website
           %p.text-gray-700.mt-2.truncate= vendor.description
-          = link_to 'View Details', admin_vendor_path(vendor), class: 'mt-4 inline-block bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded shadow text-sm font-bold'
+          = link_to 'View Details', admin_vendor_path(vendor), class: 'mt-4 inline-block bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded shadow text-sm font-bold text-center mt-auto'
   - else
     %p.text-gray-500 No vendors found.

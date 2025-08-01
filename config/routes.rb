@@ -43,6 +43,18 @@ Rails.application.routes.draw do
         get :download_report
       end
     end
+    resources :transactions, only: [:index, :show] do
+      member do
+        patch :refund
+      end
+    end
+    resources :settings, only: [:index, :update] do
+      collection do
+        post :test_webhook
+        post :clear_cache
+        get :system_info
+      end
+    end
     resources :documents, only: [:show] do
       member do
         patch :approve

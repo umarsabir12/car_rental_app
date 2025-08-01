@@ -36,11 +36,15 @@ class WebhooksController < ApplicationController
     booking_id = session['metadata']['booking_id']
     booking = Booking.find(booking_id)
     
+    # Update booking
     booking.update(
       payment_processed: true,
       status: 'confirmed',
       stripe_session_id: session['id']
     )
+    
+    # Create transaction record
+    Transaction.create_from_checkout_session(session)
   end
 
   def handle_payment_intent_succeeded(payment_intent)
@@ -52,6 +56,9 @@ class WebhooksController < ApplicationController
         payment_processed: true,
         status: 'confirmed'
       )
+      
+      # Create transaction record
+      Transaction.create_from_payment_intent(payment_intent)
     end
   end
 
@@ -61,6 +68,9 @@ class WebhooksController < ApplicationController
     
     if booking
       booking.update(status: 'payment_failed')
+      
+      # Create failed transaction record
+      Transaction.create_from_failed_payment(payment_intent)
     end
   end
 end

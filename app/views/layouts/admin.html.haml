@@ -69,7 +69,7 @@
         .flex.items-center.mb-10
           %span.text-2xl.font-extrabold.tracking-wide.ml-2 WheelsOnRent
         %nav.flex-1.space-y-2
-          - nav_links = [{name: 'Dashboard', path: admin_dashboard_index_path, icon: 'fas fa-tachometer-alt'},{name: 'Vehicles', path: '/admin/cars', icon: 'fas fa-car'},{name: 'Vendors', path: admin_vendors_path, icon: 'fas fa-store'},{name: 'Customers', path: '/admin/customers', icon: 'fas fa-users'},{name: 'Bookings', path: '/admin/bookings', icon: 'fas fa-calendar-check'},{name: 'Analytics', path: admin_analytics_path, icon: 'fas fa-chart-bar'},{name: 'Settings', path: '#', icon: 'fas fa-cog'}]
+          - nav_links = [{name: 'Dashboard', path: admin_dashboard_index_path, icon: 'fas fa-tachometer-alt'},{name: 'Vehicles', path: '/admin/cars', icon: 'fas fa-car'},{name: 'Vendors', path: admin_vendors_path, icon: 'fas fa-store'},{name: 'Invited Vendors', path: admin_invited_vendors_path, icon: 'fas fa-user-plus'},{name: 'Customers', path: '/admin/customers', icon: 'fas fa-users'},{name: 'Bookings', path: '/admin/bookings', icon: 'fas fa-calendar-check'},{name: 'Transactions', path: admin_transactions_path, icon: 'fas fa-receipt'},{name: 'Analytics', path: admin_analytics_path, icon: 'fas fa-chart-bar'},{name: 'Settings', path: admin_settings_path, icon: 'fas fa-cog'}]
           - nav_links.each do |link|
             - active = request.path == link[:path]
             %a.flex.items-center.gap-3.py-2.5.px-4.rounded-lg.font-medium.transition{ href: link[:path], class: (active ? 'bg-white/20 text-white shadow' : 'hover:bg-white/10 hover:text-white') }

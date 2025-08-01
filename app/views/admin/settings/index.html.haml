@@ -1,0 +1,181 @@
+.container.mx-auto.px-4.py-8
+  .flex.items-center.justify-between.mb-8
+    %h1.text-3xl.font-bold.text-gray-900 Settings
+    .flex.items-center.space-x-4
+      = link_to admin_dashboard_index_path, class: 'bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg transition' do
+        %i.fas.fa-arrow-left.mr-2
+        Back to Dashboard
+
+  .grid.grid-cols-1.lg:grid-cols-3.gap-8
+    / Main Settings
+    .lg:col-span-2.space-y-6
+      / General Settings
+      .bg-white.rounded-lg.shadow-md.p-6
+        %h2.text-xl.font-semibold.text-gray-900.mb-4 General Settings
+        = form_with url: admin_settings_path, method: :patch, local: true, class: 'space-y-4' do |f|
+          .grid.grid-cols-1.md:grid-cols-2.gap-4
+            .field
+              = f.label :site_name, 'Site Name', class: 'block text-sm font-medium text-gray-700 mb-2'
+              = f.text_field :site_name, value: @settings[:site_name], class: 'w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500'
+            
+            .field
+              = f.label :contact_email, 'Contact Email', class: 'block text-sm font-medium text-gray-700 mb-2'
+              = f.email_field :contact_email, value: @settings[:contact_email], class: 'w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500'
+            
+            .field
+              = f.label :support_phone, 'Support Phone', class: 'block text-sm font-medium text-gray-700 mb-2'
+              = f.text_field :support_phone, value: @settings[:support_phone], class: 'w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500'
+            
+            .field
+              = f.label :site_description, 'Site Description', class: 'block text-sm font-medium text-gray-700 mb-2'
+              = f.text_area :site_description, value: @settings[:site_description], rows: 3, class: 'w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500'
+          
+          = f.submit 'Save General Settings', class: 'bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md transition'
+
+      / Business Settings
+      .bg-white.rounded-lg.shadow-md.p-6
+        %h2.text-xl.font-semibold.text-gray-900.mb-4 Business Settings
+        = form_with url: admin_settings_path, method: :patch, local: true, class: 'space-y-4' do |f|
+          .grid.grid-cols-1.md:grid-cols-2.gap-4
+            .field
+              = f.label :commission_rate, 'Commission Rate (%)', class: 'block text-sm font-medium text-gray-700 mb-2'
+              = f.number_field :commission_rate, value: @settings[:commission_rate], min: 0, max: 100, step: 0.1, class: 'w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500'
+            
+            .field
+              = f.label :max_cars_per_vendor, 'Max Cars per Vendor', class: 'block text-sm font-medium text-gray-700 mb-2'
+              = f.number_field :max_cars_per_vendor, value: @settings[:max_cars_per_vendor], min: 1, class: 'w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500'
+            
+            .field
+              = f.label :min_booking_days, 'Min Booking Days', class: 'block text-sm font-medium text-gray-700 mb-2'
+              = f.number_field :min_booking_days, value: @settings[:min_booking_days], min: 1, class: 'w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500'
+            
+            .field
+              = f.label :max_booking_days, 'Max Booking Days', class: 'block text-sm font-medium text-gray-700 mb-2'
+              = f.number_field :max_booking_days, value: @settings[:max_booking_days], min: 1, class: 'w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500'
+          
+          .flex.items-center.space-x-4
+            .field.flex.items-center
+              = f.check_box :auto_approve_vendors, checked: @settings[:auto_approve_vendors], class: 'h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded'
+              = f.label :auto_approve_vendors, 'Auto-approve new vendors', class: 'ml-2 block text-sm text-gray-900'
+            
+            .field.flex.items-center
+              = f.check_box :require_document_verification, checked: @settings[:require_document_verification], class: 'h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded'
+              = f.label :require_document_verification, 'Require document verification', class: 'ml-2 block text-sm text-gray-900'
+            
+            .field.flex.items-center
+              = f.check_box :maintenance_mode, checked: @settings[:maintenance_mode], class: 'h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded'
+              = f.label :maintenance_mode, 'Maintenance mode', class: 'ml-2 block text-sm text-gray-900'
+          
+          = f.submit 'Save Business Settings', class: 'bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md transition'
+
+      / Payment Settings
+      .bg-white.rounded-lg.shadow-md.p-6
+        %h2.text-xl.font-semibold.text-gray-900.mb-4 Payment Settings
+        .space-y-4
+          .grid.grid-cols-1.md:grid-cols-2.gap-4
+            .field
+              %label.block.text-sm.font-medium.text-gray-700.mb-2 Stripe Publishable Key
+              %input.w-full.px-3.py-2.border.border-gray-300.rounded-md.bg-gray-50{type: 'text', value: @settings[:stripe_publishable_key], readonly: true}
+              %p.text-xs.text-gray-500.mt-1 Configured via environment variable
+            
+            .field
+              %label.block.text-sm.font-medium.text-gray-700.mb-2 Stripe Secret Key
+              %input.w-full.px-3.py-2.border.border-gray-300.rounded-md.bg-gray-50{type: 'text', value: @settings[:stripe_secret_key], readonly: true}
+              %p.text-xs.text-gray-500.mt-1 Configured via environment variable
+            
+            .field
+              %label.block.text-sm.font-medium.text-gray-700.mb-2 Webhook Secret
+              %input.w-full.px-3.py-2.border.border-gray-300.rounded-md.bg-gray-50{type: 'text', value: @settings[:webhook_secret], readonly: true}
+              %p.text-xs.text-gray-500.mt-1 Configured via environment variable
+            
+            .field
+              %label.block.text-sm.font-medium.text-gray-700.mb-2 Stripe Status
+              - if @settings[:stripe_enabled]
+                %span.inline-flex.items-center.px-3.py-1.rounded-full.text-sm.font-medium.bg-green-100.text-green-800
+                  %i.fas.fa-check.mr-1
+                  Enabled
+              - else
+                %span.inline-flex.items-center.px-3.py-1.rounded-full.text-sm.font-medium.bg-red-100.text-red-800
+                  %i.fas.fa-times.mr-1
+                  Disabled
+          
+          .flex.items-center.space-x-4
+            = link_to test_webhook_admin_settings_path, method: :post, class: 'bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md transition flex items-center' do
+              %i.fas.fa-plug.mr-2
+              Test Webhook Connection
+
+    / Sidebar - System Actions
+    .space-y-6
+      / Quick Actions
+      .bg-white.rounded-lg.shadow-md.p-6
+        %h3.text-lg.font-semibold.text-gray-900.mb-4 Quick Actions
+        .space-y-3
+          = link_to clear_cache_admin_settings_path, method: :post, class: 'w-full bg-yellow-600 hover:bg-yellow-700 text-white px-4 py-2 rounded-md transition flex items-center justify-center' do
+            %i.fas.fa-broom.mr-2
+            Clear Cache
+          
+          = link_to system_info_admin_settings_path, class: 'w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md transition flex items-center justify-center' do
+            %i.fas.fa-info-circle.mr-2
+            System Info
+      
+      / System Status
+      .bg-white.rounded-lg.shadow-md.p-6
+        %h3.text-lg.font-semibold.text-gray-900.mb-4 System Status
+        .space-y-3
+          .flex.items-center.justify-between
+            %span.text-sm.text-gray-600 Database
+            %span.inline-flex.items-center.px-2.py-1.rounded-full.text-xs.font-medium.bg-green-100.text-green-800
+              %i.fas.fa-check.mr-1
+              Connected
+          
+          .flex.items-center.justify-between
+            %span.text-sm.text-gray-600 Redis Cache
+            %span.inline-flex.items-center.px-2.py-1.rounded-full.text-xs.font-medium.bg-green-100.text-green-800
+              %i.fas.fa-check.mr-1
+              Available
+          
+          .flex.items-center.justify-between
+            %span.text-sm.text-gray-600 Stripe API
+            - if @settings[:stripe_enabled]
+              %span.inline-flex.items-center.px-2.py-1.rounded-full.text-xs.font-medium.bg-green-100.text-green-800
+                %i.fas.fa-check.mr-1
+                Connected
+            - else
+              %span.inline-flex.items-center.px-2.py-1.rounded-full.text-xs.font-medium.bg-red-100.text-red-800
+                %i.fas.fa-times.mr-1
+                Disconnected
+          
+          .flex.items-center.justify-between
+            %span.text-sm.text-gray-600 Environment
+            %span.inline-flex.items-center.px-2.py-1.rounded-full.text-xs.font-medium{class: Rails.env == 'production' ? 'bg-red-100 text-red-800' : 'bg-yellow-100 text-yellow-800'}
+              = Rails.env.titleize
+      
+      / Recent Activity
+      .bg-white.rounded-lg.shadow-md.p-6
+        %h3.text-lg.font-semibold.text-gray-900.mb-4 Recent Activity
+        .space-y-3
+          .flex.items-center.space-x-3.p-3.bg-gray-50.rounded-lg
+            %i.fas.fa-cog.text-blue-600
+            %div
+              %p.text-sm.font-medium.text-gray-900 Settings Updated
+              %p.text-xs.text-gray-500 2 hours ago
+          
+          .flex.items-center.space-x-3.p-3.bg-gray-50.rounded-lg
+            %i.fas.fa-database.text-green-600
+            %div
+              %p.text-sm.font-medium.text-gray-900 Database Backup
+              %p.text-xs.text-gray-500 1 day ago
+          
+          .flex.items-center.space-x-3.p-3.bg-gray-50.rounded-lg
+            %i.fas.fa-plug.text-yellow-600
+            %div
+              %p.text-sm.font-medium.text-gray-900 Webhook Test
+              %p.text-xs.text-gray-500 3 days ago
+
+  / Flash Messages
+  - if notice
+    .fixed.top-4.right-4.bg-green-50.border.border-green-200.text-green-700.px-4.py-3.rounded.shadow-lg.z-50
+      %p.font-medium= notice
+  - if alert
+    .fixed.top-4.right-4.bg-red-50.border.border-red-200.text-red-700.px-4.py-3.rounded.shadow-lg.z-50
+      %p.font-medium= alert 

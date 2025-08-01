@@ -1,0 +1,23 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  booking: one
+  stripe_payment_intent_id: MyString
+  stripe_session_id: MyString
+  amount: 9.99
+  status: MyString
+  transaction_type: MyString
+  refund_amount: 9.99
+  refund_reason: MyText
+  processed_at: 2025-07-31 21:26:19
+
+two:
+  booking: two
+  stripe_payment_intent_id: MyString
+  stripe_session_id: MyString
+  amount: 9.99
+  status: MyString
+  transaction_type: MyString
+  refund_amount: 9.99
+  refund_reason: MyText
+  processed_at: 2025-07-31 21:26:19
