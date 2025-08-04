@@ -1,0 +1,235 @@
+.container.mx-auto.px-4.py-8
+  .max-w-4xl.mx-auto
+    / Header
+    .flex.items-center.justify-between.mb-8
+      %h1.text-3xl.font-bold.text-gray-900.flex.items-center
+        %i.fas.fa-edit.mr-4.text-blue-600.text-2xl
+        Edit Profile
+ 
+
+    / Flash Messages
+    - if flash[:notice]
+      .mb-6.p-4.bg-green-50.border.border-green-200.rounded-lg
+        .flex.items-center
+          %i.fas.fa-check-circle.text-green-600.mr-2
+          %span.text-green-800= flash[:notice]
+    - if flash[:alert]
+      .mb-6.p-4.bg-red-50.border.border-red-200.rounded-lg
+        .flex.items-center
+          %i.fas.fa-exclamation-circle.text-red-600.mr-2
+          %span.text-red-800= flash[:alert]
+
+    / Edit Form
+    = form_with model: @user, local: true, class: 'bg-white rounded-lg shadow-md overflow-hidden' do |f|
+      / Personal Information Section
+      .border-b.border-gray-200
+        .px-6.py-4.bg-gray-50
+          %h3.text-lg.font-semibold.text-gray-900.flex.items-center
+            %i.fas.fa-user-circle.mr-2.text-blue-600
+            Personal Information
+        .px-6.py-6
+          .grid.grid-cols-1.md:grid-cols-2.gap-6
+            .space-y-4
+              .field
+                = f.label :first_name, class: 'block text-sm font-medium text-gray-700 mb-1'
+                = f.text_field :first_name, class: 'w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500'
+                - if @user.errors[:first_name].any?
+                  %p.text-red-600.text-sm.mt-1= @user.errors[:first_name].join(', ')
+              
+              .field
+                = f.label :last_name, class: 'block text-sm font-medium text-gray-700 mb-1'
+                = f.text_field :last_name, class: 'w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500'
+                - if @user.errors[:last_name].any?
+                  %p.text-red-600.text-sm.mt-1= @user.errors[:last_name].join(', ')
+              
+              .field
+                = f.label :email, class: 'block text-sm font-medium text-gray-700 mb-1'
+                = f.email_field :email, class: 'w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500'
+                - if @user.errors[:email].any?
+                  %p.text-red-600.text-sm.mt-1= @user.errors[:email].join(', ')
+            
+            .space-y-4
+              .field
+                = f.label :phone, class: 'block text-sm font-medium text-gray-700 mb-1'
+                = f.telephone_field :phone, class: 'w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500', placeholder: '+1234567890'
+                - if @user.errors[:phone].any?
+                  %p.text-red-600.text-sm.mt-1= @user.errors[:phone].join(', ')
+              
+            -#   .field
+                = f.label :nationality, class: 'block text-sm font-medium text-gray-700 mb-1'
+                = f.select :nationality, 
+                    options_for_select([['Select Nationality', ''],['Resident', 'resident'],['Tourist', 'tourist']], @user.nationality),{},{ class: 'w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500' }
+                - if @user.errors[:nationality].any?
+                  %p.text-red-600.text-sm.mt-1= @user.errors[:nationality].join(', ')
+
+      / Address Section
+    -#   .border-b.border-gray-200
+        .px-6.py-4.bg-gray-50
+          %h3.text-lg.font-semibold.text-gray-900.flex.items-center
+            %i.fas.fa-home.mr-2.text-blue-600
+            Address Information
+        .px-6.py-6
+          .field
+            = f.label :home_address, class: 'block text-sm font-medium text-gray-700 mb-1'
+            = f.text_area :home_address, rows: 3, class: 'w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500', placeholder: 'Enter your complete home address'
+            - if @user.errors[:home_address].any?
+              %p.text-red-600.text-sm.mt-1= @user.errors[:home_address].join(', ')
+
+      / Form Actions
+      .px-6.py-6.bg-gray-50
+        .flex.flex-col.sm:flex-row.gap-4
+          = f.submit 'Update Profile', class: 'flex-1 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-colors'
+          = link_to 'Cancel', user_path(@user), class: 'flex-1 bg-gray-300 hover:bg-gray-400 text-gray-700 px-6 py-3 rounded-lg font-medium text-center transition-colors'
+
+    / Additional Actions
+    .mt-8.bg-white.rounded-lg.shadow-md.overflow-hidden
+      .px-6.py-4.bg-gray-50
+        %h3.text-lg.font-semibold.text-gray-900.flex.items-center
+          %i.fas.fa-cog.mr-2.text-blue-600
+          Account Actions
+      .px-6.py-6
+        .space-y-4
+          .flex.items-center.justify-between.p-4.border.border-gray-200.rounded-lg
+            .flex.items-center
+              %i.fas.fa-key.text-gray-600.mr-3
+              .flex-1
+                %p.font-medium.text-gray-900 Change Password
+                %p.text-sm.text-gray-500 Update your account password
+            = link_to '#', class: 'text-blue-600 hover:text-blue-800 font-medium' do
+              Change
+          
+          .flex.items-center.justify-between.p-4.border.border-gray-200.rounded-lg
+            .flex.items-center
+              %i.fas.fa-calendar-alt.text-gray-600.mr-3
+              .flex-1
+                %p.font-medium.text-gray-900 View Bookings
+                %p.text-sm.text-gray-500 Check your booking history and status
+            = link_to users_bookings_path, class: 'text-blue-600 hover:text-blue-800 font-medium' do
+              View
+
+:javascript
+  document.addEventListener('DOMContentLoaded', function() {
+    // Form validation enhancement
+    const form = document.querySelector('form');
+    const submitButton = form.querySelector('input[type="submit"]');
+    
+    // Real-time validation feedback
+    const inputs = form.querySelectorAll('input, select, textarea');
+    inputs.forEach(function(input) {
+      input.addEventListener('blur', function() {
+        validateField(this);
+      });
+      
+      input.addEventListener('input', function() {
+        clearFieldError(this);
+      });
+    });
+    
+    // Form submission enhancement
+    form.addEventListener('submit', function(e) {
+      let isValid = true;
+      
+      // Validate all fields
+      inputs.forEach(function(input) {
+        if (!validateField(input)) {
+          isValid = false;
+        }
+      });
+      
+      if (!isValid) {
+        e.preventDefault();
+        showFormError('Please fix the errors above before submitting.');
+      } else {
+        // Show loading state
+        submitButton.disabled = true;
+        submitButton.value = 'Updating...';
+      }
+    });
+    
+    function validateField(field) {
+      const value = field.value.trim();
+      const fieldName = field.name.replace('user[', '').replace(']', '');
+      
+      // Clear previous error
+      clearFieldError(field);
+      
+      // Validation rules
+      switch(fieldName) {
+        case 'first_name':
+        case 'last_name':
+          if (value.length < 2) {
+            showFieldError(field, 'Must be at least 2 characters long');
+            return false;
+          }
+          break;
+        case 'email':
+          const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+          if (!emailRegex.test(value)) {
+            showFieldError(field, 'Please enter a valid email address');
+            return false;
+          }
+          break;
+        case 'phone':
+          const phoneRegex = /^\+?[\d\s\-\(\)]+$/;
+          if (!phoneRegex.test(value)) {
+            showFieldError(field, 'Please enter a valid phone number');
+            return false;
+          }
+          break;
+        case 'nationality':
+          if (!value) {
+            showFieldError(field, 'Please select your nationality');
+            return false;
+          }
+          break;
+        case 'home_address':
+          if (value.length < 10) {
+            showFieldError(field, 'Address must be at least 10 characters long');
+            return false;
+          }
+          break;
+      }
+      
+      return true;
+    }
+    
+    function showFieldError(field, message) {
+      field.classList.add('border-red-500', 'focus:border-red-500', 'focus:ring-red-500');
+      
+      const errorDiv = document.createElement('p');
+      errorDiv.className = 'text-red-600 text-sm mt-1';
+      errorDiv.textContent = message;
+      errorDiv.id = field.name + '_error';
+      
+      field.parentNode.appendChild(errorDiv);
+    }
+    
+    function clearFieldError(field) {
+      field.classList.remove('border-red-500', 'focus:border-red-500', 'focus:ring-red-500');
+      
+      const errorDiv = field.parentNode.querySelector('#' + field.name + '_error');
+      if (errorDiv) {
+        errorDiv.remove();
+      }
+    }
+    
+    function showFormError(message) {
+      // Remove existing form error
+      const existingError = document.querySelector('.form-error');
+      if (existingError) {
+        existingError.remove();
+      }
+      
+      // Add new form error
+      const errorDiv = document.createElement('div');
+      errorDiv.className = 'form-error mb-6 p-4 bg-red-50 border border-red-200 rounded-lg';
+      errorDiv.innerHTML = `
+        <div class="flex items-center">
+          <i class="fas fa-exclamation-circle text-red-600 mr-2"></i>
+          <span class="text-red-800">${message}</span>
+        </div>
+      `;
+      
+      form.parentNode.insertBefore(errorDiv, form);
+    }
+  }); 

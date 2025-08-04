@@ -1,0 +1,72 @@
+.container.mx-auto.px-4.py-8
+  .max-w-4xl.mx-auto
+    / Header
+    .flex.items-center.justify-between.mb-8
+      %h1.text-3xl.font-bold.text-gray-900.flex.items-center
+        %i.fas.fa-user.mr-4.text-blue-600.text-2xl
+        My Profile
+      = link_to edit_user_path(@user), class: 'bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors flex items-center' do
+        %i.fas.fa-edit.mr-2
+        Edit Profile
+
+    / Profile Information
+    .bg-white.rounded-lg.shadow-md.overflow-hidden
+      / Personal Information Section
+      .border-b.border-gray-200
+        .px-6.py-4.bg-gray-50
+          %h3.text-lg.font-semibold.text-gray-900.flex.items-center
+            %i.fas.fa-user-circle.mr-2.text-blue-600
+            Personal Information
+        .px-6.py-6
+          .grid.grid-cols-1.md:grid-cols-2.gap-6
+            .space-y-4
+              .flex.items-center
+                %label.text-sm.font-medium.text-gray-600.w-24 First Name:
+                %span.text-gray-900.ml-2= @user.first_name || 'Not provided'
+              .flex.items-center
+                %label.text-sm.font-medium.text-gray-600.w-24 Last Name:
+                %span.text-gray-900.ml-2= @user.last_name || 'Not provided'
+              .flex.items-center
+                %label.text-sm.font-medium.text-gray-600.w-24 Email:
+                %span.text-gray-900.ml-2= @user.email
+            .space-y-4
+              .flex.items-center
+                %label.text-sm.font-medium.text-gray-600.w-24 Phone:
+                %span.text-gray-900.ml-2= @user.phone || 'Not provided'
+              .flex.items-center
+                %label.text-sm.font-medium.text-gray-600.w-24 Nationality:
+                %span.text-gray-900.ml-2
+                  - if @user.nationality.present?
+                    %span.capitalize= @user.nationality
+                  - else
+                    %span.text-gray-500 Not specified
+
+    
+      / Account Information Section
+      .border-b.border-gray-200
+        .px-6.py-4.bg-gray-50
+          %h3.text-lg.font-semibold.text-gray-900.flex.items-center
+            %i.fas.fa-info-circle.mr-2.text-blue-600
+            Account Information
+        .px-6.py-6
+          .grid.grid-cols-1.md:grid-cols-2.gap-6
+            .space-y-4
+              .flex.items-center
+                %label.text-sm.font-medium.text-gray-600.w-24 Member Since:
+                %span.text-gray-900.ml-2= @user.created_at.strftime('%B %d, %Y')
+              .flex.items-center
+                %label.text-sm.font-medium.text-gray-600.w-24 Last Updated:
+                %span.text-gray-900.ml-2= @user.updated_at.strftime('%B %d, %Y')
+            .space-y-4
+              .flex.items-center
+                %label.text-sm.font-medium.text-gray-600.w-24 Terms Accepted:
+                %span.text-gray-900.ml-2
+                  - if @user.terms_accepted?
+                    %span.text-green-600.flex.items-center
+                      %i.fas.fa-check.mr-1
+                      Yes
+                  - else
+                    %span.text-red-600.flex.items-center
+                      %i.fas.fa-times.mr-1
+                      No
+

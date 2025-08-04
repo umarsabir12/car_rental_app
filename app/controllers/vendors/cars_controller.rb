@@ -104,7 +104,7 @@ class Vendors::CarsController < ApplicationController
         :model, :brand, :category, :color, :year, :price, :status, :description,
         :transmission, :fuel_type, :seats, :mileage, :engine_size,
         :air_conditioning, :gps, :sunroof, :bluetooth, :usb_ports, :featured,
-        :main_image_url, images: []
+        :with_driver, :main_image_url, images: []
       )
     end
 end 

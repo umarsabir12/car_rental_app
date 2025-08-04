@@ -22,23 +22,62 @@
       .flex.items-center.justify-between.mb-8
         %h2.text-3xl.font-bold.text-gray-900.flex.items-center
           %i.fas.fa-calendar-alt.mr-4.text-blue-600.text-2xl
-          My Bookings
-        = link_to root_path, class: 'flex items-center text-blue-600 hover:text-blue-800 transition-colors' do
-          %i.fas.fa-car.mr-2
-          Browse More Cars
+          - if params[:filter] == 'active'
+            Active Bookings
+          - elsif params[:filter] == 'cancelled'
+            Cancelled Bookings
+          - else
+            My Bookings
+        .flex.items-center.space-x-4
+          / Filter Dropdown
+          .relative
+            = form_with url: users_bookings_path, method: :get, local: true, class: 'flex items-center', id: 'filter-form' do |f|
+              .relative
+                = f.select :filter, 
+                    options_for_select([['All Bookings', 'all'],['Active Bookings', 'active'],['Cancelled Bookings', 'cancelled']], params[:filter] || 'all'),{},
+                    { class: 'appearance-none bg-white border border-gray-300 rounded-lg px-4 py-2 pr-8 text-sm font-medium text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors shadow-sm hover:border-gray-400',id: 'booking-filter',onchange: 'this.form.submit()'}
+                .absolute.inset-y-0.right-0.flex.items-center.pr-2.pointer-events-none
+                  %i.fas.fa-chevron-down.text-gray-400.text-xs
+
+      / Filter Summary
+      - if @bookings.any? || params[:filter].present?
+        .mb-6.p-4.bg-blue-50.rounded-lg.border.border-blue-200
+          .flex.items-center.justify-between
+            .flex.items-center
+              %i.fas.fa-filter.mr-2.text-blue-600
+              %span.text-sm.font-medium.text-blue-800
+                - case params[:filter]
+                - when 'active'
+                  Showing #{@bookings.count} active booking#{@bookings.count == 1 ? '' : 's'} (pending and confirmed)
+                - when 'cancelled'
+                  Showing #{@bookings.count} cancelled booking#{@bookings.count == 1 ? '' : 's'}
+                - else
+                  Showing #{@bookings.count} booking#{@bookings.count == 1 ? '' : 's'} (all statuses)
+            - if params[:filter].present? && params[:filter] != 'all'
+              = link_to 'Clear Filter', users_bookings_path, class: 'text-sm text-blue-600 hover:text-blue-800 underline'
 
       / Bookings List
       - if @bookings.any?
         .space-y-8
           - @bookings.each do |booking|
-            .bg-white.rounded-2xl.shadow-md.hover:shadow-lg.transition-shadow.duration-300.border.border-gray-100.overflow-hidden
+            .bg-white.rounded-2xl.shadow-md.hover:shadow-lg.transition-shadow.duration-300.border.border-gray-100.overflow-hidden.relative
+              / Cancel Button - Top Right
+              - if booking.status == 'pending' || booking.status == 'confirmed'
+                .absolute.top-4.right-4.z-10
+                  = button_to users_cancel_booking_path(booking.id), 
+                      method: :patch,
+                      class: 'bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded-2 text-sm font-medium transition-all duration-200 shadow-md hover:shadow-lg flex items-center',
+                      data: { confirm: 'Are you sure you want to cancel this booking? This action cannot be undone.',turbo_confirm: 'Are you sure you want to cancel this booking? This action cannot be undone.'} do
+                    %i.fas.fa-times.mr-1
+                    Cancel
+              
               .flex.flex-col.lg:flex-row
                 / Car Image Section
                 .relative.w-full.lg.bg-gray-50.flex.items-center.justify-center.p-6.w-50
                   .w-full.h-48.bg-gray-100.rounded-lg.overflow-hidden
                     = car_main_image(booking.car, size: [400, 300])
                   / Status Badge
-                  .absolute.top-4.right-4
+                  .absolute.top-4.left-4
                     - badge_class = case booking.status
                     - when 'confirmed' then 'bg-green-100 text-green-800'
                     - when 'pending' then 'bg-yellow-100 text-yellow-800'
@@ -49,6 +88,8 @@
                         %i.fas.fa-check-circle.mr-2
                       - elsif booking.status == 'pending'
                         %i.fas.fa-clock.mr-2
+                      - elsif booking.status == 'cancelled'
+                        %i.fas.fa-times-circle.mr-2
                       = booking.status.titleize
 
                 / Details Section
@@ -95,6 +136,8 @@
                           %p.text-2xl.font-bold.text-green-600
                             = number_to_currency(booking.car&.price * (booking.end_date - booking.start_date).to_i)
 
+
+
                         - if booking.payment_processed?
                           .bg-green-50.text-green-700.px-5.py-2.rounded-lg.font-medium.border.border-green-200.flex.items-center
                             %i.fas.fa-check-circle.mr-2
@@ -106,11 +149,13 @@
                               %i.fas.fa-lock.mr-2
                               Payment
                           - else
-                            = link_to users_payment_path(booking.id), 
-                                class: 'bg-gradient-to-r from-blue-600 to-blue-700 text-white px-6 py-3 rounded-lg font-semibold hover:from-blue-700 hover:to-blue-800 transition-all duration-200 shadow-md hover:shadow-lg flex items-center justify-center min-w-40',
-                                data: { turbo: false } do
-                              %i.fas.fa-credit-card.mr-2
-                              Pay Now
+                            - unless booking.status == 'cancelled'
+                              = link_to users_payment_path(booking.id), 
+                                  class: 'bg-gradient-to-r from-blue-600 to-blue-700 text-white px-6 py-3 rounded-lg font-semibold hover:from-blue-700 hover:to-blue-800 transition-all duration-200 shadow-md hover:shadow-lg flex items-center justify-center min-w-40',
+                                  data: { turbo: false } do
+                                %i.fas.fa-credit-card.mr-2
+                                Pay Now
+                        
 
       - else
         .text-center.py-16
@@ -125,6 +170,32 @@
                 %span Explore Cars
 :javascript
   document.addEventListener('DOMContentLoaded', function() {
+    // Enhanced cancel booking confirmation
+    document.querySelectorAll('form[action*="/cancel"]').forEach(function(form) {
+      form.addEventListener('submit', function(e) {
+        if (!confirm('Are you sure you want to cancel this booking? This action cannot be undone.')) {
+          e.preventDefault();
+          return false;
+        }
+      });
+    });
+    
+    // Filter dropdown enhancement
+    const filterSelect = document.getElementById('booking-filter');
+    if (filterSelect) {
+      filterSelect.addEventListener('change', function() {
+        // Add loading state
+        const form = document.getElementById('filter-form');
+        if (form) {
+          const submitButton = document.createElement('button');
+          submitButton.type = 'submit';
+          submitButton.style.display = 'none';
+          form.appendChild(submitButton);
+          submitButton.click();
+        }
+      });
+    }
+    
     // Check if there's a flash alert (indicating pending documents)
     const hasFlashAlert = document.querySelector('.bg-red-50') !== null;
     

@@ -77,6 +77,11 @@
           .flex.items-center
             = f.check_box :featured, class: 'h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded'
             = f.label :featured, 'Featured Car', class: 'ml-2 block text-sm font-medium text-gray-700'
+        
+        .field.space-y-2
+          .flex.items-center
+            = f.check_box :with_driver, class: 'h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded'
+            = f.label :with_driver, 'Rent with Driver', class: 'ml-2 block text-sm font-medium text-gray-700'
 
       / Main Image URL Section
       %h2.text-lg.font-bold.text-blue-800.mb-4.mt-8 Main Image URL

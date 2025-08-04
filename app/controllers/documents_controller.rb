@@ -6,12 +6,12 @@ class DocumentsController < ApplicationController
     if doc
       success, message = DocumentUploadService.upload(doc, params)
       if success
-        redirect_to user_home_path, notice: message
+        redirect_to users_documents_path, notice: message
       else
-        redirect_to user_home_path, alert: message
+        redirect_to users_documents_path, alert: message
       end
     else
-      redirect_to user_home_path, alert: "Document not found or no image selected."
+      redirect_to users_documents_path, alert: "Document not found or no image selected."
     end
   end
 

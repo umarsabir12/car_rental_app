@@ -44,7 +44,7 @@
                 = link_to users_bookings_path, class: "flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-700 transition-all duration-150" do
                   %i.fas.fa-calendar-check.mr-3.text-blue-500.w-4
                   Bookings
-                = link_to users_profile_path, class: "flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-700 transition-all duration-150" do
+                = link_to user_path(current_user), class: "flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-700 transition-all duration-150" do
                   %i.fas.fa-user.mr-3.text-blue-500.w-4
                   Profile
                 .border-t.border-gray-100.my-1

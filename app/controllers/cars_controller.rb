@@ -12,8 +12,7 @@ class CarsController < ApplicationController
         @car = Car.find(params[:id])
         @booking_success = flash[:notice] if flash[:notice].present?
         # Only include confirmed/paid bookings for date blocking
-        @booked_dates = @car.bookings
-          .where(payment_processed: true)  # Only paid bookings
+        @booked_dates = @car.bookings.where.not(status: 'cancelled')
           .flat_map { |b| (b.start_date..b.end_date).to_a }
           .uniq
           .map(&:to_s)

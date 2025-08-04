@@ -9,6 +9,7 @@ Rails.application.routes.draw do
   namespace :users do
     get 'documents', to: 'documents#index'
     get 'bookings', to: 'bookings#index'
+    patch 'bookings/:id/cancel', to: 'bookings#cancel', as: :cancel_booking
     get 'profile', to: 'profiles#index'
     resources :payments, only: [:show] do
       member do
@@ -18,6 +19,7 @@ Rails.application.routes.draw do
       end
     end
   end
+  resources :users, only: [:show, :edit, :update]
 
   namespace :admin do
     resources :dashboard, only: [:index]
@@ -82,9 +84,9 @@ Rails.application.routes.draw do
   resources :cars
   resources :bookings, only: [:new, :create]
 
-  resource :user, only: [] do
-    patch :update_nationality
-  end
+  # resource :user, only: [:show, :edit, :update] do
+  #   patch :update_nationality
+  # end
 
   # Stripe webhook
   post 'webhooks/stripe', to: 'webhooks#stripe'

@@ -8,8 +8,27 @@ class User < ApplicationRecord
   has_many :documents
   after_create :create_documents
 
+  # Validations
+  validates :first_name, presence: true, length: { minimum: 2, maximum: 50 }
+  validates :last_name, presence: true, length: { minimum: 2, maximum: 50 }
+  validates :email, presence: true, uniqueness: true, format: { with: URI::MailTo::EMAIL_REGEXP }
+  validates :phone, presence: true, format: { with: /\A\+?[\d\s\-\(\)]+\z/, message: "must be a valid phone number" }
+  validates :nationality, presence: true, inclusion: { in: %w[resident tourist], message: "must be either 'resident' or 'tourist'" }
+  validates :home_address, presence: true, length: { minimum: 10, maximum: 500 }
+  validates :terms_accepted, acceptance: { message: "must be accepted to use our services" }
+
   def full_name
     "#{self.first_name} #{self.last_name}"
+  end
+
+  def display_name
+    if first_name.present? && last_name.present?
+      full_name
+    elsif first_name.present?
+      first_name
+    else
+      email.split('@').first
+    end
   end
 
   def booking_alert
@@ -34,7 +53,7 @@ class User < ApplicationRecord
 
   def document_alert_message
     docs = documents.to_a
-    has_pending_booking = bookings.where(status: 'Pending').exists?
+    has_pending_booking = bookings.where(status: 'pending').exists?
     return nil unless has_pending_booking
     if docs.any? { |d| d.status == 'rejected' }
       'Some of your documents have been rejected. Please review and re-upload them to proceed with your booking.'

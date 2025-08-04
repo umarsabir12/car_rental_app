@@ -8,6 +8,8 @@ class Booking < ApplicationRecord
 
   # payment_processed is a boolean attribute
 
+  scope :active, -> {where("start_date > ?", Date.today)}
+  
   private
 
   def end_date_after_start_date

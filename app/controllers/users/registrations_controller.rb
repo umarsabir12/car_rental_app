@@ -17,7 +17,8 @@ class Users::RegistrationsController <  Devise::RegistrationsController
           car_id: params[:car_id],
           start_date: params[:start_date],
           end_date: params[:end_date],
-          payment_processed: false
+          payment_processed: false,
+          status: 'pending'
         )
         sign_in(user) unless user_signed_in?
         redirect_to user_home_path and return

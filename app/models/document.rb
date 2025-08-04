@@ -15,6 +15,8 @@ class Document < ApplicationRecord
     'passport_copy' => ['Passport Copy', 'passport_copy']
   }.freeze
 
+  # Callbacks to update booking status when document status changes
+  after_update :update_user_bookings_status, if: :saved_change_to_status?
 
   def self.doc_info_for_field(field)
     DOC_FIELDS[field]
@@ -24,5 +26,24 @@ class Document < ApplicationRecord
 
   def set_pending_status
     self.status = 'pending'
+  end
+
+  def update_user_bookings_status
+    # Check if all required documents are approved
+    if all_documents_approved?
+      # Update all pending bookings to confirmed status
+      user.bookings.active.where(status: 'pending').update_all(status: 'confirmed')
+    elsif status == 'rejected'
+      # If any document is rejected, keep bookings as pending
+      user.bookings.active.where(status: 'confirmed').update_all(status: 'pending')
+    end
+  end
+
+  def all_documents_approved?
+    required_docs = user.nationality == "resident" ? RESIDENT : TOURIST
+    user_docs = user.documents.where(doc_name: required_docs)
+    
+    # Check if all required documents exist and are approved
+    user_docs.count == required_docs.count && user_docs.all? { |doc| doc.status == 'approved' }
   end
 end
