@@ -14,7 +14,7 @@ class User < ApplicationRecord
   validates :email, presence: true, uniqueness: true, format: { with: URI::MailTo::EMAIL_REGEXP }
   validates :phone, presence: true, format: { with: /\A\+?[\d\s\-\(\)]+\z/, message: "must be a valid phone number" }
   validates :nationality, presence: true, inclusion: { in: %w[resident tourist], message: "must be either 'resident' or 'tourist'" }
-  validates :home_address, presence: true, length: { minimum: 10, maximum: 500 }
+  # validates :home_address, presence: true, length: { minimum: 10, maximum: 500 }
   validates :terms_accepted, acceptance: { message: "must be accepted to use our services" }
 
   def full_name

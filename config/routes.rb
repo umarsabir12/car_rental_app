@@ -2,8 +2,16 @@ Rails.application.routes.draw do
   if Rails.env.development?
     mount LetterOpenerWeb::Engine, at: "/letter_opener"
   end
-  devise_for :vendors, controllers: { sessions: 'vendors/sessions', registrations: 'vendors/registrations' }
-  devise_for :users, controllers: {sessions: 'users/sessions',registrations: 'users/registrations'}
+  devise_for :vendors, controllers: { 
+    sessions: 'vendors/sessions', 
+    registrations: 'vendors/registrations',
+    passwords: 'vendors/passwords'
+  }
+  devise_for :users, controllers: {
+    sessions: 'users/sessions',
+    registrations: 'users/registrations',
+    passwords: 'users/passwords'
+  }
   devise_for :admins, controllers: { sessions: 'admins/sessions' }
   
   namespace :users do
