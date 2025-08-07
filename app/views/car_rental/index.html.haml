@@ -5,6 +5,16 @@
       %h1.text-4xl.md:text-6xl.font-bold.mb-6 Rent Your Perfect Car
       %p.text-xl.mb-8.max-w-2xl.mx-auto
         Choose from hundreds of vehicles at the best prices. Book instantly and drive away in minutes.
+      
+      / Document Requirements Notice
+      .bg-white.bg-opacity-90.rounded-lg.p-4.max-w-2xl.mx-auto.mb-8.shadow-lg
+        .flex.items-center.justify-center.gap-3
+          %i.fa.fa-info-circle.text-blue-600.text-xl
+          %p.text-gray-800.font-medium
+            %strong New to DriveAway?
+            You'll need to submit required documents (ID, license, etc.) to complete your booking.
+            %a.text-blue-600.hover:text-blue-800.underline.font-semibold{href: "#document-requirements"} Learn more below
+      
       / Quick Actions Section
       -# .flex.flex-wrap.justify-center.gap-6.mb-8
         = link_to cars_path, class: 'flex items-center gap-2 text-blue-100 hover:text-white font-semibold text-base underline-offset-4 hover:underline transition' do
@@ -108,6 +118,106 @@
           %h3.text-xl.font-semibold.mb-2 24/7 Support
           %p.text-gray-600 Round-the-clock customer support whenever you need it.
 
+  / Document Requirements Section
+  %section#document-requirements.py-16.bg-gray-50
+    .max-w-7xl.mx-auto.px-4.sm:px-6.lg:px-8
+      .text-center.mb-12
+        %h2.text-3xl.font-bold.text-gray-900.mb-4 Required Documents for Booking
+        %p.text-gray-600.text-lg To complete your booking, you'll need to submit the following documents based on your status
+      
+      .grid.grid-cols-1.lg:grid-cols-2.gap-8
+        / Tourist Requirements
+        .bg-white.rounded-xl.shadow-lg.p-8.border-l-4.border-blue-500
+          .flex.items-center.mb-6
+            .bg-blue-100.w-12.h-12.rounded-full.flex.items-center.justify-center.mr-4
+              %i.fa.fa-plane.h-6.w-6.text-blue-600
+            %h3.text-2xl.font-bold.text-gray-900 Tourist Requirements
+          %p.text-gray-600.mb-6 For tourists visiting the UAE, the following documents are required:
+          %ul.space-y-3
+            %li.flex.items-start
+              .bg-blue-100.w-6.h-6.rounded-full.flex.items-center.justify-center.mr-3.mt-0.5.flex-shrink-0
+                %i.fa.fa-check.text-blue-600.text-xs
+              %div
+                %span.font-semibold.text-gray-900 Home country driving license and IDP
+                %p.text-sm.text-gray-600 International Driving Permit along with your home country license
+            %li.flex.items-start
+              .bg-blue-100.w-6.h-6.rounded-full.flex.items-center.justify-center.mr-3.mt-0.5.flex-shrink-0
+                %i.fa.fa-check.text-blue-600.text-xs
+              %div
+                %span.font-semibold.text-gray-900 Passport Copy
+                %p.text-sm.text-gray-600 Clear copy of your passport's main page
+            %li.flex.items-start
+              .bg-blue-100.w-6.h-6.rounded-full.flex.items-center.justify-center.mr-3.mt-0.5.flex-shrink-0
+                %i.fa.fa-check.text-blue-600.text-xs
+              %div
+                %span.font-semibold.text-gray-900 Copy of visa Entry Stamp
+                %p.text-sm.text-gray-600 Entry stamp page from your passport
+          .mt-6.p-4.bg-blue-50.rounded-lg
+            %p.text-sm.text-blue-800
+              %i.fa.fa-info-circle.mr-2
+              %strong Note:
+              All documents must be clear, legible, and valid. Processing typically takes 24-48 hours.
+
+        / Resident Requirements
+        .bg-white.rounded-xl.shadow-lg.p-8.border-l-4.border-green-500
+          .flex.items-center.mb-6
+            .bg-green-100.w-12.h-12.rounded-full.flex.items-center.justify-center.mr-4
+              %i.fa.fa-home.h-6.w-6.text-green-600
+            %h3.text-2xl.font-bold.text-gray-900 Resident Requirements
+          %p.text-gray-600.mb-6 For UAE residents, the following documents are required:
+          %ul.space-y-3
+            %li.flex.items-start
+              .bg-green-100.w-6.h-6.rounded-full.flex.items-center.justify-center.mr-3.mt-0.5.flex-shrink-0
+                %i.fa.fa-check.text-green-600.text-xs
+              %div
+                %span.font-semibold.text-gray-900 A Valid UAE driving license
+                %p.text-sm.text-gray-600 Your current UAE driving license (front and back required)
+            %li.flex.items-start
+              .bg-green-100.w-6.h-6.rounded-full.flex.items-center.justify-center.mr-3.mt-0.5.flex-shrink-0
+                %i.fa.fa-check.text-green-600.text-xs
+              %div
+                %span.font-semibold.text-gray-900 Emirates ID front and back
+                %p.text-sm.text-gray-600 Both sides of your Emirates ID card
+            %li.flex.items-start
+              .bg-green-100.w-6.h-6.rounded-full.flex.items-center.justify-center.mr-3.mt-0.5.flex-shrink-0
+                %i.fa.fa-check.text-green-600.text-xs
+              %div
+                %span.font-semibold.text-gray-900 Passport and Visa copy
+                %p.text-sm.text-gray-600 Clear copies of your passport and visa pages
+          .mt-6.p-4.bg-green-50.rounded-lg
+            %p.text-sm.text-green-800
+              %i.fa.fa-info-circle.mr-2
+              %strong Note:
+              All documents must be current and valid. Processing typically takes 24-48 hours.
+
+      / Additional Information
+      .mt-12.bg-white.rounded-xl.shadow-lg.p-8
+        .text-center.mb-6
+          %h3.text-2xl.font-bold.text-gray-900.mb-2 Important Information
+          %p.text-gray-600 Everything you need to know about the booking process
+        .grid.grid-cols-1.md:grid-cols-3.gap-6
+          .text-center
+            .bg-yellow-100.w-16.h-16.rounded-full.flex.items-center.justify-center.mx-auto.mb-4
+              %i.fa.fa-upload.h-8.w-8.text-yellow-600
+            %h4.font-semibold.mb-2 Upload Documents
+            %p.text-sm.text-gray-600 Submit all required documents through your dashboard after registration
+          .text-center
+            .bg-purple-100.w-16.h-16.rounded-full.flex.items-center.justify-center.mx-auto.mb-4
+              %i.fa.fa-clock.h-8.w-8.text-purple-600
+            %h4.font-semibold.mb-2 Review Process
+            %p.text-sm.text-gray-600 Documents are reviewed within 24-48 hours by our team
+          .text-center
+            .bg-green-100.w-16.h-16.rounded-full.flex.items-center.justify-center.mx-auto.mb-4
+              %i.fa.fa-credit-card.h-8.w-8.text-green-600
+            %h4.font-semibold.mb-2 Complete Booking
+            %p.text-sm.text-gray-600 Once approved, you can proceed with payment and complete your booking
+
+      / Call to Action
+      .mt-8.text-center
+        = link_to cars_path, class: 'inline-flex items-center px-8 py-4 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors shadow-lg hover:shadow-xl' do
+          %i.fa.fa-car.mr-2
+          Start Browsing Cars
+
   / Footer
   %footer.bg-gray-800.text-white.py-12
     .max-w-7xl.mx-auto.px-4.sm:px-6.lg:px-8
@@ -115,7 +225,7 @@
         .mb-4
           .flex.items-center.mb-4
             %i.h-8.w-8.text-primary.mr-2.fa.fa-car
-            %span.text-xl.font-bold DriveAway
+            %span.text-xl.font-bold WheelsOnRent
           %p.text-gray-300 Your trusted partner for car rentals.
         .mb-4
           %h4.font-semibold.mb-4 Quick Links
@@ -134,8 +244,8 @@
         .mb-4
           %h4.font-semibold.mb-4 Contact Info
           .space-y-2.text-gray-300
-            %p 📞 1-800-DRIVEAWAY
-            %p 📧 support@driveaway.com
+            %p 📞 1-800-WheelsOnRent
+            %p 📧 support@wheelsonrent.com
             %p 📍 123 Rental Street, City, State 12345
       .border-t.border-gray-700.mt-8.pt-8.text-center.text-gray-300
         %p &copy; 2024 DriveAway. All rights reserved.

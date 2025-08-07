@@ -14,6 +14,9 @@ Rails.application.routes.draw do
   }
   devise_for :admins, controllers: { sessions: 'admins/sessions' }
   
+  # Admin profile routes (outside namespace for simpler URLs)
+  resource :admins, only: [:show, :edit, :update, :index], path: 'admin'
+  
   namespace :users do
     get 'documents', to: 'documents#index'
     get 'bookings', to: 'bookings#index'

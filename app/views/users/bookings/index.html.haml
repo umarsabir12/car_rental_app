@@ -62,7 +62,7 @@
           - @bookings.each do |booking|
             .bg-white.rounded-2xl.shadow-md.hover:shadow-lg.transition-shadow.duration-300.border.border-gray-100.overflow-hidden.relative
               / Cancel Button - Top Right
-              - if booking.status == 'pending' || booking.status == 'confirmed'
+              - if (booking.status == 'pending' || booking.status == 'confirmed') && !booking.payment_processed?
                 .absolute.top-4.right-4.z-10
                   = button_to users_cancel_booking_path(booking.id), 
                       method: :patch,

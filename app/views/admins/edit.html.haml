@@ -1,0 +1,60 @@
+.container.mx-auto.px-4.py-8
+  .max-w-2xl.mx-auto
+    .flex.items-center.justify-between.mb-8
+      %h1.text-3xl.font-bold.text-gray-900 Edit Profile
+      = link_to admins_path, class: "text-blue-600 hover:text-blue-700 font-medium flex items-center" do
+        %i.fas.fa-arrow-left.mr-2
+        Back to Profile
+
+    .bg-white.rounded-lg.shadow-md.p-6
+      = form_with model: @admin, url: admins_path, method: :patch, local: true, class: "space-y-6" do |f|
+        - if @admin.errors.any?
+          .bg-red-50.border.border-red-200.rounded-md.p-4.mb-6
+            .flex
+              .flex-shrink-0
+                %i.fas.fa-exclamation-triangle.text-red-400
+              .ml-3
+                %h3.text-sm.font-medium.text-red-800
+                  There were errors with your submission:
+                .mt-2.text-sm.text-red-700
+                  %ul.list-disc.pl-5.space-y-1
+                    - @admin.errors.full_messages.each do |message|
+                      %li= message
+
+        .grid.grid-cols-1.md:grid-cols-2.gap-6
+          .field
+            = f.label :first_name, class: "block text-sm font-medium text-gray-700 mb-2"
+            = f.text_field :first_name, class: "block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500", placeholder: "Enter first name"
+            - if @admin.errors[:first_name].any?
+              .mt-1.text-sm.text-red-600= @admin.errors[:first_name].first
+
+          .field
+            = f.label :last_name, class: "block text-sm font-medium text-gray-700 mb-2"
+            = f.text_field :last_name, class: "block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500", placeholder: "Enter last name"
+            - if @admin.errors[:last_name].any?
+              .mt-1.text-sm.text-red-600= @admin.errors[:last_name].first
+
+        .field
+          = f.label :email, class: "block text-sm font-medium text-gray-700.mb-2"
+          = f.email_field :email, class: "block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500", placeholder: "Enter email address"
+          - if @admin.errors[:email].any?
+            .mt-1.text-sm.text-red-600= @admin.errors[:email].first
+
+        .field
+          %h3.text-lg.font-medium.text-gray-900.mb-4 Change Password (Optional)
+          .grid.grid-cols-1.md:grid-cols-2.gap-6
+            .field
+              = f.label :password, "New Password", class: "block text-sm font-medium text-gray-700 mb-2"
+              = f.password_field :password, class: "block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500", placeholder: "Leave blank to keep current password"
+              - if @admin.errors[:password].any?
+                .mt-1.text-sm.text-red-600= @admin.errors[:password].first
+
+            .field
+              = f.label :password_confirmation, "Confirm New Password", class: "block text-sm font-medium text-gray-700.mb-2"
+              = f.password_field :password_confirmation, class: "block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500", placeholder: "Confirm new password"
+              - if @admin.errors[:password_confirmation].any?
+                .mt-1.text-sm.text-red-600= @admin.errors[:password_confirmation].first
+
+        .flex.items-center.justify-end.space-x-4.pt-6.border-t.border-gray-200
+          = link_to "Cancel", admins_path, class: "px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+          = f.submit "Update Profile", class: "px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" 

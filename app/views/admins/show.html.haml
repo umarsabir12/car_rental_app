@@ -1,0 +1,100 @@
+.container.mx-auto.px-4.py-8
+  .max-w-4xl.mx-auto
+    .flex.items-center.justify-between.mb-8
+      %h1.text-3xl.font-bold.text-gray-900 My Profile
+      = link_to edit_admins_path, class: "bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors duration-200 flex items-center" do
+        %i.fas.fa-edit.mr-2
+        Edit Profile
+
+    .grid.grid-cols-1.lg:grid-cols-3.gap-8
+      .lg:col-span-2
+        .bg-white.rounded-lg.shadow-md.p-6
+          %h2.text-xl.font-semibold.text-gray-900.mb-6 Personal Information
+          
+          .grid.grid-cols-1.md:grid-cols-2.gap-6
+            .field
+              %label.text-sm.font-medium.text-gray-500 First Name
+              %p.text-lg.text-gray-900= @admin.first_name
+
+            .field
+              %label.text-sm.font-medium.text-gray-500 Last Name
+              %p.text-lg.text-gray-900= @admin.last_name
+
+            .field
+              %label.text-sm.font-medium.text-gray-500 Email
+              %p.text-lg.text-gray-900= @admin.email
+
+            .field
+              %label.text-sm.font-medium.text-gray-500 Role
+              - if @admin.super_admin?
+                %span.inline-flex.items-center.px-3.py-1.rounded-full.text-sm.font-medium.bg-purple-100.text-purple-800
+                  %i.fas.fa-crown.mr-1
+                  Super Admin
+              - else
+                %span.inline-flex.items-center.px-3.py-1.rounded-full.text-sm.font-medium.bg-gray-100.text-gray-800
+                  %i.fas.fa-user-shield.mr-1
+                  Admin
+
+            .field
+              %label.text-sm.font-medium.text-gray-500 Created At
+              %p.text-lg.text-gray-900= @admin.created_at.strftime("%B %d, %Y at %I:%M %p")
+
+            .field
+              %label.text-sm.font-medium.text-gray-500 Last Updated
+              %p.text-lg.text-gray-900= @admin.updated_at.strftime("%B %d, %Y at %I:%M %p")
+
+        .bg-white.rounded-lg.shadow-md.p-6.mt-6
+          %h2.text-xl.font-semibold.text-gray-900.mb-6 Permissions
+          
+          .space-y-4
+            .flex.items-center.justify-between.p-4.bg-gray-50.rounded-lg
+              .flex.items-center
+                %i.fas.fa-users.text-blue-500.mr-3
+                .text-sm.font-medium.text-gray-900 Manage Users
+              %span.text-green-600
+                %i.fas.fa-check
+
+            .flex.items-center.justify-between.p-4.bg-gray-50.rounded-lg
+              .flex.items-center
+                %i.fas.fa-car.text-blue-500.mr-3
+                .text-sm.font-medium.text-gray-900 Manage Vehicles
+              %span.text-green-600
+                %i.fas.fa-check
+
+            .flex.items-center.justify-between.p-4.bg-gray-50.rounded-lg
+              .flex.items-center
+                %i.fas.fa-calendar-check.text-blue-500.mr-3
+                .text-sm.font-medium.text-gray-900 Manage Bookings
+              %span.text-green-600
+                %i.fas.fa-check
+
+            .flex.items-center.justify-between.p-4.bg-gray-50.rounded-lg
+              .flex.items-center
+                %i.fas.fa-store.text-blue-500.mr-3
+                .text-sm.font-medium.text-gray-900 Manage Vendors
+              %span.text-green-600
+                %i.fas.fa-check
+
+            .flex.items-center.justify-between.p-4.bg-gray-50.rounded-lg
+              .flex.items-center
+                %i.fas.fa-user-plus.text-blue-500.mr-3
+                .text-sm.font-medium.text-gray-900 Create Admins
+              - if @admin.super_admin?
+                %span.text-green-600
+                  %i.fas.fa-check
+              - else
+                %span.text-gray-400
+                  %i.fas.fa-times
+
+      .lg:col-span-1
+        .bg-white.rounded-lg.shadow-md.p-6
+          %h2.text-xl.font-semibold.text-gray-900.mb-6 Quick Actions
+          
+          .space-y-4
+            = link_to edit_admins_path, class: "w-full flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" do
+              %i.fas.fa-edit.mr-2
+              Edit Profile
+
+            = link_to admin_dashboard_index_path, class: "w-full flex items-center justify-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" do
+              %i.fas.fa-tachometer-alt.mr-2
+              Back to Dashboard 

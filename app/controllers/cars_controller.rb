@@ -1,11 +1,13 @@
 class CarsController < ApplicationController
 
     def index
-        @cars = Car.all
+        @cars = Car.available
         @cars = @cars.where("model ILIKE ?", "%#{params[:model]}%") if params[:model].present?
         @cars = @cars.where("brand ILIKE ?", "%#{params[:brand]}%") if params[:brand].present?
         @cars = @cars.where(year: params[:year]) if params[:year].present?
-        @cars = @cars.where(status: params[:status]) if params[:status].present?
+        @cars = @cars.where(category: params[:category]) if params[:category].present?
+        @cars = @cars.where(with_driver: true) if params[:with_driver] == 'true'
+        @cars = @cars.where(with_driver: false) if params[:with_driver] == 'false'
     end
 
     def show

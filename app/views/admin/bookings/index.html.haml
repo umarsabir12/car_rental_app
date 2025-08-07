@@ -1,55 +1,103 @@
-%div.max-w-7xl.mx-auto.mt-10
-  %div.bg-white.rounded-xl.shadow.p-8
-    %div.flex.justify-between.items-center.mb-6
-      %h1.text-3xl.font-extrabold.text-blue-900.mb-2 Bookings
-      = link_to download_report_admin_bookings_path(format: :csv), class: "items-center text-white bg-blue-600 px-4 py-2 font-medium text-blue-600 hover:text-blue-800 hover:bg-blue-50 rounded-md transition-colors duration-200" do
-        %i.fas.fa-download.mr-2
-        Download Report
-    .flex.flex-col.md:flex-row.md:justify-between.md:items-start.gap-8
-      / Table
-      .flex-1.overflow-x-auto
-        %table.min-w-full.border-separate{ style: "border-spacing: 0 0.75rem;" }
-          %thead
-            %tr
-              %th.px-6.py-3.text-left.text-xs.font-bold.text-blue-700.uppercase.bg-blue-50.rounded-l-lg ID
-              %th.px-6.py-3.text-left.text-xs.font-bold.text-blue-700.uppercase.bg-blue-50 Customer
-              %th.px-6.py-3.text-left.text-xs.font-bold.text-blue-700.uppercase.bg-blue-50 Car
-              %th.px-6.py-3.text-left.text-xs.font-bold.text-blue-700.uppercase.bg-blue-50 Vendor
-              %th.px-6.py-3.text-left.text-xs.font-bold.text-blue-700.uppercase.bg-blue-50 Start Date
-              %th.px-6.py-3.text-left.text-xs.font-bold.text-blue-700.uppercase.bg-blue-50 End Date
-              %th.px-6.py-3.text-left.text-xs.font-bold.text-blue-700.uppercase.bg-blue-50 Payment
-              -# %th.px-6.py-3.text-left.text-xs.font-bold.text-blue-700.uppercase.bg-blue-50 Status
-              %th.px-6.py-3.text-left.text-xs.font-bold.text-blue-700.uppercase.bg-blue-50.rounded-r-lg Action
-          %tbody
-            - @bookings.each do |booking|
-              %tr.bg-blue-50.rounded-lg.shadow.hover:bg-blue-100.transition
-                %td.px-6.py-4.font-semibold.text-blue-900.rounded-l-lg= booking.id
-                %td.px-6.py-4.text-gray-900.font-medium= booking.user&.full_name.presence || booking.user&.email
-                %td.px-6.py-4.text-gray-700= booking.car&.model
-                %td.px-6.py-4.text-gray-700= booking.car&.vendor&.company_name
-                %td.px-6.py-4.text-gray-700= booking.start_date
-                %td.px-6.py-4.text-gray-700= booking.end_date
-                %td.px-6.py-4.text-gray-700
-                  - if booking.payment_processed?
-                    %span.inline-block.bg-green-100.text-green-700.rounded-full.px-3.py-1.text-xs.font-semibold Paid
-                  - else
-                    %span.inline-block.bg-red-100.text-red-700.rounded-full.px-3.py-1.text-xs.font-semibold Unpaid
-                -# %td.px-6.py-4.text-gray-700
-                  - status_classes = {'Confirmed' => 'bg-green-100 text-green-700','Pending' => 'bg-yellow-100 text-yellow-700','Cancelled' => 'bg-red-100 text-red-700'}[booking.status] || 'bg-blue-100 text-blue-700'
-                  %span.inline-block.rounded-full.text-xs.font-semibold.px-4.py-1{ class: status_classes }= booking.status
-                %td.px-6.py-4.rounded-r-lg
-                  = link_to 'View', admin_booking_path(booking), class: 'inline-block bg-blue-100 text-blue-800 font-semibold px-4 py-1 rounded-lg hover:bg-blue-200 transition'
-      / Filter Form
-      .w-full.md:w-64.bg-blue-50.rounded-xl.shadow.p-4.mt-8.md:mt-0
-        %h2.text-lg.font-bold.text-blue-900.mb-4 Filter Bookings
-        = form_with url: admin_bookings_path, method: :get, local: true do |f|
-          .mb-3
-            = f.label :user, "Customer", class: "text-xs font-semibold text-blue-700 mb-1"
-            = f.text_field :user, value: params[:user], class: "w-full px-3 py-2 border border-blue-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-          .mb-3
-            = f.label :car, "Car", class: "text-xs font-semibold text-blue-700 mb-1"
-            = f.text_field :car, value: params[:car], class: "w-full px-3 py-2 border border-blue-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-          .mb-3
-            = f.label :status, "Status", class: "text-xs font-semibold text-blue-700 mb-1"
-            = f.select :status, options_for_select(["All Statuses", "Pending", "Confirmed", "Cancelled"], params[:status]), {}, class: "w-full px-3 py-2 border border-blue-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-          = f.submit "Search", class: "w-full bg-blue-700 text-white font-bold px-4 py-2 rounded-lg shadow hover:bg-blue-800 transition" 
+.container.mx-auto.px-4.py-8
+  .flex.items-center.justify-between.mb-8
+    %h1.text-3xl.font-bold.text-gray-900 Bookings
+    = link_to download_report_admin_bookings_path(format: :csv), class: "bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md transition flex items-center" do
+      %i.fas.fa-download.mr-2
+      Download Report
+
+  / Filters and Search
+  .bg-white.rounded-lg.shadow-md.p-6.mb-8
+    = form_with url: admin_bookings_path, method: :get, local: true, class: 'space-y-4' do |f|
+      .grid.grid-cols-1.md:grid-cols-4.gap-4
+        .field
+          = f.label :user, 'Customer', class: 'block text-sm font-medium text-gray-700 mb-2'
+          = f.text_field :user, value: params[:user], placeholder: 'Customer name or email', class: 'w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500'
+        
+        .field
+          = f.label :car, 'Car', class: 'block text-sm font-medium text-gray-700 mb-2'
+          = f.text_field :car, value: params[:car], placeholder: 'Car model or brand', class: 'w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500'
+        
+        .field
+          = f.label :status, 'Status', class: 'block text-sm font-medium text-gray-700 mb-2'
+          = f.select :status, options_for_select([['All Statuses', ''],['Pending', 'pending'],['Confirmed', 'confirmed'],['Cancelled', 'cancelled']], params[:status]), {}, class: 'w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500'
+        
+        .field.flex.items-end
+          = f.submit 'Filter', class: 'bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md transition'
+          = link_to 'Clear', admin_bookings_path, class: 'ml-2 bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-md transition'
+
+  / Bookings Table
+  .bg-white.rounded-lg.shadow-md.overflow-hidden
+    .overflow-x-auto
+      %table.min-w-full.divide-y.divide-gray-200
+        %thead.bg-gray-50
+          %tr
+            %th.px-6.py-3.text-left.text-xs.font-medium.text-gray-500.uppercase.tracking-wider ID
+            %th.px-6.py-3.text-left.text-xs.font-medium.text-gray-500.uppercase.tracking-wider Customer
+            %th.px-6.py-3.text-left.text-xs.font-medium.text-gray-500.uppercase.tracking-wider Car
+            %th.px-6.py-3.text-left.text-xs.font-medium.text-gray-500.uppercase.tracking-wider Vendor
+            %th.px-6.py-3.text-left.text-xs.font-medium.text-gray-500.uppercase.tracking-wider Start Date
+            %th.px-6.py-3.text-left.text-xs.font-medium.text-gray-500.uppercase.tracking-wider End Date
+            %th.px-6.py-3.text-left.text-xs.font-medium.text-gray-500.uppercase.tracking-wider Status
+            %th.px-6.py-3.text-left.text-xs.font-medium.text-gray-500.uppercase.tracking-wider Payment
+            %th.px-6.py-3.text-left.text-xs.font-medium.text-gray-500.uppercase.tracking-wider Actions
+        %tbody.bg-white.divide-y.divide-gray-200
+          - @bookings.each do |booking|
+            %tr.hover:bg-gray-50
+              %td.px-6.py-4.whitespace-nowrap.text-sm.font-medium.text-gray-900= booking.id
+              %td.px-6.py-4.whitespace-nowrap.text-sm.text-gray-900
+                .flex.flex-col
+                  %span.font-medium= booking.user&.full_name.presence || 'N/A'
+                  %span.text-xs.text-gray-500= booking.user&.email
+              %td.px-6.py-4.whitespace-nowrap.text-sm.text-gray-900
+                .flex.flex-col
+                  %span.font-medium= "#{booking.car&.brand} #{booking.car&.model}"
+                  %span.text-xs.text-gray-500= booking.car&.year
+              %td.px-6.py-4.whitespace-nowrap.text-sm.text-gray-900= booking.car&.vendor&.company_name || 'N/A'
+              %td.px-6.py-4.whitespace-nowrap.text-sm.text-gray-900= booking.start_date&.strftime('%b %d, %Y')
+              %td.px-6.py-4.whitespace-nowrap.text-sm.text-gray-900= booking.end_date&.strftime('%b %d, %Y')
+              %td.px-6.py-4.whitespace-nowrap
+                %span.inline-flex.items-center.px-2.5.py-0.5.rounded-full.text-xs.font-medium{class: case booking.status when 'confirmed' then 'bg-green-100 text-green-800' when 'pending' then 'bg-yellow-100 text-yellow-800' when 'cancelled' then 'bg-red-100 text-red-800' else 'bg-gray-100 text-gray-800' end}
+                  = booking.status&.capitalize
+              %td.px-6.py-4.whitespace-nowrap
+                - if booking.payment_processed?
+                  %span.inline-flex.items-center.px-2.5.py-0.5.rounded-full.text-xs.font-medium.bg-green-100.text-green-800 Paid
+                - else
+                  %span.inline-flex.items-center.px-2.5.py-0.5.rounded-full.text-xs.font-medium.bg-red-100.text-red-800 Unpaid
+              %td.px-6.py-4.whitespace-nowrap.text-sm.font-medium
+                = link_to admin_booking_path(booking), class: 'text-blue-600 hover:text-blue-900' do
+                  %i.fas.fa-eye
+
+    / Pagination
+    - if @bookings.respond_to?(:current_page)
+      .bg-white.px-4.py-3.border-t.border-gray-200.sm:px-6
+        .flex.items-center.justify-between
+          .flex-1.flex.justify-between.sm:hidden
+            - if @bookings.prev_page
+              = link_to 'Previous', admin_bookings_path(page: @bookings.prev_page), class: 'relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50'
+            - if @bookings.next_page
+              = link_to 'Next', admin_bookings_path(page: @bookings.next_page), class: 'ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50'
+          .hidden.sm:flex-1.sm:flex.sm:items-center.sm:justify-between
+            %div
+              %p.text-sm.text-gray-700
+                Showing
+                %span.font-medium= @bookings.offset_value + 1
+                to
+                %span.font-medium= @bookings.offset_value + @bookings.length
+                of
+                %span.font-medium= @bookings.total_count
+                results
+            %div
+              .relative.z-0.inline-flex.shadow-sm.rounded-md
+                - if @bookings.prev_page
+                  = link_to admin_bookings_path(page: @bookings.prev_page), class: 'relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50' do
+                    %i.fas.fa-chevron-left
+                - if @bookings.next_page
+                  = link_to admin_bookings_path(page: @bookings.next_page), class: 'relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50' do
+                    %i.fas.fa-chevron-right
+
+  - if @bookings.empty?
+    .text-center.py-12
+      .text-gray-500
+        %i.fas.fa-calendar-check.text-4xl.mb-4
+        %p.text-lg.font-medium No bookings found
+        %p.text-sm Try adjusting your search or filter criteria 

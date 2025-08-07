@@ -68,8 +68,10 @@
       .w-64.bg-gradient-to-b.from-blue-800.to-purple-600.text-white.flex.flex-col.py-8.px-4
         .flex.items-center.mb-10
           %span.text-2xl.font-extrabold.tracking-wide.ml-2 WheelsOnRent
-        %nav.flex-1.space-y-2
-          - nav_links = [{name: 'Dashboard', path: admin_dashboard_index_path, icon: 'fas fa-tachometer-alt'},{name: 'Vehicles', path: '/admin/cars', icon: 'fas fa-car'},{name: 'Vendors', path: admin_vendors_path, icon: 'fas fa-store'},{name: 'Invited Vendors', path: admin_invited_vendors_path, icon: 'fas fa-user-plus'},{name: 'Customers', path: '/admin/customers', icon: 'fas fa-users'},{name: 'Bookings', path: '/admin/bookings', icon: 'fas fa-calendar-check'},{name: 'Transactions', path: admin_transactions_path, icon: 'fas fa-receipt'},{name: 'Analytics', path: admin_analytics_path, icon: 'fas fa-chart-bar'},{name: 'Settings', path: admin_settings_path, icon: 'fas fa-cog'}]
+        %nav.flex-1.space-y-4
+          - nav_links = [{name: 'Dashboard', path: admin_dashboard_index_path, icon: 'fas fa-tachometer-alt'},{name: 'Vehicles', path: '/admin/cars', icon: 'fas fa-car'},{name: 'Vendors', path: admin_vendors_path, icon: 'fas fa-store'},{name: 'Invited Vendors', path: admin_invited_vendors_path, icon: 'fas fa-user-plus'},{name: 'Customers', path: '/admin/customers', icon: 'fas fa-users'},{name: 'Bookings', path: '/admin/bookings', icon: 'fas fa-calendar-check'},{name: 'Transactions', path: admin_transactions_path, icon: 'fas fa-receipt'},{name: 'Analytics', path: admin_analytics_path, icon: 'fas fa-chart-bar'}]
+          - if current_admin&.super_admin?
+            - nav_links << {name: 'Admins', path: admins_path, icon: 'fas fa-user-shield'}
           - nav_links.each do |link|
             - active = request.path == link[:path]
             %a.flex.items-center.gap-3.py-2.5.px-4.rounded-lg.font-medium.transition{ href: link[:path], class: (active ? 'bg-white/20 text-white shadow' : 'hover:bg-white/10 hover:text-white') }
@@ -82,13 +84,13 @@
             %span.text-lg.font-bold.text-blue-700.md:hidden CarRental
           .relative
             %button#profileDropdownBtn.flex.items-center.focus:outline-none
-              %img.w-8.h-8.rounded-full.mr-2{:alt => "Profile", :src => "https://randomuser.me/api/portraits/men/32.jpg"}/
-              %span.hidden.md:block.font-medium.text-gray-700 Admin
+              -# %img.w-8.h-8.rounded-full.mr-2{:alt => "Profile", :src => "https://randomuser.me/api/portraits/men/32.jpg"}/
+              %span.hidden.md:block.font-medium.text-gray-700.text-lg
+                = current_admin.display_name.titleize
               %svg.w-4.h-4.ml-1.text-gray-500{:fill => "none", :stroke => "currentColor", "stroke-width" => "2", :viewbox => "0 0 24 24"}
                 %path{:d => "M19 9l-7 7-7-7", "stroke-linecap" => "round", "stroke-linejoin" => "round"}
             #profileDropdown.hidden.absolute.right-0.mt-2.w-40.bg-white.rounded.shadow-lg.py-2
-              %a.block.px-4.py-2.text-gray-700.hover:bg-gray-100{:href => "#"} Profile
-              %a.block.px-4.py-2.text-gray-700.hover:bg-gray-100{:href => "#"} Settings
+              = link_to "Edit Profile", edit_admins_path, class: "block px-4 py-2 text-gray-700 hover:bg-gray-100"
               .border-t.my-1
               = button_to "Logout", destroy_admin_session_path, method: :delete, class: "block w-full text-left px-4 py-2 text-red-600 hover:bg-gray-100"
         / Main content area

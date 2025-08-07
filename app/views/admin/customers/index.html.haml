@@ -1,47 +1,91 @@
-%div.max-w-7xl.mx-auto.mt-10
-  %div.bg-white.rounded-xl.shadow.p-8
-    %div.flex.justify-between.items-center.mb-6
-      %h1.text-3xl.font-extrabold.text-blue-900.mb-2 Customers
-      = link_to download_report_admin_customers_path(format: :csv), class: "items-center px-4 bg-blue-600 py-2 font-medium text-white hover:text-blue-800 hover:bg-blue-50 rounded-md transition-colors duration-200" do
-        %i.fas.fa-download.mr-2
-        Download Report
+.container.mx-auto.px-4.py-8
+  .flex.items-center.justify-between.mb-8
+    %h1.text-3xl.font-bold.text-gray-900 Customers
+    = link_to download_report_admin_customers_path(format: :csv), class: "bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md transition flex items-center" do
+      %i.fas.fa-download.mr-2
+      Download Report
 
-    .flex.flex-col.md:flex-row.md:justify-between.md:items-start.gap-8
-      / Table
-      .flex-1.overflow-x-auto
-        %table.min-w-full.border-separate{ style: "border-spacing: 0 0.75rem;" }
-          %thead
-            %tr
-              %th.px-6.py-3.text-left.text-xs.font-bold.text-blue-700.uppercase.bg-blue-50.rounded-l-lg #
-              %th.px-6.py-3.text-left.text-xs.font-bold.text-blue-700.uppercase.bg-blue-50 Name
-              %th.px-6.py-3.text-left.text-xs.font-bold.text-blue-700.uppercase.bg-blue-50 Email
-              %th.px-6.py-3.text-left.text-xs.font-bold.text-blue-700.uppercase.bg-blue-50 Phone
-              %th.px-6.py-3.text-left.text-xs.font-bold.text-blue-700.uppercase.bg-blue-50 Status
-              %th.px-6.py-3.text-left.text-xs.font-bold.text-blue-700.uppercase.bg-blue-50.rounded-r-lg Action
-          %tbody
-            - @users.each_with_index do |user, index|
-              %tr.bg-blue-50.rounded-lg.shadow.hover:bg-blue-100.transition
-                %td.px-6.py-4.font-semibold.text-blue-900.rounded-l-lg= index + 1
-                %td.px-6.py-4.text-gray-900.font-medium= user.full_name.presence || user.email
-                %td.px-6.py-4.text-gray-700= user.email
-                %td.px-6.py-4.text-gray-700= user.phone
-                %td.px-6.py-4.text-gray-700
-                  - status = user.active_for_authentication? ? 'Active' : 'Inactive'
-                  - status_classes = {'Active' => 'bg-green-100 text-green-700','Inactive' => 'bg-gray-100 text-gray-700','Banned' => 'bg-red-100 text-red-700'}[status] || 'bg-blue-100 text-blue-700'
-                  %span.inline-block.rounded-full.text-xs.font-semibold.px-4.py-1{ class: status_classes }= status
-                %td.px-6.py-4.rounded-r-lg
-                  = link_to 'View', admin_customer_path(user), class: 'inline-block bg-blue-100 text-blue-800 font-semibold px-4 py-1 rounded-lg hover:bg-blue-200 transition'
-      / Filter Form
-      .w-full.md:w-64.bg-blue-50.rounded-xl.shadow.p-4.mt-8.md:mt-0
-        %h2.text-lg.font-bold.text-blue-900.mb-4 Filter Users
-        = form_with url: admin_customers_path, method: :get, local: true do |f|
-          .mb-3
-            = f.label :name, "Name", class: "text-xs font-semibold text-blue-700 mb-1"
-            = f.text_field :name, value: params[:name], class: "w-full px-3 py-2 border border-blue-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-          .mb-3
-            = f.label :email, "Email", class: "text-xs font-semibold text-blue-700 mb-1"
-            = f.text_field :email, value: params[:email], class: "w-full px-3 py-2 border border-blue-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-          .mb-3
-            = f.label :phone, "Phone", class: "text-xs font-semibold text-blue-700 mb-1"
-            = f.text_field :phone, value: params[:phone], class: "w-full px-3 py-2 border border-blue-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-          = f.submit "Search", class: "w-full bg-blue-700 text-white font-bold px-4 py-2 rounded-lg shadow hover:bg-blue-800 transition" 
+  / Filters and Search
+  .bg-white.rounded-lg.shadow-md.p-6.mb-8
+    = form_with url: admin_customers_path, method: :get, local: true, class: 'space-y-4' do |f|
+      .grid.grid-cols-1.md:grid-cols-4.gap-4
+        .field
+          = f.label :name, 'Name', class: 'block text-sm font-medium text-gray-700 mb-2'
+          = f.text_field :name, value: params[:name], placeholder: 'Customer name', class: 'w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500'
+        
+        .field
+          = f.label :email, 'Email', class: 'block text-sm font-medium text-gray-700 mb-2'
+          = f.text_field :email, value: params[:email], placeholder: 'Customer email', class: 'w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500'
+        
+        .field
+          = f.label :phone, 'Phone', class: 'block text-sm font-medium text-gray-700 mb-2'
+          = f.text_field :phone, value: params[:phone], placeholder: 'Phone number', class: 'w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500'
+        
+        .field.flex.items-end
+          = f.submit 'Filter', class: 'bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md transition'
+          = link_to 'Clear', admin_customers_path, class: 'ml-2 bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-md transition'
+
+  / Customers Table
+  .bg-white.rounded-lg.shadow-md.overflow-hidden
+    .overflow-x-auto
+      %table.min-w-full.divide-y.divide-gray-200
+        %thead.bg-gray-50
+          %tr
+            %th.px-6.py-3.text-left.text-xs.font-medium.text-gray-500.uppercase.tracking-wider #
+            %th.px-6.py-3.text-left.text-xs.font-medium.text-gray-500.uppercase.tracking-wider Name
+            %th.px-6.py-3.text-left.text-xs.font-medium.text-gray-500.uppercase.tracking-wider Email
+            %th.px-6.py-3.text-left.text-xs.font-medium.text-gray-500.uppercase.tracking-wider Phone
+            %th.px-6.py-3.text-left.text-xs.font-medium.text-gray-500.uppercase.tracking-wider Status
+            %th.px-6.py-3.text-left.text-xs.font-medium.text-gray-500.uppercase.tracking-wider Actions
+        %tbody.bg-white.divide-y.divide-gray-200
+          - @users.each_with_index do |user, index|
+            %tr.hover:bg-gray-50
+              %td.px-6.py-4.whitespace-nowrap.text-sm.font-medium.text-gray-900= index + 1
+              %td.px-6.py-4.whitespace-nowrap.text-sm.text-gray-900
+                .flex.flex-col
+                  %span.font-medium= user.full_name.presence || 'N/A'
+                  %span.text-xs.text-gray-500= user.nationality&.capitalize || 'N/A'
+              %td.px-6.py-4.whitespace-nowrap.text-sm.text-gray-900= user.email
+              %td.px-6.py-4.whitespace-nowrap.text-sm.text-gray-900= user.phone || 'N/A'
+              %td.px-6.py-4.whitespace-nowrap
+                - status = user.active_for_authentication? ? 'Active' : 'Inactive'
+                %span.inline-flex.items-center.px-2.5.py-0.5.rounded-full.text-xs.font-medium{class: status == 'Active' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}
+                  = status
+              %td.px-6.py-4.whitespace-nowrap.text-sm.font-medium
+                = link_to admin_customer_path(user), class: 'text-blue-600 hover:text-blue-900' do
+                  %i.fas.fa-eye
+
+    / Pagination
+    - if @users.respond_to?(:current_page)
+      .bg-white.px-4.py-3.border-t.border-gray-200.sm:px-6
+        .flex.items-center.justify-between
+          .flex-1.flex.justify-between.sm:hidden
+            - if @users.prev_page
+              = link_to 'Previous', admin_customers_path(page: @users.prev_page), class: 'relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50'
+            - if @users.next_page
+              = link_to 'Next', admin_customers_path(page: @users.next_page), class: 'ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50'
+          .hidden.sm:flex-1.sm:flex.sm:items-center.sm:justify-between
+            %div
+              %p.text-sm.text-gray-700
+                Showing
+                %span.font-medium= @users.offset_value + 1
+                to
+                %span.font-medium= @users.offset_value + @users.length
+                of
+                %span.font-medium= @users.total_count
+                results
+            %div
+              .relative.z-0.inline-flex.shadow-sm.rounded-md
+                - if @users.prev_page
+                  = link_to admin_customers_path(page: @users.prev_page), class: 'relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50' do
+                    %i.fas.fa-chevron-left
+                - if @users.next_page
+                  = link_to admin_customers_path(page: @users.next_page), class: 'relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50' do
+                    %i.fas.fa-chevron-right
+
+  - if @users.empty?
+    .text-center.py-12
+      .text-gray-500
+        %i.fas.fa-users.text-4xl.mb-4
+        %p.text-lg.font-medium No customers found
+        %p.text-sm Try adjusting your search or filter criteria 

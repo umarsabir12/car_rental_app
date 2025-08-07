@@ -4,8 +4,13 @@ class Car < ApplicationRecord
   has_many :bookings
   after_create :create_stripe_product, :create_stripe_price
 
+  scope :available, -> { where(status: 'available') }
   def full_name
     "#{brand} #{model} (#{year})"
+  end
+
+  def with_driver?
+    with_driver == true
   end
 
   def booking_status
