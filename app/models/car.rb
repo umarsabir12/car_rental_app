@@ -1,8 +1,11 @@
 class Car < ApplicationRecord
   belongs_to :vendor, optional: true
   has_many_attached :images
+  has_one_attached :mulkiya
   has_many :bookings
   after_create :create_stripe_product, :create_stripe_price
+  validate :mulkiya_presence_on_create, on: :create
+  validate :mulkiya_content_type
 
   scope :available, -> { where(status: 'available') }
   def full_name
@@ -22,6 +25,32 @@ class Car < ApplicationRecord
   end
 
   private
+
+  def mulkiya_presence_on_create
+    if new_record? && !mulkiya.attached?
+      errors.add(:mulkiya, 'is required')
+    end
+  end
+
+  def mulkiya_content_type
+    return unless mulkiya.attached?
+
+    allowed_types = [
+      'application/pdf',
+      'image/jpeg',
+      'image/jpg',
+      'image/png',
+      'image/webp',
+      'image/heic',
+      'image/heif',
+      'image/heic-sequence',
+      'image/heif-sequence'
+    ]
+
+    unless allowed_types.include?(mulkiya.content_type)
+      errors.add(:mulkiya, 'must be a PDF or an image (JPEG, PNG, WEBP)')
+    end
+  end
 
   def create_stripe_product
     return if stripe_product_id.present?
