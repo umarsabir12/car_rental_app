@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_09_16_170917) do
+ActiveRecord::Schema[7.2].define(version: 2025_09_17_120000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -125,7 +125,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_09_16_170917) do
     t.string "invite_token"
     t.boolean "invite_sent", default: false
     t.string "status", default: "pending"
-    t.datetime "expires_at", default: "2025-08-01 14:12:06"
+    t.datetime "expires_at", default: "2025-09-23 16:33:03"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -185,7 +185,10 @@ ActiveRecord::Schema[7.2].define(version: 2025_09_16_170917) do
     t.datetime "updated_at", null: false
     t.string "first_name"
     t.string "last_name"
+    t.string "emirates_id"
+    t.date "emirates_id_expires_on"
     t.index ["email"], name: "index_vendors_on_email", unique: true
+    t.index ["emirates_id"], name: "index_vendors_on_emirates_id", unique: true, where: "(emirates_id IS NOT NULL)"
     t.index ["reset_password_token"], name: "index_vendors_on_reset_password_token", unique: true
   end
 
