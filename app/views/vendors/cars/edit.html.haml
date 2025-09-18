@@ -118,6 +118,27 @@
       .text-sm.text-gray-600.mb-8
         %p Upload additional images to add to your car. You can upload up to 5 images total.
 
+      / Mulkiya Section
+      %h2.text-lg.font-bold.text-blue-800.mb-4.mt-8 Mulkiya (PDF or Image)
+      - if @car.mulkiya.attached?
+        .mb-3
+          .flex.items-center.gap-3
+            %i.fas.fa-file.text-blue-500
+            %span.text-gray-700 Current file:
+            = link_to (@car.mulkiya.filename.to_s), url_for(@car.mulkiya), target: '_blank', class: 'text-blue-600 underline'
+
+      .flex.gap-6.mb-6
+        .relative.group
+          %div.flex.items-center.justify-center.w-32.h-24.bg-blue-50.rounded-xl.shadow.border-2.border-dashed.border-blue-300.group-hover:border-blue-500.transition-all.duration-200{id: 'plus-card-mulkiya-edit'}
+            %i.fas.fa-plus.text-3xl.text-blue-400{id: 'plus-icon-mulkiya-edit'}
+            %img.hidden.absolute.inset-0.w-full.h-full.object-cover.rounded-xl{id: 'preview-img-mulkiya-edit'}
+            %div.hidden.absolute.inset-0.w-full.h-full.flex.items-center.justify-center.rounded-xl{id: 'preview-file-mulkiya-edit'}
+              %i.fas.fa-file-pdf.text-3xl.text-red-500
+          = f.file_field :mulkiya, id: 'car_mulkiya_edit', accept: 'application/pdf,image/*,.heic,.heif', class: 'hidden'
+        .flex.flex-col.justify-center
+          %span.text-sm.text-gray-700.font-medium Selected:
+          %span#mulkiya-filename-edit.text-sm.text-gray-500 None
+
       / Submit Button
       .flex.justify-end.pt-6
         = f.submit 'Update Car', class: 'bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg shadow-lg hover:shadow-xl transition-all duration-200'
@@ -217,12 +238,74 @@
     }
   }
 
+  // Mulkiya upload placeholder behavior for edit
+  function initializeMulkiyaUploadEdit() {
+    const fileInput = document.getElementById('car_mulkiya_edit');
+    const previewImg = document.getElementById('preview-img-mulkiya-edit');
+    const plusIcon = document.getElementById('plus-icon-mulkiya-edit');
+    const plusCard = document.getElementById('plus-card-mulkiya-edit');
+    const previewFile = document.getElementById('preview-file-mulkiya-edit');
+    const fileNameEl = document.getElementById('mulkiya-filename-edit');
+
+    if (!(fileInput && previewImg && plusIcon && plusCard && previewFile && fileNameEl)) return;
+
+    // Prevent duplicate bindings across Turbo renders
+    if (plusCard.dataset.initialized === 'true') return;
+    plusCard.dataset.initialized = 'true';
+
+    const resetPreview = () => {
+      previewImg.classList.add('hidden');
+      previewFile.classList.add('hidden');
+      plusIcon.classList.remove('hidden');
+      fileNameEl.textContent = 'None';
+      previewImg.src = '';
+    };
+
+    plusCard.addEventListener('click', function() {
+      fileInput.click();
+    });
+
+    fileInput.addEventListener('change', function() {
+      if (fileInput.files && fileInput.files[0]) {
+        const file = fileInput.files[0];
+        fileNameEl.textContent = file.name;
+        const type = (file.type || '').toLowerCase();
+
+        if (type.startsWith('image/')) {
+          const reader = new FileReader();
+          reader.onload = function(ev) {
+            previewImg.src = ev.target.result;
+            previewImg.classList.remove('hidden');
+            previewFile.classList.add('hidden');
+            plusIcon.classList.add('hidden');
+          };
+          reader.onerror = function() {
+            previewImg.classList.add('hidden');
+            previewFile.classList.remove('hidden');
+            plusIcon.classList.add('hidden');
+          };
+          reader.readAsDataURL(file);
+        } else {
+          previewImg.classList.add('hidden');
+          previewFile.classList.remove('hidden');
+          plusIcon.classList.add('hidden');
+        }
+      } else {
+        resetPreview();
+      }
+    });
+  }
+
   // Initialize on multiple events to ensure it works
   document.addEventListener('DOMContentLoaded', initializeImageUploads);
   document.addEventListener('turbo:load', initializeImageUploads);
   document.addEventListener('turbo:render', initializeImageUploads);
+  document.addEventListener('DOMContentLoaded', initializeMulkiyaUploadEdit);
+  document.addEventListener('turbo:load', initializeMulkiyaUploadEdit);
+  document.addEventListener('turbo:render', initializeMulkiyaUploadEdit);
   
   // Also initialize immediately if DOM is already ready
   if (document.readyState !== 'loading') {
     setTimeout(initializeImageUploads, 100);
+    setTimeout(initializeMulkiyaUploadEdit, 120);
   } 

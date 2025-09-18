@@ -23,6 +23,16 @@ class Vendors::CarsController < ApplicationController
       render :new
       return
     end
+
+    # Ensure mulkiya is provided
+    if params[:car][:mulkiya].blank?
+      @car.errors.add(:mulkiya, "Mulkiya document is required")
+      render :new
+      return
+    end
+    
+    # Attach mulkiya before save so validations pass
+    @car.mulkiya.attach(params[:car][:mulkiya]) if params[:car][:mulkiya].present?
     
     if @car.save
       redirect_to vendors_car_path(@car), notice: 'Car was successfully created.'
@@ -60,6 +70,10 @@ class Vendors::CarsController < ApplicationController
     end
     
     if @car.update(car_params)
+      # Attach/replace mulkiya if provided
+      if params[:car][:mulkiya].present?
+        @car.mulkiya.attach(params[:car][:mulkiya])
+      end
       redirect_to vendors_car_path(@car), notice: 'Car was successfully updated.'
     else
       render :edit
@@ -104,7 +118,7 @@ class Vendors::CarsController < ApplicationController
         :model, :brand, :category, :color, :year, :price, :status, :description,
         :transmission, :fuel_type, :seats, :mileage, :engine_size,
         :air_conditioning, :gps, :sunroof, :bluetooth, :usb_ports, :featured,
-        :with_driver, :main_image_url, images: []
+        :with_driver, :main_image_url, :mulkiya, images: []
       )
     end
 end 
