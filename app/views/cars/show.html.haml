@@ -3,7 +3,7 @@
 
 %div.w-full.bg-gradient-to-br.from-blue-50.to-blue-100.min-h-screen.py-12
   / Hero Section with Image Slider
-  .relative.max-w-6xl.mx-auto.rounded-3xl.overflow-hidden.shadow-2xl.mb-8
+  .relative.max-w-container.mx-auto.rounded-3xl.overflow-hidden.shadow-2xl.mb-8
     - if @car.images.attached? && @car.images.any?
       .relative.h-96.bg-gray-100
         / Image Slider
@@ -43,7 +43,7 @@
             %span.text-blue-200 /day
 
   / Main Card
-  .max-w-6xl.mx-auto.bg-white.rounded-2xl.shadow-xl.p-10.grid.grid-cols-1.lg:grid-cols-3.gap-10.relative
+  .max-w-container.mx-auto.bg-white.rounded-2xl.shadow-xl.p-10.grid.grid-cols-1.lg:grid-cols-3.gap-10.relative
     / Left: Car Details
     .lg:col-span-2
       %h2.text-2xl.font-bold.text-blue-800.mb-6 Car Details
@@ -88,7 +88,7 @@
         = link_to 'Back', cars_path, class: 'inline-block bg-blue-100 text-blue-800 font-semibold px-8 py-3 rounded-lg hover:bg-blue-200 transition text-lg mt-4 w-full text-center'
 
   / Features Row
-  .max-w-6xl.mx-auto.grid.grid-cols-2.md:grid-cols-4.gap-6.my-10
+  .max-w-container.mx-auto.grid.grid-cols-2.md:grid-cols-4.gap-6.my-10
     %div.flex.flex-col.items-center
       %span.text-2xl.mb-1= @car.air_conditioning ? '❄️' : '🚫'
       %span.text-xs.text-gray-600 Air Conditioning
@@ -104,7 +104,7 @@
 
   / Description
   - if @car.description.present?
-    .max-w-6xl.mx-auto.bg-white.rounded-2xl.shadow-md.p-8.mb-8
+    .max-w-container.mx-auto.bg-white.rounded-2xl.shadow-md.p-8.mb-8
       %h2.text-2xl.font-semibold.text-blue-800.mb-2 Description
       %p.text-gray-700.text-lg= @car.description
 

@@ -2,6 +2,9 @@ class Booking < ApplicationRecord
   belongs_to :car
   belongs_to :user
   
+  # Enum for payment mode
+  enum payment_mode: { Cash: 0, Online: 1 }, _default: :Online
+  
   validates :car_id, :user_id, :start_date, :end_date, presence: true
   validate :end_date_after_start_date
   validate :no_overlapping_bookings

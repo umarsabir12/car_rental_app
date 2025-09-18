@@ -1,8 +1,9 @@
 # Clear existing data
 puts "Clearing existing data..."
-User.destroy_all
-Car.destroy_all
 Booking.destroy_all
+Car.destroy_all
+User.destroy_all
+Vendor.destroy_all
 
 # Create 2 users
 puts "Creating users..."
@@ -13,7 +14,9 @@ user1 = User.create!(
   first_name: "John",
   last_name: "Doe",
   phone: "+1-555-0123",
-  home_address: "123 Main St, New York, NY 10001"
+  home_address: "123 Main St, New York, NY 10001",
+  nationality: "resident",
+  terms_accepted: true
 )
 
 user2 = User.create!(
@@ -23,13 +26,20 @@ user2 = User.create!(
   first_name: "Jane",
   last_name: "Smith",
   phone: "+1-555-0456",
-  home_address: "456 Oak Ave, Los Angeles, CA 90210"
+  home_address: "456 Oak Ave, Los Angeles, CA 90210",
+  nationality: "tourist",
+  terms_accepted: true
 )
 
 puts "Created #{User.count} users"
 
 # Create 20 cars with valid images
 puts "Creating cars..."
+
+# Disable Stripe callbacks during seeding to avoid external API calls
+Car.skip_callback(:create, :after, :create_stripe_product) rescue nil
+Car.skip_callback(:create, :after, :create_stripe_price) rescue nil
+
 cars_data = [
   {
     brand: "Toyota",
@@ -37,7 +47,7 @@ cars_data = [
     year: 2022,
     color: "White",
     price: 55,
-    status: "Available",
+    status: "available",
     category: "Sedan",
     main_image_url: "https://images.unsplash.com/photo-1503736334956-4c8f8e92946d?auto=format&fit=crop&w=800&q=80",
     description: "A reliable and comfortable sedan, perfect for city and highway driving.",
@@ -59,7 +69,7 @@ cars_data = [
     year: 2021,
     color: "Blue",
     price: 48,
-    status: "Available",
+    status: "available",
     category: "Sedan",
     main_image_url: "https://images.unsplash.com/photo-1461632830798-3adb3034e4c8?auto=format&fit=crop&w=800&q=80",
     description: "Sporty and efficient, the Civic is a favorite among young drivers.",
@@ -81,7 +91,7 @@ cars_data = [
     year: 2023,
     color: "Black",
     price: 75,
-    status: "Available",
+    status: "available",
     category: "Luxury",
     main_image_url: "https://images.unsplash.com/photo-1555215695-3004980ad54e?auto=format&fit=crop&w=800&q=80",
     description: "Luxury and performance combined. The 3 Series is a joy to drive.",
@@ -103,7 +113,7 @@ cars_data = [
     year: 2020,
     color: "Red",
     price: 68,
-    status: "Available",
+    status: "available",
     category: "Sports",
     main_image_url: "https://images.unsplash.com/photo-1502877338535-766e1452684a?auto=format&fit=crop&w=800&q=80",
     description: "Iconic American muscle car. Feel the power of the Mustang!",
@@ -125,7 +135,7 @@ cars_data = [
     year: 2022,
     color: "Silver",
     price: 80,
-    status: "Available",
+    status: "available",
     category: "Electric",
     main_image_url: "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=800&q=80",
     description: "Experience the future with Tesla's all-electric Model 3.",
@@ -147,7 +157,7 @@ cars_data = [
     year: 2023,
     color: "Silver",
     price: 85,
-    status: "Available",
+    status: "available",
     category: "Luxury",
     main_image_url: "https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?auto=format&fit=crop&w=800&q=80",
     description: "Elegant luxury sedan with premium features and comfort.",
@@ -169,7 +179,7 @@ cars_data = [
     year: 2022,
     color: "Gray",
     price: 72,
-    status: "Available",
+    status: "available",
     category: "Luxury",
     main_image_url: "https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?auto=format&fit=crop&w=800&q=80",
     description: "Sophisticated German engineering with quattro all-wheel drive.",
@@ -191,7 +201,7 @@ cars_data = [
     year: 2023,
     color: "Blue",
     price: 45,
-    status: "Available",
+    status: "available",
     category: "SUV",
     main_image_url: "https://images.unsplash.com/photo-1552519507-da3b142c6e3d?auto=format&fit=crop&w=800&q=80",
     description: "Modern SUV with great fuel efficiency and technology.",
@@ -213,7 +223,7 @@ cars_data = [
     year: 2022,
     color: "White",
     price: 42,
-    status: "Available",
+    status: "available",
     category: "SUV",
     main_image_url: "https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?auto=format&fit=crop&w=800&q=80",
     description: "Stylish SUV with excellent warranty and features.",
@@ -235,7 +245,7 @@ cars_data = [
     year: 2021,
     color: "Red",
     price: 38,
-    status: "Available",
+    status: "available",
     category: "Compact",
     main_image_url: "https://images.unsplash.com/photo-1549924231-f129b911e442?auto=format&fit=crop&w=800&q=80",
     description: "Fun to drive hatchback with German engineering.",
@@ -257,7 +267,7 @@ cars_data = [
     year: 2022,
     color: "Black",
     price: 50,
-    status: "Available",
+    status: "available",
     category: "Sedan",
     main_image_url: "https://images.unsplash.com/photo-1617470706004-e6ed057f782c?auto=format&fit=crop&w=800&q=80",
     description: "Comfortable sedan with excellent fuel economy.",
@@ -279,7 +289,7 @@ cars_data = [
     year: 2021,
     color: "Yellow",
     price: 70,
-    status: "Available",
+    status: "available",
     category: "Sports",
     main_image_url: "https://images.unsplash.com/photo-1582639510494-c80b5de9f148?auto=format&fit=crop&w=800&q=80",
     description: "American muscle car with aggressive styling and performance.",
@@ -301,7 +311,7 @@ cars_data = [
     year: 2023,
     color: "Green",
     price: 65,
-    status: "Available",
+    status: "available",
     category: "SUV",
     main_image_url: "https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?auto=format&fit=crop&w=800&q=80",
     description: "Iconic off-road vehicle perfect for adventure.",
@@ -323,7 +333,7 @@ cars_data = [
     year: 2022,
     color: "Silver",
     price: 90,
-    status: "Available",
+    status: "available",
     category: "Luxury",
     main_image_url: "https://images.unsplash.com/photo-1617470706004-e6ed057f782c?auto=format&fit=crop&w=800&q=80",
     description: "Luxury SUV with exceptional reliability and comfort.",
@@ -345,7 +355,7 @@ cars_data = [
     year: 2023,
     color: "Blue",
     price: 52,
-    status: "Available",
+    status: "available",
     category: "SUV",
     main_image_url: "https://images.unsplash.com/photo-1552519507-da3b142c6e3d?auto=format&fit=crop&w=800&q=80",
     description: "All-wheel drive wagon perfect for any weather.",
@@ -367,7 +377,7 @@ cars_data = [
     year: 2022,
     color: "Red",
     price: 48,
-    status: "Available",
+    status: "available",
     category: "SUV",
     main_image_url: "https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?auto=format&fit=crop&w=800&q=80",
     description: "Stylish SUV with excellent driving dynamics.",
@@ -389,7 +399,7 @@ cars_data = [
     year: 2023,
     color: "White",
     price: 78,
-    status: "Available",
+    status: "available",
     category: "Luxury",
     main_image_url: "https://images.unsplash.com/photo-1617470706004-e6ed057f782c?auto=format&fit=crop&w=800&q=80",
     description: "Safety-focused luxury SUV with Scandinavian design.",
@@ -411,7 +421,7 @@ cars_data = [
     year: 2022,
     color: "Black",
     price: 120,
-    status: "Available",
+    status: "available",
     category: "Luxury",
     main_image_url: "https://images.unsplash.com/photo-1552519507-da3b142c6e3d?auto=format&fit=crop&w=800&q=80",
     description: "Ultimate luxury SUV with off-road capability.",
@@ -433,7 +443,7 @@ cars_data = [
     year: 2021,
     color: "Red",
     price: 150,
-    status: "Available",
+    status: "available",
     category: "Sports",
     main_image_url: "https://images.unsplash.com/photo-1502877338535-766e1452684a?auto=format&fit=crop&w=800&q=80",
     description: "Iconic sports car with unmatched performance.",
@@ -455,7 +465,7 @@ cars_data = [
     year: 2022,
     color: "British Racing Green",
     price: 110,
-    status: "Available",
+    status: "available",
     category: "Sports",
     main_image_url: "https://images.unsplash.com/photo-1582639510494-c80b5de9f148?auto=format&fit=crop&w=800&q=80",
     description: "British sports car with elegant design and performance.",
@@ -476,6 +486,10 @@ cars_data = [
 cars_data.each do |car_data|
   Car.create!(car_data)
 end
+
+# Re-enable Stripe callbacks after seeding
+Car.set_callback(:create, :after, :create_stripe_product) rescue nil
+Car.set_callback(:create, :after, :create_stripe_price) rescue nil
 
 puts "Created #{Car.count} cars"
 

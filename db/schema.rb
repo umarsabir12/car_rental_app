@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_08_06_161806) do
+ActiveRecord::Schema[7.2].define(version: 2025_09_16_170917) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -69,7 +69,9 @@ ActiveRecord::Schema[7.2].define(version: 2025_08_06_161806) do
     t.boolean "payment_processed"
     t.string "stripe_session_id"
     t.string "stripe_payment_intent_id"
+    t.integer "payment_mode", default: 1, null: false
     t.index ["car_id"], name: "index_bookings_on_car_id"
+    t.index ["payment_mode"], name: "index_bookings_on_payment_mode"
     t.index ["user_id"], name: "index_bookings_on_user_id"
   end
 
