@@ -1,4 +1,9 @@
 Rails.application.routes.draw do
+  require 'sidekiq/web'
+  require 'sidekiq/cron/web'
+  authenticate :admin do
+    mount Sidekiq::Web => '/sidekiq'
+  end
   if Rails.env.development?
     mount LetterOpenerWeb::Engine, at: "/letter_opener"
   end
