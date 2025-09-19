@@ -63,7 +63,7 @@
   box-shadow: 0 10px 40px rgba(0,0,0,0.2);
 }
 #terms-modal .bg-indigo-600:hover {
-  background-color: #4338ca;
+  background-color: #3a6363;
 }
 
 /* Swiper styles for car images slider */
@@ -80,7 +80,7 @@
   box-shadow: 0 4px 24px rgba(0,0,0,0.10);
 }
 .swiper-button-next, .swiper-button-prev {
-  color: #2563eb;
+  color: #3a6363;
   top: 50%;
   width: 2.5rem;
   height: 2.5rem;
@@ -90,13 +90,25 @@
   transition: background 0.2s;
 }
 .swiper-button-next:hover, .swiper-button-prev:hover {
-  background: #2563eb;
+  background: #3a6363;
   color: #fff;
 }
 .swiper-pagination-bullet {
-  background: #2563eb;
+  background: #3a6363;
   opacity: 0.5;
 }
 .swiper-pagination-bullet-active {
   opacity: 1;
+}
+
+.navbar-link:hover {
+  color: #3a6363 !important;
+}
+
+.navbar-button:hover {
+  background-color: #2d5555 !important;
+}
+
+.mobile-menu-button:hover {
+  color: #3a6363 !important;
 }
