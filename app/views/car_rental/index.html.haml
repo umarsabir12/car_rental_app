@@ -1,252 +1,210 @@
-%div.min-h-screen.bg-background
-  / Hero Section
-  %section.bg-gradient-to-r.from-blue-600.to-purple-700.text-white.py-20
-    .max-w-7xl.mx-auto.px-4.sm:px-6.lg:px-8.text-center
-      %h1.text-4xl.md:text-6xl.font-bold.mb-6 Rent Your Perfect Car
-      %p.text-xl.mb-8.max-w-2xl.mx-auto
-        Choose from hundreds of vehicles at the best prices. Book instantly and drive away in minutes.
-      
-      / Document Requirements Notice
-      .bg-white.bg-opacity-90.rounded-lg.p-4.max-w-2xl.mx-auto.mb-8.shadow-lg
-        .flex.items-center.justify-center.gap-3
-          %i.fa.fa-info-circle.text-blue-600.text-xl
-          %p.text-gray-800.font-medium
-            %strong New to DriveAway?
-            You'll need to submit required documents (ID, license, etc.) to complete your booking.
-            %a.text-blue-600.hover:text-blue-800.underline.font-semibold{href: "#document-requirements"} Learn more below
-      
-      / Quick Actions Section
-      -# .flex.flex-wrap.justify-center.gap-6.mb-8
-        = link_to cars_path, class: 'flex items-center gap-2 text-blue-100 hover:text-white font-semibold text-base underline-offset-4 hover:underline transition' do
-          %i.fas.fa-car-side.text-blue-200
-          %span Rent a Car
-        = link_to cars_path(driver: true), class: 'flex items-center gap-2 text-purple-100 hover:text-white font-semibold text-base underline-offset-4 hover:underline transition' do
-          %i.fas.fa-user-tie.text-purple-200
-          %span Car + Driver
-        = link_to '#brands', class: 'flex items-center gap-2 text-green-100 hover:text-white font-semibold text-base underline-offset-4 hover:underline transition' do
-          %i.fas.fa-tags.text-green-200
-          %span Brands
-        = link_to '#city', class: 'flex items-center gap-2 text-pink-100 hover:text-white font-semibold text-base underline-offset-4 hover:underline transition' do
-          %i.fas.fa-city.text-pink-200
-          %span City
-      .bg-white.rounded-lg.p-6.max-w-4xl.mx-auto.shadow-lg
-        .grid.grid-cols-1.md:grid-cols-4.gap-4
-          .relative
-            %i.absolute.left-3.top-3.h-4.w-4.text-gray-400.fa.fa-map-pin
-            %input{ placeholder: "Pick-up location", class: "pl-10 text-gray-900 w-full rounded border py-2 " }
-          .relative
-            %i.absolute.left-3.top-3.h-4.w-4.text-gray-400
-            %input{ type: "date", class: "pl-10 text-gray-900 w-full rounded border py-2 p-3" }
-          .relative
-            %i.absolute.left-3.top-3.h-4.w-4.text-gray-400
-            %input{ type: "date", class: "pl-10 text-gray-900 w-full rounded border py-2 p-3" }
-          = button_tag 'Search Cars', class: 'btn btn-primary w-full'
-
-  %section.py-16.bg-gray-100
+%div.min-h-screen.bg-white
+  / Hero
+  %section.relative.text-white{style: 'background: linear-gradient(135deg, #3a6363 0%, #2d4f4f 100%)'}
     .max-w-7xl.mx-auto.px-4.sm:px-6.lg:px-8
-      .grid.grid-cols-2.md:grid-cols-4.gap-8
-        .text-center
-          %div.text-4xl.md:text-5xl.font-bold.text-blue-600.mb-2 50,000+
-          %div.text-gray-600.font-medium Happy Customers
+      .grid.grid-cols-1.lg:grid-cols-2.gap-8.items-center.py-14.lg:py-20
+        .relative.order-2.lg:order-1
+          %h1.text-4xl.md:text-5xl.lg:text-6xl.font-extrabold.leading-tight.mb-4= (@headline || 'Rent Your Perfect Car')
+          %p.text-base.md:text-lg.mb-6.max-w-xl{style: 'color: rgba(255,255,255,0.9)'}= (@subcopy || 'Choose from hundreds of vehicles at the best prices. Book instantly and drive away in minutes.')
+          .flex.flex-wrap.items-center.gap-3
+            = link_to (@cars_path || '#'), class: 'inline-flex items-center rounded-full bg-white font-semibold px-6 py-3 shadow hover:shadow-md transition focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-white', style: 'color: #3a6363' do
+              %i{class: 'fas fa-car-side mr-2'}
+              = (@cta_label || 'Rent a Car')
+            = link_to '#document-requirements', class: 'inline-flex items-center rounded-full border border-white/60 text-white px-6 py-3 hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-white' do
+              %i{class: 'fas fa-info-circle mr-2'}
+              Learn more
+        .order-1.lg:order-2
+          %img{class: "w-full h-64 sm:h-80 lg:h-96 object-contain", src: 'https://images.unsplash.com/photo-1555215695-3004980ad54e?q=80&w=1600&auto=format&fit=crop', alt: 'Showcase car'}
 
-        .text-center
-          %div.text-4xl.md:text-5xl.font-bold.text-blue-600.mb-2 500+
-          %div.text-gray-600.font-medium Premium Vehicles
-
-        .text-center
-          %div.text-4xl.md:text-5xl.font-bold.text-blue-600.mb-2 25+
-          %div.text-gray-600.font-medium Locations
-
-        .text-center
-          %div.text-4xl.md:text-5xl.font-bold.text-blue-600.mb-2 99.9%
-          %div.text-gray-600.font-medium Uptime
-
-  / Featured Cars Section
-  %section.py-16.bg-gray-50
+  / Search bar
+  %section.-mt-8.relative.z-10
     .max-w-7xl.mx-auto.px-4.sm:px-6.lg:px-8
-      .text-center.mb-12
-        %h2.text-3xl.font-bold.text-gray-900.mb-4 Featured Vehicles
+      %div{class: 'bg-white/95 backdrop-blur rounded-2xl shadow-xl border border-gray-100 p-4 sm:p-6'}
+        = form_with url: (@cars_path || '#'), method: :get, local: true, role: 'search', 'aria-label' => 'Search vehicles' do |f|
+          .grid.grid-cols-1.md:grid-cols-4.gap-3
+            .relative
+              %label.sr-only{for: 'location'} Pick-up location
+              %i{class: 'fa fa-map-pin absolute left-3 top-1/2 -translate-y-1/2 text-gray-400'}
+              = f.select :location, options_for_select([['Select location', '']] + ((@locations || []).map { |loc| [loc[:name], loc[:id]] })), {}, {id: 'location', class: 'w-full pl-9 pr-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:border-teal-600', style: 'focus:ring-color: #3a6363'}
+            .relative
+              %label.sr-only{for: 'pickup'} Pick-up date
+              %i{class: 'fa fa-calendar-alt absolute left-3 top-1/2 -translate-y-1/2 text-gray-400'}
+              = f.date_field :pickup, id: 'pickup', value: @pick_date, class: 'w-full pl-9 pr-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:border-teal-600'
+            .relative
+              %label.sr-only{for: 'dropoff'} Drop-off date
+              %i{class: 'fa fa-calendar-check absolute left-3 top-1/2 -translate-y-1/2 text-gray-400'}
+              = f.date_field :dropoff, id: 'dropoff', value: @drop_date, class: 'w-full pl-9 pr-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:border-teal-600'
+            .flex
+              = f.submit 'Find a Car', class: 'w-full inline-flex justify-center items-center rounded-lg text-white font-semibold py-3 h-12 hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2', style: 'background-color: #3a6363; focus:ring-color: #3a6363'
+
+  / Why You Should Use Section
+  %section.py-14.bg-gray-50
+    .max-w-7xl.mx-auto.px-4.sm:px-6.lg:px-8
+      .text-center.mb-10
+        %h2.text-3xl.font-bold.text-gray-900.mb-2 Why You Should Use Wheels On Rent
+        %p.text-gray-600 Experience the best car rental service
+      .grid.grid-cols-1.md:grid-cols-3.gap-8
+        .text-center.bg-white.rounded-2xl.shadow-sm.border.border-gray-100.p-8
+          %div{class: 'rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4', style: 'background-color: #3a6363'}
+            %i{class: 'fas fa-shield-alt text-white text-2xl'}
+          %h3.text-xl.font-bold.text-gray-900.mb-3 Trusted Service
+          %p.text-gray-600 Reliable and secure car rental service with full insurance coverage
+        .text-center.bg-white.rounded-2xl.shadow-sm.border.border-gray-100.p-8
+          %div{class: 'rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4', style: 'background-color: #3a6363'}
+            %i{class: 'fas fa-map-marked-alt text-white text-2xl'}
+          %h3.text-xl.font-bold.text-gray-900.mb-3 Prime Locations
+          %p.text-gray-600 Convenient pickup and drop-off locations across major cities
+        .text-center.bg-white.rounded-2xl.shadow-sm.border.border-gray-100.p-8
+          %div{class: 'rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4', style: 'background-color: #3a6363'}
+            %i{class: 'fas fa-award text-white text-2xl'}
+          %h3.text-xl.font-bold.text-gray-900.mb-3 100% Satisfaction
+          %p.text-gray-600 Guaranteed customer satisfaction with 24/7 support service
+
+  / Featured vehicles
+  %section.py-14.bg-white
+    .max-w-7xl.mx-auto.px-4.sm:px-6.lg:px-8
+      .text-center.mb-10
+        %h2.text-3xl.font-bold.text-gray-900.mb-2 Cars We are Offering for Rentals
         %p.text-gray-600 Discover our most popular rental cars
-      .grid.grid-cols-1.md:grid-cols-3.gap-8
-        - @featured_cars.each do |car|
-          .bg-white.rounded-lg.shadow-md.p-4.hover:shadow-lg.transition-shadow
-            %img.w-full.h-48.object-cover.rounded-t-lg{ src: car[:image_url], alt: car[:name] }
-            .p-6
-              .flex.justify-between.items-start.mb-2
-                %h3.text-xl.font-semibold= car[:car_type]
-                -# %span.text-sm.text-gray-500.bg-gray-100.px-2.py-1.rounded= car[:car_type]
-              %p.text-gray-600.mb-4= car[:features].join(' • ')
-              .flex.justify-between.items-center
+      .grid.grid-cols-1.md:grid-cols-3.gap-6
+        - (@featured_cars || []).each do |car|
+          %article.group.bg-white.rounded-2xl.shadow-md.border.border-gray-100.overflow-hidden.hover:shadow-lg.transition
+            %img.w-full.h-48.object-cover{src: car[:image_url], alt: car[:name]}
+            .p-5
+              .flex.items-start.justify-between.mb-2
+                %h3.text-lg.font-semibold.text-gray-900= car[:name]
+                %span{class: 'inline-flex items-center rounded-full text-xs font-semibold px-2 py-1 text-white', style: 'background-color: #3a6363'}= car[:car_type]
+              %p.text-sm.text-gray-600.line-clamp-2.mb-4= (car[:features] || []).join(' • ')
+              .flex.items-center.justify-between
                 %div
-                  %span.text-2xl.font-bold.text-primary= "$#{car[:price]}"
+                  %span.text-2xl.font-extrabold.text-gray-900= number_to_currency(car[:price], precision: 0)
                   %span.text-gray-500 /day
-                = link_to 'Book Now', cars_path, class: 'btn btn-primary'
+                = link_to 'Book Now', (@cars_path || '#'), class: 'inline-flex items-center rounded-lg text-white font-semibold px-4 py-2 hover:opacity-90 focus:outline-none focus:ring-2', style: 'background-color: #3a6363; focus:ring-color: #3a6363'
 
-  / Choose a car by brand section
-  %section.py-16.bg-gray-100
+  / Select Class Section
+  %section.py-14.bg-gray-50
     .max-w-7xl.mx-auto.px-4.sm:px-6.lg:px-8
-      .text-center.mb-12
-        %h2.text-3xl.font-bold.text-gray-900.mb-4 Choose a car by brand
-        %p.text-gray-600 Select a brand to see all available cars
-      .flex.flex-wrap.justify-center.gap-8.mt-8
-        - brands = [{ name: 'Toyota' },{ name: 'Honda' },{ name: 'BMW' },{ name: 'Mercedes-Benz' },{ name: 'Audi' },{ name: 'Ford' },{ name: 'Tesla' },{ name: 'Hyundai' },{ name: 'Kia' },{ name: 'Volkswagen' },{ name: 'Nissan' },{ name: 'Chevrolet' },{ name: 'Jeep' }]
-        - brands.each do |brand|
-          = link_to cars_path(brand: brand[:name]), class: 'group flex flex-col items-center transition hover:scale-105 focus:outline-none' do
-            %div.flex.items-center.justify-center.bg-white.rounded-full.shadow-md.border.border-gray-200.w-20.h-20.mb-2.transition-all.group-hover:border-blue-500.group-hover:shadow-lg
-              = image_tag "https://placehold.co/80x80/png?text=#{brand[:name][0..1].upcase}", alt: brand[:name], class: 'w-12 h-12 object-contain', loading: 'lazy'
-            %span.text-base.font-semibold.text-gray-700.group-hover:text-blue-700= brand[:name]
+      .text-center.mb-10
+        %h2.text-3xl.font-bold.text-gray-900.mb-2 Select Class
+        %p.text-gray-600 Choose the perfect car class for your needs
+      .grid.grid-cols-2.md:grid-cols-3.gap-6
+        - (@car_classes || []).each do |car_class|
+          = link_to '#', class: 'group bg-white rounded-2xl shadow-sm border border-gray-100 p-6 hover:shadow-md transition cursor-pointer hover:border-teal-300' do
+            .text-center
+              %h3.text-lg.font-semibold.text-gray-900.mb-3= car_class[:name]
+              %img.w-full.h-32.object-contain.mb-3.rounded-lg{src: car_class[:image], alt: car_class[:name]}
+              %p{class: 'font-semibold', style: 'color: #3a6363'}= car_class[:price]
 
-  / Why Choose Us
-  %section.py-16
+  / CTA banner
+  %section.relative.text-white{style: 'background-color: #3a6363'}
     .max-w-7xl.mx-auto.px-4.sm:px-6.lg:px-8
-      .text-center.mb-12
-        %h2.text-3xl.font-bold.text-gray-900.mb-4 Why Choose DriveAway?
-      .grid.grid-cols-1.md:grid-cols-3.gap-8
-        .text-center
-          .bg-blue-100.w-16.h-16.rounded-full.flex.items-center.justify-center.mx-auto.mb-4
-            %i.fa.fa-users.h-8.w-8.text-blue-600
-          %h3.text-xl.font-semibold.mb-2 Trusted by Thousands
-          %p.text-gray-600 Join thousands of satisfied customers who trust us.
-        .text-center
-          .bg-green-100.w-16.h-16.rounded-full.flex.items-center.justify-center.mx-auto.mb-4
-            %i.fa.fa-shield-alt.h-8.w-8.text-green-600
-          %h3.text-xl.font-semibold.mb-2 Safe & Insured
-          %p.text-gray-600 All vehicles are fully insured and regularly maintained.
-        .text-center
-          .bg-purple-100.w-16.h-16.rounded-full.flex.items-center.justify-center.mx-auto.mb-4
-            %i.fa.fa-clock.h-8.w-8.text-purple-600
-          %h3.text-xl.font-semibold.mb-2 24/7 Support
-          %p.text-gray-600 Round-the-clock customer support whenever you need it.
+      .grid.grid-cols-1.lg:grid-cols-2.gap-8.items-center.py-14
+        .order-2.lg:order-1
+          %h3.text-3xl.font-extrabold.mb-3= (@cta_title || 'Save Time & Money with Top Car Rent Services')
+          %p.mb-6{style: 'color: rgba(255,255,255,0.9)'}= (@cta_copy || 'Experience premium car rental service with the best prices and excellent customer support.')
+          = link_to ((@cta_action && @cta_action[:href]) || @cars_path || '#'), class: 'inline-flex items-center rounded-lg bg-white font-semibold px-6 py-3 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-white', style: 'color: #3a6363' do
+            %i{class: 'fa fa-car mr-2'}
+            = ((@cta_action && @cta_action[:label]) || 'Start Browsing Cars')
+        .order-1.lg:order-2
+          %div.relative
+            %img{class: 'w-full h-56 sm:h-72 object-contain', src: 'https://images.unsplash.com/photo-1517142089942-ba376ce32a2e?q=80&w=1600&auto=format&fit=crop', alt: 'Cars lineup'}
 
-  / Document Requirements Section
+  / Stats Section (Circular Design with Icons)
+  %section.py-16.bg-white
+    .max-w-7xl.mx-auto.px-4.sm:px-6.lg:px-8
+      .grid.grid-cols-2.md:grid-cols-3.gap-8.text-center
+        - default_stats = [{value: '990+', label: 'CARS RENTOUTS', icon: 'fa-car'}, {value: '230+', label: 'CARS SOLUTIONS', icon: 'fa-wrench'}, {value: '660+', label: 'HAPPY CUSTOMER', icon: 'fa-users'}]
+        - (@stats || default_stats).each do |s|
+          .flex.flex-col.items-center
+            %div{class: 'w-32 h-32 md:w-40 md:h-40 rounded-full border-4 flex flex-col items-center justify-center mb-4', style: 'border-color: #3a6363'}
+              / Icon at the top
+              %i{class: "fas #{s[:icon]} text-2xl md:text-3xl mb-2", style: 'color: #3a6363'}
+              / Stats content
+              .text-center
+                %div{class: 'text-xl md:text-2xl font-extrabold mb-1', style: 'color: #3a6363'}= s[:value]
+                %div.text-xs.text-gray-600.font-medium= s[:label]
+
+  / Requirements
   %section#document-requirements.py-16.bg-gray-50
     .max-w-7xl.mx-auto.px-4.sm:px-6.lg:px-8
       .text-center.mb-12
-        %h2.text-3xl.font-bold.text-gray-900.mb-4 Required Documents for Booking
-        %p.text-gray-600.text-lg To complete your booking, you'll need to submit the following documents based on your status
-      
+        %h2.text-3xl.font-bold.text-gray-900.mb-2 Document Requirements
       .grid.grid-cols-1.lg:grid-cols-2.gap-8
-        / Tourist Requirements
-        .bg-white.rounded-xl.shadow-lg.p-8.border-l-4.border-blue-500
-          .flex.items-center.mb-6
-            .bg-blue-100.w-12.h-12.rounded-full.flex.items-center.justify-center.mr-4
-              %i.fa.fa-plane.h-6.w-6.text-blue-600
-            %h3.text-2xl.font-bold.text-gray-900 Tourist Requirements
-          %p.text-gray-600.mb-6 For tourists visiting the UAE, the following documents are required:
-          %ul.space-y-3
-            %li.flex.items-start
-              .bg-blue-100.w-6.h-6.rounded-full.flex.items-center.justify-center.mr-3.mt-0.5.flex-shrink-0
-                %i.fa.fa-check.text-blue-600.text-xs
-              %div
-                %span.font-semibold.text-gray-900 Home country driving license and IDP
-                %p.text-sm.text-gray-600 International Driving Permit along with your home country license
-            %li.flex.items-start
-              .bg-blue-100.w-6.h-6.rounded-full.flex.items-center.justify-center.mr-3.mt-0.5.flex-shrink-0
-                %i.fa.fa-check.text-blue-600.text-xs
-              %div
-                %span.font-semibold.text-gray-900 Passport Copy
-                %p.text-sm.text-gray-600 Clear copy of your passport's main page
-            %li.flex.items-start
-              .bg-blue-100.w-6.h-6.rounded-full.flex.items-center.justify-center.mr-3.mt-0.5.flex-shrink-0
-                %i.fa.fa-check.text-blue-600.text-xs
-              %div
-                %span.font-semibold.text-gray-900 Copy of visa Entry Stamp
-                %p.text-sm.text-gray-600 Entry stamp page from your passport
-          .mt-6.p-4.bg-blue-50.rounded-lg
-            %p.text-sm.text-blue-800
-              %i.fa.fa-info-circle.mr-2
-              %strong Note:
-              All documents must be clear, legible, and valid. Processing typically takes 24-48 hours.
+        - default_tourist = {title: 'Tourist Requirements', items: ['Home country license + IDP','Passport copy','Visa entry stamp']}
+        - default_resident = {title: 'Resident Requirements', items: ['UAE driving license','Emirates ID front/back','Passport and Visa copy']}
+        
+        %article{class: 'bg-white rounded-2xl shadow-md border-l-4', style: 'border-left-color: #3a6363'}
+          .p-8
+            .flex.items-center.mb-4
+              %div{class: 'rounded-full w-12 h-12 flex items-center justify-center', style: 'background-color: rgba(58, 99, 99, 0.1)'}
+                %i{class: 'fa fa-shield-alt', style: 'color: #3a6363'}
+              %h3.ml-4.text-2xl.font-bold.text-gray-900= (@tourist_requirements || default_tourist)[:title]
+            %ul.space-y-3
+              - ((@tourist_requirements || default_tourist)[:items] || []).each do |item|
+                %li.flex
+                  %div{class: 'mt-1 rounded-full w-6 h-6 flex items-center justify-center flex-shrink-0', style: 'background-color: rgba(58, 99, 99, 0.1)'}
+                    %i{class: 'fa fa-check text-xs', style: 'color: #3a6363'}
+                  %p.ml-3.text-gray-700= item
 
-        / Resident Requirements
-        .bg-white.rounded-xl.shadow-lg.p-8.border-l-4.border-green-500
-          .flex.items-center.mb-6
-            .bg-green-100.w-12.h-12.rounded-full.flex.items-center.justify-center.mr-4
-              %i.fa.fa-home.h-6.w-6.text-green-600
-            %h3.text-2xl.font-bold.text-gray-900 Resident Requirements
-          %p.text-gray-600.mb-6 For UAE residents, the following documents are required:
-          %ul.space-y-3
-            %li.flex.items-start
-              .bg-green-100.w-6.h-6.rounded-full.flex.items-center.justify-center.mr-3.mt-0.5.flex-shrink-0
-                %i.fa.fa-check.text-green-600.text-xs
-              %div
-                %span.font-semibold.text-gray-900 A Valid UAE driving license
-                %p.text-sm.text-gray-600 Your current UAE driving license (front and back required)
-            %li.flex.items-start
-              .bg-green-100.w-6.h-6.rounded-full.flex.items-center.justify-center.mr-3.mt-0.5.flex-shrink-0
-                %i.fa.fa-check.text-green-600.text-xs
-              %div
-                %span.font-semibold.text-gray-900 Emirates ID front and back
-                %p.text-sm.text-gray-600 Both sides of your Emirates ID card
-            %li.flex.items-start
-              .bg-green-100.w-6.h-6.rounded-full.flex.items-center.justify-center.mr-3.mt-0.5.flex-shrink-0
-                %i.fa.fa-check.text-green-600.text-xs
-              %div
-                %span.font-semibold.text-gray-900 Passport and Visa copy
-                %p.text-sm.text-gray-600 Clear copies of your passport and visa pages
-          .mt-6.p-4.bg-green-50.rounded-lg
-            %p.text-sm.text-green-800
-              %i.fa.fa-info-circle.mr-2
-              %strong Note:
-              All documents must be current and valid. Processing typically takes 24-48 hours.
+        %article{class: 'bg-white rounded-2xl shadow-md border-l-4', style: 'border-left-color: #2d5555'}
+          .p-8
+            .flex.items-center.mb-4
+              %div{class: 'rounded-full w-12 h-12 flex items-center justify-center', style: 'background-color: rgba(45, 85, 85, 0.1)'}
+                %i{class: 'fa fa-shield-alt', style: 'color: #2d5555'}
+              %h3.ml-4.text-2xl.font-bold.text-gray-900= (@resident_requirements || default_resident)[:title]
+            %ul.space-y-3
+              - ((@resident_requirements || default_resident)[:items] || []).each do |item|
+                %li.flex
+                  %div{class: 'mt-1 rounded-full w-6 h-6 flex items-center justify-center flex-shrink-0', style: 'background-color: rgba(45, 85, 85, 0.1)'}
+                    %i{class: 'fa fa-check text-xs', style: 'color: #2d5555'}
+                  %p.ml-3.text-gray-700= item
 
-      / Additional Information
-      .mt-12.bg-white.rounded-xl.shadow-lg.p-8
-        .text-center.mb-6
-          %h3.text-2xl.font-bold.text-gray-900.mb-2 Important Information
-          %p.text-gray-600 Everything you need to know about the booking process
-        .grid.grid-cols-1.md:grid-cols-3.gap-6
-          .text-center
-            .bg-yellow-100.w-16.h-16.rounded-full.flex.items-center.justify-center.mx-auto.mb-4
-              %i.fa.fa-upload.h-8.w-8.text-yellow-600
-            %h4.font-semibold.mb-2 Upload Documents
-            %p.text-sm.text-gray-600 Submit all required documents through your dashboard after registration
-          .text-center
-            .bg-purple-100.w-16.h-16.rounded-full.flex.items-center.justify-center.mx-auto.mb-4
-              %i.fa.fa-clock.h-8.w-8.text-purple-600
-            %h4.font-semibold.mb-2 Review Process
-            %p.text-sm.text-gray-600 Documents are reviewed within 24-48 hours by our team
-          .text-center
-            .bg-green-100.w-16.h-16.rounded-full.flex.items-center.justify-center.mx-auto.mb-4
-              %i.fa.fa-credit-card.h-8.w-8.text-green-600
-            %h4.font-semibold.mb-2 Complete Booking
-            %p.text-sm.text-gray-600 Once approved, you can proceed with payment and complete your booking
-
-      / Call to Action
-      .mt-8.text-center
-        = link_to cars_path, class: 'inline-flex items-center px-8 py-4 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors shadow-lg hover:shadow-xl' do
-          %i.fa.fa-car.mr-2
-          Start Browsing Cars
-
-  / Footer
-  %footer.bg-gray-800.text-white.py-12
+  / Testimonials
+  %section.py-16.bg-white
     .max-w-7xl.mx-auto.px-4.sm:px-6.lg:px-8
-      .grid.grid-cols-1.md:grid-cols-4.gap-8
-        .mb-4
-          .flex.items-center.mb-4
-            %i.h-8.w-8.text-primary.mr-2.fa.fa-car
-            %span.text-xl.font-bold WheelsOnRent
-          %p.text-gray-300 Your trusted partner for car rentals.
-        .mb-4
-          %h4.font-semibold.mb-4 Quick Links
-          %ul.space-y-2.text-gray-300
-            %li= link_to 'Browse Cars', "customer_path", class: 'hover:text-white'
-            %li= link_to 'List Your Car', "vendor_path", class: 'hover:text-white'
-            %li= link_to 'About Us', '#', class: 'hover:text-white'
-            %li= link_to 'Contact', '#', class: 'hover:text-white'
-        .mb-4
-          %h4.font-semibold.mb-4 Support
-          %ul.space-y-2.text-gray-300
-            %li= link_to 'Help Center', '#', class: 'hover:text-white'
-            %li= link_to 'Terms of Service', '#', class: 'hover:text-white'
-            %li= link_to 'Privacy Policy', '#', class: 'hover:text-white'
-            %li= link_to 'Insurance', '#', class: 'hover:text-white'
-        .mb-4
-          %h4.font-semibold.mb-4 Contact Info
-          .space-y-2.text-gray-300
-            %p 📞 1-800-WheelsOnRent
-            %p 📧 support@wheelsonrent.com
-            %p 📍 123 Rental Street, City, State 12345
-      .border-t.border-gray-700.mt-8.pt-8.text-center.text-gray-300
-        %p &copy; 2024 DriveAway. All rights reserved.
+      .text-center.mb-10
+        %h2.text-3xl.font-bold.text-gray-900.mb-2 What They're Talking About Wheels on Rent
+      .grid.grid-cols-1.md:grid-cols-3.gap-6
+        - (@testimonials || []).each do |t|
+          %figure.bg-white.rounded-2xl.shadow-sm.border.border-gray-100.p-6.flex.flex-col.justify-between.hover:shadow-md.transition
+            %div
+              %div{class: 'text-3xl mb-2', style: 'color: #3a6363'} "
+              %blockquote.text-gray-700.text-sm.leading-relaxed= t[:quote]
+            %figcaption.mt-4.flex.items-center.gap-3
+              %div{class: 'w-10 h-10 rounded-full flex items-center justify-center text-white font-semibold', style: 'background-color: #3a6363'}
+                %span.text-sm= t[:author].to_s.first
+              %div
+                %div.text-sm.font-semibold.text-gray-900= t[:author]
+                %div.text-xs.text-gray-500= t[:role]
 
+- content_for :footer do
+  %footer.bg-gray-900.text-white
+    .max-w-7xl.mx-auto.px-4.sm:px-6.lg:px-8.py-12
+      .grid.grid-cols-1.md:grid-cols-4.gap-8
+        .space-y-4
+          .flex.items-center
+            %i{class: 'fas fa-car text-2xl', style: 'color: #3a6363'}
+            %span.text-xl.font-extrabold.ml-2= (@company && @company[:name]) || 'WheelsOnRent'
+          %p.text-gray-300= (@company && @company[:blurb]) || 'Your trusted partner for car rentals.'
+        .space-y-4
+          %h4.text-white.font-semibold Quick Links
+          %ul.space-y-2
+            - default_footer_links = [{label:'Browse Cars',href:'#'},{label:'List Your Car',href:'#'},{label:'About Us',href:'#'},{label:'Contact',href:'#'}]
+            - (@footer_links || default_footer_links).each do |l|
+              %li= link_to l[:label], l[:href], class: 'text-gray-300 hover:text-white transition'
+        .space-y-4
+          %h4.text-white.font-semibold Support
+          %ul.space-y-2
+            - default_support_links = [{label:'Help Center',href:'#'},{label:'Terms of Service',href:'#'},{label:'Privacy Policy',href:'#'},{label:'Insurance',href:'#'}]
+            - (@support_links || default_support_links).each do |l|
+              %li= link_to l[:label], l[:href], class: 'text-gray-300 hover:text-white transition'
+        .space-y-4
+          %h4.text-white.font-semibold Contact Info
+          - default_contact = {phone: '1-800-WheelsOnRent', email: 'support@wheelsonrent.com', address: '123 Rental Street, City, State 12345'}
+          - c = (@contact || default_contact)
+          %div.text-gray-300
+            %p= "📞 #{c[:phone]}"
+            %p= "📧 #{c[:email]}"
+            %p= "📍 #{c[:address]}"
+      .border-t.border-gray-800.mt-8.pt-8.text-center.text-gray-400
+        %p &copy; #{Time.current.year} WheelsOnRent. All rights reserved.
