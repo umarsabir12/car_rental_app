@@ -19,6 +19,17 @@
   z-index: 99999 !important;
 }
 
+/* Ensure flatpickr calendar is visible in modals */
+.flatpickr-calendar {
+  z-index: 99999 !important;
+}
+
+/* Modal-specific flatpickr styling */
+.modal .flatpickr-calendar.open {
+  display: block !important;
+  z-index: 99999 !important;
+}
+
 /* Ensure modal backdrop doesn't interfere */
 .modal-backdrop {
   z-index: 9998 !important;

@@ -3,7 +3,7 @@
 
 %div.w-full.bg-gradient-to-br.from-blue-50.to-blue-100.min-h-screen.py-12
   / Hero Section with Image Slider
-  .relative.max-w-container.mx-auto.rounded-3xl.overflow-hidden.shadow-2xl.mb-8
+  .relative.max-w-7xl.mx-auto.rounded-3xl.overflow-hidden.shadow-2xl.mb-8
     - if @car.images.attached? && @car.images.any?
       .relative.h-96.bg-gray-100
         / Image Slider
@@ -137,6 +137,12 @@
           %button.bg-blue-700.text-white.font-semibold.px-6.py-2.rounded-lg.shadow-md.hover:bg-blue-800.transition{ type: "button", id: "createBookingBtn", disabled: true, style: "pointer-events: none; opacity: 0.5;" } Create Booking
         - else
           %a.bg-blue-700.text-white.font-semibold.px-6.py-2.rounded-lg.shadow-md.hover:bg-blue-800.transition{ href: "#", id: "continueToLoginLink", disabled: true, style: "pointer-events: none; opacity: 0.5;" } Continue to Sign In
+
+
+
+
+
+
 
 
 :javascript
