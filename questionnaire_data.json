@@ -1,0 +1,60 @@
+{
+  "forced_choice": [
+    {
+      "block_id": "PR1",
+      "prompt": "Your partner pauses before replying to your text.",
+      "options": {
+        "A": {
+          "text": "I assume they're busy and wait patiently.",
+          "subtype": "SECURE"
+        },
+        "B": {
+          "text": "I worry I may have said something wrong.",
+          "subtype": "NURTURING ANXIOUS"
+        },
+        "C": {
+          "text": "I accept it quietly, not wanting to pressure them.",
+          "subtype": "ETHICAL AVOIDANT"
+        },
+        "D": {
+          "text": "Once they respond I ignore them.",
+          "subtype": "MANIPULATIVE AVOIDANT"
+        }
+      }
+    }
+  ],
+  "scenario_choice": [
+    {
+      "block_id": "SC1",
+      "prompt": "If your partner arrives late for an important dinner, you …",
+      "options": {
+        "A": {
+          "text": "Tell myself they did what was best, because I trust they care about me.",
+          "subtype": "SECURE"
+        },
+        "B": {
+          "text": "Worry I made them upset and apologize more than necessary.",
+          "subtype": "NURTURING ANXIOUS"
+        },
+        "C": {
+          "text": "Test loyalty by pretending not to care.",
+          "subtype": "MANIPULATIVE AVOIDANT"
+        },
+        "D": {
+          "text": "Freeze inside, unsure what to say.",
+          "subtype": "QUIET DISORGANIZED"
+        }
+      }
+    }
+  ],
+  "likert": [
+    {
+      "item_id": "L1",
+      "text": "I feel comfortable depending on others without fear.",
+      "subtype": "SECURE"
+    }
+  ]
+}
+
+
+

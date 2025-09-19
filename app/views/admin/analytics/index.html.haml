@@ -1,62 +1,225 @@
 -# Admin Analytics Dashboard Sample
 .container.mx-auto.px-4.py-8
   %h1.text-3xl.font-bold.text-blue-900.mb-8 Analytics Dashboard
+  
   / Summary Cards
   .grid.grid-cols-1.md:grid-cols-2.lg:grid-cols-4.gap-6.mb-10
     .bg-white.rounded-xl.shadow.p-6.flex.flex-col.items-center
-      %div.text-3xl.font-bold.text-blue-900.mb-1 1,245
+      %div.text-3xl.font-bold.text-blue-900.mb-1= Booking.count
       %div.text-gray-600.font-semibold Total Bookings
     .bg-white.rounded-xl.shadow.p-6.flex.flex-col.items-center
-      %div.text-3xl.font-bold.text-green-700.mb-1 $12,300
-      %div.text-gray-600.font-semibold Revenue This Month
+      %div.text-3xl.font-bold.text-green-700.mb-1= User.count
+      %div.text-gray-600.font-semibold Total Users
     .bg-white.rounded-xl.shadow.p-6.flex.flex-col.items-center
-      %div.text-3xl.font-bold.text-blue-700.mb-1 18/20
-      %div.text-gray-600.font-semibold Active Cars
+      %div.text-3xl.font-bold.text-blue-700.mb-1= Car.count
+      %div.text-gray-600.font-semibold Total Cars
     .bg-white.rounded-xl.shadow.p-6.flex.flex-col.items-center
-      %div.text-3xl.font-bold.text-purple-700.mb-1 12
-      %div.text-gray-600.font-semibold New Customers This Week
+      %div.text-3xl.font-bold.text-purple-700.mb-1= Vendor.count
+      %div.text-gray-600.font-semibold Total Vendors
 
-  / Charts (placeholders)
-  .grid.grid-cols-1.md:grid-cols-2.gap-8.mb-10
+  / Recent Activity & Insights
+  .grid.grid-cols-1.lg:grid-cols-2.gap-8.mb-10
+    / Recent Bookings
     .bg-white.rounded-xl.shadow.p-8
-      %h2.text-xl.font-bold.text-blue-900.mb-4 Bookings Trend
-      %div.flex.justify-center.items-center.h-48.text-gray-400.text-2xl.font-bold [Line Chart Here]
+      %h2.text-xl.font-bold.text-blue-900.mb-6 Recent Bookings
+      - recent_bookings = Booking.includes(:user, :car).order(created_at: :desc).limit(5)
+      - if recent_bookings.any?
+        .space-y-4
+          - recent_bookings.each do |booking|
+            .flex.items-center.justify-between.p-3.bg-gray-50.rounded-lg
+              .flex.items-center
+                .flex-shrink-0.h-10.w-10.bg-blue-100.rounded-full.flex.items-center.justify-center
+                  %i.fas.fa-calendar.text-blue-600
+                .ml-3
+                  .text-sm.font-medium.text-gray-900
+                    = booking.user&.full_name || booking.user&.email
+                  .text-sm.text-gray-500
+                    = booking.car&.brand + " " + booking.car&.model if booking.car
+              .text-right
+                .text-sm.font-medium.text-gray-900
+                  = booking.status.titleize
+                .text-xs.text-gray-500
+                  = booking.created_at.strftime("%b %d")
+        .mt-4
+          = link_to admin_bookings_path, class: "text-blue-600 hover:text-blue-700 text-sm font-medium" do
+            View All Bookings
+            %i.fas.fa-arrow-right.ml-1
+      - else
+        .text-center.py-8.text-gray-500
+          %i.fas.fa-calendar.text-4xl.mb-2
+          %p No recent bookings
+
+    / Recent Users
     .bg-white.rounded-xl.shadow.p-8
-      %h2.text-xl.font-bold.text-blue-900.mb-4 Revenue by Car
-      %div.flex.justify-center.items-center.h-48.text-gray-400.text-2xl.font-bold [Bar Chart Here]
+      %h2.text-xl.font-bold.text-blue-900.mb-6 Recent Users
+      - recent_users = User.order(created_at: :desc).limit(5)
+      - if recent_users.any?
+        .space-y-4
+          - recent_users.each do |user|
+            .flex.items-center.justify-between.p-3.bg-gray-50.rounded-lg
+              .flex.items-center
+                .flex-shrink-0.h-10.w-10.bg-green-100.rounded-full.flex.items-center.justify-center
+                  %i.fas.fa-user.text-green-600
+                .ml-3
+                  .text-sm.font-medium.text-gray-900
+                    = user.full_name || user.email
+                  .text-sm.text-gray-500= user.email
+              .text-right
+                .text-xs.text-gray-500
+                  = user.created_at.strftime("%b %d")
+        .mt-4
+          = link_to admin_customers_path, class: "text-blue-600 hover:text-blue-700 text-sm font-medium" do
+            View All Users
+            %i.fas.fa-arrow-right.ml-1
+      - else
+        .text-center.py-8.text-gray-500
+          %i.fas.fa-users.text-4xl.mb-2
+          %p No recent users
 
-  / Fleet Utilization Table
-  .bg-white.rounded-xl.shadow.p-8.mb-10
-    %h2.text-xl.font-bold.text-blue-900.mb-4 Top Booked Cars
-    %table.min-w-full.border-separate{ style: "border-spacing: 0 0.75rem;" }
-      %thead
-        %tr
-          %th.px-6.py-3.text-left.text-xs.font-bold.text-blue-700.uppercase.bg-blue-50.rounded-l-lg Car
-          %th.px-6.py-3.text-left.text-xs.font-bold.text-blue-700.uppercase.bg-blue-50 Bookings
-          %th.px-6.py-3.text-left.text-xs.font-bold.text-blue-700.uppercase.bg-blue-50 Revenue
-          %th.px-6.py-3.text-left.text-xs.font-bold.text-blue-700.uppercase.bg-blue-50.rounded-r-lg Status
-      %tbody
-        - [['Toyota Camry', 32, '$2,400', 'Active'], ['BMW 3 Series', 28, '$3,100', 'Active'], ['Ford Mustang', 20, '$1,800', 'Active']].each do |car, bookings, revenue, status|
-          %tr.bg-blue-50.rounded-lg.shadow.hover:bg-blue-100.transition
-            %td.px-6.py-4.font-medium.text-gray-900.rounded-l-lg= car
-            %td.px-6.py-4.text-gray-700= bookings
-            %td.px-6.py-4.text-gray-700= revenue
-            %td.px-6.py-4.text-gray-700.rounded-r-lg= status
+  / Performance Metrics
+  .grid.grid-cols-1.lg:grid-cols-3.gap-8.mb-10
+    / Booking Status Distribution
+    .bg-white.rounded-xl.shadow.p-8
+      %h2.text-xl.font-bold.text-blue-900.mb-6 Booking Status
+      - pending_count = Booking.where(status: 'pending').count
+      - confirmed_count = Booking.where(status: 'confirmed').count
+      - cancelled_count = Booking.where(status: 'cancelled').count
+      - total_count = Booking.count
+      
+      .space-y-4
+        .flex.items-center.justify-between
+          .flex.items-center
+            .w-3.h-3.bg-yellow-500.rounded-full.mr-3
+            %span.text-sm.font-medium Pending
+          %span.text-sm.text-gray-600= "#{pending_count} (#{total_count > 0 ? (pending_count.to_f / total_count * 100).round(1) : 0}%)"
+        
+        .flex.items-center.justify-between
+          .flex.items-center
+            .w-3.h-3.bg-green-500.rounded-full.mr-3
+            %span.text-sm.font-medium Confirmed
+          %span.text-sm.text-gray-600= "#{confirmed_count} (#{total_count > 0 ? (confirmed_count.to_f / total_count * 100).round(1) : 0}%)"
+        
+        .flex.items-center.justify-between
+          .flex.items-center
+            .w-3.h-3.bg-red-500.rounded-full.mr-3
+            %span.text-sm.font-medium Cancelled
+          %span.text-sm.text-gray-600= "#{cancelled_count} (#{total_count > 0 ? (cancelled_count.to_f / total_count * 100).round(1) : 0}%)"
 
-  / Customer Insights Table
+    / Document Status
+    .bg-white.rounded-xl.shadow.p-8
+      %h2.text-xl.font-bold.text-blue-900.mb-6 Document Status
+      - pending_docs = Document.where(status: 'pending').count
+      - approved_docs = Document.where(status: 'approved').count
+      - rejected_docs = Document.where(status: 'rejected').count
+      - total_docs = Document.count
+      
+      .space-y-4
+        .flex.items-center.justify-between
+          .flex.items-center
+            .w-3.h-3.bg-yellow-500.rounded-full.mr-3
+            %span.text-sm.font-medium Pending
+          %span.text-sm.text-gray-600= "#{pending_docs} (#{total_docs > 0 ? (pending_docs.to_f / total_docs * 100).round(1) : 0}%)"
+        
+        .flex.items-center.justify-between
+          .flex.items-center
+            .w-3.h-3.bg-green-500.rounded-full.mr-3
+            %span.text-sm.font-medium Approved
+          %span.text-sm.text-gray-600= "#{approved_docs} (#{total_docs > 0 ? (approved_docs.to_f / total_docs * 100).round(1) : 0}%)"
+        
+        .flex.items-center.justify-between
+          .flex.items-center
+            .w-3.h-3.bg-red-500.rounded-full.mr-3
+            %span.text-sm.font-medium Rejected
+          %span.text-sm.text-gray-600= "#{rejected_docs} (#{total_docs > 0 ? (rejected_docs.to_f / total_docs * 100).round(1) : 0}%)"
+
+    / System Health
+    .bg-white.rounded-xl.shadow.p-8
+      %h2.text-xl.font-bold.text-blue-900.mb-6 System Health
+      .space-y-4
+        .flex.items-center.justify-between
+          .flex.items-center
+            .w-3.h-3.bg-green-500.rounded-full.mr-3
+            %span.text-sm.font-medium Database
+          %span.text-sm.text-gray-600 Healthy
+        
+        .flex.items-center.justify-between
+          .flex.items-center
+            .w-3.h-3.bg-green-500.rounded-full.mr-3
+            %span.text-sm.font-medium Storage
+          %span.text-sm.text-gray-600 Good
+        
+        .flex.items-center.justify-between
+          .flex.items-center
+            .w-3.h-3.bg-green-500.rounded-full.mr-3
+            %span.text-sm.font-medium Performance
+          %span.text-sm.text-gray-600 Optimal
+
+  / Top Performers
+  .grid.grid-cols-1.lg:grid-cols-2.gap-8.mb-10
+    / Top Booked Cars
+    .bg-white.rounded-xl.shadow.p-8
+      %h2.text-xl.font-bold.text-blue-900.mb-6 Top Booked Cars
+      - top_cars = Car.joins(:bookings).group('cars.id').order('COUNT(bookings.id) DESC').limit(5)
+      - if top_cars.any?
+        .space-y-3
+          - top_cars.each_with_index do |car, index|
+            .flex.items-center.justify-between.p-3.bg-gray-50.rounded-lg
+              .flex.items-center
+                .flex-shrink-0.h-8.w-8.bg-blue-100.rounded-full.flex.items-center.justify-center
+                  %span.text-sm.font-bold.text-blue-600= index + 1
+                .ml-3
+                  .text-sm.font-medium.text-gray-900
+                    = car.brand + " " + car.model
+                  .text-sm.text-gray-500= car.vendor&.company_name || "Unknown Vendor"
+              .text-right
+                .text-sm.font-medium.text-gray-900
+                  = car.bookings.count
+                .text-xs.text-gray-500 bookings
+      - else
+        .text-center.py-8.text-gray-500
+          %i.fas.fa-car.text-4xl.mb-2
+          %p No cars with bookings
+
+    / Top Vendors
+    .bg-white.rounded-xl.shadow.p-8
+      %h2.text-xl.font-bold.text-blue-900.mb-6 Top Vendors
+      - top_vendors = Vendor.joins(:cars).group('vendors.id').order('COUNT(cars.id) DESC').limit(5)
+      - if top_vendors.any?
+        .space-y-3
+          - top_vendors.each_with_index do |vendor, index|
+            .flex.items-center.justify-between.p-3.bg-gray-50.rounded-lg
+              .flex.items-center
+                .flex-shrink-0.h-8.w-8.bg-purple-100.rounded-full.flex.items-center.justify-center
+                  %span.text-sm.font-bold.text-purple-600= index + 1
+                .ml-3
+                  .text-sm.font-medium.text-gray-900
+                    = vendor.company_name
+                  -# .text-sm.text-gray-500= vendor.contact_person
+              .text-right
+                .text-sm.font-medium.text-gray-900
+                  = vendor.cars.count
+                .text-xs.text-gray-500 cars
+      - else
+        .text-center.py-8.text-gray-500
+          %i.fas.fa-store.text-4xl.mb-2
+          %p No vendors with cars
+
+  / Quick Actions
   .bg-white.rounded-xl.shadow.p-8
-    %h2.text-xl.font-bold.text-blue-900.mb-4 Top Vendors
-    %table.min-w-full.border-separate{ style: "border-spacing: 0 0.75rem;" }
-      %thead
-        %tr
-          %th.px-6.py-3.text-left.text-xs.font-bold.text-blue-700.uppercase.bg-blue-50.rounded-l-lg Name
-          %th.px-6.py-3.text-left.text-xs.font-bold.text-blue-700.uppercase.bg-blue-50 Cars
-          %th.px-6.py-3.text-left.text-xs.font-bold.text-blue-700.uppercase.bg-blue-50 Revenue
-          %th.px-6.py-3.text-left.text-xs.font-bold.text-blue-700.uppercase.bg-blue-50.rounded-r-lg Last Booking
-      %tbody
-        - [['Alice Smith', 8, '$600', '2024-07-01'], ['Bob Johnson', 6, '$480', '2024-06-28'], ['Jane Doe', 5, '$400', '2024-06-25']].each do |name, bookings, revenue, last|
-          %tr.bg-blue-50.rounded-lg.shadow.hover:bg-blue-100.transition
-            %td.px-6.py-4.font-medium.text-gray-900.rounded-l-lg= name
-            %td.px-6.py-4.text-gray-700= bookings
-            %td.px-6.py-4.text-gray-700= revenue
-            %td.px-6.py-4.text-gray-700.rounded-r-lg= last 
+    %h2.text-xl.font-bold.text-blue-900.mb-6 Quick Actions
+    .grid.grid-cols-1.md:grid-cols-4.gap-4
+      = link_to admin_bookings_path, class: "flex flex-col items-center p-4 bg-blue-50 rounded-lg hover:bg-blue-100 transition" do
+        %i.fas.fa-calendar-check.text-2xl.text-blue-600.mb-2
+        %span.text-sm.font-medium.text-blue-900 View Bookings
+      
+      = link_to admin_customers_path, class: "flex flex-col items-center p-4 bg-green-50 rounded-lg hover:bg-green-100 transition" do
+        %i.fas.fa-users.text-2xl.text-green-600.mb-2
+        %span.text-sm.font-medium.text-green-900 Manage Users
+      
+      = link_to admin_vendors_path, class: "flex flex-col items-center p-4 bg-purple-50 rounded-lg hover:bg-purple-100 transition" do
+        %i.fas.fa-store.text-2xl.text-purple-600.mb-2
+        %span.text-sm.font-medium.text-purple-900 Manage Vendors
+      
+      = link_to admin_cars_path, class: "flex flex-col items-center p-4 bg-orange-50 rounded-lg hover:bg-orange-100 transition" do
+        %i.fas.fa-car.text-2xl.text-orange-600.mb-2
+        %span.text-sm.font-medium.text-orange-900 View Cars 

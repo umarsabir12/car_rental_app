@@ -69,7 +69,7 @@
         
         .field.space-y-2.md:col-span-2
           = f.label :category, 'Category', class: 'block text-sm font-medium text-gray-700'
-          = f.select :category, options_for_select([['Sedan', 'Sedan'], ['SUV', 'SUV'], ['Sports', 'Sports'], ['Luxury', 'Luxury'], ['Electric', 'Electric'], ['Hybrid', 'Hybrid'], ['Van', 'Van'], ['Truck', 'Truck']], @car.category), { prompt: 'Select category' }, { class: 'w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition' }
+          = f.select :category, options_for_select([["All Categories", ""], ["Sedan", "sedan"], ["SUV", "suv"], ["Hatchback", "hatchback"], ["Coupe", "coupe"], ["Convertible", "convertible"], ["Wagon", "wagon"], ["Van", "van"], ["Truck", "truck"], ["Luxury", "luxury"], ["Sports", "sports"], ["Electric", "electric"], ["Hybrid", "hybrid"]], @car.category), { prompt: 'Select category' }, { class: 'w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition' }
         
         .field.space-y-2.md:col-span-2
           = f.label :description, 'Description', class: 'block text-sm font-medium text-gray-700'

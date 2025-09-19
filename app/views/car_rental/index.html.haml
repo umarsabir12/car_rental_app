@@ -74,13 +74,8 @@
             .p-6
               .flex.justify-between.items-start.mb-2
                 %h3.text-xl.font-semibold= car[:car_type]
-                -# %span.text-sm.text-gray-500.bg-gray-100.px-2.py-1.rounded= car[:car_type]
-              %p.text-gray-600.mb-4= car[:features].join(' • ')
-              .flex.justify-between.items-center
-                %div
-                  %span.text-2xl.font-bold.text-primary= "$#{car[:price]}"
-                  %span.text-gray-500 /day
-                = link_to 'Book Now', cars_path, class: 'btn btn-primary'
+                = link_to 'View Collection', cars_path, class: 'btn btn-primary'
+              
 
   / Choose a car by brand section
   %section.py-16.bg-gray-100

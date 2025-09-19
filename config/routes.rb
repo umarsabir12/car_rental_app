@@ -12,10 +12,8 @@ Rails.application.routes.draw do
     registrations: 'users/registrations',
     passwords: 'users/passwords'
   }
-  devise_for :admins, controllers: { sessions: 'admins/sessions' }
+  devise_for :admins, controllers: { sessions: 'admins/sessions'}
   
-  # Admin profile routes (outside namespace for simpler URLs)
-  resource :admins, only: [:show, :edit, :update, :index], path: 'admin'
   
   namespace :users do
     get 'documents', to: 'documents#index'
@@ -32,6 +30,8 @@ Rails.application.routes.draw do
   end
   resources :users, only: [:show, :edit, :update]
 
+  # Admin profile routes (outside namespace for simpler URLs)
+  resources :admins
   namespace :admin do
     resources :dashboard, only: [:index]
     resources :analytics, only: [:index]
@@ -103,6 +103,8 @@ Rails.application.routes.draw do
   post 'webhooks/stripe', to: 'webhooks#stripe'
 
   get 'user/home', to: 'users#home', as: :user_home
+
+  get 'about', to: 'pages#about', as: :about
 
   root "car_rental#index"
 end

@@ -1,0 +1,103 @@
+.container.mx-auto.px-4.py-8
+  .max-w-2xl.mx-auto
+    .mb-8
+      .flex.items-center.space-x-4
+        = link_to admins_path, class: "text-blue-600 hover:text-blue-700 transition" do
+          %i.fas.fa-arrow-left.mr-2
+          Back to Admins
+        %h1.text-3xl.font-bold.text-gray-900 Create New Admin
+
+    .bg-white.rounded-lg.shadow-md.p-8
+      = form_for @admin, local: true, class: "space-y-6" do |f|
+        
+
+        .grid.grid-cols-1.md:grid-cols-2.gap-6
+          .space-y-2
+            = f.label :first_name, class: "block text-sm font-medium text-gray-700" do
+              First Name
+              %span.text-red-500 *
+            = f.text_field :first_name, required: true, class: "w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent", placeholder: "Enter first name"
+            - if @admin.errors[:first_name].any?
+              .text-red-600.text-sm= @admin.errors[:first_name].join(", ")
+
+          .space-y-2
+            = f.label :last_name, class: "block text-sm font-medium text-gray-700" do
+              Last Name
+              %span.text-red-500 *
+            = f.text_field :last_name, required: true, class: "w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent", placeholder: "Enter last name"
+            - if @admin.errors[:last_name].any?
+              .text-red-600.text-sm= @admin.errors[:last_name].join(", ")
+
+        .space-y-2
+          = f.label :email, class: "block text-sm font-medium text-gray-700" do
+            Email
+            %span.text-red-500 *
+          = f.email_field :email, required: true, class: "w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent", placeholder: "Enter email address"
+          - if @admin.errors[:email].any?
+            .text-red-600.text-sm= @admin.errors[:email].join(", ")
+
+        .space-y-2
+          = f.label :role_type, class: "block text-sm font-medium text-gray-700" do
+            Role Type
+            %span.text-red-500 *
+          = f.select :role_type, options_for_select([['Admin', 'admin'], ['Super Admin', 'super_admin']], 'admin'), { include_blank: false }, class: "w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          .text-sm.text-gray-500
+            %strong Super Admin:
+            Can create other admin accounts and has full system access.
+            %br
+            %strong Admin:
+            Regular admin with limited permissions.
+          - if @admin.errors[:role_type].any?
+            .text-red-600.text-sm= @admin.errors[:role_type].join(", ")
+
+        .grid.grid-cols-1.md:grid-cols-2.gap-6
+          .space-y-2
+            = f.label :password, class: "block text-sm font-medium text-gray-700" do
+              Password
+              %span.text-red-500 *
+            = f.password_field :password, required: true, class: "w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent", placeholder: "Enter password"
+            - if @admin.errors[:password].any?
+              .text-red-600.text-sm= @admin.errors[:password].join(", ")
+
+          .space-y-2
+            = f.label :password_confirmation, class: "block text-sm font-medium text-gray-700" do
+              Confirm Password
+              %span.text-red-500 *
+            = f.password_field :password_confirmation, required: true, class: "w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent", placeholder: "Confirm password"
+            - if @admin.errors[:password_confirmation].any?
+              .text-red-600.text-sm= @admin.errors[:password_confirmation].join(", ")
+
+        .flex.items-center.justify-between.pt-6
+          = link_to "Cancel", admins_path, class: "px-6 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition"
+          = f.submit "Create Admin", class: "px-6 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition"
+
+    .mt-8.bg-blue-50.rounded-lg.p-6
+      %h3.text-lg.font-medium.text-blue-900.mb-3
+        %i.fas.fa-info-circle.mr-2
+        Important Notes
+      %ul.text-sm.text-blue-800.space-y-2
+        %li
+          %strong Email:
+          Must be unique and will be used for login
+        %li
+          %strong Password:
+          Should be at least 6 characters long
+        %li
+          %strong Role Type:
+          Choose carefully as Super Admins have full system access
+        %li
+          %strong Security:
+          The new admin will be able to log in immediately after creation
+
+:javascript
+  document.addEventListener('DOMContentLoaded', function() {
+    const form = document.querySelector('form');
+    
+    form.addEventListener('submit', function(e) {
+      const formData = new FormData(form);
+      console.log('Form data being submitted:');
+      for (let [key, value] of formData.entries()) {
+        console.log(key + ': ' + value);
+      }
+    });
+  });

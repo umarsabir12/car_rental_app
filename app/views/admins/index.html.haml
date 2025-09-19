@@ -1,1 +1,133 @@
-kajhl
+.container.mx-auto.px-4.py-8
+  .max-w-7xl.mx-auto
+    .flex.items-center.justify-between.mb-8
+      .flex.items-center.space-x-4
+        %h1.text-3xl.font-bold.text-gray-900 Admin Users
+        
+      .text-sm.text-gray-500
+        - if current_admin.super_admin?
+          = link_to new_admin_path, class: "inline-flex items-center px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition" do
+            %i.fas.fa-plus.mr-2
+            Create Admin
+
+    / Search and Filter Section
+    .bg-white.rounded-lg.shadow-md.p-6.mb-6
+      .flex.flex-col.md:flex-row.md:items-center.md:justify-between.space-y-4.md:space-y-0
+        .flex-1.max-w-md
+          .relative
+            %input#search-input.w-full.pl-10.pr-4.py-2.border.border-gray-300.rounded-lg.focus:ring-2.focus:ring-blue-500.focus:border-transparent{placeholder: "Search admins...", type: "text"}
+            .absolute.inset-y-0.left-0.pl-3.flex.items-center.pointer-events-none
+              %i.fas.fa-search.text-gray-400
+        .flex.space-x-3
+          %select#role-filter.px-4.py-2.border.border-gray-300.rounded-lg.focus:ring-2.focus:ring-blue-500.focus:border-transparent
+            %option{value: ""} All Roles
+            %option{value: "admin"} Admin
+            %option{value: "super_admin"} Super Admin
+          %button#clear-filters.px-4.py-2.text-sm.font-medium.text-gray-600.bg-gray-100.rounded-lg.hover:bg-gray-200.transition
+            Clear Filters
+
+    / Admins Table
+    .bg-white.rounded-lg.shadow-md.overflow-hidden
+      .overflow-x-auto
+        %table.min-w-full.divide-y.divide-gray-200
+          %thead.bg-gray-50
+            %tr
+              %th.px-6.py-3.text-left.text-xs.font-medium.text-gray-500.uppercase.tracking-wider
+                Admin
+              %th.px-6.py-3.text-left.text-xs.font-medium.text-gray-500.uppercase.tracking-wider
+                Role
+              %th.px-6.py-3.text-left.text-xs.font-medium.text-gray-500.uppercase.tracking-wider
+                Email
+              %th.px-6.py-3.text-left.text-xs.font-medium.text-gray-500.uppercase.tracking-wider
+                Status
+              %th.px-6.py-3.text-left.text-xs.font-medium.text-gray-500.uppercase.tracking-wider
+                Created
+              %th.px-6.py-3.text-left.text-xs.font-medium.text-gray-500.uppercase.tracking-wider
+                Actions
+          %tbody.bg-white.divide-y.divide-gray-200
+            - @admins.each do |admin|
+              %tr.hover:bg-gray-50.transition
+                %td.px-6.py-4.whitespace-nowrap
+                  .flex.items-center
+                    .flex-shrink-0.h-10.w-10
+                      .h-10.w-10.rounded-full.bg-gradient-to-r.from-blue-500.to-purple-600.flex.items-center.justify-center
+                        %span.text-white.font-semibold.text-sm
+                          = admin.first_name&.first&.upcase || admin.email.first.upcase
+                    .ml-4
+                      .text-sm.font-medium.text-gray-900
+                        = admin.full_name || "N/A"
+                      .text-sm.text-gray-500
+                        = admin.email
+                %td.px-6.py-4.whitespace-nowrap
+                  - if admin.super_admin?
+                    %span.inline-flex.items-center.px-2.5.py-0.5.rounded-full.text-xs.font-medium.bg-purple-100.text-purple-800
+                      %i.fas.fa-crown.mr-1
+                      Super Admin
+                  - else
+                    %span.inline-flex.items-center.px-2.5.py-0.5.rounded-full.text-xs.font-medium.bg-blue-100.text-blue-800
+                      %i.fas.fa-user-shield.mr-1
+                      Admin
+                %td.px-6.py-4.whitespace-nowrap.text-sm.text-gray-900
+                  = admin.email
+                %td.px-6.py-4.whitespace-nowrap
+                  - if admin == current_admin
+                    %span.inline-flex.items-center.px-2.5.py-0.5.rounded-full.text-xs.font-medium.bg-green-100.text-green-800
+                      %i.fas.fa-user.mr-1
+                      Current User
+                  - else
+                    %span.inline-flex.items-center.px-2.5.py-0.5.rounded-full.text-xs.font-medium.bg-gray-100.text-gray-800
+                      %i.fas.fa-user.mr-1
+                      Active
+                %td.px-6.py-4.whitespace-nowrap.text-sm.text-gray-500
+                  = admin.created_at.strftime("%b %d, %Y")
+                %td.px-6.py-4.whitespace-nowrap.text-sm.font-medium
+                  .flex.space-x-2
+                    - if admin == current_admin
+                      = link_to edit_admin_path(admin), class: "text-indigo-600 hover:text-indigo-900 transition" do
+                        %i.fas.fa-edit
+                    - elsif current_admin.super_admin?
+                      = link_to edit_admin_path(admin), class: "text-indigo-600 hover:text-indigo-900 transition" do
+                        %i.fas.fa-edit
+                     
+
+    / Empty State
+    - if @admins.empty?
+      .bg-white.rounded-lg.shadow-md.p-12.text-center
+        .mx-auto.h-12.w-12.text-gray-400
+          %i.fas.fa-users.text-4xl
+        %h3.text-lg.font-medium.text-gray-900.mt-4 No admins found
+        %p.text-gray-500.mt-2
+          There are no admin users in the system yet.
+
+:javascript
+  document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('search-input');
+    const roleFilter = document.getElementById('role-filter');
+    const clearFiltersBtn = document.getElementById('clear-filters');
+    const tableRows = document.querySelectorAll('tbody tr');
+
+    function filterTable() {
+      const searchTerm = searchInput.value.toLowerCase();
+      const selectedRole = roleFilter.value.toLowerCase();
+
+      tableRows.forEach(row => {
+        const name = row.querySelector('td:first-child').textContent.toLowerCase();
+        const email = row.querySelector('td:nth-child(3)').textContent.toLowerCase();
+        const role = row.querySelector('td:nth-child(2)').textContent.toLowerCase();
+        
+        const matchesSearch = name.includes(searchTerm) || email.includes(searchTerm);
+        const matchesRole = !selectedRole || role.includes(selectedRole);
+        
+        row.style.display = matchesSearch && matchesRole ? '' : 'none';
+      });
+    }
+
+    searchInput.addEventListener('input', filterTable);
+    roleFilter.addEventListener('change', filterTable);
+    
+    clearFiltersBtn.addEventListener('click', function() {
+      searchInput.value = '';
+      roleFilter.value = '';
+      tableRows.forEach(row => row.style.display = '');
+    });
+  });
