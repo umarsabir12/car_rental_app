@@ -39,7 +39,7 @@
                   %li • Main image URL (optional)
                   %li • First image becomes primary display
 
-    = form_with model: @car, url: vendors_cars_path, local: true, html: { multipart: true, class: 'space-y-8' } do |f|
+    = form_with model: @car, url: vendors_cars_path, local: true, html: { multipart: true, class: 'space-y-8', id: 'car-creation-form' } do |f|
       / Basic Information Section (Required Fields)
       %h2.text-lg.font-bold.text-blue-800.mb-4 Basic Information
       .grid.grid-cols-1.md:grid-cols-2.gap-6
@@ -188,7 +188,7 @@
 :javascript
   // Initialize image upload functionality
   function initializeImageUploads() {
-    const form = document.querySelector('form');
+    const form = document.getElementById('car-creation-form');
     let hasImage = false;
     
     // Track if any image is selected
@@ -203,8 +203,8 @@
       }
     }
     
-    // Form validation
-    if (form) {
+    // Form validation - only apply to car creation form
+    if (form && form.id === 'car-creation-form') {
       form.addEventListener('submit', function(e) {
         checkImageSelection();
         if (!hasImage) {
