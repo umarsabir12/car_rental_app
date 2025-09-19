@@ -124,41 +124,6 @@
                 %div{class: 'text-xl md:text-2xl font-extrabold mb-1', style: 'color: #3a6363'}= s[:value]
                 %div.text-xs.text-gray-600.font-medium= s[:label]
 
-  / Requirements
-  %section#document-requirements.py-16.bg-gray-50
-    .max-w-7xl.mx-auto.px-4.sm:px-6.lg:px-8
-      .text-center.mb-12
-        %h2.text-3xl.font-bold.text-gray-900.mb-2 Document Requirements
-      .grid.grid-cols-1.lg:grid-cols-2.gap-8
-        - default_tourist = {title: 'Tourist Requirements', items: ['Home country license + IDP','Passport copy','Visa entry stamp']}
-        - default_resident = {title: 'Resident Requirements', items: ['UAE driving license','Emirates ID front/back','Passport and Visa copy']}
-        
-        %article{class: 'bg-white rounded-2xl shadow-md border-l-4', style: 'border-left-color: #3a6363'}
-          .p-8
-            .flex.items-center.mb-4
-              %div{class: 'rounded-full w-12 h-12 flex items-center justify-center', style: 'background-color: rgba(58, 99, 99, 0.1)'}
-                %i{class: 'fa fa-shield-alt', style: 'color: #3a6363'}
-              %h3.ml-4.text-2xl.font-bold.text-gray-900= (@tourist_requirements || default_tourist)[:title]
-            %ul.space-y-3
-              - ((@tourist_requirements || default_tourist)[:items] || []).each do |item|
-                %li.flex
-                  %div{class: 'mt-1 rounded-full w-6 h-6 flex items-center justify-center flex-shrink-0', style: 'background-color: rgba(58, 99, 99, 0.1)'}
-                    %i{class: 'fa fa-check text-xs', style: 'color: #3a6363'}
-                  %p.ml-3.text-gray-700= item
-
-        %article{class: 'bg-white rounded-2xl shadow-md border-l-4', style: 'border-left-color: #2d5555'}
-          .p-8
-            .flex.items-center.mb-4
-              %div{class: 'rounded-full w-12 h-12 flex items-center justify-center', style: 'background-color: rgba(45, 85, 85, 0.1)'}
-                %i{class: 'fa fa-shield-alt', style: 'color: #2d5555'}
-              %h3.ml-4.text-2xl.font-bold.text-gray-900= (@resident_requirements || default_resident)[:title]
-            %ul.space-y-3
-              - ((@resident_requirements || default_resident)[:items] || []).each do |item|
-                %li.flex
-                  %div{class: 'mt-1 rounded-full w-6 h-6 flex items-center justify-center flex-shrink-0', style: 'background-color: rgba(45, 85, 85, 0.1)'}
-                    %i{class: 'fa fa-check text-xs', style: 'color: #2d5555'}
-                  %p.ml-3.text-gray-700= item
-
   / Testimonials
   %section.py-16.bg-white
     .max-w-7xl.mx-auto.px-4.sm:px-6.lg:px-8

@@ -11,10 +11,9 @@
       .hidden.md:flex.items-center.space-x-8
         - unless user_signed_in? || vendor_signed_in?
           = link_to 'Home', root_path, class: 'text-gray-700 font-medium transition navbar-link'
-          = link_to 'Browse Cars', cars_path, class: 'text-gray-700 font-medium transition navbar-link'
-          = link_to 'Car with Driver', cars_path(with_driver: 'true'), class: 'text-gray-700 font-medium transition navbar-link'
           = link_to 'About Us', '#', class: 'text-gray-700 font-medium transition navbar-link'
-          = link_to 'Contact', '#', class: 'text-gray-700 font-medium transition navbar-link'
+          = link_to 'Car Class', '#', class: 'text-gray-700 font-medium transition navbar-link'
+          = link_to 'Contact Us', '#', class: 'text-gray-700 font-medium transition navbar-link'
         
         .flex.items-center.space-x-3
           - if user_signed_in?
@@ -114,9 +113,6 @@
                   = link_to new_user_registration_path, class: "flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 transition-all duration-150" do
                     %i{class: 'fas fa-user-plus mr-3 w-4', style: 'color: #3a6363'}
                     Sign Up as Customer
-                  = link_to new_vendor_registration_path, class: "flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 transition-all duration-150" do
-                    %i{class: 'fas fa-building mr-3 w-4', style: 'color: #3a6363'}
-                    Sign Up as Vendor
       
       / Mobile menu button
       .md:hidden
@@ -178,10 +174,9 @@
       - else
         / Unauthenticated mobile menu
         = link_to 'Home', root_path, class: 'block px-3 py-2 text-gray-700 hover:bg-gray-50 font-medium transition rounded-md navbar-link'
-        = link_to 'Browse Cars', cars_path, class: 'block px-3 py-2 text-gray-700 hover:bg-gray-50 font-medium transition rounded-md navbar-link'
-        = link_to 'Car with Driver', cars_path(with_driver: 'true'), class: 'block px-3 py-2 text-gray-700 hover:bg-gray-50 font-medium transition rounded-md navbar-link'
         = link_to 'About Us', '#', class: 'block px-3 py-2 text-gray-700 hover:bg-gray-50 font-medium transition rounded-md navbar-link'
-        = link_to 'Contact', '#', class: 'block px-3 py-2 text-gray-700 hover:bg-gray-50 font-medium transition rounded-md navbar-link'
+        = link_to 'Car Class', '#', class: 'block px-3 py-2 text-gray-700 hover:bg-gray-50 font-medium transition rounded-md navbar-link'
+        = link_to 'Contact Us', '#', class: 'block px-3 py-2 text-gray-700 hover:bg-gray-50 font-medium transition rounded-md navbar-link'
         .border-t.border-gray-200.pt-4
           .px-3.py-2
             %p.text-sm.font-semibold.text-gray-500.mb-2 Login
