@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_09_23_121500) do
+ActiveRecord::Schema[7.2].define(version: 2025_09_24_171306) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -106,6 +106,8 @@ ActiveRecord::Schema[7.2].define(version: 2025_09_23_121500) do
     t.integer "daily_milleage", default: 0
     t.integer "weekly_milleage", default: 0
     t.integer "monthly_milleage", default: 0
+    t.string "insurance_policy_number", default: ""
+    t.string "insurance_policy", default: ""
     t.index ["stripe_price_id"], name: "index_cars_on_stripe_price_id"
     t.index ["stripe_product_id"], name: "index_cars_on_stripe_product_id"
     t.index ["vendor_id"], name: "index_cars_on_vendor_id"
