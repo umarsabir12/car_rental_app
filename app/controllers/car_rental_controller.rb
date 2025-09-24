@@ -99,12 +99,12 @@ class CarRentalController < ApplicationController
       {name: 'Electric', image: 'https://images.unsplash.com/photo-1560958089-b8a1929cea89?q=80&w=400&auto=format&fit=crop', daily_price: '$45/day'}
     ]
 
-    # Build brand logos dynamically from app/assets/images/brands to avoid broken links
-    brands_dir = Rails.root.join('app', 'assets', 'images', 'brands')
+    # Build brand logos dynamically from app/assets/car_logo (per requirement)
+    brands_dir = Rails.root.join('app', 'assets', 'car_logo')
     @brand_logos = Dir.glob(brands_dir.join('*.png')).map do |path|
       filename = File.basename(path) # e.g., 'mercedes-benz.png'
       name = filename.sub('.png', '').tr('-', ' ').split.map(&:capitalize).join(' ')
-      { name: name, image: "brands/#{filename}" }
+      { name: name, image: "car_logo/#{filename}" }
     end.sort_by { |b| b[:name] }
   end
 end
