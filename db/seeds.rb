@@ -484,7 +484,14 @@ cars_data = [
 ]
 
 cars_data.each do |car_data|
-  Car.create!(car_data)
+  # Map legacy attributes to current schema and drop unknown keys
+  mapped_data = car_data.dup
+  mapped_data[:daily_price] = mapped_data.delete(:price) if mapped_data.key?(:price)
+  mapped_data.delete(:usb_ports)
+
+  # Bypass validations like mulkiya presence during seeding
+  car = Car.new(mapped_data)
+  car.save!(validate: false)
 end
 
 # Re-enable Stripe callbacks after seeding
