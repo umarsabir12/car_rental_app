@@ -67,7 +67,7 @@
       .flex.flex-wrap.justify-center.items-center.gap-8.md:gap-12
         - (@brand_logos || []).each do |brand|
           .flex.items-center.justify-center.group.hover:scale-105.transition-transform.duration-200
-            %img{class: 'h-8 w-auto opacity-60 group-hover:opacity-80 transition-opacity duration-200', src: asset_path(brand[:image]), alt: "#{brand[:name]} logo"}
+            %img{class: 'h-8 w-auto opacity-60 group-hover:opacity-80 transition-opacity duration-200', src: asset_path(brand[:image]), alt: "#{brand[:name]} logo", onerror: "this.onerror=null;this.src='#{image_path('icon.png')}';"}
 
   / Featured vehicles
   %section.py-14.bg-white
