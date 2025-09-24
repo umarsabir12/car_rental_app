@@ -22,9 +22,6 @@
             = link_to (@cars_path || '#'), class: 'inline-flex items-center rounded-full bg-white font-semibold px-6 py-3 shadow hover:shadow-md transition focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-white', style: 'color: #3a6363' do
               %i{class: 'fas fa-car-side mr-2'}
               = (@cta_label || 'Rent a Car')
-            = link_to '#document-requirements', class: 'inline-flex items-center rounded-full border border-white/60 text-white px-6 py-3 hover:bg-white/10 transition focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-white' do
-              %i{class: 'fas fa-info-circle mr-2'}
-              Learn more
 
   / Search bar
   %section.-mt-8.relative.z-10
@@ -46,6 +43,15 @@
               = f.date_field :dropoff, id: 'dropoff', value: @drop_date, class: 'w-full pl-9 pr-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:border-teal-600'
             .flex
               = f.submit 'Find a Car', class: 'w-full inline-flex justify-center items-center rounded-lg text-white font-semibold py-3 h-12 hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2', style: 'background-color: #3a6363; focus:ring-color: #3a6363'
+
+  / Promo Slider Banner (auto-rotates every 3s)
+  %section.py-6.bg-white
+    .max-w-7xl.mx-auto.px-4.sm:px-6.lg:px-8
+      .relative.rounded-2xl.overflow-hidden.border.border-gray-100.shadow-sm
+        #promoSlider.relative.h-32.sm:h-40.md:h-48.lg:h-56
+          %img.absolute.inset-0.w-full.h-full.object-cover.transition-opacity.duration-700.opacity-100{ src: image_path('tabby_banner.jpg'), alt: 'Tabby banner', 'data-index' => '0' }
+          %img.absolute.inset-0.w-full.h-full.object-cover.transition-opacity.duration-700.opacity-0{ src: image_path('no_deposit_banner.jpg'), alt: 'No deposit banner', 'data-index' => '1' }
+
 
   / Select Class Section
   %section.py-14.bg-gray-50
@@ -180,21 +186,6 @@
                   %span.inline-flex.items-center.justify-center.rounded-full.w-6.h-6{style: 'background-color: #e8f1f1; color: #3a6363'}
                     %i{class: 'fas fa-check text-sm'}
                   %span.text-gray-700 International Driving Permit (IDP)
-  / Vendor CTA Banner under Stats
-  %section.py-12.bg-white
-    .max-w-7xl.mx-auto.px-4.sm:px-6.lg:px-8
-      .rounded-3xl.border.border-gray-200.bg-white.overflow-hidden
-        .grid.grid-cols-1.lg:grid-cols-2.items-center
-          / Left image
-          %div.relative.h-56.sm:h-64.lg:h-72
-            %img{class: 'absolute inset-0 w-full h-full object-cover fade-right', src: image_path('join_us_image.png'), alt: 'Work with us'}
-          / Right content
-          .p-8.lg:p-12
-            %h3.text-3xl.font-bold.text-gray-900.mb-3 Are you a car rental company?
-            %p.text-lg.text-gray-600.mb-6 Join Us – List Your Fleet, Get Confirmed Bookings, Double Your Profit!
-            = link_to ((@list_cars_path) || '#'), class: 'inline-flex items-center rounded-xl border px-6 py-3 font-semibold transition hover:bg-gray-50', style: 'color: #3a6363; border-color: #3a6363' do
-              %span List Your Cars
-              %i{class: 'fas fa-arrow-right ml-3'}
 
   / Testimonials
   %section.py-16.bg-white
@@ -237,6 +228,22 @@
           %h3.text-xl.font-bold.text-gray-900.mb-3 Easy Booking Process
           %p.text-gray-600 With our user-friendly platform, you can book your car in just a few clicks — online or through our app — quickly and conveniently.
 
+  / Vendor CTA Banner under Stats
+  %section.py-12.bg-white
+    .max-w-7xl.mx-auto.px-4.sm:px-6.lg:px-8
+      .rounded-3xl.border.border-gray-200.bg-white.overflow-hidden
+        .grid.grid-cols-1.lg:grid-cols-2.items-center
+          / Left image
+          %div.relative.h-56.sm:h-64.lg:h-72
+            %img{class: 'absolute inset-0 w-full h-full object-cover fade-right', src: image_path('join_us_image.png'), alt: 'Work with us'}
+          / Right content
+          .p-8.lg:p-12
+            %h3.text-3xl.font-bold.text-gray-900.mb-3 Are you a car rental company?
+            %p.text-lg.text-gray-600.mb-6 Join Us – List Your Fleet, Get Confirmed Bookings, Double Your Profit!
+            = link_to ((@list_cars_path) || '#'), class: 'inline-flex items-center rounded-xl border px-6 py-3 font-semibold transition hover:bg-gray-50', style: 'color: #3a6363; border-color: #3a6363' do
+              %span List Your Cars
+              %i{class: 'fas fa-arrow-right ml-3'}
+
 - content_for :footer do
   %footer.bg-gray-900.text-white
     .max-w-7xl.mx-auto.px-4.sm:px-6.lg:px-8.py-12
@@ -268,3 +275,45 @@
             %p= "📍 #{c[:address]}"
       .border-t.border-gray-800.mt-8.pt-8.text-center.text-gray-400
         %p &copy; #{Time.current.year} WheelsOnRent. All rights reserved.
+
+:javascript
+  (function() {
+    function initPromoSlider() {
+      var container = document.getElementById('promoSlider');
+      if (!container) return;
+      var slides = Array.prototype.slice.call(container.querySelectorAll('img'));
+      if (slides.length < 2) return;
+      var active = 0;
+
+      function show(index) {
+        slides.forEach(function(img, i) {
+          if (i === index) {
+            img.classList.remove('opacity-0');
+            img.classList.add('opacity-100');
+          } else {
+            img.classList.remove('opacity-100');
+            img.classList.add('opacity-0');
+          }
+        });
+      }
+
+      // Clear any previous interval to avoid duplicates on Turbo renders
+      if (window._promoSliderInterval) {
+        clearInterval(window._promoSliderInterval);
+        window._promoSliderInterval = null;
+      }
+
+      show(active);
+      window._promoSliderInterval = setInterval(function() {
+        active = (active + 1) % slides.length;
+        show(active);
+      }, 5000);
+    }
+
+    document.addEventListener('DOMContentLoaded', initPromoSlider);
+    document.addEventListener('turbo:load', initPromoSlider);
+    document.addEventListener('turbo:render', initPromoSlider);
+    if (document.readyState !== 'loading') {
+      setTimeout(initPromoSlider, 0);
+    }
+  })();
