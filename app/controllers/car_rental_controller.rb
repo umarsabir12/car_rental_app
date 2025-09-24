@@ -99,20 +99,12 @@ class CarRentalController < ApplicationController
       {name: 'Electric', image: 'https://images.unsplash.com/photo-1560958089-b8a1929cea89?q=80&w=400&auto=format&fit=crop', daily_price: '$45/day'}
     ]
 
-    @brand_logos = [
-      {name: 'BMW', image: 'brands/bmw.png'},
-      {name: 'Audi', image: 'brands/audi.png'},
-      {name: 'Mercedes-Benz', image: 'brands/mercedes-benz.png'},
-      {name: 'Toyota', image: 'brands/toyota.png'},
-      {name: 'Honda', image: 'brands/honda.png'},
-      {name: 'Nissan', image: 'brands/nissan.png'},
-      {name: 'Ford', image: 'brands/ford.png'},
-      {name: 'Chevrolet', image: 'brands/chevrolet.png'},
-      {name: 'Hyundai', image: 'brands/hyundai.png'},
-      {name: 'Kia', image: 'brands/kia.png'},
-      {name: 'Volkswagen', image: 'brands/volkswagen.png'},
-      {name: 'Tesla', image: 'brands/tesla.png'},
-      {name: 'Jeep', image: 'brands/jeep.png'}
-    ]
+    # Build brand logos dynamically from app/assets/images/brands to avoid broken links
+    brands_dir = Rails.root.join('app', 'assets', 'images', 'brands')
+    @brand_logos = Dir.glob(brands_dir.join('*.png')).map do |path|
+      filename = File.basename(path) # e.g., 'mercedes-benz.png'
+      name = filename.sub('.png', '').tr('-', ' ').split.map(&:capitalize).join(' ')
+      { name: name, image: "brands/#{filename}" }
+    end.sort_by { |b| b[:name] }
   end
 end
