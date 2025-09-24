@@ -1,155 +1,347 @@
 - content_for :head do
   %meta{ name: "booked-dates", content: @booked_dates.to_json, "data-turbo-track" => "reload" }
 
-%div.w-full.bg-gradient-to-br.from-blue-50.to-blue-100.min-h-screen.py-12
-  / Hero Section with Image Slider
-  .relative.max-w-7xl.mx-auto.rounded-3xl.overflow-hidden.shadow-2xl.mb-8
-    - if @car.images.attached? && @car.images.any?
-      .relative.h-96.bg-gray-100
-        / Image Slider
-        .swiper-container.h-full
-          .swiper-wrapper
-            - @car.images.each do |image|
-              .swiper-slide.flex.items-center.justify-center
-                %img.w-full.h-full.object-cover{ src: url_for(image), alt: "#{@car.brand} #{@car.model}" }
-          
-          / Navigation Buttons
-          .swiper-button-prev.swiper-button-white.bg-transparent
-          .swiper-button-next.swiper-button-white.bg-transparent
-          
-          / Pagination
-          .swiper-pagination.swiper-pagination-white
-          
-          / Image Counter
-          .absolute.top-4.right-4.bg-black.bg-opacity-50.text-white.px-3.py-1.rounded-full.text-sm.font-medium
-            %span.current-slide 1
-            %span /
-            %span.total-slides= @car.images.count
-    - else
-      .h-96.bg-gradient-to-br.from-gray-100.to-gray-200.flex.items-center.justify-center
-        .text-center
-          %i.fas.fa-car.text-gray-400.text-6xl.mb-4
-          %p.text-gray-500.text-lg No Images Available
-    
-    / Car Info Overlay
-    .bottom-0.left-0.right-0.p-8.bg-gray-100
+%div.w-full.bg-gray-50.min-h-screen
+  / Header Section
+  .bg-white.border-b.py-4
+    .max-w-7xl.mx-auto.px-4.sm:px-6.lg:px-8
       .flex.items-center.justify-between
-        .text-blue-900
-          %h1.text-4xl.font-extrabold.mb-2= "#{@car.brand} #{@car.model}"
-          .flex.items-center.space-x-4
-            - status_classes = {'Available' => 'bg-green-500','Rented' => 'bg-red-500'}[@car.status] || 'bg-blue-500'
-            %span.text-white.inline-block.rounded-full.text-sm.font-semibold.px-4.py-2{ class: status_classes }= @car.status
-            %span.text-2xl.font-bold= @car.daily_price ? number_to_currency(@car.daily_price) : 'N/A'
-            %span.text-blue-200 /day
+        %h1.text-2xl.font-bold{style: 'color: #3a6363'}
+          = "#{@car.brand} #{@car.model} #{@car.year} in Dubai"
+        .flex.items-center.space-x-4
+          %button.p-2.border.rounded-lg.hover:bg-gray-50
+            %i.far.fa-heart
+          %button.p-2.border.rounded-lg.hover:bg-gray-50
+            %i.fas.fa-share-alt
 
-  / Main Card
-  .max-w-7xl.mx-auto.bg-white.rounded-2xl.shadow-xl.p-10.grid.grid-cols-1.lg:grid-cols-3.gap-10.relative
-    / Left: Car Details
-    .lg:col-span-2
-      %h2.text-2xl.font-bold.text-blue-800.mb-6 Car Details
-      .grid.grid-cols-1.md:grid-cols-2.gap-6.mb-8
-        %div.flex.items-center.gap-2
-          %span.text-gray-600.font-medium Category:
-          %span.text-blue-800= @car.category
-        %div.flex.items-center.gap-2
-          %span.text-gray-600.font-medium Year:
-          %span.text-blue-800= @car.year
-        %div.flex.items-center.gap-2
-          %span.text-gray-600.font-medium Color:
-          %span.text-blue-800= @car.color
-        %div.flex.items-center.gap-2
-          %span.text-gray-600.font-medium Mileage:
-          %span.text-blue-800= @car.mileage
-        %div.flex.items-center.gap-2
-          %span.text-gray-600.font-medium Engine Size:
-          %span.text-blue-800= @car.engine_size
-        %div.flex.items-center.gap-2
-          %span.text-gray-600.font-medium Transmission:
-          %span.text-blue-800= @car.transmission
-        %div.flex.items-center.gap-2
-          %span.text-gray-600.font-medium Fuel Type:
-          %span.text-blue-800= @car.fuel_type
-        %div.flex.items-center.gap-2
-          %span.text-gray-600.font-medium Seats:
-          %span.text-blue-800= @car.seats
-        %div.flex.items-center.gap-2
-          %span.text-gray-600.font-medium Featured:
-          %span.text-blue-800= @car.featured ? 'Yes' : 'No'
-        %div.flex.items-center.gap-2
-          %span.text-gray-600.font-medium Daily Mileage:
-          %span.text-blue-800= @car.daily_milleage
-        %div.flex.items-center.gap-2
-          %span.text-gray-600.font-medium Weekly Mileage:
-          %span.text-blue-800= @car.weekly_milleage
-        %div.flex.items-center.gap-2
-          %span.text-gray-600.font-medium Monthly Mileage:
-          %span.text-blue-800= @car.monthly_milleage
-    / Right: Booking/Price/Status
-    .lg:col-span-1.lg:sticky.lg:top-24.flex.flex-col.gap-6
-      .bg-blue-50.rounded-xl.p-6.shadow.flex.flex-col.items-center
-        %span.text-3xl.font-bold.text-blue-800= @car.daily_price ? number_to_currency(@car.daily_price) : 'N/A'
-        %span.text-gray-500.mb-4 /day
-        %button.btn.btn-primary.btn-lg.w-full.mt-2{"data-bs-toggle" => "modal", "data-bs-target" => "#bookingModal"}
-          Book This Car
-        = link_to 'Back', cars_path, class: 'inline-block bg-blue-100 text-blue-800 font-semibold px-8 py-3 rounded-lg hover:bg-blue-200 transition text-lg mt-4 w-full text-center'
+  / Main Content
+  .max-w-7xl.mx-auto.px-4.sm:px-6.lg:px-8.py-8
+    .grid.grid-cols-1.lg:grid-cols-3.gap-8
 
-  / Features Row
-  .max-w-7xl.mx-auto.grid.grid-cols-2.md:grid-cols-4.gap-6.my-10
-    %div.flex.flex-col.items-center
-      %span.text-2xl.mb-1= @car.air_conditioning ? '❄️' : '🚫'
-      %span.text-xs.text-gray-600 Air Conditioning
-    %div.flex.flex-col.items-center
-      %span.text-2xl.mb-1= @car.gps ? '📡' : '🚫'
-      %span.text-xs.text-gray-600 GPS
-    %div.flex.flex-col.items-center
-      %span.text-2xl.mb-1= @car.sunroof ? '🌞' : '🚫'
-      %span.text-xs.text-gray-600 Sunroof
-    %div.flex.flex-col.items-center
-      %span.text-2xl.mb-1= @car.bluetooth ? '🔊' : '🚫'
-      %span.text-xs.text-gray-600 Bluetooth
+      / Left Column - Images (2/3 width)
+      .lg:col-span-2
+        / Main Image Gallery
+        .bg-white.rounded-xl.shadow-sm.overflow-hidden.mb-6
+          - if @car.images.attached? && @car.images.any?
+            .relative
+              .swiper-container.h-80
+                .swiper-wrapper
+                  - @car.images.each do |image|
+                    .swiper-slide
+                      %img.w-full.h-full.object-cover{ src: url_for(image), alt: "#{@car.brand} #{@car.model}" }
+                / Navigation
+                .swiper-button-prev
+                .swiper-button-next
+                .swiper-pagination
+              / Image Counter
+              .absolute.top-4.right-4.bg-black.bg-opacity-50.text-white.px-3.py-1.rounded-full.text-sm
+                %span.current-slide 1
+                %span /
+                %span.total-slides= @car.images.count
+              / Thumbnail Strip
+              .p-4.bg-gray-50
+                .flex.space-x-2.overflow-x-auto
+                  - @car.images.first(6).each_with_index do |image, index|
+                    %img.w-16.h-12.object-cover.rounded.cursor-pointer.border-2.border-transparent.hover:border-blue-500{ src: url_for(image), alt: "Thumbnail #{index + 1}" }
+          - else
+            .h-80.bg-gray-200.flex.items-center.justify-center
+              .text-center
+                %i.fas.fa-car.text-gray-400.text-6xl.mb-4
+                %p.text-gray-500 No images available
 
-  / Description
+        / Rental Terms Card under gallery
+        .bg-white.rounded-xl.shadow-sm.mb-6
+          .px-6.py-4.border-b
+            %h3.font-semibold.text-gray-900 Rental Terms
+          .p-6
+            .grid.grid-cols-1.sm:grid-cols-2.gap-x-10.gap-y-5.place-items-center.text-center
+              .flex.items-center.justify-center.gap-3
+                %i.fas.fa-tachometer-alt.text-xl.text-gray-700
+                %span.text-gray-800 Mileage Policy
+                %button.text-gray-400.hover:text-gray-600{ "data-bs-toggle" => "modal", "data-bs-target" => "#policyModal", "data-policy" => "mileage" }
+                  %i.fas.fa-info-circle
+              .flex.items-center.justify-center.gap-3
+                %i.fas.fa-gas-pump.text-xl.text-gray-700
+                %span.text-gray-800 Fuel Policy
+                %button.text-gray-400.hover:text-gray-600{ "data-bs-toggle" => "modal", "data-bs-target" => "#policyModal", "data-policy" => "fuel" }
+                  %i.fas.fa-info-circle
+              .flex.items-center.justify-center.gap-3
+                %i.fas.fa-hand-holding-usd.text-xl.text-gray-700
+                %span.text-gray-800 Deposit Policy
+                %button.text-gray-400.hover:text-gray-600{ "data-bs-toggle" => "modal", "data-bs-target" => "#policyModal", "data-policy" => "deposit" }
+                  %i.fas.fa-info-circle
+              .flex.items-center.justify-center.gap-3
+                %i.fas.fa-file-alt.text-xl.text-gray-700
+                %span.text-gray-800 Rental Policy
+                %button.text-gray-400.hover:text-gray-600{ "data-bs-toggle" => "modal", "data-bs-target" => "#policyModal", "data-policy" => "rental" }
+                  %i.fas.fa-info-circle
+
+        / Insurance Card under rental terms
+        .bg-white.rounded-xl.shadow-sm.mb-6
+          .p-6
+            .flex.flex-col.sm:flex-row.items-center.justify-center.gap-10.text-center
+              .flex.items-center.gap-3
+                %span.inline-flex.items-center.justify-center.w-6.h-6.rounded-full.bg-green-500.text-white
+                  %i.fas.fa-check.text-xs
+                %span.text-gray-800 Minimum 5 days rental
+                %button.text-gray-400.hover:text-gray-600{ "data-bs-toggle" => "modal", "data-bs-target" => "#policyModal", "data-policy" => "min_days" }
+                  %i.fas.fa-info-circle
+              .flex.items-center.gap-3
+                %span.inline-flex.items-center.justify-center.w-6.h-6.rounded-full.bg-green-500.text-white
+                  %i.fas.fa-check.text-xs
+                %span.text-gray-800 Insurance included
+                %button.text-gray-400.hover:text-gray-600{ "data-bs-toggle" => "modal", "data-bs-target" => "#policyModal", "data-policy" => "insurance" }
+                  %i.fas.fa-info-circle
+
+            / Right Column - Pricing & Booking (1/3 width)
+      .lg:col-span-1
+        / Vendor Info Card
+        .bg-white.rounded-xl.shadow-sm.p-6.mb-6
+          .flex.items-center.mb-4
+            .w-12.h-12.bg-gray-200.rounded-full.flex.items-center.justify-center
+              %i.fas.fa-user.text-gray-500
+            .ml-3
+              %h3.font-semibold.text-gray-900= @car.vendor&.name || "Vendor Name"
+              .text-sm.text-gray-500 Book directly from the Owner
+          .flex.space-x-3
+            %button.flex-1.bg-green-600.text-white.py-2.px-4.rounded-lg.text-sm
+              %i.fab.fa-whatsapp.mr-2
+              WhatsApp
+            %button.flex-1.border.border-gray-300.py-2.px-4.rounded-lg.text-sm
+              %i.fas.fa-phone.mr-2
+              Call
+
+        / Pricing Card
+        .bg-white.rounded-xl.shadow-sm.p-6.mb-6
+          .text-center.border-b.pb-4.mb-4
+            .text-3xl.font-bold{style: 'color: #3a6363'}
+              = @car.daily_price ? "AED #{@car.daily_price}" : 'AED 0'
+            .text-sm.text-gray-500 /day
+            .text-xs.text-gray-400.mt-1 Excluded mileage range
+
+          .space-y-3.text-sm
+            .flex.justify-between
+              %span Additional mileage charge
+              %span AED 1 /km
+            .flex.justify-between
+              %span Security Deposit
+              %span AED 1500
+          
+          .border-t.pt-4.mt-4
+            .text-sm.text-gray-600.mb-4 Required in 1 day rental
+            %button.w-full.py-3.px-4.rounded-lg.text-white.font-semibold{"data-bs-toggle" => "modal", "data-bs-target" => "#bookingModal", style: 'background-color: #3a6363'}
+              Book This Car
+
+        / Agent Card
+        .bg-white.rounded-xl.shadow-sm.p-6
+          %h4.font-semibold.mb-3 Agent Sales
+          .flex.items-center.mb-3
+            .w-10.h-10.bg-gray-200.rounded-full
+            .ml-3
+              %p.font-medium Agent Name
+              %p.text-sm.text-gray-500 +971 50 123 4567
+          .space-y-2.text-sm
+            .flex.items-center
+              %i.fas.fa-phone.w-4.text-gray-400.mr-2
+              %span First timers
+            .flex.items-center
+              %i.fas.fa-clock.w-4.text-gray-400.mr-2
+              %span Online booking
+            .flex.items-center
+              %i.fas.fa-shield-alt.w-4.text-gray-400.mr-2
+              %span Verified
+
+  / Car Overview Section
+  .max-w-7xl.mx-auto.px-4.sm:px-6.lg:px-8.pb-8
+    .bg-white.rounded-xl.shadow-sm.p-8
+      %h2.text-2xl.font-bold.mb-6{style: 'color: #2d4f4f'} CAR OVERVIEW
+      
+      .grid.grid-cols-2.md:grid-cols-3.lg:grid-cols-4.gap-6
+        .flex.items-center.space-x-3
+          %i.fas.fa-car.text-gray-400.w-5
+          .div
+            %span.text-sm.text-gray-500 Body Type
+            %p.font-medium= @car.category || 'Sedan'
+        
+        .flex.items-center.space-x-3
+          %i.fas.fa-calendar.text-gray-400.w-5
+          .div
+            %span.text-sm.text-gray-500 Model
+            %p.font-medium= @car.year || '2021'
+        
+        .flex.items-center.space-x-3
+          %i.fas.fa-palette.text-gray-400.w-5
+          .div
+            %span.text-sm.text-gray-500 Colour
+            %p.font-medium= @car.color || 'Black'
+        
+        .flex.items-center.space-x-3
+          %i.fas.fa-gas-pump.text-gray-400.w-5
+          .div
+            %span.text-sm.text-gray-500 Fuel
+            %p.font-medium= @car.fuel_type || 'Petrol'
+        
+        .flex.items-center.space-x-3
+          %i.fas.fa-tachometer-alt.text-gray-400.w-5
+          .div
+            %span.text-sm.text-gray-500 Mileage
+            %p.font-medium= @car.mileage || '50,000'
+        
+        .flex.items-center.space-x-3
+          %i.fas.fa-cogs.text-gray-400.w-5
+          .div
+            %span.text-sm.text-gray-500 Transmission
+            %p.font-medium= @car.transmission || 'Auto'
+        
+        .flex.items-center.space-x-3
+          %i.fas.fa-users.text-gray-400.w-5
+          .div
+            %span.text-sm.text-gray-500 Seating Capacity
+            %p.font-medium= "#{@car.seats || 5} passengers"
+        
+        .flex.items-center.space-x-3
+          %i.fas.fa-engine.text-gray-400.w-5
+          .div
+            %span.text-sm.text-gray-500 Engine CC
+            %p.font-medium= @car.engine_size || '2.0L'
+
+  / Features & Specs Section
+  .max-w-7xl.mx-auto.px-4.sm:px-6.lg:px-8.pb-8
+    .bg-white.rounded-xl.shadow-sm.p-8
+      %h2.text-2xl.font-bold.mb-6{style: 'color: #2d4f4f'} FEATURES & SPECS
+      
+      .grid.grid-cols-1.md:grid-cols-2.gap-8
+        .div
+          %h3.font-semibold.mb-4.text-gray-700 Technical Features
+          .space-y-3
+            .flex.items-center
+              - if @car.air_conditioning
+                %i.fas.fa-check-circle.text-green-500.mr-3
+              - else
+                %i.fas.fa-times-circle.text-red-500.mr-3
+              %span Automatic Emergency Braking
+            .flex.items-center
+              - if @car.bluetooth
+                %i.fas.fa-check-circle.text-green-500.mr-3
+              - else
+                %i.fas.fa-times-circle.text-red-500.mr-3
+              %span Bluetooth Connectivity
+            .flex.items-center
+              %i.fas.fa-check-circle.text-green-500.mr-3
+              %span Power Windows
+            .flex.items-center
+              %i.fas.fa-check-circle.text-green-500.mr-3
+              %span Power Door Locks
+
+        .div
+          %h3.font-semibold.mb-4.text-gray-700 Other Features
+          .space-y-3
+            .flex.items-center
+              - if @car.sunroof
+                %i.fas.fa-check-circle.text-green-500.mr-3
+              - else
+                %i.fas.fa-times-circle.text-red-500.mr-3
+              %span Panoramic Sunroof
+            .flex.items-center
+              - if @car.gps
+                %i.fas.fa-check-circle.text-green-500.mr-3
+              - else
+                %i.fas.fa-times-circle.text-red-500.mr-3
+              %span GPS Navigation
+            .flex.items-center
+              %i.fas.fa-check-circle.text-green-500.mr-3
+              %span USB Chargers
+            .flex.items-center
+              %i.fas.fa-check-circle.text-green-500.mr-3
+              %span LED Screens
+
+  / Description Section
   - if @car.description.present?
-    .max-w-7xl.mx-auto.bg-white.rounded-2xl.shadow-md.p-8.mb-8
-      %h2.text-2xl.font-semibold.text-blue-800.mb-2 Description
-      %p.text-gray-700.text-lg= @car.description
+    .max-w-7xl.mx-auto.px-4.sm:px-6.lg:px-8.pb-8
+      .bg-white.rounded-xl.shadow-sm.p-8
+        %h2.text-2xl.font-bold.mb-6{style: 'color: #2d4f4f'} DESCRIPTION & HIGHLIGHTS
+        %p.text-gray-700.leading-relaxed= @car.description
 
-  / Car Images Gallery
-  -# .max-w-6xl.mx-auto.bg-white.rounded-2xl.shadow-md.p-8.mb-8
-    %h2.text-2xl.font-semibold.text-blue-800.mb-6 Car Images
-    -# The slider is now in the hero section above
+  / Requirements Section
+  .max-w-7xl.mx-auto.px-4.sm:px-6.lg:px-8.pb-8
+    .bg-white.rounded-xl.shadow-sm.p-8
+      %h2.text-2xl.font-bold.mb-6{style: 'color: #2d4f4f'} REQUIREMENTS TO RENT THIS CAR
+      .space-y-3.text-gray-700
+        %p • Valid UAE driving license
+        %p • Emirates ID or Passport
+        %p • Security deposit required
+        %p • Minimum age: 21 years
 
-/ Bootstrap Modal
+  / FAQ Section
+  .max-w-7xl.mx-auto.px-4.sm:px-6.lg:px-8.pb-8
+    .bg-white.rounded-xl.shadow-sm.p-8
+      %h2.text-2xl.font-bold.mb-6{style: 'color: #2d4f4f'} FREQUENTLY ASKED QUESTIONS
+      .space-y-4
+        .border-b.pb-4
+          %h4.font-semibold.mb-2 What documents do I need to rent this car?
+          %p.text-gray-600 You'll need a valid UAE driving license, Emirates ID or passport, and a credit card for the security deposit.
+        .border-b.pb-4
+          %h4.font-semibold.mb-2 Is fuel included in the rental price?
+          %p.text-gray-600 No, fuel is not included. You'll need to return the car with the same fuel level.
+
+  / Recommended Cars Section
+  - if @recommended_cars&.any?
+    .max-w-7xl.mx-auto.px-4.sm:px-6.lg:px-8.pb-8
+      .bg-white.rounded-xl.shadow-sm.p-8
+        %h2.text-2xl.font-bold.mb-6{style: 'color: #2d4f4f'} RECOMMENDED CAR RENTALS
+        .grid.grid-cols-1.md:grid-cols-2.lg:grid-cols-4.gap-6
+          - @recommended_cars.each do |car|
+            = link_to car_path(car), class: 'block bg-white border rounded-xl overflow-hidden hover:shadow-md transition-shadow' do
+              - if car.images.attached? && car.images.any?
+                %img.w-full.h-32.object-cover{ src: url_for(car.images.first), alt: "#{car.brand} #{car.model}" }
+              - else
+                .w-full.h-32.bg-gray-200.flex.items-center.justify-center
+                  %i.fas.fa-car.text-gray-400.text-2xl
+              .p-4
+                %h3.font-semibold.text-sm.mb-1= "#{car.brand} #{car.model}"
+                .text-xs.text-gray-500.mb-2= car.year
+                .flex.justify-between.items-center
+                  .text-sm.font-bold{style: 'color: #3a6363'}
+                    = car.daily_price ? "AED #{car.daily_price}" : 'AED 0'
+                  .text-xs.text-gray-400 /day
+
+/ Booking Modal (keeping your existing modal)
 #bookingModal.modal.fade{"aria-hidden" => "true", "aria-labelledby" => "bookingModalLabel", tabindex: "-1", "data-controller" => "modal"}
   .modal-dialog.modal-dialog-centered.mt-16
-    .modal-content.rounded-2xl.shadow-xl.border.border-blue-100
+    .modal-content.rounded-2xl.shadow-xl.border{style: 'border-color: #cfe5e5'}
       .modal-header.flex.items-center.justify-between.px-6.py-4
-        %h5#bookingModalLabel.modal-title.text-xl.font-bold.text-blue-900 Book This Car
+        %h5#bookingModalLabel.modal-title.text-xl.font-bold{style: 'color: #2d4f4f'} Book This Car
         %button.text-gray-400.hover:text-gray-600.transition{"aria-label" => "Close", "data-bs-dismiss" => "modal", type: "button"}
           %i.fas.fa-times
 
       .modal-body.bg-white.px-6.py-4
         .mb-4
-          %label.block.text-sm.font-medium.text-blue-700.mb-1 Pickup Date
-          = text_field_tag :start_date, nil, required: true, class: "w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 flatpickr", autocomplete: "off", id: "startDateInput"
+          %label.block.text-sm.font-medium.mb-1{style: 'color: #2d4f4f'} Pickup Date
+          = text_field_tag :start_date, nil, required: true, class: "w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 flatpickr", autocomplete: "off", id: "startDateInput", style: "--tw-ring-color:#3a6363"
 
         .mb-4
-          %label.block.text-sm.font-medium.text-blue-700.mb-1 Return Date
-          = text_field_tag :end_date, nil, required: true, class: "w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 flatpickr", autocomplete: "off", id: "endDateInput"
+          %label.block.text-sm.font-medium.mb-1{style: 'color: #2d4f4f'} Return Date
+          = text_field_tag :end_date, nil, required: true, class: "w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 flatpickr", autocomplete: "off", id: "endDateInput", style: "--tw-ring-color:#3a6363"
 
       .modal-footer.flex.justify-end.gap-4.px-6.py-4
         %button.bg-gray-200.text-gray-700.font-semibold.px-5.py-2.rounded-lg.hover:bg-gray-300.transition{ "data-bs-dismiss" => "modal", type: "button" } Close
         - if user_signed_in?
-          %button.bg-blue-700.text-white.font-semibold.px-6.py-2.rounded-lg.shadow-md.hover:bg-blue-800.transition{ type: "button", id: "createBookingBtn", disabled: true, style: "pointer-events: none; opacity: 0.5;" } Create Booking
+          %button.text-white.font-semibold.px-6.py-2.rounded-lg.shadow-md.transition{ type: "button", id: "createBookingBtn", disabled: true, style: "pointer-events: none; opacity: 0.5; background-color: #3a6363" } Create Booking
         - else
-          %a.bg-blue-700.text-white.font-semibold.px-6.py-2.rounded-lg.shadow-md.hover:bg-blue-800.transition{ href: "#", id: "continueToLoginLink", disabled: true, style: "pointer-events: none; opacity: 0.5;" } Continue to Sign In
+          %a.text-white.font-semibold.px-6.py-2.rounded-lg.shadow-md.transition{ href: "#", id: "continueToLoginLink", disabled: true, style: "pointer-events: none; opacity: 0.5; background-color: #3a6363" } Continue to Sign In
 
+/ Policy Modal
+#policyModal.modal.fade{"aria-hidden" => "true", "aria-labelledby" => "policyModalLabel", tabindex: "-1"}
+  .modal-dialog.modal-dialog-centered
+    .modal-content.rounded-2xl.shadow-xl.border{style: 'border-color: #cfe5e5'}
+      .modal-header.flex.items-center.justify-between.px-6.py-4
+        %h5#policyModalLabel.modal-title.text-xl.font-bold{style: 'color: #2d4f4f'} Policy Details
+        %button.text-gray-400.hover:text-gray-600.transition{"aria-label" => "Close", "data-bs-dismiss" => "modal", type: "button"}
+          %i.fas.fa-times
 
-
-
-
-
-
+      .modal-body.bg-white.px-6.py-4
+        #policyContent.text-gray-700
+          / Content will be populated by JavaScript
 
 :javascript
   document.addEventListener("DOMContentLoaded", function () {
@@ -187,7 +379,6 @@
     startInput.addEventListener("change", updateButtonState);
     endInput.addEventListener("change", updateButtonState);
 
-    // Handle login redirect for non-logged-in users
     if (continueBtn) {
       continueBtn.addEventListener("click", function (e) {
         if (!startInput.value || !endInput.value) {
@@ -199,18 +390,15 @@
         const carId = "#{@car.id}";
         const startDate = startInput.value;
         const endDate = endInput.value;
-
         const queryParams = new URLSearchParams({
           car_id: carId,
           start_date: startDate,
           end_date: endDate
         });
-
         window.location.href = "/users/sign_in?" + queryParams.toString();
       });
     }
 
-    // Handle direct booking for logged-in users
     if (createBookingBtn) {
       createBookingBtn.addEventListener("click", function (e) {
         if (!startInput.value || !endInput.value) {
@@ -219,12 +407,10 @@
           return;
         }
         e.preventDefault();
-        
         const formData = new FormData();
         formData.append('booking[car_id]', "#{@car.id}");
         formData.append('booking[start_date]', startInput.value);
         formData.append('booking[end_date]', endInput.value);
-        
         fetch('/bookings', {
           method: 'POST',
           body: formData,
@@ -250,10 +436,146 @@
       });
     }
 
-    // Initial state
-    updateButtonState();
+:javascript
+  document.addEventListener("DOMContentLoaded", function () {
+    // Booking Modal Logic
+    const continueBtn = document.getElementById("continueToLoginLink");
+    const createBookingBtn = document.getElementById("createBookingBtn");
+    const startInput = document.getElementById("startDateInput");
+    const endInput = document.getElementById("endDateInput");
+
+    function updateButtonState() {
+      if (startInput.value && endInput.value) {
+        if (continueBtn) {
+          continueBtn.removeAttribute("disabled");
+          continueBtn.style.pointerEvents = "auto";
+          continueBtn.style.opacity = "1";
+        }
+        if (createBookingBtn) {
+          createBookingBtn.removeAttribute("disabled");
+          createBookingBtn.style.pointerEvents = "auto";
+          createBookingBtn.style.opacity = "1";
+        }
+      } else {
+        if (continueBtn) {
+          continueBtn.setAttribute("disabled", "true");
+          continueBtn.style.pointerEvents = "none";
+          continueBtn.style.opacity = "0.5";
+        }
+        if (createBookingBtn) {
+          createBookingBtn.setAttribute("disabled", "true");
+          createBookingBtn.style.pointerEvents = "none";
+          createBookingBtn.style.opacity = "0.5";
+        }
+      }
+    }
+
+    if (startInput && endInput) {
+      startInput.addEventListener("change", updateButtonState);
+      endInput.addEventListener("change", updateButtonState);
+      updateButtonState();
+    }
+
+    if (continueBtn) {
+      continueBtn.addEventListener("click", function (e) {
+        if (!startInput.value || !endInput.value) {
+          e.preventDefault();
+          alert("Please select both start and end dates.");
+          return;
+        }
+        e.preventDefault();
+        const carId = "#{@car.id}";
+        const startDate = startInput.value;
+        const endDate = endInput.value;
+        const queryParams = new URLSearchParams({
+          car_id: carId,
+          start_date: startDate,
+          end_date: endDate
+        });
+        window.location.href = "/users/sign_in?" + queryParams.toString();
+      });
+    }
+
+    if (createBookingBtn) {
+      createBookingBtn.addEventListener("click", function (e) {
+        if (!startInput.value || !endInput.value) {
+          e.preventDefault();
+          alert("Please select both start and end dates.");
+          return;
+        }
+        e.preventDefault();
+        const formData = new FormData();
+        formData.append('booking[car_id]', "#{@car.id}");
+        formData.append('booking[start_date]', startInput.value);
+        formData.append('booking[end_date]', endInput.value);
+        fetch('/bookings', {
+          method: 'POST',
+          body: formData,
+          headers: {
+            'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+          }
+        })
+        .then(response => {
+          if (response.redirected) {
+            window.location.href = response.url;
+          } else {
+            if (response.ok) {
+              return response.text();
+            } else {
+              throw new Error('Booking creation failed');
+            }
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          alert('There was an error creating your booking. Please check your dates and try again.');
+        });
+      });
+    }
+
+    // Policy Modal Logic
+    const policyContent = {
+      mileage: {
+        title: 'Mileage Policy',
+        content: 'This rental includes limited mileage. Additional charges apply for exceeding the daily mileage limit of ' + (#{@car.daily_milleage || 200}) + ' km per day. Extra mileage is charged at AED 1 per kilometer.'
+      },
+      fuel: {
+        title: 'Fuel Policy',
+        content: 'The vehicle will be provided with a full tank of fuel. You are required to return the vehicle with the same fuel level. If returned with less fuel, you will be charged for refueling at current market rates plus a service fee.'
+      },
+      deposit: {
+        title: 'Deposit Policy',  
+        content: 'A security deposit of AED 1500 is required and will be blocked on your credit card. This deposit covers any potential damages, traffic fines, or additional charges. The deposit will be released within 7-10 business days after the rental return, subject to no claims.'
+      },
+      rental: {
+        title: 'Rental Policy',
+        content: 'Minimum rental age is 21 years. A valid UAE driving license is required for UAE residents, or an International Driving Permit for tourists. The renter is responsible for all traffic fines incurred during the rental period. Vehicle must be returned to the same location unless prior arrangements are made.'
+      },
+      min_days: {
+        title: 'Minimum Rental Duration',
+        content: 'The minimum rental period for this vehicle is 5 days. Shorter durations are not eligible for booking and pricing is calculated on a per-day basis.'
+      },
+      insurance: {
+        title: 'Insurance Included',
+        content: 'Basic insurance is included in the rental price as per UAE regulations. It covers third-party liability. Comprehensive coverage and additional protections (e.g., CDW, PAI) may be available at extra cost upon request.'
+      }
+    };
+
+    // Handle policy info button clicks
+    document.querySelectorAll('[data-policy]').forEach(button => {
+      button.addEventListener('click', function() {
+        const policyType = this.getAttribute('data-policy');
+        const policy = policyContent[policyType];
+        
+        if (policy) {
+          document.getElementById('policyModalLabel').textContent = policy.title;
+          document.getElementById('policyContent').innerHTML = '<p>' + policy.content + '</p>';
+        }
+      });
+    });
   });
 
+  // Swiper initialization
   document.addEventListener('DOMContentLoaded', function() {
     if (window.Swiper) {
       new Swiper('.swiper-container', {

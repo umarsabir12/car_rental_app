@@ -1,9 +1,6 @@
 -# Hero Section
-%div.relative.bg-gradient-to-r.from-blue-700.to-blue-400.h-64.flex.items-center.justify-center.mb-12.overflow-hidden
-  %img.absolute.inset-0.w-full.h-full.object-cover.opacity-40{ src: 'https://images.unsplash.com/photo-1503736334956-4c8f8e92946d?auto=format&fit=crop&w=1200&q=80', alt: 'Cars background' }
-  %div.relative.z-10.text-center
-    %h1.text-4xl.md:text-5xl.font-extrabold.text-white.drop-shadow-lg.mb-2 Listing
-    %p.text-lg.text-blue-100.font-medium Available Cars
+%div.relative.h-64.flex.items-center.justify-center.mb-12.overflow-hidden
+  %img.absolute.inset-0.w-full.h-full.object-cover.opacity-50{ src: image_path('listing/banner.jpg'), alt: 'Cars background' }
 
 .max-w-7xl.mx-auto.px-4
   / Filter/Search Bar at Top
@@ -11,29 +8,29 @@
     -# %h2.text-lg.font-bold.text-blue-800.mb-4 Filter/Search
     = form_with url: cars_path, method: :get, local: true, class: "grid grid-cols-1 md:grid-cols-5 gap-4 items-end" do |f|
       .flex.flex-col
-        = f.label :model, "Model", class: "text-xs font-semibold text-blue-700 mb-1"
-        = f.text_field :model, value: params[:model], class: "px-3 py-2 border border-blue-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+        = f.label :model, "Model", class: "text-xs font-semibold text-gray-700 mb-1"
+        = f.text_field :model, value: params[:model], class: "px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:border-teal-600 focus:ring-teal-600"
       .flex.flex-col
-        = f.label :brand, "Brand", class: "text-xs font-semibold text-blue-700 mb-1"
-        = f.text_field :brand, value: params[:brand], class: "px-3 py-2 border border-blue-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+        = f.label :brand, "Brand", class: "text-xs font-semibold text-gray-700 mb-1"
+        = f.text_field :brand, value: params[:brand], class: "px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:border-teal-600 focus:ring-teal-600"
       -# .flex.flex-col
         = f.label :year, "Year", class: "text-xs font-semibold text-blue-700 mb-1"
         = f.number_field :year, value: params[:year], class: "px-3 py-2 border border-blue-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
       .flex.flex-col
-        = f.label :category, "Category", class: "text-xs font-semibold text-blue-700 mb-1"
-        = f.select :category, options_for_select([["All Categories", ""], ["Sedan", "sedan"], ["SUV", "suv"], ["Hatchback", "hatchback"], ["Coupe", "coupe"], ["Convertible", "convertible"], ["Wagon", "wagon"], ["Van", "van"], ["Truck", "truck"], ["Luxury", "luxury"], ["Sports", "sports"], ["Electric", "electric"], ["Hybrid", "hybrid"]], params[:category]), {}, class: "block w-full px-4 py-2 border border-blue-200 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400 bg-white text-gray-700"
+        = f.label :category, "Category", class: "text-xs font-semibold text-gray-700 mb-1"
+        = f.select :category, options_for_select([["All Categories", ""], ["Sedan", "sedan"], ["SUV", "suv"], ["Hatchback", "hatchback"], ["Coupe", "coupe"], ["Convertible", "convertible"], ["Wagon", "wagon"], ["Van", "van"], ["Truck", "truck"], ["Luxury", "luxury"], ["Sports", "sports"], ["Electric", "electric"], ["Hybrid", "hybrid"]], params[:category]), {}, class: "block w-full px-4 py-2 border border-gray-200 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:border-teal-600 focus:ring-teal-600 bg-white text-gray-700"
       .flex.flex-col
-        = f.label :with_driver, "Driver Option", class: "text-xs font-semibold text-blue-700 mb-1"
-        = f.select :with_driver, options_for_select([["All Cars", ""], ["With Driver", "true"], ["Self Drive", "false"]], params[:with_driver]), {}, class: "block w-full px-4 py-2 border border-blue-200 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400 bg-white text-gray-700"
-      = f.submit "Search", class: "bg-blue-700 text-white font-bold px-6 py-2 rounded-lg shadow hover:bg-blue-800 transition w-full" 
+        = f.label :with_driver, "Driver Option", class: "text-xs font-semibold text-gray-700 mb-1"
+        = f.select :with_driver, options_for_select([["All Cars", ""], ["With Driver", "true"], ["Self Drive", "false"]], params[:with_driver]), {}, class: "block w-full px-4 py-2 border border-gray-200 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:border-teal-600 focus:ring-teal-600 bg-white text-gray-700"
+      = f.submit "Search", class: "text-white font-bold px-6 py-2 rounded-lg shadow transition w-full", style: "background-color: #3a6363" 
 
   / Filter Summary
   - if params[:with_driver].present? || params[:category].present? || params[:model].present? || params[:brand].present? || params[:year].present?
-    .mb-6.p-4.bg-blue-50.rounded-lg.border.border-blue-200
+    .mb-6.p-4.rounded-lg.border{style: 'background-color: #f0f6f6; border-color: #cfe5e5'}
       .flex.items-center.justify-between
         .flex.items-center
-          %i.fas.fa-filter.mr-2.text-blue-600
-          %span.text-sm.font-medium.text-blue-800
+          %i.fas.fa-filter.mr-2{style: 'color: #3a6363'}
+          %span.text-sm.font-medium{style: 'color: #2d4f4f'}
             - if params[:with_driver] == 'true'
               Showing #{@cars.count} car#{@cars.count == 1 ? '' : 's'} with driver
             - elsif params[:with_driver] == 'false'
@@ -42,7 +39,7 @@
               Showing #{@cars.count} #{params[:category].capitalize} car#{@cars.count == 1 ? '' : 's'}
             - else
               Showing #{@cars.count} filtered car#{@cars.count == 1 ? '' : 's'}
-        = link_to 'Clear Filters', cars_path, class: 'text-sm text-blue-600 hover:text-blue-800 underline'
+        = link_to 'Clear Filters', cars_path, class: 'text-sm underline', style: 'color: #3a6363'
 
   / Car Cards Grid
   %div.grid.grid-cols-1.sm:grid-cols-2.lg:grid-cols-3.gap-8.mb-16
@@ -54,7 +51,7 @@
           
           / Status and Driver Badges
           .absolute.top-3.right-3.flex.flex-col.space-y-1
-            - status_classes = {'Available' => 'bg-green-500 text-white','Rented' => 'bg-red-500 text-white'}[car.status] || 'bg-blue-500 text-white'
+            - status_classes = {'Available' => 'bg-green-500 text-white','Rented' => 'bg-red-500 text-white'}[car.status] || 'bg-teal-600 text-white'
             %span.inline-block.rounded-full.text-xs.font-semibold.px-2.py-1{ class: status_classes }= car.status
             - if car.with_driver?
               %span.inline-block.rounded-full.text-xs.font-semibold.px-2.py-1.bg-purple-500.text-white
@@ -63,16 +60,16 @@
           
         .p-6.flex-1.flex.flex-col
           %div.flex.items-center.justify-between.mb-2
-            %span.text-lg.font-bold.text-blue-900= car.brand
+            %span.text-lg.font-bold.text-gray-900= car.brand
             %span.text-sm.text-gray-500= car.year
-          %div.text-xl.font-semibold.text-blue-800.mb-2= car.model
+          %div.text-xl.font-semibold.text-gray-900.mb-2= car.model
           %div.text-gray-700.mb-3
             = car.color
             - if car.category.present?
               %span.text-gray-500.ml-2 •
               %span.text-gray-500= car.category.capitalize
           %div.flex.items-center.justify-between.mb-4
-            %span.text-2xl.font-bold.text-blue-800= car.daily_price ? number_to_currency(car.daily_price) : 'N/A'
+            %span.text-2xl.font-bold{style: 'color: #3a6363'}= car.daily_price ? number_to_currency(car.daily_price) : 'N/A'
             %span.text-sm.text-gray-500 /day
           .mt-auto
-            = link_to 'View Details', car_path(car), class: 'btn btn-outline-primary w-100' 
+            = link_to 'View Details', car_path(car), class: 'inline-flex items-center justify-center rounded-lg text-white px-4 py-2 w-full hover:opacity-90 transition', style: 'background-color: #3a6363' 
