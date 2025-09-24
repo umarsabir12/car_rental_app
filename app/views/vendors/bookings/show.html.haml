@@ -1,4 +1,4 @@
-.container.mx-auto.max-w-container.p-6
+.container.mx-auto.max-w-7xl.p-6
   = render partial: "vendors/navbar"
   
   / Header Section
@@ -68,7 +68,7 @@
             %span.text-gray-900= @booking.car.category.presence || 'N/A'
           .flex.justify-between.py-2.border-b.border-gray-100
             %span.font-medium.text-gray-600 Daily Rate
-            %span.text-gray-900= @booking.car.price ? number_to_currency(@booking.car.price) : 'N/A'
+            %span.text-gray-900= @booking.car.daily_price ? number_to_currency(@booking.car.daily_price) : 'N/A'
           .flex.justify-between.py-2.border-b.border-gray-100
             %span.font-medium.text-gray-600 Car Status
             - car_status_classes = {'available' => 'bg-green-100 text-green-700', 'rented' => 'bg-red-100 text-red-700', 'maintenance' => 'bg-yellow-100 text-yellow-700'}
@@ -91,9 +91,9 @@
             %span.text-gray-900= "#{(@booking.end_date - @booking.start_date).to_i} days"
           .flex.justify-between.py-2.border-b.border-gray-100
             %span.font-medium.text-gray-600 Total Amount
-            - if @booking.car.price
+            - if @booking.car.daily_price
               - total_days = (@booking.end_date - @booking.start_date).to_i
-              - total_amount = @booking.car.price * total_days
+              - total_amount = @booking.car.daily_price * total_days
               %span.font-semibold.text-lg.text-blue-600= number_to_currency(total_amount)
             - else
               %span.text-gray-400 N/A
@@ -125,12 +125,12 @@
           .flex.justify-between.items-center.py-2.border-b.border-gray-100
             %span.font-medium.text-gray-600 Last Updated
             %span.text-gray-900= @booking.updated_at.strftime('%b %d, %Y')
-          - if @booking.car.price
+          - if @booking.car.daily_price
             - total_days = (@booking.end_date - @booking.start_date).to_i
-            - total_amount = @booking.car.price * total_days
+            - total_amount = @booking.car.daily_price * total_days
             .flex.justify-between.items-center.py-2.border-b.border-gray-100
               %span.font-medium.text-gray-600 Daily Rate
-              %span.text-gray-900= number_to_currency(@booking.car.price)
+              %span.text-gray-900= number_to_currency(@booking.car.daily_price)
             .flex.justify-between.items-center.py-2.border-b.border-gray-100
               %span.font-medium.text-gray-600 Days
               %span.text-gray-900= total_days

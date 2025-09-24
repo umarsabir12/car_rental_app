@@ -11,9 +11,10 @@
       .hidden.md:flex.items-center.space-x-8
         - unless user_signed_in? || vendor_signed_in?
           = link_to 'Home', root_path, class: 'text-gray-700 font-medium transition navbar-link'
-          = link_to 'About Us', '#', class: 'text-gray-700 font-medium transition navbar-link'
-          = link_to 'Car Class', '#', class: 'text-gray-700 font-medium transition navbar-link'
-          = link_to 'Contact Us', '#', class: 'text-gray-700 font-medium transition navbar-link'
+          = link_to 'Rent A Car', cars_path, class: 'text-gray-700 font-medium transition navbar-link'
+          = link_to 'Car Brands', '#', class: 'text-gray-700 font-medium transition navbar-link'
+          = link_to 'Car With Driver', '#', class: 'text-gray-700 font-medium transition navbar-link'
+          = link_to 'List Your Cars', '#', class: 'text-gray-700 font-medium transition navbar-link'
         
         .flex.items-center.space-x-3
           - if user_signed_in?
@@ -97,10 +98,10 @@
                 .py-2
                   = link_to new_user_session_path, class: "flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 transition-all duration-150" do
                     %i{class: 'fas fa-user mr-3 w-4', style: 'color: #3a6363'}
-                    Login as Customer
+                    Customer Login
                   = link_to new_vendor_session_path, class: "flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 transition-all duration-150" do
                     %i{class: 'fas fa-store mr-3 w-4', style: 'color: #3a6363'}
-                    Login as Vendor
+                    Vendor Login
 
             / Sign Up dropdown with click
             .relative
@@ -112,7 +113,7 @@
                 .py-2
                   = link_to new_user_registration_path, class: "flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 transition-all duration-150" do
                     %i{class: 'fas fa-user-plus mr-3 w-4', style: 'color: #3a6363'}
-                    Sign Up as Customer
+                    Customer Sign Up
       
       / Mobile menu button
       .md:hidden
@@ -174,22 +175,23 @@
       - else
         / Unauthenticated mobile menu
         = link_to 'Home', root_path, class: 'block px-3 py-2 text-gray-700 hover:bg-gray-50 font-medium transition rounded-md navbar-link'
-        = link_to 'About Us', '#', class: 'block px-3 py-2 text-gray-700 hover:bg-gray-50 font-medium transition rounded-md navbar-link'
-        = link_to 'Car Class', '#', class: 'block px-3 py-2 text-gray-700 hover:bg-gray-50 font-medium transition rounded-md navbar-link'
-        = link_to 'Contact Us', '#', class: 'block px-3 py-2 text-gray-700 hover:bg-gray-50 font-medium transition rounded-md navbar-link'
+        = link_to 'Rent A Car', cars_path, class: 'block px-3 py-2 text-gray-700 hover:bg-gray-50 font-medium transition rounded-md navbar-link'
+        = link_to 'Car Brands', '#', class: 'block px-3 py-2 text-gray-700 hover:bg-gray-50 font-medium transition rounded-md navbar-link'
+        = link_to 'Car With Driver', '#', class: 'block px-3 py-2 text-gray-700 hover:bg-gray-50 font-medium transition rounded-md navbar-link'
+        = link_to 'List Your Cars', '#', class: 'block px-3 py-2 text-gray-700 hover:bg-gray-50 font-medium transition rounded-md navbar-link'
         .border-t.border-gray-200.pt-4
           .px-3.py-2
             %p.text-sm.font-semibold.text-gray-500.mb-2 Login
             = link_to new_user_session_path, class: 'flex items-center px-3 py-2 text-gray-700 hover:bg-gray-50 font-medium transition rounded-md navbar-link mb-1' do
               %i{class: 'fas fa-user mr-3 w-4', style: 'color: #3a6363'}
-              Login as Customer
+              Customer Login
             = link_to new_vendor_session_path, class: 'flex items-center px-3 py-2 text-gray-700 hover:bg-gray-50 font-medium transition rounded-md navbar-link mb-3' do
               %i{class: 'fas fa-store mr-3 w-4', style: 'color: #3a6363'}
-              Login as Vendor
+              Vendor Login
             %p.text-sm.font-semibold.text-gray-500.mb-2 Sign Up
             = link_to new_user_registration_path, class: 'flex items-center px-3 py-2 text-gray-700 hover:bg-gray-50 font-medium transition rounded-md navbar-link mb-1' do
               %i{class: 'fas fa-user-plus mr-3 w-4', style: 'color: #3a6363'}
-              Sign Up as Customer
+              Customer Sign Up
 
 :javascript
   // Mobile menu toggle

@@ -19,7 +19,7 @@ class CarRentalController < ApplicationController
         name: 'Cadillac Escalade Limited',
         car_type: 'SUV',
         image_url: 'https://images.unsplash.com/photo-1549923746-c502d488b3ea?q=80&w=800&auto=format&fit=crop',
-        price: 89,
+        daily_price: 89,
         features: ['GPS Navigation', 'Bluetooth', 'Air Conditioning']
       },
       {
@@ -27,7 +27,7 @@ class CarRentalController < ApplicationController
         name: 'BMW X5 Limited',
         car_type: 'SUV', 
         image_url: 'https://images.unsplash.com/photo-1555215695-3004980ad54e?q=80&w=800&auto=format&fit=crop',
-        price: 79,
+        daily_price: 79,
         features: ['Premium Interior', 'All-wheel Drive', 'Safety Features']
       },
       {
@@ -35,7 +35,7 @@ class CarRentalController < ApplicationController
         name: 'Audi Q5 Sedan',
         car_type: 'Sedan',
         image_url: 'https://images.unsplash.com/photo-1603584173870-7f23fdae1b7a?q=80&w=800&auto=format&fit=crop',
-        price: 69,
+        daily_price: 69,
         features: ['Luxury Seats', 'Advanced Tech', 'Premium Sound']
       }
     ]
@@ -91,12 +91,28 @@ class CarRentalController < ApplicationController
     @cars_path = cars_path if respond_to?(:cars_path)
 
     @car_classes = [
-      {name: 'Economy', image: 'https://images.unsplash.com/photo-1552519507-da3b142c6e3d?q=80&w=400&auto=format&fit=crop', price: '$20/day'},
-      {name: 'Standard', image: 'https://images.unsplash.com/photo-1583121274602-3e2820c69888?q=80&w=400&auto=format&fit=crop', price: '$35/day'},
-      {name: 'Business', image: 'https://images.unsplash.com/photo-1617788138017-80ad40651399?q=80&w=400&auto=format&fit=crop', price: '$55/day'},
-      {name: 'Sport', image: 'https://images.unsplash.com/photo-1544636331-e26879cd4d9b?q=80&w=400&auto=format&fit=crop', price: '$75/day'},
-      {name: 'Luxury', image: 'https://images.unsplash.com/photo-1563720223185-11003d516935?q=80&w=400&auto=format&fit=crop', price: '$120/day'},
-      {name: 'Electric', image: 'https://images.unsplash.com/photo-1560958089-b8a1929cea89?q=80&w=400&auto=format&fit=crop', price: '$45/day'}
+      {name: 'Economy', image: 'https://images.unsplash.com/photo-1552519507-da3b142c6e3d?q=80&w=400&auto=format&fit=crop', daily_price: '$20/day'},
+      {name: 'Standard', image: 'https://images.unsplash.com/photo-1583121274602-3e2820c69888?q=80&w=400&auto=format&fit=crop', daily_price: '$35/day'},
+      {name: 'Convertible', image: 'https://images.unsplash.com/photo-1617788138017-80ad40651399?q=80&w=400&auto=format&fit=crop', daily_price: '$55/day'},
+      {name: 'Sport', image: 'https://images.unsplash.com/photo-1544636331-e26879cd4d9b?q=80&w=400&auto=format&fit=crop', daily_price: '$75/day'},
+      {name: 'Luxury', image: 'https://images.unsplash.com/photo-1563720223185-11003d516935?q=80&w=400&auto=format&fit=crop', daily_price: '$120/day'},
+      {name: 'Electric', image: 'https://images.unsplash.com/photo-1560958089-b8a1929cea89?q=80&w=400&auto=format&fit=crop', daily_price: '$45/day'}
+    ]
+
+    @brand_logos = [
+      {name: 'BMW', image: 'brands/bmw.png'},
+      {name: 'Audi', image: 'brands/audi.png'},
+      {name: 'Mercedes-Benz', image: 'brands/mercedes-benz.png'},
+      {name: 'Toyota', image: 'brands/toyota.png'},
+      {name: 'Honda', image: 'brands/honda.png'},
+      {name: 'Nissan', image: 'brands/nissan.png'},
+      {name: 'Ford', image: 'brands/ford.png'},
+      {name: 'Chevrolet', image: 'brands/chevrolet.png'},
+      {name: 'Hyundai', image: 'brands/hyundai.png'},
+      {name: 'Kia', image: 'brands/kia.png'},
+      {name: 'Volkswagen', image: 'brands/volkswagen.png'},
+      {name: 'Tesla', image: 'brands/tesla.png'},
+      {name: 'Jeep', image: 'brands/jeep.png'}
     ]
   end
 end

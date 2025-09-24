@@ -52,9 +52,9 @@ class Vendors::PaymentsController < ApplicationController
 
   def calculate_total_earnings(bookings)
     bookings.sum do |booking|
-      if booking.car.price
+      if booking.car.daily_price
         total_days = (booking.end_date - booking.start_date).to_i
-        booking.car.price * total_days
+        booking.car.daily_price * total_days
       else
         0
       end
@@ -79,10 +79,10 @@ class Vendors::PaymentsController < ApplicationController
   end
 
   def calculate_payment_details(booking)
-    return {} unless booking.car.price
+    return {} unless booking.car.daily_price
 
     total_days = (booking.end_date - booking.start_date).to_i
-    daily_rate = booking.car.price
+    daily_rate = booking.car.daily_price
     total_amount = daily_rate * total_days
 
     {

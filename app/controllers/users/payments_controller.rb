@@ -5,14 +5,14 @@ class Users::PaymentsController < ApplicationController
     @booking = current_user.bookings.find(params[:id])
     @car = @booking.car
     @days = [(@booking.end_date - @booking.start_date).to_i, 1].max
-    @total_amount = @days * @car.price
+    @total_amount = @days * @car.daily_price
   end
 
   def create_checkout
     @booking = current_user.bookings.find(params[:id])
     @car = @booking.car
     days = [(@booking.end_date - @booking.start_date).to_i, 1].max
-    total_amount = days * @car.price
+    total_amount = days * @car.daily_price
 
     begin
       session = Stripe::Checkout::Session.create(

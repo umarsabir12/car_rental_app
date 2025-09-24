@@ -1,4 +1,4 @@
-.container.mx-auto.max-w-container.p-6
+.container.mx-auto.max-w-7xl.p-6
   = render partial: "vendors/navbar"
   
   / Hero Section with Car Images
@@ -18,8 +18,12 @@
           .flex.items-center.gap-4
             - status_classes = {'available' => 'bg-green-100 text-green-700', 'rented' => 'bg-red-100 text-red-700', 'maintenance' => 'bg-yellow-100 text-yellow-700'}
             %span.inline-block.rounded-full.text-sm.font-semibold.px-4.py-2{class: status_classes[@car.status] || 'bg-blue-100 text-blue-700'}= @car.status.titleize
-            %span.text-2xl.font-bold.text-blue-600= @car.price ? number_to_currency(@car.price) : 'N/A'
-            %span.text-gray-500 /day
+            %span.text-2xl.font-bold.text-blue-600= @car.daily_price ? number_to_currency(@car.daily_price) : 'N/A'
+            %span.text-gray-500   /day
+            %span.text-2xl.font-bold.text-blue-600= @car.weekly_price ? number_to_currency(@car.weekly_price) : 'N/A'
+            %span.text-gray-500 /week
+            %span.text-2xl.font-bold.text-blue-600= @car.monthly_price ? number_to_currency(@car.monthly_price) : 'N/A'
+            %span.text-gray-500 /month
         .flex.gap-3
           = link_to edit_vendors_car_path(@car), class: 'bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded-lg transition flex items-center gap-2' do
             %i.fas.fa-edit
@@ -54,8 +58,14 @@
             %span.font-medium.text-gray-600 Category
             %span.text-gray-900= @car.category.presence || '—'
           .flex.justify-between.py-2.border-b.border-gray-100
-            %span.font-medium.text-gray-600 Price
-            %span.text-gray-900= @car.price ? number_to_currency(@car.price) : 'N/A'
+            %span.font-medium.text-gray-600 Daily Price
+            %span.text-gray-900= @car.daily_price ? number_to_currency(@car.daily_price) : 'N/A'
+          .flex.justify-between.py-2.border-b.border-gray-100
+            %span.font-medium.text-gray-600 Weekly Price
+            %span.text-gray-900= @car.weekly_price ? number_to_currency(@car.weekly_price) : 'N/A'
+          .flex.justify-between.py-2.border-b.border-gray-100
+            %span.font-medium.text-gray-600 Monthly Price
+            %span.text-gray-900= @car.monthly_price ? number_to_currency(@car.monthly_price) : 'N/A'
 
       / Specifications Card
       .bg-white.rounded-xl.shadow-lg.p-6
@@ -73,14 +83,20 @@
             %span.font-medium.text-gray-600 Seats
             %span.text-gray-900= @car.seats.presence || '—'
           .flex.justify-between.py-2.border-b.border-gray-100
-            %span.font-medium.text-gray-600 Mileage
+            %span.font-medium.text-gray-600 Total Mileage
             %span.text-gray-900= @car.mileage.presence || '—'
+          .flex.justify-between.py-2.border-b.border-gray-100
+            %span.font-medium.text-gray-600 Daily Mileage
+            %span.text-gray-900= @car.daily_milleage.presence || '—'
+          .flex.justify-between.py-2.border-b.border-gray-100
+            %span.font-medium.text-gray-600 Weekly Mileage
+            %span.text-gray-900= @car.weekly_milleage.presence || '—'
+          .flex.justify-between.py-2.border-b.border-gray-100
+            %span.font-medium.text-gray-600 Monthly Mileage
+            %span.text-gray-900= @car.monthly_milleage.presence || '—'
           .flex.justify-between.py-2.border-b.border-gray-100
             %span.font-medium.text-gray-600 Engine Size
             %span.text-gray-900= @car.engine_size.presence || '—'
-          .flex.justify-between.py-2.border-b.border-gray-100
-            %span.font-medium.text-gray-600 USB Ports
-            %span.text-gray-900= @car.usb_ports.presence || '—'
 
       / Features Card
       .bg-white.rounded-xl.shadow-lg.p-6

@@ -19,5 +19,7 @@ class CarsController < ApplicationController
           .uniq
           .map(&:to_s)
           .sort
+        
+        @recommended_cars = Car.where.not(id: @car.id).where(featured: true).limit(4)
     end
 end 

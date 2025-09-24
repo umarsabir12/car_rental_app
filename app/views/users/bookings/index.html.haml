@@ -109,7 +109,7 @@
                           %i.fas.fa-tag.mr-2.text-green-500
                           = booking.car&.category
                       .text-xl.font-semibold.text-blue-600.mb-4
-                        = number_to_currency(booking.car&.price)
+                        = number_to_currency(booking.car&.daily_price)
                         %span.text-sm.font-normal.text-gray-500.ml-1 per day
 
                     / Rental Period
@@ -134,7 +134,7 @@
                         .flex-1
                           %p.text-sm.text-gray-500 Total Amount
                           %p.text-2xl.font-bold.text-green-600
-                            = number_to_currency(booking.car&.price * (booking.end_date - booking.start_date).to_i)
+                            = number_to_currency(booking.car&.daily_price * (booking.end_date - booking.start_date).to_i)
 
 
 
