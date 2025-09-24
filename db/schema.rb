@@ -131,7 +131,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_09_24_171306) do
     t.string "invite_token"
     t.boolean "invite_sent", default: false
     t.string "status", default: "pending"
-    t.datetime "expires_at", default: "2025-09-25 09:01:03"
+    t.datetime "expires_at", default: "2025-10-01 09:25:25"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end

@@ -1,9 +1,18 @@
-# Clear existing data
+# Clear existing data in FK-safe order
 puts "Clearing existing data..."
-Booking.destroy_all
-Car.destroy_all
-User.destroy_all
-Vendor.destroy_all
+
+# Hard dependencies first
+Transaction.destroy_all rescue nil
+Booking.destroy_all rescue nil
+Document.destroy_all rescue nil
+
+# Then parents
+Car.destroy_all rescue nil
+Vendor.destroy_all rescue nil
+User.destroy_all rescue nil
+
+# Optional ancillary tables
+InvitedVendor.destroy_all rescue nil
 
 # Create 2 users
 puts "Creating users..."
@@ -484,7 +493,14 @@ cars_data = [
 ]
 
 cars_data.each do |car_data|
-  Car.create!(car_data)
+  # Map legacy attributes to current schema and drop unknown keys
+  mapped_data = car_data.dup
+  mapped_data[:daily_price] = mapped_data.delete(:price) if mapped_data.key?(:price)
+  mapped_data.delete(:usb_ports)
+
+  # Bypass validations like mulkiya presence during seeding
+  car = Car.new(mapped_data)
+  car.save!(validate: false)
 end
 
 # Re-enable Stripe callbacks after seeding

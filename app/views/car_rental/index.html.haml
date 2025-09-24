@@ -1,6 +1,6 @@
 %div.min-h-screen.bg-white
   / Hero Section
-  %section.relative.text-white.h-screen{style: 'height: 70vh; background: linear-gradient(135deg, #3a6363 0%, #2d4f4f 100%)'}
+  %section.relative.text-white{style: 'height: 60vh; background: linear-gradient(135deg, #3a6363 0%, #2d4f4f 100%)'}
     .absolute.inset-0.opacity-30
       %img{class: "w-full h-full object-cover", src: asset_path('hero.jpg'), alt: 'Hero background'}
   
@@ -67,7 +67,7 @@
       .flex.flex-wrap.justify-center.items-center.gap-8.md:gap-12
         - (@brand_logos || []).each do |brand|
           .flex.items-center.justify-center.group.hover:scale-105.transition-transform.duration-200
-            %img{class: 'h-8 w-auto opacity-60 group-hover:opacity-80 transition-opacity duration-200', src: asset_path(brand[:image]), alt: "#{brand[:name]} logo"}
+            %img{class: 'h-8 w-auto opacity-60 group-hover:opacity-80 transition-opacity duration-200', src: asset_path(brand[:image]), alt: "#{brand[:name]} logo", onerror: "this.onerror=null;this.src='/icon.png';"}
 
   / Featured vehicles
   %section.py-14.bg-white
