@@ -39,11 +39,11 @@
           .flex.items-center.space-x-4
             - status_classes = {'Available' => 'bg-green-500','Rented' => 'bg-red-500'}[@car.status] || 'bg-blue-500'
             %span.text-white.inline-block.rounded-full.text-sm.font-semibold.px-4.py-2{ class: status_classes }= @car.status
-            %span.text-2xl.font-bold= @car.price ? number_to_currency(@car.price) : 'N/A'
+            %span.text-2xl.font-bold= @car.daily_price ? number_to_currency(@car.daily_price) : 'N/A'
             %span.text-blue-200 /day
 
   / Main Card
-  .max-w-container.mx-auto.bg-white.rounded-2xl.shadow-xl.p-10.grid.grid-cols-1.lg:grid-cols-3.gap-10.relative
+  .max-w-7xl.mx-auto.bg-white.rounded-2xl.shadow-xl.p-10.grid.grid-cols-1.lg:grid-cols-3.gap-10.relative
     / Left: Car Details
     .lg:col-span-2
       %h2.text-2xl.font-bold.text-blue-800.mb-6 Car Details
@@ -73,22 +73,28 @@
           %span.text-gray-600.font-medium Seats:
           %span.text-blue-800= @car.seats
         %div.flex.items-center.gap-2
-          %span.text-gray-600.font-medium USB Ports:
-          %span.text-blue-800= @car.usb_ports
-        %div.flex.items-center.gap-2
           %span.text-gray-600.font-medium Featured:
           %span.text-blue-800= @car.featured ? 'Yes' : 'No'
+        %div.flex.items-center.gap-2
+          %span.text-gray-600.font-medium Daily Mileage:
+          %span.text-blue-800= @car.daily_milleage
+        %div.flex.items-center.gap-2
+          %span.text-gray-600.font-medium Weekly Mileage:
+          %span.text-blue-800= @car.weekly_milleage
+        %div.flex.items-center.gap-2
+          %span.text-gray-600.font-medium Monthly Mileage:
+          %span.text-blue-800= @car.monthly_milleage
     / Right: Booking/Price/Status
     .lg:col-span-1.lg:sticky.lg:top-24.flex.flex-col.gap-6
       .bg-blue-50.rounded-xl.p-6.shadow.flex.flex-col.items-center
-        %span.text-3xl.font-bold.text-blue-800= @car.price ? number_to_currency(@car.price) : 'N/A'
+        %span.text-3xl.font-bold.text-blue-800= @car.daily_price ? number_to_currency(@car.daily_price) : 'N/A'
         %span.text-gray-500.mb-4 /day
         %button.btn.btn-primary.btn-lg.w-full.mt-2{"data-bs-toggle" => "modal", "data-bs-target" => "#bookingModal"}
           Book This Car
         = link_to 'Back', cars_path, class: 'inline-block bg-blue-100 text-blue-800 font-semibold px-8 py-3 rounded-lg hover:bg-blue-200 transition text-lg mt-4 w-full text-center'
 
   / Features Row
-  .max-w-container.mx-auto.grid.grid-cols-2.md:grid-cols-4.gap-6.my-10
+  .max-w-7xl.mx-auto.grid.grid-cols-2.md:grid-cols-4.gap-6.my-10
     %div.flex.flex-col.items-center
       %span.text-2xl.mb-1= @car.air_conditioning ? '❄️' : '🚫'
       %span.text-xs.text-gray-600 Air Conditioning
@@ -104,7 +110,7 @@
 
   / Description
   - if @car.description.present?
-    .max-w-container.mx-auto.bg-white.rounded-2xl.shadow-md.p-8.mb-8
+    .max-w-7xl.mx-auto.bg-white.rounded-2xl.shadow-md.p-8.mb-8
       %h2.text-2xl.font-semibold.text-blue-800.mb-2 Description
       %p.text-gray-700.text-lg= @car.description
 

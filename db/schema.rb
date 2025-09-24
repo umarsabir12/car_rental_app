@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_09_17_120000) do
+ActiveRecord::Schema[7.2].define(version: 2025_09_23_121500) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -81,7 +81,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_09_17_120000) do
     t.string "category"
     t.string "color"
     t.integer "year"
-    t.decimal "price", precision: 10, scale: 2
+    t.decimal "daily_price", precision: 10, scale: 2
     t.string "status"
     t.text "description"
     t.string "main_image_url"
@@ -94,7 +94,6 @@ ActiveRecord::Schema[7.2].define(version: 2025_09_17_120000) do
     t.boolean "gps", default: false
     t.boolean "sunroof", default: false
     t.boolean "bluetooth", default: false
-    t.integer "usb_ports", default: 2
     t.boolean "featured", default: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -102,6 +101,11 @@ ActiveRecord::Schema[7.2].define(version: 2025_09_17_120000) do
     t.string "stripe_product_id"
     t.string "stripe_price_id"
     t.boolean "with_driver", default: false
+    t.decimal "weekly_price", precision: 10, scale: 2
+    t.decimal "monthly_price", precision: 10, scale: 2
+    t.integer "daily_milleage", default: 0
+    t.integer "weekly_milleage", default: 0
+    t.integer "monthly_milleage", default: 0
     t.index ["stripe_price_id"], name: "index_cars_on_stripe_price_id"
     t.index ["stripe_product_id"], name: "index_cars_on_stripe_product_id"
     t.index ["vendor_id"], name: "index_cars_on_vendor_id"
@@ -125,7 +129,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_09_17_120000) do
     t.string "invite_token"
     t.boolean "invite_sent", default: false
     t.string "status", default: "pending"
-    t.datetime "expires_at", default: "2025-09-23 16:33:03"
+    t.datetime "expires_at", default: "2025-09-25 09:01:03"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end

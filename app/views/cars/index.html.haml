@@ -72,7 +72,7 @@
               %span.text-gray-500.ml-2 •
               %span.text-gray-500= car.category.capitalize
           %div.flex.items-center.justify-between.mb-4
-            %span.text-2xl.font-bold.text-blue-800= car.price ? number_to_currency(car.price) : 'N/A'
+            %span.text-2xl.font-bold.text-blue-800= car.daily_price ? number_to_currency(car.daily_price) : 'N/A'
             %span.text-sm.text-gray-500 /day
           .mt-auto
             = link_to 'View Details', car_path(car), class: 'btn btn-outline-primary w-100' 

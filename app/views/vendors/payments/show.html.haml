@@ -1,4 +1,4 @@
-.container.mx-auto.max-w-container.p-6
+.container.mx-auto.max-w-7xl.p-6
   = render partial: "vendors/navbar"
   
   / Header Section
@@ -95,7 +95,7 @@
             %span.text-gray-900= @booking.car.category.presence || 'N/A'
           .flex.justify-between.py-2.border-b.border-gray-100
             %span.font-medium.text-gray-600 Daily Rate
-            %span.text-gray-900= @booking.car.price ? number_to_currency(@booking.car.price) : 'N/A'
+            %span.text-gray-900= @booking.car.daily_price ? number_to_currency(@booking.car.daily_price) : 'N/A'
           .flex.justify-between.py-2.border-b.border-gray-100
             %span.font-medium.text-gray-600 Car Status
             - car_status_classes = {'available' => 'bg-green-100 text-green-700', 'rented' => 'bg-red-100 text-red-700', 'maintenance' => 'bg-yellow-100 text-yellow-700'}

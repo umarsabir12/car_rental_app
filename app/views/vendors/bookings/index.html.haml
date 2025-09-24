@@ -1,4 +1,4 @@
-.container.mx-auto.max-w-container.p-6
+.container.mx-auto.max-w-7xl.p-6
   = render partial: "vendors/navbar"
   
   / Header Section
@@ -99,9 +99,9 @@
                   - else
                     %span.inline-block.bg-yellow-100.text-yellow-700.px-3.py-1.rounded-full.text-xs.font-semibold Pending
                 %td.px-6.py-4.whitespace-nowrap
-                  - if booking.car.price
+                  - if booking.car.daily_price
                     - total_days = (booking.end_date - booking.start_date).to_i
-                    - total_amount = booking.car.price * total_days
+                    - total_amount = booking.car.daily_price * total_days
                     %span.font-semibold.text-gray-900= number_to_currency(total_amount)
                   - else
                     %span.text-gray-400 N/A

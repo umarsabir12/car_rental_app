@@ -29,3 +29,11 @@
 
 en:
   hello: "Hello world"
+  number:
+    currency:
+      format:
+        unit: "AED "
+        format: "%u%n" # e.g., AED 1,234.56
+        delimiter: ","
+        separator: "."
+        precision: 2

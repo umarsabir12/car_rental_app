@@ -1,4 +1,4 @@
-.container.mx-auto.max-w-container.p-6
+.container.mx-auto.max-w-7xl.p-6
   = render partial: "vendors/navbar"
   
   / Header Section
@@ -104,7 +104,7 @@
           %tbody.divide-y.divide-gray-200
             - @paid_bookings.each do |booking|
               - total_days = (booking.end_date - booking.start_date).to_i
-              - total_amount = booking.car.price ? booking.car.price * total_days : 0
+              - total_amount = booking.car.daily_price ? booking.car.daily_price * total_days : 0
               %tr.hover:bg-gray-50.transition
                 %td.px-6.py-4.whitespace-nowrap
                   %span.font-mono.text-sm.text-gray-900 ##{booking.id}
@@ -121,7 +121,7 @@
                     %span.text-sm.text-gray-900= booking.start_date.strftime('%b %d, %Y')
                     %span.text-sm.text-gray-900= booking.end_date.strftime('%b %d, %Y')
                 %td.px-6.py-4.whitespace-nowrap
-                  %span.text-gray-900= booking.car.price ? number_to_currency(booking.car.price) : 'N/A'
+                  %span.text-gray-900= booking.car.daily_price ? number_to_currency(booking.car.daily_price) : 'N/A'
                 %td.px-6.py-4.whitespace-nowrap
                   %span.text-gray-900= "#{total_days} days"
                 %td.px-6.py-4.whitespace-nowrap

@@ -72,7 +72,7 @@ class Car < ApplicationRecord
     
     stripe_price = Stripe::Price.create(
       product: stripe_product_id,
-      unit_amount: self.price.to_i * 100,
+      unit_amount: self.daily_price.to_i * 100,
       currency: 'usd'
     )
 

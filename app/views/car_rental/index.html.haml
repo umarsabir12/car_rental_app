@@ -1,20 +1,30 @@
 %div.min-h-screen.bg-white
-  / Hero
-  %section.relative.text-white{style: 'background: linear-gradient(135deg, #3a6363 0%, #2d4f4f 100%)'}
-    .max-w-7xl.mx-auto.px-4.sm:px-6.lg:px-8
-      .grid.grid-cols-1.lg:grid-cols-2.gap-8.items-center.py-14.lg:py-20
-        .relative.order-2.lg:order-1
-          %h1.text-4xl.md:text-5xl.lg:text-6xl.font-extrabold.leading-tight.mb-4= (@headline || 'Rent Your Perfect Car')
-          %p.text-base.md:text-lg.mb-6.max-w-xl{style: 'color: rgba(255,255,255,0.9)'}= (@subcopy || 'Choose from hundreds of vehicles at the best prices. Book instantly and drive away in minutes.')
+  / Hero Section
+  %section.relative.text-white.h-screen{style: 'height: 70vh; background: linear-gradient(135deg, #3a6363 0%, #2d4f4f 100%)'}
+    .absolute.inset-0.opacity-30
+      %img{class: "w-full h-full object-cover", src: asset_path('hero.jpg'), alt: 'Hero background'}
+  
+    .max-w-container.mx-auto.px-4.sm:px-6.lg:px-8.relative.z-10
+      .grid.grid-cols-1.lg:grid-cols-2.gap-8.items-center.pt-40.lg:pt-40.pb-14.lg:pb-20.h-full
+        / Car Image - Left Side
+        .order-1.lg:order-1.relative
+          %img{class: "w-full h-80 sm:h-96 lg:h-[16rem] object-contain", src: asset_path('hero_cars/car2.png'), alt: 'BMW sedan on road'}
+      
+        / Text Content - Right Side  
+        .order-2.lg:order-2.relative
+          %h1.text-4xl.md:text-5xl.lg:text-6xl.font-extrabold.leading-tight.mb-4
+            = (@headline || 'Rent Your Perfect Car')
+          %p.text-base.md:text-lg.mb-6.max-w-xl{style: 'color: rgba(255,255,255,0.9)'}
+            Book your car with 
+            %span.font-bold.text-white.text-3xl Zero Deposit
+            and hit the road today! No hidden charges!
           .flex.flex-wrap.items-center.gap-3
             = link_to (@cars_path || '#'), class: 'inline-flex items-center rounded-full bg-white font-semibold px-6 py-3 shadow hover:shadow-md transition focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-white', style: 'color: #3a6363' do
               %i{class: 'fas fa-car-side mr-2'}
               = (@cta_label || 'Rent a Car')
-            = link_to '#document-requirements', class: 'inline-flex items-center rounded-full border border-white/60 text-white px-6 py-3 hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-white' do
+            = link_to '#document-requirements', class: 'inline-flex items-center rounded-full border border-white/60 text-white px-6 py-3 hover:bg-white/10 transition focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-white' do
               %i{class: 'fas fa-info-circle mr-2'}
               Learn more
-        .order-1.lg:order-2
-          %img{class: "w-full h-64 sm:h-80 lg:h-96 object-contain", src: 'https://images.unsplash.com/photo-1555215695-3004980ad54e?q=80&w=1600&auto=format&fit=crop', alt: 'Showcase car'}
 
   / Search bar
   %section.-mt-8.relative.z-10
@@ -37,35 +47,33 @@
             .flex
               = f.submit 'Find a Car', class: 'w-full inline-flex justify-center items-center rounded-lg text-white font-semibold py-3 h-12 hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2', style: 'background-color: #3a6363; focus:ring-color: #3a6363'
 
-  / Why You Should Use Section
+  / Select Class Section
   %section.py-14.bg-gray-50
     .max-w-7xl.mx-auto.px-4.sm:px-6.lg:px-8
       .text-center.mb-10
-        %h2.text-3xl.font-bold.text-gray-900.mb-2 Why You Should Use Wheels On Rent
-        %p.text-gray-600 Experience the best car rental service
-      .grid.grid-cols-1.md:grid-cols-3.gap-8
-        .text-center.bg-white.rounded-2xl.shadow-sm.border.border-gray-100.p-8
-          %div{class: 'rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4', style: 'background-color: #3a6363'}
-            %i{class: 'fas fa-shield-alt text-white text-2xl'}
-          %h3.text-xl.font-bold.text-gray-900.mb-3 Trusted Service
-          %p.text-gray-600 Reliable and secure car rental service with full insurance coverage
-        .text-center.bg-white.rounded-2xl.shadow-sm.border.border-gray-100.p-8
-          %div{class: 'rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4', style: 'background-color: #3a6363'}
-            %i{class: 'fas fa-map-marked-alt text-white text-2xl'}
-          %h3.text-xl.font-bold.text-gray-900.mb-3 Prime Locations
-          %p.text-gray-600 Convenient pickup and drop-off locations across major cities
-        .text-center.bg-white.rounded-2xl.shadow-sm.border.border-gray-100.p-8
-          %div{class: 'rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4', style: 'background-color: #3a6363'}
-            %i{class: 'fas fa-award text-white text-2xl'}
-          %h3.text-xl.font-bold.text-gray-900.mb-3 100% Satisfaction
-          %p.text-gray-600 Guaranteed customer satisfaction with 24/7 support service
+        %h2.text-3xl.font-bold.text-gray-900.mb-2 Choose the perfect car for your needs
+      .grid.grid-cols-2.md:grid-cols-3.gap-6
+        - (@car_classes || []).each do |car_class|
+          = link_to '#', class: 'group relative rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition cursor-pointer hover:border-teal-300 overflow-hidden h-48' do
+            .absolute.inset-0
+              %img.w-full.h-full.object-cover{src: car_class[:image], alt: car_class[:name]}
+            .absolute.inset-0.bg-black.bg-opacity-30.group-hover:bg-opacity-40.transition
+            .absolute.inset-0.flex.items-center.justify-center
+              %h3.text-xl.font-bold.text-white.text-center.px-4= car_class[:name]
+
+  / Car Brands Banner
+  %section.py-12.bg-white.border-t.border-b.border-gray-100
+    .max-w-7xl.mx-auto.px-4.sm:px-6.lg:px-8
+      .flex.flex-wrap.justify-center.items-center.gap-8.md:gap-12
+        - (@brand_logos || []).each do |brand|
+          .flex.items-center.justify-center.group.hover:scale-105.transition-transform.duration-200
+            %img{class: 'h-8 w-auto opacity-60 group-hover:opacity-80 transition-opacity duration-200', src: asset_path(brand[:image]), alt: "#{brand[:name]} logo"}
 
   / Featured vehicles
   %section.py-14.bg-white
     .max-w-7xl.mx-auto.px-4.sm:px-6.lg:px-8
       .text-center.mb-10
-        %h2.text-3xl.font-bold.text-gray-900.mb-2 Cars We are Offering for Rentals
-        %p.text-gray-600 Discover our most popular rental cars
+        %h2.text-3xl.font-bold.text-gray-900.mb-2 Discover our most popular rental cars
       .grid.grid-cols-1.md:grid-cols-3.gap-6
         - (@featured_cars || []).each do |car|
           %article.group.bg-white.rounded-2xl.shadow-md.border.border-gray-100.overflow-hidden.hover:shadow-lg.transition
@@ -77,52 +85,117 @@
               %p.text-sm.text-gray-600.line-clamp-2.mb-4= (car[:features] || []).join(' • ')
               .flex.items-center.justify-between
                 %div
-                  %span.text-2xl.font-extrabold.text-gray-900= number_to_currency(car[:price], precision: 0)
+                  %span.text-2xl.font-extrabold.text-gray-900= number_to_currency(car[:daily_price], precision: 0)
                   %span.text-gray-500 /day
                 = link_to 'Book Now', (@cars_path || '#'), class: 'inline-flex items-center rounded-lg text-white font-semibold px-4 py-2 hover:opacity-90 focus:outline-none focus:ring-2', style: 'background-color: #3a6363; focus:ring-color: #3a6363'
 
-  / Select Class Section
-  %section.py-14.bg-gray-50
-    .max-w-7xl.mx-auto.px-4.sm:px-6.lg:px-8
-      .text-center.mb-10
-        %h2.text-3xl.font-bold.text-gray-900.mb-2 Select Class
-        %p.text-gray-600 Choose the perfect car class for your needs
-      .grid.grid-cols-2.md:grid-cols-3.gap-6
-        - (@car_classes || []).each do |car_class|
-          = link_to '#', class: 'group bg-white rounded-2xl shadow-sm border border-gray-100 p-6 hover:shadow-md transition cursor-pointer hover:border-teal-300' do
-            .text-center
-              %h3.text-lg.font-semibold.text-gray-900.mb-3= car_class[:name]
-              %img.w-full.h-32.object-contain.mb-3.rounded-lg{src: car_class[:image], alt: car_class[:name]}
-              %p{class: 'font-semibold', style: 'color: #3a6363'}= car_class[:price]
+  / CTA banner - Updated to match required design
+  %section.relative.text-white{class: 'bg-cover-center bg-fade-bottom', style: "background-image: linear-gradient(rgba(44,95,95,0.6), rgba(58,99,99,0.6)), url('#{image_path('hero.jpg')}')"}
+    .absolute.inset-0.pointer-events-none{style: 'background: linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.2) 60%, rgba(0,0,0,0.6) 100%)'}
 
-  / CTA banner
-  %section.relative.text-white{style: 'background-color: #3a6363'}
     .max-w-7xl.mx-auto.px-4.sm:px-6.lg:px-8
-      .grid.grid-cols-1.lg:grid-cols-2.gap-8.items-center.py-14
-        .order-2.lg:order-1
-          %h3.text-3xl.font-extrabold.mb-3= (@cta_title || 'Save Time & Money with Top Car Rent Services')
-          %p.mb-6{style: 'color: rgba(255,255,255,0.9)'}= (@cta_copy || 'Experience premium car rental service with the best prices and excellent customer support.')
-          = link_to ((@cta_action && @cta_action[:href]) || @cars_path || '#'), class: 'inline-flex items-center rounded-lg bg-white font-semibold px-6 py-3 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-white', style: 'color: #3a6363' do
-            %i{class: 'fa fa-car mr-2'}
+      .grid.grid-cols-1.lg:grid-cols-2.gap-12.items-center.py-16
+        / Text content - now on the left
+        .order-1.lg:order-1
+          %h1.text-4xl.lg:text-5xl.font-bold.mb-6.leading-tight= (@cta_title || 'Save Time & Money with Top Car Rent Services')
+          %p.text-lg.mb-8.leading-relaxed{style: 'color: rgba(255,255,255,1)'}= (@cta_copy || 'Experience premium car rental service with the best prices and excellent customer support.')
+          = link_to ((@cta_action && @cta_action[:href]) || @cars_path || '#'), class: 'inline-flex items-center rounded-lg bg-white font-semibold px-8 py-4 text-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-white transition-colors duration-300', style: 'color: #3a6363' do
+            %i{class: 'fa fa-car mr-3'}
             = ((@cta_action && @cta_action[:label]) || 'Start Browsing Cars')
-        .order-1.lg:order-2
-          %div.relative
-            %img{class: 'w-full h-56 sm:h-72 object-contain', src: 'https://images.unsplash.com/photo-1517142089942-ba376ce32a2e?q=80&w=1600&auto=format&fit=crop', alt: 'Cars lineup'}
+      
+        / Image content - now on the right
+        .order-2.lg:order-2.self-end
+          %div.relative.flex.items-end.h-full
+            %img{class: 'w-full h-64 sm:h-80 lg:h-[32rem] xl:h-[36rem] object-contain object-bottom drop-shadow-2xl', src: image_path('car_fleet.png'), alt: 'Luxury cars lineup'}
 
-  / Stats Section (Circular Design with Icons)
-  %section.py-16.bg-white
+  / Stats Section - Design 1 with proper icon circles
+  %section.py-20.bg-white
     .max-w-7xl.mx-auto.px-4.sm:px-6.lg:px-8
-      .grid.grid-cols-2.md:grid-cols-3.gap-8.text-center
-        - default_stats = [{value: '990+', label: 'CARS RENTOUTS', icon: 'fa-car'}, {value: '230+', label: 'CARS SOLUTIONS', icon: 'fa-wrench'}, {value: '660+', label: 'HAPPY CUSTOMER', icon: 'fa-users'}]
+      .grid.grid-cols-1.md:grid-cols-3.gap-16.text-center
+        - default_stats = [{value: '990 +', label: 'CARS RENTOUTS', icon: 'fa-car'}, {value: '230 +', label: 'CARS SOLUTIONS', icon: 'fa-shield-alt'}, {value: '660 +', label: 'HAPPY CUSTOMER', icon: 'fa-thumbs-up'}]
         - (@stats || default_stats).each do |s|
           .flex.flex-col.items-center
-            %div{class: 'w-32 h-32 md:w-40 md:h-40 rounded-full border-4 flex flex-col items-center justify-center mb-4', style: 'border-color: #3a6363'}
-              / Icon at the top
-              %i{class: "fas #{s[:icon]} text-2xl md:text-3xl mb-2", style: 'color: #3a6363'}
-              / Stats content
-              .text-center
-                %div{class: 'text-xl md:text-2xl font-extrabold mb-1', style: 'color: #3a6363'}= s[:value]
-                %div.text-xs.text-gray-600.font-medium= s[:label]
+            .relative.inline-block
+              / Main circle with stats
+              %div{class: 'w-48 h-48 lg:w-56 lg:h-56 rounded-full border-4 bg-white flex flex-col items-center justify-center shadow-lg', style: 'border-color: #2c5f5f'}
+                .text-center.px-6
+                  %div{class: 'text-4xl lg:text-5xl font-black mb-2', style: 'color: #2c5f5f'}= s[:value]
+                  %div{class: 'text-sm font-semibold uppercase tracking-wider', style: 'color: #5a7a7a'}= s[:label]
+            
+              / Small icon circle positioned at top-right
+              %div{class: 'absolute -top-4 -right-4 w-20 h-20 lg:w-24 lg:h-24 rounded-full bg-white flex items-center justify-center shadow-xl', style: 'border: 4px solid #2c5f5f'}
+                %i{class: "fas #{s[:icon]} text-2xl lg:text-3xl", style: 'color: #2c5f5f'}
+
+  / Required Document Section
+  %section.py-16.bg-white
+    .max-w-7xl.mx-auto.px-4.sm:px-6.lg:px-8
+      .mb-10
+        %h2.text-3xl.font-bold.text-gray-900.mb-3 Documents Required for Car Rental in the UAE
+        %p.text-gray-600 Whether you are a resident or a tourist, a rent a car in Dubai is the most convenient method of visiting the UAE's major attractions. In order to not encounter any type of inconvenience while renting a car, it's necessary to prepare the necessary documents in advance.
+
+      .grid.grid-cols-1.lg:grid-cols-2.gap-8
+        / Card: UAE Residents
+        .rounded-3xl.border.border-gray-200.bg-white.shadow-sm.overflow-hidden
+          .bg-gray-100.py-4.text-center
+            %h3.text-lg.font-semibold.text-gray-800 For UAE Residents
+          .p-6
+            .grid.grid-cols-1.md:grid-cols-2.gap-6.items-center
+              %div.flex.items-end.justify-center
+                %img{class: 'w-64 h-40 object-contain', src: asset_path('hero_cars/car3.png'), alt: 'UAE Resident documents'}
+              %ul.space-y-4
+                %li.flex.items-start.gap-3
+                  %span.inline-flex.items-center.justify-center.rounded-full.w-6.h-6{style: 'background-color: #e8f1f1; color: #3a6363'}
+                    %i{class: 'fas fa-check text-sm'}
+                  %span.text-gray-700 UAE Driving License
+                %li.flex.items-start.gap-3
+                  %span.inline-flex.items-center.justify-center.rounded-full.w-6.h-6{style: 'background-color: #e8f1f1; color: #3a6363'}
+                    %i{class: 'fas fa-check text-sm'}
+                  %span.text-gray-700 Emirates ID
+                %li.flex.items-start.gap-3
+                  %span.inline-flex.items-center.justify-center.rounded-full.w-6.h-6{style: 'background-color: #e8f1f1; color: #3a6363'}
+                    %i{class: 'fas fa-check text-sm'}
+                  %span.text-gray-700 Residential Visa may be acceptable
+
+        / Card: Tourists visiting the UAE
+        .rounded-3xl.border.border-gray-200.bg-white.shadow-sm.overflow-hidden
+          .bg-gray-100.py-4.text-center
+            %h3.text-lg.font-semibold.text-gray-800 For Tourists visiting the UAE
+          .p-6
+            .grid.grid-cols-1.md:grid-cols-2.gap-6.items-center
+              %div.flex.items-end.justify-center
+                %img{class: 'w-64 h-40 object-contain', src: asset_path('hero_cars/car4.png'), alt: 'Tourist documents'}
+              %ul.space-y-4
+                %li.flex.items-start.gap-3
+                  %span.inline-flex.items-center.justify-center.rounded-full.w-6.h-6{style: 'background-color: #e8f1f1; color: #3a6363'}
+                    %i{class: 'fas fa-check text-sm'}
+                  %span.text-gray-700 Passport
+                %li.flex.items-start.gap-3
+                  %span.inline-flex.items-center.justify-center.rounded-full.w-6.h-6{style: 'background-color: #e8f1f1; color: #3a6363'}
+                    %i{class: 'fas fa-check text-sm'}
+                  %span.text-gray-700 Visit Visa
+                %li.flex.items-start.gap-3
+                  %span.inline-flex.items-center.justify-center.rounded-full.w-6.h-6{style: 'background-color: #e8f1f1; color: #3a6363'}
+                    %i{class: 'fas fa-check text-sm'}
+                  %span.text-gray-700 Home Country Driving License
+                %li.flex.items-start.gap-3
+                  %span.inline-flex.items-center.justify-center.rounded-full.w-6.h-6{style: 'background-color: #e8f1f1; color: #3a6363'}
+                    %i{class: 'fas fa-check text-sm'}
+                  %span.text-gray-700 International Driving Permit (IDP)
+  / Vendor CTA Banner under Stats
+  %section.py-12.bg-white
+    .max-w-7xl.mx-auto.px-4.sm:px-6.lg:px-8
+      .rounded-3xl.border.border-gray-200.bg-white.overflow-hidden
+        .grid.grid-cols-1.lg:grid-cols-2.items-center
+          / Left image
+          %div.relative.h-56.sm:h-64.lg:h-72
+            %img{class: 'absolute inset-0 w-full h-full object-cover fade-right', src: image_path('join_us_image.png'), alt: 'Work with us'}
+          / Right content
+          .p-8.lg:p-12
+            %h3.text-3xl.font-bold.text-gray-900.mb-3 Are you a car rental company?
+            %p.text-lg.text-gray-600.mb-6 Join Us – List Your Fleet, Get Confirmed Bookings, Double Your Profit!
+            = link_to ((@list_cars_path) || '#'), class: 'inline-flex items-center rounded-xl border px-6 py-3 font-semibold transition hover:bg-gray-50', style: 'color: #3a6363; border-color: #3a6363' do
+              %span List Your Cars
+              %i{class: 'fas fa-arrow-right ml-3'}
 
   / Testimonials
   %section.py-16.bg-white
@@ -141,6 +214,29 @@
               %div
                 %div.text-sm.font-semibold.text-gray-900= t[:author]
                 %div.text-xs.text-gray-500= t[:role]
+
+  / Why You Should Use Section
+  %section.py-14.bg-gray-50
+    .max-w-7xl.mx-auto.px-4.sm:px-6.lg:px-8
+      .text-center.mb-10
+        %h2.text-3xl.font-bold.text-gray-900.mb-2 Why You Should Use Wheels On Rent
+        %p.text-gray-600 Experience the best car rental service
+      .grid.grid-cols-1.md:grid-cols-3.gap-8
+        .text-center.bg-white.rounded-2xl.shadow-sm.border.border-gray-100.p-8
+          %div{class: 'rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4', style: 'background-color: #3a6363'}
+            %i{class: 'fas fa-shield-alt text-white text-2xl'}
+          %h3.text-xl.font-bold.text-gray-900.mb-3 Affordable Rates
+          %p.text-gray-600 We make car rentals simple and accessible for everyone. Enjoy transparent, competitive pricing with no hidden charges — the best value for your money.
+        .text-center.bg-white.rounded-2xl.shadow-sm.border.border-gray-100.p-8
+          %div{class: 'rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4', style: 'background-color: #3a6363'}
+            %i{class: 'fas fa-map-marked-alt text-white text-2xl'}
+          %h3.text-xl.font-bold.text-gray-900.mb-3 Wide Range of Vehicles
+          %p.text-gray-600 From budget-friendly cars to premium luxury models, SUVs, and vans, our diverse fleet is well-maintained to meet every travel need and occasion. 
+        .text-center.bg-white.rounded-2xl.shadow-sm.border.border-gray-100.p-8
+          %div{class: 'rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4', style: 'background-color: #3a6363'}
+            %i{class: 'fas fa-award text-white text-2xl'}
+          %h3.text-xl.font-bold.text-gray-900.mb-3 Easy Booking Process
+          %p.text-gray-600 With our user-friendly platform, you can book your car in just a few clicks — online or through our app — quickly and conveniently.
 
 - content_for :footer do
   %footer.bg-gray-900.text-white
