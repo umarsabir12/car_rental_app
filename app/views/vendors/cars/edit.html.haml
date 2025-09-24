@@ -1,108 +1,114 @@
 .container.mx-auto.max-w-7xl.p-8
   .bg-white.rounded-2xl.shadow-xl.p-12
-    %h1.text-4xl.font-extrabold.text-blue-900.mb-6 Edit Car
+    %h1.text-4xl.font-extrabold.mb-6{style: 'color:#2d4f4f'} Edit Car
     %p.text-lg.text-gray-700.mb-8 Update the details below to edit your car listing.
 
     = form_with model: @car, url: vendors_car_path(@car), method: :patch, local: true, html: { multipart: true, class: 'space-y-8' } do |f|
       / Basic Information Section (Required Fields)
-      %h2.text-lg.font-bold.text-blue-800.mb-4 Basic Information
+      %h2.text-lg.font-bold.mb-4{style: 'color:#2d4f4f'} Basic Information
       .grid.grid-cols-1.md:grid-cols-2.gap-6
         .field.space-y-2
           = f.label :model, 'Model *', class: 'block text-sm font-medium text-gray-700'
-          = f.text_field :model, required: true, class: 'w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition', placeholder: 'e.g., Camry'
+          = f.text_field :model, required: true, class: 'w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 transition', style: '--tw-ring-color:#3A6363', placeholder: 'e.g., Camry'
         .field.space-y-2
           = f.label :brand, 'Brand *', class: 'block text-sm font-medium text-gray-700'
-          = f.text_field :brand, required: true, class: 'w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition', placeholder: 'e.g., Toyota'
+          = f.text_field :brand, required: true, class: 'w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 transition', style: '--tw-ring-color:#3A6363', placeholder: 'e.g., Toyota'
         .field.space-y-2
           = f.label :year, 'Year *', class: 'block text-sm font-medium text-gray-700'
-          = f.number_field :year, required: true, min: 1900, max: Date.current.year + 1, class: 'w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition', placeholder: 'e.g., 2023'
+          = f.number_field :year, required: true, min: 1900, max: Date.current.year + 1, class: 'w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 transition', style: '--tw-ring-color:#3A6363', placeholder: 'e.g., 2023'
         .field.space-y-2
           = f.label :color, 'Color *', class: 'block text-sm font-medium text-gray-700'
-          = f.text_field :color, required: true, class: 'w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition', placeholder: 'e.g., White'
+          = f.text_field :color, required: true, class: 'w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 transition', style: '--tw-ring-color:#3A6363', placeholder: 'e.g., White'
         .field.space-y-2
           = f.label :daily_price, 'Daily Price (AED) *', class: 'block text-sm font-medium text-gray-700'
-          = f.number_field :daily_price, required: true, step: 0.01, min: 0, class: 'w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition', placeholder: 'e.g., 50.00'
+          = f.number_field :daily_price, required: true, step: 0.01, min: 0, class: 'w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 transition', style: '--tw-ring-color:#3A6363', placeholder: 'e.g., 50.00'
         .field.space-y-2
           = f.label :weekly_price, 'Weekly Price (AED)', class: 'block text-sm font-medium text-gray-700'
-          = f.number_field :weekly_price, step: 0.01, min: 0, class: 'w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition', placeholder: 'e.g., 300.00'
+          = f.number_field :weekly_price, step: 0.01, min: 0, class: 'w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 transition', style: '--tw-ring-color:#3A6363', placeholder: 'e.g., 300.00'
         .field.space-y-2
           = f.label :monthly_price, 'Monthly Price (AED)', class: 'block text-sm font-medium text-gray-700'
-          = f.number_field :monthly_price, step: 0.01, min: 0, class: 'w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition', placeholder: 'e.g., 1200.00'
+          = f.number_field :monthly_price, step: 0.01, min: 0, class: 'w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 transition', style: '--tw-ring-color:#3A6363', placeholder: 'e.g., 1200.00'
         .field.space-y-2
           = f.label :status, 'Status *', class: 'block text-sm font-medium text-gray-700'
-          = f.select :status, options_for_select([['Available', 'available'], ['Rented', 'rented'], ['Maintenance', 'maintenance']], @car.status), { prompt: 'Select status' }, { required: true, class: 'w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition' }
+          = f.select :status, options_for_select([['Available', 'available'], ['Rented', 'rented'], ['Maintenance', 'maintenance']], @car.status), { prompt: 'Select status' }, { required: true, class: 'w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 transition', style: '--tw-ring-color:#3A6363' }
         .field.space-y-2.md:col-span-2
           = f.label :category, 'Category', class: 'block text-sm font-medium text-gray-700'
-          = f.select :category, options_for_select([['Sedan', 'Sedan'], ['SUV', 'SUV'], ['Sports', 'Sports'], ['Luxury', 'Luxury'], ['Electric', 'Electric'], ['Hybrid', 'Hybrid'], ['Van', 'Van'], ['Truck', 'Truck']], @car.category), { prompt: 'Select category' }, { class: 'w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition' }
+          = f.select :category, options_for_select([['Sedan', 'Sedan'], ['SUV', 'SUV'], ['Sports', 'Sports'], ['Luxury', 'Luxury'], ['Electric', 'Electric'], ['Hybrid', 'Hybrid'], ['Van', 'Van'], ['Truck', 'Truck']], @car.category), { prompt: 'Select category' }, { class: 'w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 transition', style: '--tw-ring-color:#3A6363' }
         .field.space-y-2.md:col-span-2
           = f.label :description, 'Description', class: 'block text-sm font-medium text-gray-700'
-          = f.text_area :description, rows: 4, class: 'w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition', placeholder: 'Describe the car features, condition, and any special notes...'
+          = f.text_area :description, rows: 4, class: 'w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 transition', style: '--tw-ring-color:#3A6363', placeholder: 'Describe the car features, condition, and any special notes...'
 
       / Specifications Section
-      %h2.text-lg.font-bold.text-blue-800.mb-4.mt-8 Specifications
+      %h2.text-lg.font-bold.mb-4.mt-8{style: 'color:#2d4f4f'} Specifications
       .grid.grid-cols-1.md:grid-cols-2.gap-6
         .field.space-y-2
           = f.label :transmission, 'Transmission', class: 'block text-sm font-medium text-gray-700'
-          = f.select :transmission, options_for_select([['Automatic', 'Automatic'], ['Manual', 'Manual'], ['CVT', 'CVT']], @car.transmission), { prompt: 'Select transmission' }, { class: 'w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition' }
+          = f.select :transmission, options_for_select([['Automatic', 'Automatic'], ['Manual', 'Manual'], ['CVT', 'CVT']], @car.transmission), { prompt: 'Select transmission' }, { class: 'w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 transition', style: '--tw-ring-color:#3A6363' }
         .field.space-y-2
           = f.label :fuel_type, 'Fuel Type', class: 'block text-sm font-medium text-gray-700'
           = f.select :fuel_type, options_for_select([['Petrol', 'Petrol'], ['Diesel', 'Diesel'], ['Electric', 'Electric'], ['Hybrid', 'Hybrid'], ['Plug-in Hybrid', 'Plug-in Hybrid']], @car.fuel_type), { prompt: 'Select fuel type' }, { class: 'w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition' }
         .field.space-y-2
           = f.label :seats, 'Number of Seats', class: 'block text-sm font-medium text-gray-700'
-          = f.number_field :seats, min: 1, max: 15, class: 'w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition', placeholder: 'e.g., 5'
+          = f.number_field :seats, min: 1, max: 15, class: 'w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 transition', style: '--tw-ring-color:#3A6363', placeholder: 'e.g., 5'
         .field.space-y-2
           = f.label :mileage, 'Total Mileage (km)', class: 'block text-sm font-medium text-gray-700'
-          = f.number_field :mileage, min: 0, class: 'w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition', placeholder: 'e.g., 15000'
+          = f.number_field :mileage, min: 0, class: 'w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 transition', style: '--tw-ring-color:#3A6363', placeholder: 'e.g., 15000'
         .field.space-y-2
           = f.label :daily_milleage, 'Daily Mileage (km)', class: 'block text-sm font-medium text-gray-700'
-          = f.number_field :daily_milleage, min: 0, class: 'w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition', placeholder: 'e.g., 100'
+          = f.number_field :daily_milleage, min: 0, class: 'w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 transition', style: '--tw-ring-color:#3A6363', placeholder: 'e.g., 100'
         .field.space-y-2
           = f.label :weekly_milleage, 'Weekly Mileage (km)', class: 'block text-sm font-medium text-gray-700'
-          = f.number_field :weekly_milleage, min: 0, class: 'w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition', placeholder: 'e.g., 500'
+          = f.number_field :weekly_milleage, min: 0, class: 'w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 transition', style: '--tw-ring-color:#3A6363', placeholder: 'e.g., 500'
         .field.space-y-2
           = f.label :monthly_milleage, 'Monthly Mileage (km)', class: 'block text-sm font-medium text-gray-700'
-          = f.number_field :monthly_milleage, min: 0, class: 'w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition', placeholder: 'e.g., 1500'
+          = f.number_field :monthly_milleage, min: 0, class: 'w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 transition', style: '--tw-ring-color:#3A6363', placeholder: 'e.g., 1500'
         .field.space-y-2
           = f.label :engine_size, 'Engine Size', class: 'block text-sm font-medium text-gray-700'
-          = f.text_field :engine_size, class: 'w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition', placeholder: 'e.g., 2.0L'
+          = f.text_field :engine_size, class: 'w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 transition', style: '--tw-ring-color:#3A6363', placeholder: 'e.g., 2.0L'
 
       / Features Section
-      %h2.text-lg.font-bold.text-blue-800.mb-4.mt-8 Features
+      %h2.text-lg.font-bold.mb-4.mt-8{style: 'color:#2d4f4f'} Features
       .grid.grid-cols-1.md:grid-cols-2.gap-6
         .field.space-y-2
           .flex.items-center
-            = f.check_box :air_conditioning, class: 'h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded'
+            = f.check_box :air_conditioning, class: 'h-4 w-4 border-gray-300 rounded', style: 'accent-color:#3A6363'
             = f.label :air_conditioning, 'Air Conditioning', class: 'ml-2 block text-sm font-medium text-gray-700'
         .field.space-y-2
           .flex.items-center
-            = f.check_box :gps, class: 'h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded'
+            = f.check_box :gps, class: 'h-4 w-4 border-gray-300 rounded', style: 'accent-color:#3A6363'
             = f.label :gps, 'GPS Navigation', class: 'ml-2 block text-sm font-medium text-gray-700'
         .field.space-y-2
           .flex.items-center
-            = f.check_box :sunroof, class: 'h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded'
+            = f.check_box :sunroof, class: 'h-4 w-4 border-gray-300 rounded', style: 'accent-color:#3A6363'
             = f.label :sunroof, 'Sunroof', class: 'ml-2 block text-sm font-medium text-gray-700'
         .field.space-y-2
           .flex.items-center
-            = f.check_box :bluetooth, class: 'h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded'
+            = f.check_box :bluetooth, class: 'h-4 w-4 border-gray-300 rounded', style: 'accent-color:#3A6363'
             = f.label :bluetooth, 'Bluetooth', class: 'ml-2 block text-sm font-medium text-gray-700'
         .field.space-y-2
           .flex.items-center
-            = f.check_box :featured, class: 'h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded'
+            = f.check_box :featured, class: 'h-4 w-4 border-gray-300 rounded', style: 'accent-color:#3A6363'
             = f.label :featured, 'Featured Car', class: 'ml-2 block text-sm font-medium text-gray-700'
         
         .field.space-y-2
           .flex.items-center
-            = f.check_box :with_driver, class: 'h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded'
+            = f.check_box :with_driver, class: 'h-4 w-4 border-gray-300 rounded', style: 'accent-color:#3A6363'
             = f.label :with_driver, 'Rent with Driver', class: 'ml-2 block text-sm font-medium text-gray-700'
 
       / Main Image URL Section
-      %h2.text-lg.font-bold.text-blue-800.mb-4.mt-8 Main Image URL
+      %h2.text-lg.font-bold.mb-4.mt-8{style: 'color:#2d4f4f'} Main Image URL
       .field.space-y-2
         = f.label :main_image_url, 'Main Image URL', class: 'block text-sm font-medium text-gray-700'
-        = f.text_field :main_image_url, class: 'w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition', placeholder: 'https://example.com/car-image.jpg'
+        = f.text_field :main_image_url, class: 'w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 transition', style: '--tw-ring-color:#3A6363', placeholder: 'https://example.com/car-image.jpg'
+
+      / Insurance Section
+      %h2.text-lg.font-bold.mb-4.mt-8{style: 'color:#2d4f4f'} Insurance
+      .field.space-y-2
+        = f.label :insurance_policy, 'Insurance Policy', class: 'block text-sm font-medium text-gray-700'
+        = f.text_field :insurance_policy, class: 'w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 transition', style: '--tw-ring-color:#3A6363', placeholder: @car.insurance_policy.present? ? @car.insurance_policy : 'e.g., Insurance policy details'
 
       / Images Section
-      %h2.text-lg.font-bold.text-blue-800.mb-4.mt-8 Car Images
+      %h2.text-lg.font-bold.mb-4.mt-8{style: 'color:#2d4f4f'} Car Images
       
       / Existing Images Display
       - if @car.images.attached? && @car.images.any?
@@ -122,8 +128,8 @@
       .flex.gap-6.mb-4
         - 5.times do |i|
           .relative.group
-            %div.flex.items-center.justify-center.w-32.h-24.bg-blue-50.rounded-xl.shadow.border-2.border-dashed.border-blue-300.group-hover:border-blue-500.transition-all.duration-200{ id: "plus-card-#{i}" }
-              %i.fas.fa-plus.text-3xl.text-blue-400{ id: "plus-icon-#{i}" }
+            %div.flex.items-center.justify-center.w-32.h-24.rounded-xl.shadow.border-2.border-dashed.transition-all.duration-200{ id: "plus-card-#{i}", style: 'border-color:#3A6363; background-color:#eff5f5' }
+              %i.fas.fa-plus.text-3xl{ id: "plus-icon-#{i}", style: 'color:#3A6363' }
               %img.hidden.absolute.inset-0.w-full.h-full.object-cover.rounded-xl{ id: "preview-img-#{i}" }
             = f.file_field :images, name: "car[images][]", id: "car_image_#{i}", accept: 'image/*', class: 'hidden', data: { image_index: i }
 
@@ -131,18 +137,18 @@
         %p Upload additional images to add to your car. You can upload up to 5 images total.
 
       / Mulkiya Section
-      %h2.text-lg.font-bold.text-blue-800.mb-4.mt-8 Mulkiya (PDF or Image)
+      %h2.text-lg.font-bold.mb-4.mt-8{style: 'color:#2d4f4f'} Mulkiya (PDF or Image)
       - if @car.mulkiya.attached?
         .mb-3
           .flex.items-center.gap-3
-            %i.fas.fa-file.text-blue-500
+            %i.fas.fa-file{style: 'color:#3A6363'}
             %span.text-gray-700 Current file:
-            = link_to (@car.mulkiya.filename.to_s), url_for(@car.mulkiya), target: '_blank', class: 'text-blue-600 underline'
+            = link_to (@car.mulkiya.filename.to_s), url_for(@car.mulkiya), target: '_blank', class: 'underline', style: 'color:#3A6363'
 
       .flex.gap-6.mb-6
         .relative.group
-          %div.flex.items-center.justify-center.w-32.h-24.bg-blue-50.rounded-xl.shadow.border-2.border-dashed.border-blue-300.group-hover:border-blue-500.transition-all.duration-200{id: 'plus-card-mulkiya-edit'}
-            %i.fas.fa-plus.text-3xl.text-blue-400{id: 'plus-icon-mulkiya-edit'}
+          %div.flex.items-center.justify-center.w-32.h-24.rounded-xl.shadow.border-2.border-dashed.transition-all.duration-200{id: 'plus-card-mulkiya-edit', style: 'border-color:#3A6363; background-color:#eff5f5'}
+            %i.fas.fa-plus.text-3xl{id: 'plus-icon-mulkiya-edit', style: 'color:#3A6363'}
             %img.hidden.absolute.inset-0.w-full.h-full.object-cover.rounded-xl{id: 'preview-img-mulkiya-edit'}
             %div.hidden.absolute.inset-0.w-full.h-full.flex.items-center.justify-center.rounded-xl{id: 'preview-file-mulkiya-edit'}
               %i.fas.fa-file-pdf.text-3xl.text-red-500
@@ -153,7 +159,7 @@
 
       / Submit Button
       .flex.justify-end.pt-6
-        = f.submit 'Update Car', class: 'bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg shadow-lg hover:shadow-xl transition-all duration-200'
+        = f.submit 'Update Car', class: 'text-white font-bold py-3 px-8 rounded-lg shadow-lg hover:shadow-xl transition-all duration-200', style: 'background-color:#3A6363'
 
 :javascript
   // Function to remove existing images
