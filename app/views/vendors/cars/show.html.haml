@@ -45,22 +45,22 @@
             .flex.items-center.justify-center.gap-3
               %i.fas.fa-tachometer-alt.text-xl.text-gray-700
               %span.text-gray-800 Mileage Policy
-              %button.text-gray-400.hover:text-gray-600{ "data-bs-toggle" => "modal", "data-bs-target" => "#policyModal", "data-policy" => "mileage" }
+              %button.text-gray-400.hover:text-gray-600{ "data-policy" => "mileage" }
                 %i.fas.fa-info-circle
             .flex.items-center.justify-center.gap-3
               %i.fas.fa-gas-pump.text-xl.text-gray-700
               %span.text-gray-800 Fuel Policy
-              %button.text-gray-400.hover:text-gray-600{ "data-bs-toggle" => "modal", "data-bs-target" => "#policyModal", "data-policy" => "fuel" }
+              %button.text-gray-400.hover:text-gray-600{ "data-policy" => "fuel" }
                 %i.fas.fa-info-circle
             .flex.items-center.justify-center.gap-3
               %i.fas.fa-hand-holding-usd.text-xl.text-gray-700
               %span.text-gray-800 Deposit Policy
-              %button.text-gray-400.hover:text-gray-600{ "data-bs-toggle" => "modal", "data-bs-target" => "#policyModal", "data-policy" => "deposit" }
+              %button.text-gray-400.hover:text-gray-600{ "data-policy" => "deposit" }
                 %i.fas.fa-info-circle
             .flex.items-center.justify-center.gap-3
               %i.fas.fa-file-alt.text-xl.text-gray-700
               %span.text-gray-800 Rental Policy
-              %button.text-gray-400.hover:text-gray-600{ "data-bs-toggle" => "modal", "data-bs-target" => "#policyModal", "data-policy" => "rental" }
+              %button.text-gray-400.hover:text-gray-600{ "data-policy" => "rental" }
                 %i.fas.fa-info-circle
 
       / Insurance Highlights
@@ -347,17 +347,15 @@
           %p.text-gray-500.text-lg No bookings for this car yet.
           %p.text-gray-400.text-sm This car is available for new bookings.
 
-  / Policy Modal (for policy info buttons)
-  #policyModal.modal.fade{"aria-hidden" => "true", "aria-labelledby" => "policyModalLabel", tabindex: "-1"}
-    .modal-dialog.modal-dialog-centered
-      .modal-content.rounded-2xl.shadow-xl.border{style: 'border-color: #cfe5e5'}
-        .modal-header.flex.items-center.justify-between.px-6.py-4
-          %h5#policyModalLabel.modal-title.text-xl.font-bold{style: 'color: #2d4f4f'} Policy Details
-          %button.text-gray-400.hover:text-gray-600.transition{"aria-label" => "Close", "data-bs-dismiss" => "modal", type: "button"}
-            %i.fas.fa-times
-        .modal-body.bg-white.px-6.py-4
-          #policyContent.text-gray-700
-            / Content populated by JavaScript
+  / Right-side Drawer for policy info
+  #policyDrawer.fixed.top-0.right-0.h-full.w-96.bg-white.shadow-2xl.transform.translate-x-full.transition-transform.duration-300.z-50{ 'aria-hidden' => 'true' }
+    .flex.items-center.justify-between.px-5.py-4.border-b
+      %h5#policyDrawerTitle.text-lg.font-bold{style: 'color:#2d4f4f'} Policy Details
+      %button#closePolicyDrawer.text-gray-400.hover:text-gray-600{ type: 'button', 'aria-label' => 'Close' }
+        %i.fas.fa-times
+    .p-5.overflow-y-auto.h-full
+      #policyDrawerContent.text-gray-700
+        / Content populated by JavaScript
 
 :javascript
   // Initialize Swiper with better timing and Turbo support
@@ -411,41 +409,89 @@
     });
   }
 
-  // Policy Modal content
-  document.addEventListener('DOMContentLoaded', function () {
-    const policyContent = {
-      mileage: {
-        title: 'Mileage Policy',
-        content: 'This rental includes limited mileage. Additional charges apply for exceeding the daily mileage limit of ' + (#{@car.daily_milleage || 200}) + ' km per day. Extra mileage is charged at AED 1 per kilometer.'
-      },
-      fuel: {
-        title: 'Fuel Policy',
-        content: 'The vehicle will be provided with a full tank of fuel. You are required to return the vehicle with the same fuel level. If returned with less fuel, you will be charged for refueling at current market rates plus a service fee.'
-      },
-      deposit: {
-        title: 'Deposit Policy',
-        content: 'A security deposit of AED 1500 is required and will be blocked on your credit card. This deposit covers any potential damages, traffic fines, or additional charges. The deposit will be released within 7-10 business days after the rental return, subject to no claims.'
-      },
-      rental: {
-        title: 'Rental Policy',
-        content: 'Minimum rental age is 21 years. A valid UAE driving license is required for UAE residents, or an International Driving Permit for tourists. The renter is responsible for all traffic fines incurred during the rental period. Vehicle must be returned to the same location unless prior arrangements are made.'
-      },
-      min_days: {
-        title: 'Minimum Rental Duration',
-        content: 'The minimum rental period for this vehicle is 5 days. Shorter durations are not eligible for booking and pricing is calculated on a per-day basis.'
-      }
-    };
+  // Policy Drawer content (Turbo-friendly, delegated listeners)
+  (function() {
+    if (window._policyDrawerInit) return; // avoid duplicate bindings
+    window._policyDrawerInit = true;
 
-    document.querySelectorAll('[data-policy]').forEach(function(button) {
-      button.addEventListener('click', function() {
-        const type = this.getAttribute('data-policy');
-        const policy = policyContent[type];
+    function getPolicyContent() {
+      return {
+        mileage: {
+          title: 'Mileage Policy',
+          content: 'This rental includes limited mileage. Additional charges apply for exceeding the daily mileage limit of ' + (#{@car.daily_milleage || 200}) + ' km per day. Extra mileage is charged at AED 1 per kilometer.'
+        },
+        fuel: {
+          title: 'Fuel Policy',
+          content: 'The vehicle will be provided with a full tank of fuel. You are required to return the vehicle with the same fuel level. If returned with less fuel, you will be charged for refueling at current market rates plus a service fee.'
+        },
+        deposit: {
+          title: 'Deposit Policy',
+          content: 'A security deposit of AED 1500 is required and will be blocked on your credit card. This deposit covers any potential damages, traffic fines, or additional charges. The deposit will be released within 7-10 business days after the rental return, subject to no claims.'
+        },
+        rental: {
+          title: 'Rental Policy',
+          content: 'Minimum rental age is 21 years. A valid UAE driving license is required for UAE residents, or an International Driving Permit for tourists. The renter is responsible for all traffic fines incurred during the rental period. Vehicle must be returned to the same location unless prior arrangements are made.'
+        },
+        min_days: {
+          title: 'Minimum Rental Duration',
+          content: 'The minimum rental period for this vehicle is 5 days. Shorter durations are not eligible for booking and pricing is calculated on a per-day basis.'
+        }
+      };
+    }
+
+    function openPolicyDrawer(title, content) {
+      const drawer = document.getElementById('policyDrawer');
+      const titleEl = document.getElementById('policyDrawerTitle');
+      const contentEl = document.getElementById('policyDrawerContent');
+      if (!drawer || !titleEl || !contentEl) return;
+      titleEl.textContent = title;
+      contentEl.innerHTML = '<p>' + content + '</p>';
+      drawer.setAttribute('aria-hidden', 'false');
+      drawer.classList.remove('translate-x-full');
+    }
+
+    function closePolicyDrawer() {
+      const drawer = document.getElementById('policyDrawer');
+      if (!drawer) return;
+      drawer.setAttribute('aria-hidden', 'true');
+      drawer.classList.add('translate-x-full');
+    }
+
+    function bindPolicyDrawer() {
+      const closeBtn = document.getElementById('closePolicyDrawer');
+      if (closeBtn && !closeBtn._bound) {
+        closeBtn.addEventListener('click', closePolicyDrawer);
+        closeBtn._bound = true;
+      }
+
+      document.addEventListener('click', function(e) {
+        const trigger = e.target.closest && e.target.closest('[data-policy]');
+        if (!trigger) return;
+        const type = trigger.getAttribute('data-policy');
+        const policy = getPolicyContent()[type];
         if (!policy) return;
-        document.getElementById('policyModalLabel').textContent = policy.title;
-        document.getElementById('policyContent').innerHTML = '<p>' + policy.content + '</p>';
+        e.preventDefault();
+        openPolicyDrawer(policy.title, policy.content);
       });
-    });
-  });
+
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+          closePolicyDrawer();
+        }
+      });
+    }
+
+    function init() {
+      bindPolicyDrawer();
+    }
+
+    document.addEventListener('DOMContentLoaded', init);
+    document.addEventListener('turbo:load', init);
+    document.addEventListener('turbo:render', init);
+    if (document.readyState !== 'loading') {
+      setTimeout(init, 0);
+    }
+  })();
 
   // Multiple initialization triggers for different scenarios
   document.addEventListener('DOMContentLoaded', initializeSwiper);
