@@ -100,9 +100,10 @@ class CarRentalController < ApplicationController
     ]
 
     # Build brand logos dynamically from app/assets/car_logo (per requirement)
-    brands_dir = Rails.root.join('app', 'assets', 'car_logo')
+    brands_dir = Rails.root.join('app', 'assets', 'images', 'car_logo')
+
     @brand_logos = Dir.glob(brands_dir.join('*.png')).map do |path|
-      filename = File.basename(path) # e.g., 'mercedes-benz.png'
+      filename = File.basename(path)
       name = filename.sub('.png', '').tr('-', ' ').split.map(&:capitalize).join(' ')
       { name: name, image: "car_logo/#{filename}" }
     end.sort_by { |b| b[:name] }

@@ -1,9 +1,18 @@
-# Clear existing data
+# Clear existing data in FK-safe order
 puts "Clearing existing data..."
-Booking.destroy_all
-Car.destroy_all
-User.destroy_all
-Vendor.destroy_all
+
+# Hard dependencies first
+Transaction.destroy_all rescue nil
+Booking.destroy_all rescue nil
+Document.destroy_all rescue nil
+
+# Then parents
+Car.destroy_all rescue nil
+Vendor.destroy_all rescue nil
+User.destroy_all rescue nil
+
+# Optional ancillary tables
+InvitedVendor.destroy_all rescue nil
 
 # Create 2 users
 puts "Creating users..."
