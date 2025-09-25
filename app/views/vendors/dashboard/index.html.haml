@@ -5,10 +5,10 @@
   .bg-white.rounded-2xl.shadow-xl.p-8.mb-8
     .flex.flex-col.md:flex-row.md:items-center.md:justify-between.gap-4
       .flex-1
-        %h1.text-4xl.font-extrabold.text-blue-900.mb-2 Welcome, #{current_vendor.company_name}!
+        %h1.text-4xl.font-extrabold.mb-2{style: 'color: #3a6363'} Welcome, #{current_vendor.company_name}!
         %p.text-lg.text-gray-600 Manage your car rental business from this dashboard
       .flex.gap-3
-        = link_to edit_vendor_path, class: 'bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded-lg transition flex items-center gap-2' do
+        = link_to edit_vendor_path, class: 'text-white font-semibold px-6 py-3 rounded-lg transition flex items-center gap-2 hover:opacity-90', style: 'background-color: #3a6363' do
           %i.fas.fa-edit
           Edit Profile
 
@@ -39,7 +39,7 @@
   .grid.grid-cols-1.lg:grid-cols-2.gap-8
     / Vendor Details Card
     .bg-white.rounded-xl.shadow-lg.p-6
-      %h2.text-xl.font-bold.text-blue-900.mb-4.flex.items-center.gap-2
+      %h2.text-xl.font-bold.mb-4.flex.items-center.gap-2{style: 'color: #3a6363'}
         %i.fas.fa-user.text-blue-500
         Company Information
       .space-y-4
@@ -66,33 +66,33 @@
             %span.text-gray-400 Not provided
       
       .mt-6.pt-4.border-t.border-gray-100
-        = link_to edit_vendor_path, class: 'w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 rounded-lg transition flex items-center justify-center gap-2' do
+        = link_to edit_vendor_path, class: 'w-full text-white font-semibold px-4 py-2 rounded-lg transition flex items-center justify-center gap-2 hover:opacity-90', style: 'background-color: #3a6363' do
           %i.fas.fa-edit
           Edit Company Information
 
     / Quick Actions Card
     .bg-white.rounded-xl.shadow-lg.p-6
-      %h2.text-xl.font-bold.text-blue-900.mb-4.flex.items-center.gap-2
+      %h2.text-xl.font-bold.mb-4.flex.items-center.gap-2{style: 'color: #3a6363'}
         %i.fas.fa-bolt.text-blue-500
         Quick Actions
       .space-y-3
-        = link_to vendors_cars_path, class: 'w-full bg-blue-50 hover:bg-blue-100 text-blue-700 font-medium px-4 py-3 rounded-lg transition flex items-center justify-center gap-2' do
+        = link_to vendors_cars_path, class: 'w-full text-white font-medium px-4 py-3 rounded-lg transition flex items-center justify-center gap-2 hover:opacity-90', style: 'background-color: #3a6363' do
           %i.fas.fa-car
           Manage Cars
-        = link_to vendors_bookings_path, class: 'w-full bg-green-50 hover:bg-green-100 text-green-700 font-medium px-4 py-3 rounded-lg transition flex items-center justify-center gap-2' do
+        = link_to vendors_bookings_path, class: 'w-full text-white font-medium px-4 py-3 rounded-lg transition flex items-center justify-center gap-2 hover:opacity-90', style: 'background-color: #3a6363' do
           %i.fas.fa-calendar-alt
           View Bookings
-        = link_to new_vendors_car_path, class: 'w-full bg-purple-50 hover:bg-purple-100 text-purple-700 font-medium px-4 py-3 rounded-lg transition flex items-center justify-center gap-2' do
+        = link_to new_vendors_car_path, class: 'w-full text-white font-medium px-4 py-3 rounded-lg transition flex items-center justify-center gap-2 hover:opacity-90', style: 'background-color: #3a6363' do
           %i.fas.fa-plus
           Add New Car
-        = link_to vendors_payments_path, class: 'w-full bg-yellow-50 hover:bg-yellow-100 text-yellow-700 font-medium px-4 py-3 rounded-lg transition flex items-center justify-center gap-2' do
+        = link_to vendors_payments_path, class: 'w-full text-white font-medium px-4 py-3 rounded-lg transition flex items-center justify-center gap-2 hover:opacity-90', style: 'background-color: #3a6363' do
           %i.fas.fa-credit-card
           Payment History
 
   / Recent Activity Section
   .mt-8
     .bg-white.rounded-xl.shadow-lg.p-6
-      %h2.text-xl.font-bold.text-blue-900.mb-4.flex.items-center.gap-2
+      %h2.text-xl.font-bold.mb-4.flex.items-center.gap-2{style: 'color: #3a6363'}
         %i.fas.fa-history.text-blue-500
         Recent Activity
       - recent_bookings = Booking.where(car_id: current_vendor.cars.pluck(:id)).includes(:user, :car).order(created_at: :desc).limit(5)

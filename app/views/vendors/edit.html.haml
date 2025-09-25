@@ -2,7 +2,7 @@
   = render partial: "vendors/navbar"
   
   .bg-white.rounded-2xl.shadow-xl.p-8
-    %h1.text-4xl.font-extrabold.text-blue-900.mb-6 Edit Profile
+    %h1.text-4xl.font-extrabold.mb-6{style: 'color: #3a6363'} Edit Profile
     %p.text-lg.text-gray-700.mb-8 Update your vendor profile information below.
 
     / Flash Messages
@@ -15,7 +15,7 @@
 
     = form_with model: @vendor, local: true, class: 'space-y-8' do |f|
       / Personal Information Section
-      %h2.text-xl.font-bold.text-blue-800.mb-6 Personal Information
+      %h2.text-xl.font-bold.mb-6{style: 'color: #3a6363'} Personal Information
       .grid.grid-cols-1.md:grid-cols-2.gap-6
         .field.space-y-2
           = f.label :first_name, 'First Name *', class: 'block text-sm font-medium text-gray-700'
@@ -35,7 +35,7 @@
           - if @vendor.errors[:email].any?
             %p.text-red-600.text-sm.mt-1= @vendor.errors[:email].join(', ')
 
-      %h2.text-xl.font-bold.text-blue-800.mb-6 Emirates ID
+      %h2.text-xl.font-bold.mb-6{style: 'color: #3a6363'} Emirates ID
       .grid.grid-cols-1.md:grid-cols-2.gap-6
         .field.space-y-2
           = f.label :emirates_id, 'Emirates ID', class: 'block text-sm font-medium text-gray-700'
@@ -55,7 +55,7 @@
             %p.text-red-600.text-sm.mt-1= @vendor.errors[:phone].join(', ')
 
       / Company Information Section
-      %h2.text-xl.font-bold.text-blue-800.mb-6.mt-8 Company Information
+      %h2.text-xl.font-bold.mb-6.mt-8{style: 'color: #3a6363'} Company Information
       .grid.grid-cols-1.md:grid-cols-2.gap-6
         .field.space-y-2.md:col-span-2
           = f.label :company_name, 'Company Name *', class: 'block text-sm font-medium text-gray-700'
@@ -88,7 +88,7 @@
             %p.text-red-600.text-sm.mt-1= @vendor.errors[:description].join(', ')
 
       / Account Information Section
-      %h2.text-xl.font-bold.text-blue-800.mb-6.mt-8 Account Information
+      %h2.text-xl.font-bold.mb-6.mt-8{style: 'color: #3a6363'} Account Information
       .bg-gray-50.rounded-lg.p-6
         .grid.grid-cols-1.md:grid-cols-2.gap-6
           .field.space-y-2
@@ -109,5 +109,5 @@
 
       / Action Buttons
       .flex.flex-col.sm:flex-row.gap-4.pt-8
-        = f.submit 'Update Profile', class: 'bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg shadow-lg hover:shadow-xl transition-all duration-200'
+        = f.submit 'Update Profile', class: 'text-white font-bold py-3 px-8 rounded-lg shadow-lg hover:shadow-xl transition-all duration-200 hover:opacity-90', style: 'background-color: #3a6363'
         = link_to 'Cancel', vendor_path(@vendor), class: 'bg-gray-500 hover:bg-gray-600 text-white font-bold py-3 px-8 rounded-lg shadow-lg hover:shadow-xl transition-all duration-200 text-center' 
