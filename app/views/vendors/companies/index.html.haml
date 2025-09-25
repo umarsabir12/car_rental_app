@@ -1,0 +1,26 @@
+.max-w-7xl.mx-auto.px-4.sm:px-6.lg:px-8.py-10
+  %h1.text-3xl.font-bold.mb-6{style: 'color: #2d4f4f'} Registered Companies
+  - if @companies.blank?
+    .bg-white.rounded-xl.shadow-sm.p-8.text-center.text-gray-600
+      No companies found.
+  - else
+    .grid.grid-cols-1.sm:grid-cols-2.lg:grid-cols-3.gap-6
+      - @companies.each do |company|
+        .bg-white.border.rounded-xl.overflow-hidden.hover:shadow-md.transition-shadow
+          .p-5.flex.items-center.gap-4
+            - logo_url = nil
+            -# Try to find a sample vendor's company_logo if present
+            - sample_vendor = Vendor.where(company_name: company.company_name).where.not(company_logo: [nil, '']).first
+            - logo_url = sample_vendor&.company_logo
+            - if logo_url.present?
+              %img.w-14.h-14.object-cover.rounded-full{ src: logo_url, alt: company.company_name }
+            - else
+              .w-14.h-14.bg-gray-200.rounded-full.flex.items-center.justify-center
+                %i.fas.fa-building.text-gray-500
+            .flex-1
+              %h3.font-semibold.text-gray-900= company.company_name
+              .text-sm.text-gray-500
+                = pluralize(company.vendors_count.to_i, 'Vendor')
+                %span.mx-1 •
+                = pluralize(company.total_cars.to_i, 'Car')
+

@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :companies, only: [:index]
   require 'sidekiq/web'
   require 'sidekiq/cron/web'
   authenticate :admin do
@@ -83,6 +84,7 @@ Rails.application.routes.draw do
 
   namespace :vendors do
     get 'dashboard', to: 'dashboard#index'
+    get 'companies', to: 'companies#index', as: :companies
     resources :cars do
       member do
         delete :remove_image
