@@ -16,6 +16,6 @@ class BookingsController < ApplicationController
 
   private
   def booking_params
-    params.require(:booking).permit(:car_id, :start_date, :end_date, :payment_mode)
+    params.require(:booking).permit(:car_id, :start_date, :end_date, :payment_mode, :selected_period, :selected_price, :selected_mileage_limit)
   end
 end 

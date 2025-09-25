@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_09_24_171306) do
+ActiveRecord::Schema[7.2].define(version: 2025_09_25_082920) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -70,6 +70,9 @@ ActiveRecord::Schema[7.2].define(version: 2025_09_24_171306) do
     t.string "stripe_session_id"
     t.string "stripe_payment_intent_id"
     t.integer "payment_mode", default: 1, null: false
+    t.string "selected_period"
+    t.decimal "selected_price", precision: 10, scale: 2
+    t.integer "selected_mileage_limit"
     t.index ["car_id"], name: "index_bookings_on_car_id"
     t.index ["payment_mode"], name: "index_bookings_on_payment_mode"
     t.index ["user_id"], name: "index_bookings_on_user_id"
@@ -108,6 +111,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_09_24_171306) do
     t.integer "monthly_milleage", default: 0
     t.string "insurance_policy_number", default: ""
     t.string "insurance_policy", default: ""
+    t.decimal "additional_mileage_charge", precision: 10, scale: 2, default: "0.0"
     t.index ["stripe_price_id"], name: "index_cars_on_stripe_price_id"
     t.index ["stripe_product_id"], name: "index_cars_on_stripe_product_id"
     t.index ["vendor_id"], name: "index_cars_on_vendor_id"
@@ -131,7 +135,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_09_24_171306) do
     t.string "invite_token"
     t.boolean "invite_sent", default: false
     t.string "status", default: "pending"
-    t.datetime "expires_at", default: "2025-10-01 09:25:25"
+    t.datetime "expires_at", default: "2025-09-25 09:01:03"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end

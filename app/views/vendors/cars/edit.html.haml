@@ -63,6 +63,9 @@
           = f.label :monthly_milleage, 'Monthly Mileage (km)', class: 'block text-sm font-medium text-gray-700'
           = f.number_field :monthly_milleage, min: 0, class: 'w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 transition', style: '--tw-ring-color:#3A6363', placeholder: 'e.g., 1500'
         .field.space-y-2
+          = f.label :additional_mileage_charge, 'Additional Mileage Charge (AED)', class: 'block text-sm font-medium text-gray-700'
+          = f.number_field :additional_mileage_charge, step: 0.01, min: 0, class: 'w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 transition', style: '--tw-ring-color:#3A6363', placeholder: 'e.g., 1.00'
+        .field.space-y-2
           = f.label :engine_size, 'Engine Size', class: 'block text-sm font-medium text-gray-700'
           = f.text_field :engine_size, class: 'w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 transition', style: '--tw-ring-color:#3A6363', placeholder: 'e.g., 2.0L'
 
