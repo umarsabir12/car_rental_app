@@ -24,6 +24,28 @@ class Car < ApplicationRecord
     end
   end
 
+  # Returns true if the car is available for the entire period starting at start_date
+  # period_type: 'daily' | 'weekly' | 'monthly'
+  def available_for_period?(start_date, period_type)
+    return false if start_date.blank?
+
+    days_to_check = case period_type
+                    when 'daily' then 1
+                    when 'weekly' then 7
+                    when 'monthly' then 30
+                    else 1
+                    end
+
+    period_start = start_date.to_date
+    period_end = period_start + (days_to_check - 1).days
+
+    overlapping = bookings.where.not(status: 'cancelled').where(
+      '(start_date, end_date) OVERLAPS (?, ?)', period_start, period_end
+    )
+
+    overlapping.none?
+  end
+
   private
 
   def mulkiya_presence_on_create

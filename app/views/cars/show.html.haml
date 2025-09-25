@@ -109,24 +109,80 @@
               %i.fas.fa-phone.mr-2
               Call
 
-        / Pricing Card
-        .bg-white.rounded-xl.shadow-sm.p-6.mb-6
+        / Pricing Card - Three-tier selector
+        .bg-white.rounded-xl.shadow-sm.p-6.mb-6{ "data-controller" => "pricing-selector" }
           .text-center.border-b.pb-4.mb-4
-            .text-3xl.font-bold{style: 'color: #3a6363'}
-              = @car.daily_price ? "AED #{@car.daily_price}" : 'AED 0'
-            .text-sm.text-gray-500 /day
-            .text-xs.text-gray-400.mt-1 Excluded mileage range
+            %h3.text-lg.font-semibold.text-gray-800 Choose your plan
+          .grid.grid-cols-1.sm:grid-cols-3.gap-3.mb-4
+            - daily_price = @car.respond_to?(:daily_price) && @car.daily_price || 0
+            - weekly_price = @car.respond_to?(:weekly_price) && @car.weekly_price || 0
+            - monthly_price = @car.respond_to?(:monthly_price) && @car.monthly_price || 0
+            - daily_mileage = @car.respond_to?(:daily_mileage) && @car.daily_mileage || @car.try(:daily_milleage) || 200
+            - weekly_mileage = @car.respond_to?(:weekly_mileage) && @car.weekly_mileage || 1400
+            - monthly_mileage = @car.respond_to?(:monthly_mileage) && @car.monthly_mileage || 6000
+            - extra_charge = @car.respond_to?(:additional_mileage_charge) && @car.additional_mileage_charge || 1
 
+            / Daily Card
+            .cursor-pointer.border.rounded-xl.p-4.text-center.transition.shadow-sm.hover:shadow{ 
+              "data-action" => "click->pricing-selector#select",
+              "data-pricing-selector-target" => "card",
+              "data-price" => daily_price,
+              "data-period" => "daily",
+              "data-mileage" => daily_mileage
+            }
+              %div.text-xs.font-medium.uppercase.text-gray-500.mb-1 Daily
+              %div.text-2xl.font-bold{style: 'color: #3a6363'} AED
+              %div.text-3xl.font-extrabold{style: 'color: #3a6363'}= daily_price
+              %div.text-xs.text-gray-500.mt-1 /day
+              %div.mt-2.text-xs.text-gray-600 Includes
+              %div.text-sm.font-medium= "#{daily_mileage} km"
+
+            / Weekly Card
+            .cursor-pointer.border.rounded-xl.p-4.text-center.transition.shadow-sm.hover:shadow{ 
+              "data-action" => "click->pricing-selector#select",
+              "data-pricing-selector-target" => "card",
+              "data-price" => weekly_price,
+              "data-period" => "weekly",
+              "data-mileage" => weekly_mileage
+            }
+              %div.text-xs.font-medium.uppercase.text-gray-500.mb-1 Weekly
+              %div.text-2xl.font-bold{style: 'color: #3a6363'} AED
+              %div.text-3xl.font-extrabold{style: 'color: #3a6363'}= weekly_price
+              %div.text-xs.text-gray-500.mt-1 /week
+              %div.mt-2.text-xs.text-gray-600 Includes
+              %div.text-sm.font-medium= "#{weekly_mileage} km"
+
+            / Monthly Card
+            .cursor-pointer.border.rounded-xl.p-4.text-center.transition.shadow-sm.hover:shadow{ 
+              "data-action" => "click->pricing-selector#select",
+              "data-pricing-selector-target" => "card",
+              "data-price" => monthly_price,
+              "data-period" => "monthly",
+              "data-mileage" => monthly_mileage
+            }
+              %div.text-xs.font-medium.uppercase.text-gray-500.mb-1 Monthly
+              %div.text-2xl.font-bold{style: 'color: #3a6363'} AED
+              %div.text-3xl.font-extrabold{style: 'color: #3a6363'}= monthly_price
+              %div.text-xs.text-gray-500.mt-1 /month
+              %div.mt-2.text-xs.text-gray-600 Includes
+              %div.text-sm.font-medium= "#{monthly_mileage} km"
+
+          / Mileage and charge info
           .space-y-3.text-sm
             .flex.justify-between
-              %span Additional mileage charge
-              %span AED 1 /km
+              %span Included mileage limit
+              %span{ id: "includedMileageText", "data-pricing-selector-target" => "includedMileage" }= "#{daily_mileage} km"
             .flex.justify-between
-              %span Security Deposit
-              %span AED 1500
-          
+              %span Additional mileage charge
+              %span{ id: "additionalMileageText", "data-pricing-selector-target" => "additionalCharge" }= "AED #{extra_charge} /km"
+
+          / Hidden inputs for booking submission
+          = hidden_field_tag :selected_period, "daily", id: "selectedPeriodInput", "data-pricing-selector-target" => "selectedPeriod"
+          = hidden_field_tag :selected_price, daily_price, id: "selectedPriceInput", "data-pricing-selector-target" => "selectedPrice"
+          = hidden_field_tag :selected_mileage_limit, daily_mileage, id: "selectedMileageInput", "data-pricing-selector-target" => "selectedMileage"
+
           .border-t.pt-4.mt-4
-            .text-sm.text-gray-600.mb-4 Required in 1 day rental
+            %div{ id: "requirementText", "data-pricing-selector-target" => "requirement", class: "text-sm text-gray-600 mb-4" } Required in 1 day rental
             %button.w-full.py-3.px-4.rounded-lg.text-white.font-semibold{"data-bs-toggle" => "modal", "data-bs-target" => "#bookingModal", style: 'background-color: #3a6363'}
               Book This Car
 
@@ -385,10 +441,16 @@
         const carId = "#{@car.id}";
         const startDate = startInput.value;
         const endDate = endInput.value;
+        const selectedPeriod = document.getElementById("selectedPeriodInput")?.value || "daily";
+        const selectedPrice = document.getElementById("selectedPriceInput")?.value || "0";
+        const selectedMileage = document.getElementById("selectedMileageInput")?.value || "0";
         const queryParams = new URLSearchParams({
           car_id: carId,
           start_date: startDate,
-          end_date: endDate
+          end_date: endDate,
+          selected_period: selectedPeriod,
+          selected_price: selectedPrice,
+          selected_mileage_limit: selectedMileage
         });
         window.location.href = "/users/sign_in?" + queryParams.toString();
       });
@@ -406,6 +468,9 @@
         formData.append('booking[car_id]', "#{@car.id}");
         formData.append('booking[start_date]', startInput.value);
         formData.append('booking[end_date]', endInput.value);
+        formData.append('booking[selected_period]', document.getElementById("selectedPeriodInput")?.value || 'daily');
+        formData.append('booking[selected_price]', document.getElementById("selectedPriceInput")?.value || '0');
+        formData.append('booking[selected_mileage_limit]', document.getElementById("selectedMileageInput")?.value || '0');
         fetch('/bookings', {
           method: 'POST',
           body: formData,
@@ -482,10 +547,16 @@
         const carId = "#{@car.id}";
         const startDate = startInput.value;
         const endDate = endInput.value;
+        const selectedPeriod = document.getElementById("selectedPeriodInput")?.value || "daily";
+        const selectedPrice = document.getElementById("selectedPriceInput")?.value || "0";
+        const selectedMileage = document.getElementById("selectedMileageInput")?.value || "0";
         const queryParams = new URLSearchParams({
           car_id: carId,
           start_date: startDate,
-          end_date: endDate
+          end_date: endDate,
+          selected_period: selectedPeriod,
+          selected_price: selectedPrice,
+          selected_mileage_limit: selectedMileage
         });
         window.location.href = "/users/sign_in?" + queryParams.toString();
       });
@@ -503,6 +574,9 @@
         formData.append('booking[car_id]', "#{@car.id}");
         formData.append('booking[start_date]', startInput.value);
         formData.append('booking[end_date]', endInput.value);
+        formData.append('booking[selected_period]', document.getElementById("selectedPeriodInput")?.value || 'daily');
+        formData.append('booking[selected_price]', document.getElementById("selectedPriceInput")?.value || '0');
+        formData.append('booking[selected_mileage_limit]', document.getElementById("selectedMileageInput")?.value || '0');
         fetch('/bookings', {
           method: 'POST',
           body: formData,

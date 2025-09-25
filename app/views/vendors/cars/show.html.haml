@@ -108,6 +108,9 @@
           .flex.justify-between.py-2.border-b.border-gray-100
             %span.font-medium.text-gray-600 Monthly Price
             %span.text-gray-900= @car.monthly_price ? number_to_currency(@car.monthly_price) : 'N/A'
+          .flex.justify-between.py-2.border-b.border-gray-100
+            %span.font-medium.text-gray-600 Additional Mileage Charge
+            %span.text-gray-900= @car.additional_mileage_charge ? number_to_currency(@car.additional_mileage_charge) : 'N/A'
 
       / Specifications Card
       .bg-white.rounded-xl.shadow-lg.p-6
