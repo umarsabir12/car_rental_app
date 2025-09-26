@@ -25,6 +25,6 @@ module CarRental
     # config.eager_load_paths << Rails.root.join("extras")
     config.autoload_paths << Rails.root.join('app/services')
     config.eager_load_paths << Rails.root.join('app/services')
-    config.active_job.queue_adapter = :sidekiq
+    config.active_job.queue_adapter = :inline
   end
 end

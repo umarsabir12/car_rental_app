@@ -3,7 +3,7 @@ class CheckExpiredEmiratesIdsJob < ApplicationJob
 
   def perform
     Vendor.with_expired_emirates_id.find_each do |vendor|
-      VendorMailer.emirates_id_expired_email(vendor).deliver_later
+      VendorMailer.emirates_id_expired_email(vendor).deliver_now
     end
   end
 end
