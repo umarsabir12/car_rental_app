@@ -15,7 +15,7 @@ class Vendors::CarsController < ApplicationController
   end
 
   def create
-    @car = current_vendor.cars.build(car_params)
+    @car = current_vendor.cars.build(car_params.except(:mulkiya))
     
     # Validate that at least one image is uploaded
     if params[:car][:images].blank? || params[:car][:images].all?(&:blank?)
@@ -78,14 +78,17 @@ class Vendors::CarsController < ApplicationController
       # Attach/replace mulkiya if provided
       if params[:car][:mulkiya].present?
         if @car.car_document.present?
+          @car.car_document.mulkiya.purge if @car.car_document.mulkiya.attached?
           @car.car_document.mulkiya.attach(params[:car][:mulkiya])
           @car.car_document.document_status = :pending
+          @car.car_document.save!
         else
-          @car.car_document = CarDocument.new
-          @car.car_document.mulkiya.attach(params[:car][:mulkiya])
-          @car.car_document.document_status = :pending
+          car_document = CarDocument.new
+          car_document.mulkiya.attach(params[:car][:mulkiya])
+          car_document.document_status = :pending
+          car_document.car = @car
+          car_document.save!
         end
-        @car.car_document.save
       end
 
       redirect_to vendors_car_path(@car), notice: 'Car was successfully updated.'
