@@ -1,5 +1,0 @@
-emirates_id_expiry_checker:
-  cron: "0 3 * * *"
-  class: "CheckExpiredEmiratesIdsJob"
-  queue: default
-
