@@ -1,0 +1,15 @@
+.container.mx-auto.max-w-4xl.p-8
+  .bg-white.rounded-2xl.shadow-xl.p-8
+    %h1.text-2xl.font-bold.text-blue-900.mb-4 Car Document
+    %p.text-gray-700.mb-6= @car_document.car&.full_name
+
+    - if @car_document.mulkiya.attached?
+      .mb-6
+        %p.text-sm.text-gray-600.mb-2 Attached file:
+        = link_to 'Open in new window', url_for(@car_document.mulkiya), target: '_blank', rel: 'noopener', class: 'text-blue-700 underline'
+
+    .flex.gap-3
+      = button_to 'Approve', approve_admin_car_document_path(@car_document), method: :patch, class: 'bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded'
+      = button_to 'Reject', reject_admin_car_document_path(@car_document), method: :post, class: 'bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded'
+
+

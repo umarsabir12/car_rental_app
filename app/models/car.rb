@@ -1,16 +1,16 @@
 class Car < ApplicationRecord
   belongs_to :vendor, optional: true
   has_many_attached :images
-  has_one_attached :mulkiya
   has_many :bookings
-  after_create :create_stripe_product, :create_stripe_price
-  validates :mulkiya, presence: { message: 'is required for all cars' }
-  validates :images, presence: { message: 'at least one image is required' }
-  validate :mulkiya_presence_on_create, on: :create
-  validate :mulkiya_content_type
-  validate :images_presence_on_create, on: :create
+  has_one :car_document
 
+  validates :images, presence: { message: 'at least one image is required' }
+  validate :images_presence_on_create, on: :create
+  
+  after_create :create_stripe_product, :create_stripe_price
+  
   scope :available, -> { where(status: 'available') }
+
   def full_name
     "#{brand} #{model} (#{year})"
   end
@@ -97,32 +97,6 @@ class Car < ApplicationRecord
   def images_presence_on_create
     if new_record? && images.attached? == false
       errors.add(:images, 'at least one image must be uploaded before creating the car')
-    end
-  end
-
-  def mulkiya_presence_on_create
-    if new_record? && !mulkiya.attached?
-      errors.add(:mulkiya, 'must be uploaded before creating the car')
-    end
-  end
-
-  def mulkiya_content_type
-    return unless mulkiya.attached?
-
-    allowed_types = [
-      'application/pdf',
-      'image/jpeg',
-      'image/jpg',
-      'image/png',
-      'image/webp',
-      'image/heic',
-      'image/heif',
-      'image/heic-sequence',
-      'image/heif-sequence'
-    ]
-
-    unless allowed_types.include?(mulkiya.content_type)
-      errors.add(:mulkiya, 'must be a PDF or an image (JPEG, PNG, WEBP)')
     end
   end
 
