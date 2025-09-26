@@ -141,12 +141,12 @@
 
       / Mulkiya Section
       %h2.text-lg.font-bold.mb-4.mt-8{style: 'color:#2d4f4f'} Mulkiya (PDF or Image)
-      - if @car.mulkiya.attached?
+      - if @car.car_document.present? && @car.car_document.mulkiya.attached?
         .mb-3
           .flex.items-center.gap-3
             %i.fas.fa-file{style: 'color:#3A6363'}
             %span.text-gray-700 Current file:
-            = link_to (@car.mulkiya.filename.to_s), url_for(@car.mulkiya), target: '_blank', class: 'underline', style: 'color:#3A6363'
+            = link_to (@car.car_document.mulkiya.filename.to_s), url_for(@car.car_document.mulkiya), target: '_blank', class: 'underline', style: 'color:#3A6363'
 
       .flex.gap-6.mb-6
         .relative.group

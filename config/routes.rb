@@ -80,6 +80,12 @@ Rails.application.routes.draw do
         post :reject
       end
     end
+    resources :car_documents, only: [:show] do
+      member do
+        patch :approve
+        post :reject
+      end
+    end
   end
 
   namespace :vendors do

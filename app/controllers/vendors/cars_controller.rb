@@ -15,7 +15,7 @@ class Vendors::CarsController < ApplicationController
   end
 
   def create
-    @car = current_vendor.cars.build(car_params)
+    @car = current_vendor.cars.build(car_params.except(:mulkiya))
     
     # Validate that at least one image is uploaded
     if params[:car][:images].blank? || params[:car][:images].all?(&:blank?)
@@ -32,8 +32,13 @@ class Vendors::CarsController < ApplicationController
     end
     
     # Attach mulkiya before save so validations pass
-    @car.mulkiya.attach(params[:car][:mulkiya]) if params[:car][:mulkiya].present?
-    
+    if params[:car][:mulkiya].present?
+      @car.car_document = CarDocument.new
+      @car.car_document.mulkiya.attach(params[:car][:mulkiya]) 
+      @car.car_document.document_status = :pending
+      @car.car_document.save
+    end
+
     if @car.save
       redirect_to vendors_car_path(@car), notice: 'Car was successfully created.'
     else
@@ -69,11 +74,23 @@ class Vendors::CarsController < ApplicationController
       params[:car].delete(:images)
     end
     
-    if @car.update(car_params)
+    if @car.update!(car_params.except(:mulkiya))
       # Attach/replace mulkiya if provided
       if params[:car][:mulkiya].present?
-        @car.mulkiya.attach(params[:car][:mulkiya])
+        if @car.car_document.present?
+          @car.car_document.mulkiya.purge if @car.car_document.mulkiya.attached?
+          @car.car_document.mulkiya.attach(params[:car][:mulkiya])
+          @car.car_document.document_status = :pending
+          @car.car_document.save!
+        else
+          car_document = CarDocument.new
+          car_document.mulkiya.attach(params[:car][:mulkiya])
+          car_document.document_status = :pending
+          car_document.car = @car
+          car_document.save!
+        end
       end
+
       redirect_to vendors_car_path(@car), notice: 'Car was successfully updated.'
     else
       render :edit
@@ -118,7 +135,7 @@ class Vendors::CarsController < ApplicationController
         :model, :brand, :category, :color, :year, :daily_price, :weekly_price, :monthly_price, :status, :description,
         :transmission, :fuel_type, :seats, :mileage, :engine_size,
         :air_conditioning, :gps, :sunroof, :bluetooth, :daily_milleage, :weekly_milleage, :monthly_milleage, :featured,
-        :with_driver, :main_image_url, :mulkiya, :insurance_policy, :additional_mileage_charge, images: []
+        :with_driver, :main_image_url, :insurance_policy, :additional_mileage_charge, :mulkiya, images: []
       )
     end
 end 

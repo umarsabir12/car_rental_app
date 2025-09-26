@@ -47,11 +47,26 @@
             %strong Bluetooth:
             = @car.bluetooth ? 'Yes' : 'No'
           %div
-            %strong USB Ports:
-            = @car.usb_ports
-          %div
             %strong Featured:
             = @car.featured ? 'Yes' : 'No'
+          %div
+            %strong With Driver:
+            = @car.with_driver ? 'Yes' : 'No'
+          %div
+            %strong Insurance Policy:
+            = @car.insurance_policy
+          %div
+            %strong Additional Mileage Charge:
+            = @car.additional_mileage_charge ? number_to_currency(@car.additional_mileage_charge) : 'N/A'
+          %div
+            %strong Daily Mileage:
+            = @car.daily_milleage
+          %div
+            %strong Weekly Mileage:
+            = @car.weekly_milleage
+          %div
+            %strong Monthly Mileage:
+            = @car.monthly_milleage
 
         / ==== Price and CTA ====
         .mt-6.flex.items-center.justify-between

@@ -46,3 +46,29 @@
     .bg-white.rounded-xl.shadow.p-8.mb-8
       %h2.text-xl.font-bold.text-blue-900.mb-4 Pending Documents
       %p.text-gray-500 No pending documents found.
+
+  / ==== Pending Car Documents Section ====
+  - pending_car_docs = CarDocument.includes(car: :vendor).where(document_status: CarDocument.document_statuses[:pending])
+  - if pending_car_docs.any?
+    .bg-white.rounded-xl.shadow.p-8.mb-8
+      %h2.text-xl.font-bold.text-blue-900.mb-4 Pending Car Documents
+      %table.min-w-full.border-separate{ style: "border-spacing: 0 0.75rem;" }
+        %thead
+          %tr
+            %th.px-6.py-3.text-left.text-xs.font-bold.text-blue-700.uppercase.bg-blue-50.rounded-l-lg Car
+            %th.px-6.py-3.text-left.text-xs.font-bold.text-blue-700.uppercase.bg-blue-50 Vendor
+            %th.px-6.py-3.text-left.text-xs.font-bold.text-blue-700.uppercase.bg-blue-50 Status
+            %th.px-6.py-3.text-left.text-xs.font-bold.text-blue-700.uppercase.bg-blue-50.rounded-r-lg Actions
+        %tbody
+          - pending_car_docs.each do |car_doc|
+            %tr.bg-blue-50.rounded-lg.shadow.hover:bg-blue-100.transition
+              %td.px-6.py-4.font-medium.text-gray-900.rounded-l-lg= car_doc.car&.full_name
+              %td.px-6.py-4.text-gray-700= car_doc.car&.vendor&.display_name || '-'
+              %td.px-6.py-4.text-yellow-700 Pending
+              %td.px-6.py-4.rounded-r-lg.flex.gap-2
+                - if car_doc.mulkiya.attached?  
+                  = link_to 'View', admin_document_path(car_doc, type: 'car_document'), class: 'inline-block bg-blue-100 text-blue-800 font-semibold px-4 py-1 rounded-lg hover:bg-blue-200 transition'
+  - else
+    .bg-white.rounded-xl.shadow.p-8.mb-8
+      %h2.text-xl.font-bold.text-blue-900.mb-4 Pending Car Documents
+      %p.text-gray-500 No pending car documents found.

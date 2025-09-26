@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_09_25_082920) do
+ActiveRecord::Schema[7.2].define(version: 2025_09_26_120317) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -76,6 +76,14 @@ ActiveRecord::Schema[7.2].define(version: 2025_09_25_082920) do
     t.index ["car_id"], name: "index_bookings_on_car_id"
     t.index ["payment_mode"], name: "index_bookings_on_payment_mode"
     t.index ["user_id"], name: "index_bookings_on_user_id"
+  end
+
+  create_table "car_documents", force: :cascade do |t|
+    t.bigint "car_id", null: false
+    t.integer "document_status", default: 0
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["car_id"], name: "index_car_documents_on_car_id"
   end
 
   create_table "cars", force: :cascade do |t|
@@ -206,6 +214,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_09_25_082920) do
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "bookings", "cars"
   add_foreign_key "bookings", "users"
+  add_foreign_key "car_documents", "cars"
   add_foreign_key "cars", "vendors"
   add_foreign_key "documents", "users"
   add_foreign_key "transactions", "bookings"
