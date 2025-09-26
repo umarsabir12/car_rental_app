@@ -51,7 +51,7 @@ class Car < ApplicationRecord
 
   BRAND_LOGOS = [
     { slug: 'mitsubishi',   name: 'Mitsubishi',   image: 'car_logo/logo_0000_pngwing.com-(32).png' },
-    { slug: 'rolls-royce',  name: 'Rolls-Royce',  image: 'logo_0001_pngwing.com-(31).png' },
+    { slug: 'rolls-royce',  name: 'Rolls-Royce',  image: 'car_logo/logo_0001_pngwing.com-(31).png' },
     { slug: 'aston-martin', name: 'Aston Martin', image: 'car_logo/logo_0002_pngwing.com-(30).png' },
     { slug: 'bentley',      name: 'Bentley',      image: 'car_logo/logo_0003_pngwing.com-(29).png' },
     { slug: 'lamborghini',  name: 'Lamborghini',  image: 'car_logo/logo_0004_pngwing.com-(28).png' },
