@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_09_26_120317) do
+ActiveRecord::Schema[7.2].define(version: 2025_09_29_162228) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -92,7 +92,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_09_26_120317) do
     t.string "category"
     t.string "color"
     t.integer "year"
-    t.decimal "daily_price", precision: 10, scale: 2
+    t.integer "daily_price"
     t.string "status"
     t.text "description"
     t.string "main_image_url"
@@ -112,14 +112,14 @@ ActiveRecord::Schema[7.2].define(version: 2025_09_26_120317) do
     t.string "stripe_product_id"
     t.string "stripe_price_id"
     t.boolean "with_driver", default: false
-    t.decimal "weekly_price", precision: 10, scale: 2
-    t.decimal "monthly_price", precision: 10, scale: 2
+    t.integer "weekly_price"
+    t.integer "monthly_price"
     t.integer "daily_milleage", default: 0
     t.integer "weekly_milleage", default: 0
     t.integer "monthly_milleage", default: 0
     t.string "insurance_policy_number", default: ""
     t.string "insurance_policy", default: ""
-    t.decimal "additional_mileage_charge", precision: 10, scale: 2, default: "0.0"
+    t.integer "additional_mileage_charge", default: 0
     t.index ["stripe_price_id"], name: "index_cars_on_stripe_price_id"
     t.index ["stripe_product_id"], name: "index_cars_on_stripe_product_id"
     t.index ["vendor_id"], name: "index_cars_on_vendor_id"
