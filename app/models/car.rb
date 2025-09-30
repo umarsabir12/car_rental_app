@@ -6,6 +6,12 @@ class Car < ApplicationRecord
 
   validates :images, presence: { message: 'at least one image is required' }
   validate :images_presence_on_create, on: :create
+
+  FEATURE_COLUMNS = %w[air_conditioning gps sunroof bluetooth].freeze
+  
+  def active_features
+    FEATURE_COLUMNS.select { |feature| send(feature) }.map { |feature| feature.humanize }
+  end
   
   after_create :create_stripe_product, :create_stripe_price
   
