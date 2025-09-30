@@ -39,6 +39,7 @@
             %th.px-6.py-3.text-left.text-xs.font-medium.text-gray-500.uppercase.tracking-wider End Date
             %th.px-6.py-3.text-left.text-xs.font-medium.text-gray-500.uppercase.tracking-wider Status
             %th.px-6.py-3.text-left.text-xs.font-medium.text-gray-500.uppercase.tracking-wider Payment
+            %th.px-6.py-3.text-left.text-xs.font-medium.text-gray-500.uppercase.tracking-wider Payment Mode
             %th.px-6.py-3.text-left.text-xs.font-medium.text-gray-500.uppercase.tracking-wider Actions
         %tbody.bg-white.divide-y.divide-gray-200
           - @bookings.each do |booking|
@@ -63,6 +64,9 @@
                   %span.inline-flex.items-center.px-2.5.py-0.5.rounded-full.text-xs.font-medium.bg-green-100.text-green-800 Paid
                 - else
                   %span.inline-flex.items-center.px-2.5.py-0.5.rounded-full.text-xs.font-medium.bg-red-100.text-red-800 Unpaid
+              %td.px-6.py-4.whitespace-nowrap
+                - payment_mode_classes = {'Cash' => 'bg-yellow-100 text-yellow-700', 'Online' => 'bg-green-100 text-green-700'}
+                %span.inline-block.rounded-full.text-xs.font-semibold.px-3.py-1{class: payment_mode_classes[booking.payment_mode] || 'bg-gray-100 text-gray-700'}= booking.payment_mode
               %td.px-6.py-4.whitespace-nowrap.text-sm.font-medium
                 = link_to admin_booking_path(booking), class: 'text-blue-600 hover:text-blue-900' do
                   %i.fas.fa-eye
