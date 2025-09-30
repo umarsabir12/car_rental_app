@@ -5,6 +5,7 @@ class Vendor < ApplicationRecord
          :recoverable, :rememberable, :validatable
 
   has_many :cars, dependent: :destroy
+  has_one :vendor_document
 
   has_many_attached :avatar
 
