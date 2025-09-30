@@ -21,7 +21,7 @@
   / Filters Section
   .bg-white.rounded-xl.shadow-lg.p-6.mb-8
     %h2.text-xl.font-bold.mb-4.flex.items-center.gap-2{style: 'color: #3a6363'}
-      %i.fas.fa-filter.text-blue-500
+      %i.fas.fa-filter{style: 'color:#3A6363'}
       Filter & Search
     = form_with url: vendors_bookings_path, method: :get, local: true, class: 'flex flex-wrap items-end gap-4' do |f|
       .field.flex-1.min-w-48
@@ -52,7 +52,7 @@
   .bg-white.rounded-xl.shadow-lg.overflow-hidden
     .p-6.border-b.border-gray-200
       %h2.text-xl.font-bold.flex.items-center.gap-2{style: 'color: #3a6363'}
-        %i.fas.fa-calendar-alt.text-blue-500
+        %i.fas.fa-calendar-alt{style: 'color:#3A6363'}
         Bookings List
         - if params[:search].present? || params[:status].present? || params[:car_id].present?
           %span.text-sm.font-normal.text-gray-500.ml-2 (#{@bookings.count} results)
@@ -68,6 +68,7 @@
               %th.px-6.py-4.text-left.text-xs.font-semibold.text-gray-600.uppercase.tracking-wider Dates
               %th.px-6.py-4.text-left.text-xs.font-semibold.text-gray-600.uppercase.tracking-wider Status
               %th.px-6.py-4.text-left.text-xs.font-semibold.text-gray-600.uppercase.tracking-wider Payment
+              %th.px-6.py-4.text-left.text-xs.font-semibold.text-gray-600.uppercase.tracking-wider Payment Mode
               %th.px-6.py-4.text-left.text-xs.font-semibold.text-gray-600.uppercase.tracking-wider Total
               %th.px-6.py-4.text-left.text-xs.font-semibold.text-gray-600.uppercase.tracking-wider Actions
           %tbody.divide-y.divide-gray-200
@@ -78,8 +79,6 @@
                 %td.px-6.py-4.whitespace-nowrap
                   .flex.flex-col
                     %span.font-medium.text-gray-900= booking.user&.full_name || 'N/A'
-                    %span.text-sm.text-gray-500= booking.user&.email
-                    %span.text-xs.text-gray-400= booking.user&.phone
                 %td.px-6.py-4.whitespace-nowrap
                   .flex.flex-col
                     %span.font-medium.text-gray-900= "#{booking.car.brand} #{booking.car.model}"
@@ -98,6 +97,9 @@
                     %span.inline-block.bg-green-100.text-green-700.px-3.py-1.rounded-full.text-xs.font-semibold Paid
                   - else
                     %span.inline-block.bg-yellow-100.text-yellow-700.px-3.py-1.rounded-full.text-xs.font-semibold Pending
+                %td.px-6.py-4.whitespace-nowrap
+                  - payment_mode_classes = {'Cash' => 'bg-yellow-100 text-yellow-700', 'Online' => 'bg-green-100 text-green-700'}
+                  %span.inline-block.rounded-full.text-xs.font-semibold.px-3.py-1{class: payment_mode_classes[booking.payment_mode] || 'bg-gray-100 text-gray-700'}= booking.payment_mode
                 %td.px-6.py-4.whitespace-nowrap
                   - if booking.car.daily_price
                     - total_days = (booking.end_date - booking.start_date).to_i

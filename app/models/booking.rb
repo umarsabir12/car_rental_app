@@ -1,5 +1,5 @@
 class Booking < ApplicationRecord
-  belongs_to :car
+  belongs_to :car, counter_cache: true
   belongs_to :user
   belongs_to :vendor, optional: true
   has_many :activities, as: :subject, dependent: :destroy

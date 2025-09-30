@@ -8,7 +8,11 @@
         %h2.text-2xl.font-bold.mb-1{style: 'color:#3A6363'}= @car&.full_name
         - if @car&.vendor
           %div.mb-1{style: 'color:#3A6363'}= @car.vendor.display_name
-      / Right: Car Document Details
+    - elsif @is_vendor_document
+      / Left: Vendor Details
+      .flex-1.w-full.rounded-2xl.p-8.flex.flex-col.items-center.shadow-md{style: 'background-color:#E6F0F0'}
+        %i.fas.fa-car.text-6xl{style: 'color:#3A6363'}
+        %h2.text-2xl.font-bold.mb-1{style: 'color:#3A6363'}= @vendor&.display_name
     - else
       / Left: User Details
       .flex-1.max-w-xs.rounded-2xl.p-8.flex.flex-col.items-center.shadow-md.bg-blue-50
@@ -18,7 +22,7 @@
         %div.text-gray-500.mb-1= @user.phone
         = link_to 'View User', admin_customer_path(@user), class: 'mt-6 inline-block bg-blue-100 text-blue-800 font-semibold px-5 py-2 rounded-lg hover:bg-blue-200 transition'
     / Right: Document Details
-    - right_classes = @is_car_document ? 'flex-1 w-full' : 'flex-2 w-full'
+    - right_classes = (@is_car_document || @is_vendor_document) ? 'flex-1 w-full' : 'flex-2 w-full'
     %div{ class: right_classes }
       - if @is_car_document
         %h1.text-3xl.font-extrabold.mb-2{style: 'color:#3A6363'} Mulkiya Document
@@ -28,11 +32,19 @@
         - status = @document.document_status
         .mt-2
           %span.inline-flex.items-center.px-2.py-1.rounded-full.text-xs.font-semibold{style: 'background-color:#E6F0F0; color:#3A6363; border:1px solid #3A6363'}= status.to_s.titleize
+      - elsif @is_vendor_document
+        %h1.text-3xl.font-extrabold.mb-2{style: 'color:#3A6363'} Vendor Trade License
+        - if @document.trade_license.attached?
+          .mb-6
+            %img.w-96.h-72.object-cover.rounded-2xl.shadow-lg.cursor-pointer.transition-transform.hover:scale-105{ src: url_for(@document.trade_license), alt: 'Trade License', onclick: "openImagePreview('#{url_for(@document.trade_license)}')" }
+        - status = @document.document_status
+        .mt-2
+          %span.inline-flex.items-center.px-2.py-1.rounded-full.text-xs.font-semibold{style: 'background-color:#E6F0F0; color:#3A6363; border:1px solid #3A6363'}= status.to_s.titleize
       - else
         %h1.text-3xl.font-extrabold.text-blue-900.mb-2= @document.doc_name
         .flex.items-center.gap-4.mb-10
           %span.inline-block.bg-blue-100.text-blue-700.px-4.py-1.rounded-full.text-sm.font-semibold= @document.document_type.titleize
-      - if !@is_car_document && @document.images.attached?
+      - if !@is_car_document && !@is_vendor_document && @document.images.attached?
         - if @document.doc_name == 'Home country driving license and IDP' && @document.images.count >= 2
           .flex.flex-row.gap-8.mb-8.justify-start
             .flex.flex-col.items-center
@@ -45,7 +57,7 @@
           .flex.flex-wrap.gap-8.mb-8.justify-start
             - @document.images.each do |img|
               %img.w-96.h-72.object-cover.rounded-2xl.shadow-lg.cursor-pointer.transition-transform.hover:scale-105{ src: url_for(img), alt: @document.doc_name, onclick: "openImagePreview('#{url_for(img)}')" }
-      - if !@is_car_document && @document.status == 'rejected' && @document.reason.present?
+      - if !@is_car_document && !@is_vendor_document && @document.status == 'rejected' && @document.reason.present?
         .bg-red-100.text-red-800.font-semibold.p-4.rounded-xl.mb-4.shadow-md.flex.items-center.gap-3
           %i.fas.fa-exclamation-triangle.text-2xl
           %span Reason: #{@document.reason}
@@ -53,6 +65,9 @@
         - if @is_car_document
           = button_to 'Approve', approve_admin_document_path(@document, type: 'car_document'), method: :patch, class: 'border text-green-700 bg-transparent px-8 py-2 rounded-lg font-bold hover:bg-green-50 transition cursor-pointer'
           = button_to 'Reject', reject_admin_document_path(@document, type: 'car_document'), method: :post, class: 'border border-red-600 text-red-700 bg-transparent px-8 py-2 rounded-lg font-bold hover:bg-red-50 transition cursor-pointer'
+        - elsif @is_vendor_document
+          = button_to 'Approve', approve_admin_document_path(@document, type: 'trade_license'), method: :patch, class: 'border text-green-700 bg-transparent px-8 py-2 rounded-lg font-bold hover:bg-green-50 transition cursor-pointer'
+          = button_to 'Reject', reject_admin_document_path(@document, type: 'trade_license'), method: :post, class: 'border border-red-600 text-red-700 bg-transparent px-8 py-2 rounded-lg font-bold hover:bg-red-50 transition cursor-pointer'
         - else
           - unless @document.status == 'approved'
             = form_with url: approve_admin_document_path(@document), method: :patch, local: true, class: 'inline' do |f|

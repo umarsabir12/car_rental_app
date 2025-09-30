@@ -58,14 +58,8 @@
         .flex.justify-between.items-center.py-3.border-b.border-gray-100
           %span.font-medium.text-gray-600 Address
           %span.text-gray-900= current_vendor.address.presence || 'Not provided'
-        .flex.justify-between.items-center.py-3
-          %span.font-medium.text-gray-600 Website
-          - if current_vendor.website.present?
-            = link_to current_vendor.website, current_vendor.website, target: '_blank', class: 'text-blue-600 hover:text-blue-800 underline'
-          - else
-            %span.text-gray-400 Not provided
       
-      .mt-6.pt-4.border-t.border-gray-100
+      .mt-6.pt-4
         = link_to edit_vendor_path, class: 'w-full text-white font-semibold px-4 py-2 rounded-lg transition flex items-center justify-center gap-2 hover:opacity-90', style: 'background-color: #3a6363' do
           %i.fas.fa-edit
           Edit Company Information
@@ -93,7 +87,7 @@
   .mt-8
     .bg-white.rounded-xl.shadow-lg.p-6
       %h2.text-xl.font-bold.mb-4.flex.items-center.gap-2{style: 'color: #3a6363'}
-        %i.fas.fa-history.text-blue-500
+        %i.fas.fa-history{style: 'color:#3A6363'}
         Recent Activity
       - recent_bookings = Booking.where(car_id: current_vendor.cars.pluck(:id)).includes(:user, :car).order(created_at: :desc).limit(5)
       - if recent_bookings.any?
@@ -102,7 +96,7 @@
             .flex.items-center.justify-between.py-3.border-b.border-gray-100.last:border-b-0
               .flex.items-center.gap-3
                 .bg-blue-100.rounded-full.p-2
-                  %i.fas.fa-calendar.text-blue-600
+                  %i.fas.fa-calendar{style: 'color:#3A6363'}
                 .flex.flex-col
                   %span.font-medium.text-gray-900= "Booking ##{booking.id}"
                   %span.text-sm.text-gray-500= "#{booking.user&.full_name} - #{booking.car.brand} #{booking.car.model}"

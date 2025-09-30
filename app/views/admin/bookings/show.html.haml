@@ -19,6 +19,9 @@
           - else
             %span.inline-block.bg-red-100.text-red-700.rounded-full.px-3.py-1.text-xs.font-semibold Unpaid
         %div.text-gray-700.mb-2
+          %span.font-semibold.text-gray-800 Payment Mode:
+          = @booking.payment_mode
+        %div.text-gray-700.mb-2
           %span.font-semibold.text-gray-800 Start Date:
           = @booking.start_date
         %div.text-gray-700.mb-2

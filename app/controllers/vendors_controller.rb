@@ -11,7 +11,23 @@ class VendorsController < ApplicationController
   end
 
   def update
-    if @vendor.update(vendor_params)
+    if @vendor.update(vendor_params.except(:trade_license))
+
+      if params[:vendor][:trade_license].present?
+        if @vendor.vendor_document.present?
+          @vendor.vendor_document.trade_license.purge if @vendor.vendor_document.trade_license.attached?
+          @vendor.vendor_document.trade_license.attach(params[:vendor][:trade_license])
+          @vendor.vendor_document.document_status = :pending
+          @vendor.vendor_document.save!
+        else
+          vendor_document = VendorDocument.new
+          vendor_document.trade_license.attach(params[:vendor][:trade_license])
+          vendor_document.document_status = :pending
+          vendor_document.vendor = @vendor
+          vendor_document.save!
+        end
+      end
+
       redirect_to vendor_path(@vendor), notice: 'Profile was successfully updated.'
     else
       flash.now[:alert] = 'Failed to update profile. Please check the errors below.'
@@ -29,7 +45,7 @@ class VendorsController < ApplicationController
     params.require(:vendor).permit(
       :first_name, :last_name, :email, :phone, :company_name,
       :company_logo, :address, :website, :description,
-      :emirates_id, :emirates_id_expires_on
+      :emirates_id, :emirates_id_expires_on, :trade_license
     )
   end
 end 

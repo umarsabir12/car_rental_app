@@ -18,6 +18,6 @@ class DocumentsController < ApplicationController
   private
 
   def document_params
-    params.require(:document).permit(:doc_name, :document_type, :status, :reason, :front_image, :back_image, images: [])
+    params.require(:document).permit(:doc_name, :document_type, :status, :reason, :front_image, :back_image, :passport_image, :visa_image, images: [])
   end
 end

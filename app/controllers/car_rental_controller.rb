@@ -12,33 +12,17 @@ class CarRentalController < ApplicationController
       { id: 'ajman', name: 'Ajman' }
     ]
       
-    # Featured cars data
-    @featured_cars = [
+    # Popular cars data
+    @featured_cars = Car.order(bookings_count: :desc).limit(3).map do |car|
       {
-        id: 1,
-        name: 'Cadillac Escalade Limited',
-        car_type: 'SUV',
-        image_url: 'https://images.unsplash.com/photo-1549923746-c502d488b3ea?q=80&w=800&auto=format&fit=crop',
-        daily_price: 89,
-        features: ['GPS Navigation', 'Bluetooth', 'Air Conditioning']
-      },
-      {
-        id: 2,
-        name: 'BMW X5 Limited',
-        car_type: 'SUV', 
-        image_url: 'https://images.unsplash.com/photo-1555215695-3004980ad54e?q=80&w=800&auto=format&fit=crop',
-        daily_price: 79,
-        features: ['Premium Interior', 'All-wheel Drive', 'Safety Features']
-      },
-      {
-        id: 3,
-        name: 'Audi Q5 Sedan',
-        car_type: 'Sedan',
-        image_url: 'https://images.unsplash.com/photo-1603584173870-7f23fdae1b7a?q=80&w=800&auto=format&fit=crop',
-        daily_price: 69,
-        features: ['Luxury Seats', 'Advanced Tech', 'Premium Sound']
+        id: car.id,
+        name: car.full_name,
+        car_type: car.category,
+        image_url: car.main_image_url,
+        daily_price: car.daily_price,
+        features: car.active_features
       }
-    ]
+    end
       
     # Brands data
     @brands = [

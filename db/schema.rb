@@ -11,6 +11,7 @@
 # It's strongly recommended that you check this file into your version control system.
 
 ActiveRecord::Schema[7.2].define(version: 2025_09_30_225417) do
+
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -114,7 +115,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_09_30_225417) do
     t.string "category"
     t.string "color"
     t.integer "year"
-    t.decimal "daily_price", precision: 10, scale: 2
+    t.integer "daily_price"
     t.string "status"
     t.text "description"
     t.string "main_image_url"
@@ -134,13 +135,14 @@ ActiveRecord::Schema[7.2].define(version: 2025_09_30_225417) do
     t.string "stripe_product_id"
     t.string "stripe_price_id"
     t.boolean "with_driver", default: false
-    t.decimal "weekly_price", precision: 10, scale: 2
-    t.decimal "monthly_price", precision: 10, scale: 2
+    t.integer "weekly_price"
+    t.integer "monthly_price"
     t.integer "daily_milleage", default: 0
     t.integer "weekly_milleage", default: 0
     t.integer "monthly_milleage", default: 0
     t.string "insurance_policy", default: ""
-    t.decimal "additional_mileage_charge", precision: 10, scale: 2, default: "0.0"
+    t.integer "additional_mileage_charge", default: 0
+    t.integer "bookings_count", default: 0, null: false
     t.index ["stripe_price_id"], name: "index_cars_on_stripe_price_id"
     t.index ["stripe_product_id"], name: "index_cars_on_stripe_product_id"
     t.index ["vendor_id"], name: "index_cars_on_vendor_id"
@@ -208,6 +210,14 @@ ActiveRecord::Schema[7.2].define(version: 2025_09_30_225417) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  create_table "vendor_documents", force: :cascade do |t|
+    t.bigint "vendor_id", null: false
+    t.integer "document_status", default: 0
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["vendor_id"], name: "index_vendor_documents_on_vendor_id"
+  end
+
   create_table "vendors", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
@@ -242,4 +252,5 @@ ActiveRecord::Schema[7.2].define(version: 2025_09_30_225417) do
   add_foreign_key "cars", "vendors"
   add_foreign_key "documents", "users"
   add_foreign_key "transactions", "bookings"
+  add_foreign_key "vendor_documents", "vendors"
 end

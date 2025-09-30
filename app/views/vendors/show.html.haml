@@ -88,3 +88,75 @@
         .field.space-y-2
           %label.block.text-sm.font-semibold.text-gray-600 Account Status
           %span.inline-block.bg-green-100.text-green-700.px-3.py-1.rounded-full.text-sm.font-semibold Active 
+
+    / Enhanced trade license Card
+    .bg-white.rounded-2xl.shadow-xl.border.border-gray-100.overflow-hidden.transition-all.duration-300.mt-5
+      / Header Section
+      .bg-gradient-to-r.from-slate-50.to-gray-50.px-6.py-4.border-b.border-gray-100
+        %h2.text-xl.font-bold.flex.items-center.gap-3{style: 'color:#3A6363'}
+          .p-2.rounded-lg{style: 'background-color:#E6F0F0'}
+            %i.fas.fa-id-card{style: 'color:#3A6363'}
+          Trade License
+
+      / Content Section  
+      .p-6
+        - if @vendor.vendor_document.present? && @vendor.vendor_document.trade_license.attached?
+          .space-y-4
+            / Document Preview & Actions Row
+            .flex.flex-col.lg:flex-row.gap-4.items-start
+              / Document Preview
+              .flex-shrink-0.w-full.lg:w-40
+                .w-full.lg:w-40.h-32.rounded-xl.overflow-hidden.bg-gradient-to-br.from-gray-50.to-gray-100.border-2.border-dashed.flex.items-center.justify-center.relative.group.transition-all.duration-300.hover:shadow-lg{style: 'border-color:#3A6363'}
+                  - content_type = @vendor.vendor_document.trade_license.content_type.to_s
+                  - if content_type.start_with?("image/")
+                    = image_tag url_for(@vendor.vendor_document.trade_license.variant(resize_to_fill: [160, 128])), class: 'w-full h-full object-cover transition-transform duration-300 group-hover:scale-110'
+                    .absolute.inset-0.bg-black.bg-opacity-0.group-hover:bg-opacity-20.transition-all.duration-300.flex.items-center.justify-center
+                      %i.fas.fa-search-plus.text-white.opacity-0.group-hover:opacity-100.text-xl
+                  - elsif content_type == 'application/pdf'
+                    .text-center.space-y-2
+                      %i.fas.fa-file-pdf.text-4xl.text-red-500
+                      %span.text-xs.font-medium.text-gray-600 PDF Document
+                  - else
+                    .text-center.space-y-2
+                      %i.fas.fa-file-alt.text-4xl.text-gray-400
+                      %span.text-xs.font-medium.text-gray-600 Document
+        
+              / Document Info & Actions
+              .flex-1.min-w-0.space-y-4
+          
+                / Action Buttons & Status
+                .flex.flex-col.sm:flex-row.gap-3.items-start.sm:items-center.justify-between.flex-wrap
+                  / Download Button
+                  = link_to url_for(@vendor.vendor_document.trade_license), target: '_blank', class: 'inline-flex items-center gap-1 px-3 py-2 text-white text-sm font-medium rounded-md transition-all duration-200 shadow hover:shadow-md whitespace-nowrap', style: 'background-color:#3A6363; hover:background-color:#2d4f4f' do
+                    %i.fas.fa-download
+                    %span View & Download
+              
+                  / Status Badge
+                  - status = @vendor.vendor_document.document_status
+                  - case status
+                  - when 'approved'
+                    - badge_classes = 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                    - icon_class = 'fas fa-check-circle text-emerald-600'
+                  - when 'rejected'
+                    - badge_classes = 'bg-red-50 text-red-700 border-red-200'
+                    - icon_class = 'fas fa-times-circle text-red-600'
+                  - when 'pending'
+                    - badge_classes = 'bg-amber-50 text-amber-700 border-amber-200'
+                    - icon_class = 'fas fa-clock text-amber-600'
+                  - else
+                    - badge_classes = 'bg-gray-50 text-gray-700 border-gray-200'
+                    - icon_class = 'fas fa-question-circle text-gray-600'
+              
+                  .inline-flex.items-center.gap-2.px-3.py-2.rounded-lg.text-sm.font-semibold.border-2.transition-all.duration-200.whitespace-nowrap{class: badge_classes}
+                    %i{class: icon_class}
+                    %span= status.to_s.titleize
+      
+        - else
+          / Empty State
+          .text-center.py-12.space-y-6
+            .w-24.h-24.mx-auto.rounded-full.flex.items-center.justify-center{style: 'background-color:#E6F0F0'}
+              %i.fas.fa-file-plus.text-3xl{style: 'color:#3A6363'}
+            .space-y-2
+              %h3.text-lg.font-semibold.text-gray-800 No Trade License
+              %p.max-w-md.mx-auto.leading-relaxed.break-words{style: 'color:#3A6363'}
+                Upload Trade License to complete your vendor profile and enable verification.

@@ -6,6 +6,8 @@ class Vendor < ApplicationRecord
 
   has_many :cars, dependent: :destroy
   has_many :activities, dependent: :destroy
+  has_one :vendor_document
+
   has_many_attached :avatar
 
   validates :email, :company_name, :first_name, :last_name, presence: true

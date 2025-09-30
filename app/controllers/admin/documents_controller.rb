@@ -4,7 +4,7 @@ class Admin::DocumentsController < ApplicationController
   before_action :load_resource
 
   def approve
-    if @is_car_document
+    if @is_car_document || @is_vendor_document
       @document.update(document_status: :approved)
     else
       @document.update(status: 'approved', reason: nil)
@@ -13,7 +13,7 @@ class Admin::DocumentsController < ApplicationController
   end
 
   def reject
-    if @is_car_document
+    if @is_car_document || @is_vendor_document
       @document.update(document_status: :rejected)
       redirect_to admin_dashboard_index_path
     else
@@ -29,6 +29,8 @@ class Admin::DocumentsController < ApplicationController
   def show
     if @is_car_document
       @car = @document.car
+    elsif @is_vendor_document
+      @vendor = @document.vendor
     else
       @user = @document.user
     end
@@ -39,6 +41,9 @@ class Admin::DocumentsController < ApplicationController
       if params[:type].to_s == 'car_document'
         @document = CarDocument.find(params[:id])
         @is_car_document = true
+      elsif params[:type].to_s == 'trade_license'
+        @document = VendorDocument.find(params[:id])
+        @is_vendor_document = true
       else
         @document = Document.find(params[:id])
         @is_car_document = false

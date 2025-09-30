@@ -105,6 +105,26 @@
             .flex.gap-3
               = f.submit 'Upload', class: 'flex-1 bg-blue-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-blue-700 transition'
               %button.flex-1.bg-gray-300.text-gray-700.px-4.py-2.rounded-lg.font-semibold.hover:bg-gray-400.transition{type: "button", onclick: "closeUploadModal('#{doc.doc_name.parameterize}')"} Cancel
+        
+        
+        
+        - elsif doc.doc_name == 'Passport and Visa copy'
+          %p.text-sm.text-gray-600.mb-4 You need to upload copies of passport and visa.
+          = form_with url: documents_path, method: :post, local: true, html: {multipart: true, class: 'space-y-4', onsubmit: 'return validateLicenseUpload(this);'} do |f|
+            .flex.flex-col.md:flex-row.gap-4
+              .flex-1
+                %label.text-sm.font-semibold.text-gray-700.mb-2 Passport
+                = f.file_field :passport_image, class: 'block w-full text-sm text-gray-700 border border-gray-300 rounded-lg p-3 bg-blue-50 focus:ring-2 focus:ring-blue-400 focus:border-blue-400 transition', required: true
+              .flex-1
+                %label.text-sm.font-semibold.text-gray-700.mb-2 Visa
+                = f.file_field :visa_image, class: 'block w-full text-sm text-gray-700 border border-gray-300 rounded-lg p-3 bg-blue-50 focus:ring-2 focus:ring-blue-400 focus:border-blue-400 transition', required: true
+            = f.hidden_field :id, value: doc.id
+            .flex.gap-3
+              = f.submit 'Upload', class: 'flex-1 bg-blue-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-blue-700 transition'
+              %button.flex-1.bg-gray-300.text-gray-700.px-4.py-2.rounded-lg.font-semibold.hover:bg-gray-400.transition{type: "button", onclick: "closeUploadModal('#{doc.doc_name.parameterize}')"} Cancel
+        
+        
+        
         - else
           = form_with url: documents_path, method: :post, local: true, html: {multipart: true, class: 'space-y-4'} do |f|
             = f.file_field :images, multiple: true, class: 'block w-full text-sm text-gray-700 border border-gray-300 rounded-lg p-3 bg-blue-50 focus:ring-2 focus:ring-blue-400 focus:border-blue-400 transition', required: true
