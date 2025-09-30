@@ -21,7 +21,7 @@
   / Filters Section
   .bg-white.rounded-xl.shadow-lg.p-6.mb-8
     %h2.text-xl.font-bold.mb-4.flex.items-center.gap-2{style: 'color: #3a6363'}
-      %i.fas.fa-filter.text-blue-500
+      %i.fas.fa-filter{style: 'color:#3A6363'}
       Filter & Search
     = form_with url: vendors_payments_path, method: :get, local: true, class: 'flex flex-wrap items-end gap-4' do |f|
       .field.flex-1.min-w-48
@@ -81,7 +81,7 @@
   .bg-white.rounded-xl.shadow-lg.overflow-hidden
     .p-6.border-b.border-gray-200
       %h2.text-xl.font-bold.flex.items-center.gap-2{style: 'color: #3a6363'}
-        %i.fas.fa-credit-card.text-blue-500
+        %i.fas.fa-credit-card{style: 'color:#3A6363'}
         Payment History
         - if params[:search].present? || params[:status].present? || params[:car_id].present?
           %span.text-sm.font-normal.text-gray-500.ml-2 (#{@paid_bookings.count} results)

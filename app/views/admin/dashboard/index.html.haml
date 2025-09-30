@@ -72,3 +72,29 @@
     .bg-white.rounded-xl.shadow.p-8.mb-8
       %h2.text-xl.font-bold.text-blue-900.mb-4 Pending Car Documents
       %p.text-gray-500 No pending car documents found.
+
+  / ==== Pending Vendor Trade License Section ====
+  - pending_vendor_trade_license = VendorDocument.includes(:vendor).where(document_status: VendorDocument.document_statuses[:pending])
+  - if pending_vendor_trade_license.any?
+    .bg-white.rounded-xl.shadow.p-8.mb-8
+      %h2.text-xl.font-bold.text-blue-900.mb-4 Pending Vendor Trade Licenses
+      %table.min-w-full.border-separate{ style: "border-spacing: 0 0.75rem;" }
+        %thead
+          %tr
+            %th.px-6.py-3.text-left.text-xs.font-bold.text-blue-700.uppercase.bg-blue-50.rounded-l-lg ID
+            %th.px-6.py-3.text-left.text-xs.font-bold.text-blue-700.uppercase.bg-blue-50 Vendor
+            %th.px-6.py-3.text-left.text-xs.font-bold.text-blue-700.uppercase.bg-blue-50 Status
+            %th.px-6.py-3.text-left.text-xs.font-bold.text-blue-700.uppercase.bg-blue-50.rounded-r-lg Actions
+        %tbody
+          - pending_vendor_trade_license.each do |vendor_doc|
+            %tr.bg-blue-50.rounded-lg.shadow.hover:bg-blue-100.transition
+              %td.px-6.py-4.font-medium.text-gray-900.rounded-l-lg= vendor_doc.vendor.id
+              %td.px-6.py-4.text-gray-700= vendor_doc.vendor&.display_name || '-'
+              %td.px-6.py-4.text-yellow-700 Pending
+              %td.px-6.py-4.rounded-r-lg.flex.gap-2
+                - if vendor_doc.trade_license.attached?  
+                  = link_to 'View', admin_document_path(vendor_doc, type: 'trade_license'), class: 'inline-block bg-blue-100 text-blue-800 font-semibold px-4 py-1 rounded-lg hover:bg-blue-200 transition'
+  - else
+    .bg-white.rounded-xl.shadow.p-8.mb-8
+      %h2.text-xl.font-bold.text-blue-900.mb-4 Pending Vendor Trade Licenses
+      %p.text-gray-500 No pending vendor trade licenses found.

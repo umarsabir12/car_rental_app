@@ -106,8 +106,102 @@
           .field.space-y-2
             %label.block.text-sm.font-medium.text-gray-700 Active Cars
             %p.text-gray-900= @vendor.cars.where(status: 'available').count
+      
+      / Trade License Section
+      %h2.text-lg.font-bold.mb-4.mt-8{style: 'color:#3A6363'} Trade License (PDF or Image) *
+      - if @vendor.errors[:trade_license].any?
+        .mb-4.p-4.bg-red-50.border.border-red-200.rounded-lg
+          %p.text-red-600.font-medium= @vendor.errors[:trade_license].join(', ')
+
+      .mb-2.text-sm.text-gray-600
+        %p Upload the trade license card or PDF. Only one file is required.
+
+      .flex.gap-6.mb-6
+        .relative.group
+          %div.flex.items-center.justify-center.w-32.h-24.bg-blue-50.rounded-xl.shadow.border-2.border-dashed.border-blue-300.group-hover:border-blue-500.transition-all.duration-200{id: 'plus-card-trade-license'}
+            %i.fas.fa-plus.text-3xl.text-blue-400{id: 'plus-icon-trade-license'}
+            %img.hidden.absolute.inset-0.w-full.h-full.object-cover.rounded-xl{id: 'preview-img-trade-license'}
+            %div.hidden.absolute.inset-0.w-full.h-full.flex.items-center.justify-center.rounded-xl{id: 'preview-file-trade-license'}
+              %i.fas.fa-file-pdf.text-3xl.text-red-500
+            .absolute.-top-2.-right-2.bg-red-500.text-white.text-xs.px-2.py-1.rounded-full.font-bold Required
+          = f.file_field :trade_license, id: 'vendor_trade_license', accept: 'application/pdf,image/*,.heic,.heif', required: true, class: 'hidden'
+        .flex.flex-col.justify-center
+          %span.text-sm.text-gray-700.font-medium Selected:
+          %span#trade-license-filename.text-sm.text-gray-500 None
 
       / Action Buttons
       .flex.flex-col.sm:flex-row.gap-4.pt-8
         = f.submit 'Update Profile', class: 'text-white font-bold py-3 px-8 rounded-lg shadow-lg hover:shadow-xl transition-all duration-200 hover:opacity-90', style: 'background-color: #3a6363'
         = link_to 'Cancel', vendor_path(@vendor), class: 'bg-gray-500 hover:bg-gray-600 text-white font-bold py-3 px-8 rounded-lg shadow-lg hover:shadow-xl transition-all duration-200 text-center' 
+
+:javascript
+
+  // Trade License upload placeholder behavior
+  function initializeLicenseUpload() {
+    const fileInput = document.getElementById('vendor_trade_license');
+    const previewImg = document.getElementById('preview-img-trade-license');
+    const plusIcon = document.getElementById('plus-icon-trade-license');
+    const plusCard = document.getElementById('plus-card-trade-license');
+    const previewFile = document.getElementById('preview-file-trade-license');
+    const fileNameEl = document.getElementById('trade-license-filename');
+
+    if (!(fileInput && previewImg && plusIcon && plusCard && previewFile && fileNameEl)) return;
+
+    // Prevent duplicate bindings across Turbo renders
+    if (plusCard.dataset.initialized === 'true') return;
+    plusCard.dataset.initialized = 'true';
+
+    const resetPreview = () => {
+      previewImg.classList.add('hidden');
+      previewFile.classList.add('hidden');
+      plusIcon.classList.remove('hidden');
+      fileNameEl.textContent = 'None';
+      previewImg.src = '';
+    };
+
+    plusCard.addEventListener('click', function() {
+      fileInput.click();
+    });
+
+    fileInput.addEventListener('change', function() {
+      if (fileInput.files && fileInput.files[0]) {
+        const file = fileInput.files[0];
+        fileNameEl.textContent = file.name;
+        const type = (file.type || '').toLowerCase();
+
+        // If it's an image, try to preview; otherwise show file icon
+        if (type.startsWith('image/')) {
+          const reader = new FileReader();
+          reader.onload = function(ev) {
+            previewImg.src = ev.target.result;
+            previewImg.classList.remove('hidden');
+            previewFile.classList.add('hidden');
+            plusIcon.classList.add('hidden');
+          };
+          reader.onerror = function() {
+            // Fall back to file icon
+            previewImg.classList.add('hidden');
+            previewFile.classList.remove('hidden');
+            plusIcon.classList.add('hidden');
+          };
+          reader.readAsDataURL(file);
+        } else {
+          previewImg.classList.add('hidden');
+          previewFile.classList.remove('hidden');
+          plusIcon.classList.add('hidden');
+        }
+      } else {
+        resetPreview();
+      }
+    });
+  }
+
+  // Initialize on multiple events to ensure it works
+  document.addEventListener('DOMContentLoaded', initializeLicenseUpload);
+  document.addEventListener('turbo:load', initializeLicenseUpload);
+  document.addEventListener('turbo:render', initializeLicenseUpload);
+
+  // Also initialize immediately if DOM is already ready
+  if (document.readyState !== 'loading') {
+    setTimeout(initializeLicenseUpload, 120);
+  }
