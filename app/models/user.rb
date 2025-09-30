@@ -6,7 +6,8 @@ class User < ApplicationRecord
 
   has_many :bookings, dependent: :destroy
   has_many :documents
-  after_create :create_documents
+  has_many :activities, dependent: :destroy
+  after_create :create_documents, :log_registration
 
   # Validations
   validates :first_name, presence: true, length: { minimum: 2, maximum: 50 }
@@ -64,6 +65,18 @@ class User < ApplicationRecord
     else
       nil
     end
+  end
+
+  private
+
+  def log_registration
+    Activity.log_activity(
+      user: self,
+      subject: self,
+      action: 'registration_completed',
+      description: "New user registered: #{full_name} (#{email})",
+      metadata: { nationality: nationality, phone: phone }
+    )
   end
 
 end

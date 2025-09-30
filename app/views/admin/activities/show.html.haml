@@ -1,0 +1,92 @@
+%div.min-h-screen.bg-gray-50
+  .max-w-4xl.mx-auto.px-4.sm:px-6.lg:px-8.py-8
+    / Header
+    .mb-8
+      .flex.items-center.justify-between
+        .flex-1
+          = link_to admin_activities_path, class: 'inline-flex items-center text-sm font-medium text-gray-500 hover:text-gray-700 mb-4' do
+            %i.fas.fa-arrow-left.mr-2
+            Back to Activities
+          %h1.text-3xl.font-bold.text-gray-900 Activity Details
+        .flex.gap-3
+        -#   = link_to admin_user_path(@activity.user), class: 'inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50' do
+            %i.fas.fa-user.mr-2
+            View User Profile
+
+    / Activity Details Card
+    .bg-white.shadow.rounded-lg.mb-8
+      .px-6.py-4.border-b.border-gray-200
+        .flex.items-center.space-x-4
+          .w-12.h-12.rounded-full.bg-gray-100.flex.items-center.justify-center
+            %i{class: "#{@activity.action_icon} #{@activity.action_color} text-xl"}
+          .flex-1
+            %h2.text-xl.font-semibold.text-gray-900= @activity.description
+            %p.text-sm.text-gray-500= @activity.formatted_time
+      
+      .p-6
+        .grid.grid-cols-1.md:grid-cols-2.gap-6
+          .space-y-4
+            %div
+              %h3.text-sm.font-medium.text-gray-500 Action
+              %p.text-sm.text-gray-900= @activity.action.humanize
+            
+            %div
+              %h3.text-sm.font-medium.text-gray-500 User
+              %p.text-sm.text-gray-900= @activity.user.full_name
+              %p.text-sm.text-gray-500= @activity.user.email
+            
+            %div
+              %h3.text-sm.font-medium.text-gray-500 Subject Type
+              %p.text-sm.text-gray-900= @activity.subject_type
+            
+            %div
+              %h3.text-sm.font-medium.text-gray-500 Subject ID
+              %p.text-sm.text-gray-900= @activity.subject_id
+            
+            - if @activity.ip_address.present?
+              %div
+                %h3.text-sm.font-medium.text-gray-500 IP Address
+                %p.text-sm.text-gray-900= @activity.ip_address
+            
+            - if @activity.user_agent.present?
+              %div
+                %h3.text-sm.font-medium.text-gray-500 User Agent
+                %p.text-sm.text-gray-900.text-xs.break-all= @activity.user_agent
+
+          .space-y-4
+            - if @activity.metadata.present?
+              %div
+                %h3.text-sm.font-medium.text-gray-500 Additional Information
+                .bg-gray-50.rounded-lg.p-4
+                  %pre.text-xs.text-gray-600.whitespace-pre-wrap= JSON.pretty_generate(@activity.metadata_hash)
+            
+            %div
+              %h3.text-sm.font-medium.text-gray-500 Activity ID
+              %p.text-sm.text-gray-900.font-mono= @activity.id
+            
+            %div
+              %h3.text-sm.font-medium.text-gray-500 Created At
+              %p.text-sm.text-gray-900= @activity.created_at.strftime('%B %d, %Y at %I:%M %p')
+            
+            %div
+              %h3.text-sm.font-medium.text-gray-500 Updated At
+              %p.text-sm.text-gray-900= @activity.updated_at.strftime('%B %d, %Y at %I:%M %p')
+
+    / Related Activities
+    - related_activities = Activity.where(user: @activity.user).where.not(id: @activity.id).recent.limit(5)
+    - if related_activities.any?
+      .bg-white.shadow.rounded-lg
+        .px-6.py-4.border-b.border-gray-200
+          %h3.text-lg.font-medium.text-gray-900 Other Activities by #{@activity.user.full_name}
+        .divide-y.divide-gray-200
+          - related_activities.each do |activity|
+            .p-4.hover:bg-gray-50.transition-colors
+              .flex.items-center.space-x-4
+                .w-8.h-8.rounded-full.bg-gray-100.flex.items-center.justify-center
+                  %i{class: "#{activity.action_icon} #{activity.action_color} text-sm"}
+                .flex-1.min-w-0
+                  %p.text-sm.font-medium.text-gray-900= activity.description
+                  %p.text-xs.text-gray-500= activity.formatted_time
+                .flex-shrink-0
+                  = link_to admin_activity_path(activity), class: 'text-blue-600 hover:text-blue-900' do
+                    %i.fas.fa-eye.text-sm

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_09_26_120317) do
+ActiveRecord::Schema[7.2].define(version: 2025_09_30_140153) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -40,6 +40,24 @@ ActiveRecord::Schema[7.2].define(version: 2025_09_26_120317) do
     t.bigint "blob_id", null: false
     t.string "variation_digest", null: false
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
+  end
+
+  create_table "activities", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "subject_type", null: false
+    t.bigint "subject_id", null: false
+    t.string "action", null: false
+    t.text "description"
+    t.text "metadata"
+    t.string "ip_address"
+    t.string "user_agent"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["action"], name: "index_activities_on_action"
+    t.index ["subject_type", "subject_id"], name: "index_activities_on_subject"
+    t.index ["subject_type", "subject_id"], name: "index_activities_on_subject_type_and_subject_id"
+    t.index ["user_id", "created_at"], name: "index_activities_on_user_id_and_created_at"
+    t.index ["user_id"], name: "index_activities_on_user_id"
   end
 
   create_table "admins", force: :cascade do |t|
@@ -73,9 +91,11 @@ ActiveRecord::Schema[7.2].define(version: 2025_09_26_120317) do
     t.string "selected_period"
     t.decimal "selected_price", precision: 10, scale: 2
     t.integer "selected_mileage_limit"
+    t.bigint "vendor_id"
     t.index ["car_id"], name: "index_bookings_on_car_id"
     t.index ["payment_mode"], name: "index_bookings_on_payment_mode"
     t.index ["user_id"], name: "index_bookings_on_user_id"
+    t.index ["vendor_id"], name: "index_bookings_on_vendor_id"
   end
 
   create_table "car_documents", force: :cascade do |t|
@@ -117,7 +137,6 @@ ActiveRecord::Schema[7.2].define(version: 2025_09_26_120317) do
     t.integer "daily_milleage", default: 0
     t.integer "weekly_milleage", default: 0
     t.integer "monthly_milleage", default: 0
-    t.string "insurance_policy_number", default: ""
     t.string "insurance_policy", default: ""
     t.decimal "additional_mileage_charge", precision: 10, scale: 2, default: "0.0"
     t.index ["stripe_price_id"], name: "index_cars_on_stripe_price_id"
@@ -143,7 +162,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_09_26_120317) do
     t.string "invite_token"
     t.boolean "invite_sent", default: false
     t.string "status", default: "pending"
-    t.datetime "expires_at", default: "2025-09-25 09:01:03"
+    t.datetime "expires_at", default: "2025-10-01 09:25:25"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -212,8 +231,10 @@ ActiveRecord::Schema[7.2].define(version: 2025_09_26_120317) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "activities", "users"
   add_foreign_key "bookings", "cars"
   add_foreign_key "bookings", "users"
+  add_foreign_key "bookings", "vendors"
   add_foreign_key "car_documents", "cars"
   add_foreign_key "cars", "vendors"
   add_foreign_key "documents", "users"

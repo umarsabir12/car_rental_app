@@ -1,6 +1,7 @@
 -# Admin Booking Show Page
 .container.mx-auto.px-4.py-8
   %h1.text-3xl.font-bold.text-blue-900.mb-6 Booking Details
+
   .bg-white.shadow-lg.rounded-xl.overflow-hidden.p-8.mb-8
     %h2.text-xl.font-bold.text-blue-900.mb-4 Booking Info
     %div.flex.flex-wrap.gap-8
@@ -23,6 +24,29 @@
         %div.text-gray-700.mb-2
           %span.font-semibold.text-gray-800 End Date:
           = @booking.end_date
+    
+    / Vendor Assignment Section - Under Booking Info
+    .mt-6.pt-6.border-t.border-gray-200
+      %h3.text-lg.font-semibold.text-blue-900.mb-4 Change Vendor Assignment
+      = form_with model: [:admin, @booking], local: true, method: :patch, class: 'flex items-center gap-4' do |f|
+        .flex.items-center.gap-2
+          = f.label :vendor_id, 'Assign to Vendor:', class: 'text-sm font-medium text-gray-700 whitespace-nowrap'
+          = f.select :vendor_id, 
+              options_from_collection_for_select(@vendors, :id, :company_name, @booking.vendor_id),
+              { prompt: 'Select a vendor...' }, 
+              { class: 'px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 min-w-64' }
+        = f.submit 'Update Vendor', class: 'px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:ring-2 focus:ring-blue-500'
+      
+      - if @booking.vendor.present?
+        .mt-4.p-4.bg-green-50.border.border-green-200.rounded-lg
+          %p.text-green-700.font-medium
+            %i.fas.fa-check-circle.mr-2
+            Currently assigned to: #{@booking.vendor.company_name}
+      - else
+        .mt-4.p-4.bg-yellow-50.border.border-yellow-200.rounded-lg
+          %p.text-yellow-700.font-medium
+            %i.fas.fa-exclamation-triangle.mr-2
+            No vendor assigned to this booking
 
   .grid.grid-cols-1.md:grid-cols-2.gap-8
     / Car Info
@@ -50,10 +74,10 @@
       - else
         %div.text-gray-500 Car not found.
 
-    / Vendor Info
+    / Vendor Info - Shows assigned vendor, not car owner
     .bg-white.shadow-lg.rounded-xl.overflow-hidden.p-8
-      %h2.text-xl.font-bold.text-blue-900.mb-4 Car Owner (Vendor)
-      - vendor = @booking.car&.vendor
+      %h2.text-xl.font-bold.text-blue-900.mb-4 Assigned Vendor
+      - vendor = @booking.vendor
       - if vendor
         %div.flex.items-center.gap-4.mb-4
           -# = image_tag(vendor.company_logo.presence || image_path('placeholder-avatar.png'), class: 'w-16 h-16 object-cover rounded')
@@ -69,8 +93,15 @@
         %div.text-gray-700.mb-2
           %span.font-semibold.text-gray-800 Address:
           = vendor.address
+        .mt-4.p-3.bg-blue-50.border.border-blue-200.rounded-lg
+          %p.text-blue-700.text-sm
+            %i.fas.fa-info-circle.mr-2
+            This vendor is assigned to handle this booking
       - else
-        %div.text-gray-500 Vendor not found.
+        .text-center.py-8
+          %i.fas.fa-exclamation-triangle.text-4xl.text-gray-300.mb-4
+          %p.text-gray-500 No vendor assigned to this booking
+          %p.text-sm.text-gray-400 Please assign a vendor using the dropdown above
 
   .mt-8.bg-white.shadow-lg.rounded-xl.overflow-hidden.p-8
     %h2.text-xl.font-bold.text-blue-900.mb-4 Customer Info

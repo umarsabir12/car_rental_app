@@ -1,6 +1,7 @@
 class Document < ApplicationRecord
   belongs_to :user
   has_many_attached :images
+  has_many :activities, as: :subject, dependent: :destroy
   # before_create :set_pending_status
 
   TOURIST =  ["Home country driving license and IDP", "Passport Copy", "Copy of visa Entry Stamp"]
@@ -16,7 +17,7 @@ class Document < ApplicationRecord
   }.freeze
 
   # Callbacks to update booking status when document status changes
-  after_update :update_user_bookings_status, if: :saved_change_to_status?
+  after_update :update_user_bookings_status, :log_document_status_change, if: :saved_change_to_status?
 
   def self.doc_info_for_field(field)
     DOC_FIELDS[field]
@@ -45,5 +46,19 @@ class Document < ApplicationRecord
     
     # Check if all required documents exist and are approved
     user_docs.count == required_docs.count && user_docs.all? { |doc| doc.status == 'approved' }
+  end
+
+  def log_document_status_change
+    Activity.log_activity(
+      user: user,
+      subject: self,
+      action: "document_#{status}",
+      description: "#{user.full_name}'s #{doc_name} was #{status}",
+      metadata: { 
+        document_type: doc_name,
+        previous_status: status_before_last_save,
+        new_status: status
+      }
+    )
   end
 end

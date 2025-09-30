@@ -8,7 +8,38 @@ class Admin::BookingsController < ApplicationController
   end
 
   def show
-    @booking = Booking.includes(:user, car: :vendor).find(params[:id])
+    @booking = Booking.includes(:user, :vendor, car: :vendor).find(params[:id])
+    @vendors = Vendor.all.order(:company_name)
+    
+    # Set vendor to car's owner if not already assigned
+    if @booking.vendor_id.blank? && @booking.car&.vendor
+      @booking.update_column(:vendor_id, @booking.car.vendor_id)
+      @booking.reload
+    end
+  end
+
+  def update
+    @booking = Booking.find(params[:id])
+    if @booking.update(booking_params)
+      # Log vendor assignment activity
+      Activity.log_activity(
+        user: @booking.user,
+        subject: @booking,
+        action: 'booking_assigned',
+        description: "Booking ##{@booking.id} assigned to vendor: #{@booking.vendor&.company_name}",
+        metadata: { 
+          vendor_id: @booking.vendor_id,
+          vendor_name: @booking.vendor&.company_name,
+          assigned_by: current_admin.email
+        },
+        request: request
+      )
+      redirect_to admin_booking_path(@booking), notice: 'Vendor assignment updated successfully.'
+    else
+      @vendors = Vendor.all.order(:company_name)
+      flash.now[:alert] = 'Failed to update vendor assignment.'
+      render :show
+    end
   end
 
   def download_report
@@ -31,5 +62,11 @@ class Admin::BookingsController < ApplicationController
       end
     end
     send_data csv_data, filename: "bookings_report_#{Date.today}.csv"
+  end
+
+  private
+
+  def booking_params
+    params.require(:booking).permit(:vendor_id)
   end
 end 
