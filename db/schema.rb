@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_09_30_140153) do
+ActiveRecord::Schema[7.2].define(version: 2025_09_30_225417) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -53,11 +53,13 @@ ActiveRecord::Schema[7.2].define(version: 2025_09_30_140153) do
     t.string "user_agent"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "vendor_id"
     t.index ["action"], name: "index_activities_on_action"
     t.index ["subject_type", "subject_id"], name: "index_activities_on_subject"
     t.index ["subject_type", "subject_id"], name: "index_activities_on_subject_type_and_subject_id"
     t.index ["user_id", "created_at"], name: "index_activities_on_user_id_and_created_at"
     t.index ["user_id"], name: "index_activities_on_user_id"
+    t.index ["vendor_id"], name: "index_activities_on_vendor_id"
   end
 
   create_table "admins", force: :cascade do |t|
@@ -232,6 +234,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_09_30_140153) do
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "activities", "users"
+  add_foreign_key "activities", "vendors"
   add_foreign_key "bookings", "cars"
   add_foreign_key "bookings", "users"
   add_foreign_key "bookings", "vendors"

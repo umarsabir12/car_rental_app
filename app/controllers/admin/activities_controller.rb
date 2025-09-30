@@ -3,10 +3,8 @@ class Admin::ActivitiesController < ApplicationController
     before_action :authenticate_admin!
 
   def index
-    @activities = Activity.includes(:user, :subject)
+    @activities = Activity.includes(:user, :vendor, :subject)
                          .recent
-                        #  .page(params[:page])
-                        #  .per(50)
 
     # Filtering
     if params[:action_filter].present?
@@ -15,6 +13,19 @@ class Admin::ActivitiesController < ApplicationController
 
     if params[:user_id].present?
       @activities = @activities.by_user(User.find(params[:user_id]))
+    end
+
+    if params[:vendor_id].present?
+      @activities = @activities.by_vendor(Vendor.find(params[:vendor_id]))
+    end
+
+    if params[:actor_type].present?
+      case params[:actor_type]
+      when 'user'
+        @activities = @activities.user_activities
+      when 'vendor'
+        @activities = @activities.vendor_activities
+      end
     end
 
     if params[:date_from].present?
@@ -32,7 +43,9 @@ class Admin::ActivitiesController < ApplicationController
       this_week_activities: Activity.where(created_at: 1.week.ago..Time.current).count,
       booking_activities: Activity.by_action('booking_created').count,
       document_activities: Activity.by_action('document_uploaded').count,
-      payment_activities: Activity.by_action('payment_completed').count
+      payment_activities: Activity.by_action('payment_completed').count,
+      user_activities: Activity.user_activities.count,
+      vendor_activities: Activity.vendor_activities.count
     }
 
     # Recent activity types

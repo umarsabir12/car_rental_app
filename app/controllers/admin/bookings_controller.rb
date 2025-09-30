@@ -21,19 +21,6 @@ class Admin::BookingsController < ApplicationController
   def update
     @booking = Booking.find(params[:id])
     if @booking.update(booking_params)
-      # Log vendor assignment activity
-      Activity.log_activity(
-        user: @booking.user,
-        subject: @booking,
-        action: 'booking_assigned',
-        description: "Booking ##{@booking.id} assigned to vendor: #{@booking.vendor&.company_name}",
-        metadata: { 
-          vendor_id: @booking.vendor_id,
-          vendor_name: @booking.vendor&.company_name,
-          assigned_by: current_admin.email
-        },
-        request: request
-      )
       redirect_to admin_booking_path(@booking), notice: 'Vendor assignment updated successfully.'
     else
       @vendors = Vendor.all.order(:company_name)
