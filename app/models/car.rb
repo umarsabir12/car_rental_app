@@ -3,6 +3,7 @@ class Car < ApplicationRecord
   has_many_attached :images
   has_many :bookings
   has_one :car_document
+  has_many :activities, as: :subject, dependent: :destroy
 
   validates :images, presence: { message: 'at least one image is required' }
   validate :images_presence_on_create, on: :create
@@ -13,7 +14,9 @@ class Car < ApplicationRecord
     FEATURE_COLUMNS.select { |feature| send(feature) }.map { |feature| feature.humanize }
   end
   
-  after_create :create_stripe_product, :create_stripe_price
+  after_create :create_stripe_product, :create_stripe_price, :log_car_added
+  after_update :log_car_updated, if: :saved_change_to_brand? || :saved_change_to_model? || :saved_change_to_daily_price?
+  before_destroy :log_car_deleted
   
   scope :available, -> { where(status: 'available') }
 
@@ -131,5 +134,62 @@ class Car < ApplicationRecord
     )
 
     update(stripe_price_id: stripe_price.id)
+  end
+
+  private
+
+  def log_car_added
+    return unless vendor.present?
+    
+    Activity.log_activity(
+      vendor: vendor,
+      subject: self,
+      action: 'car_added',
+      description: "#{vendor.company_name} added a new car: #{full_name}",
+      metadata: { 
+        car_id: id,
+        brand: brand,
+        model: model,
+        year: year,
+        daily_price: daily_price
+      }
+    )
+  end
+
+  def log_car_updated
+    return unless vendor.present?
+    
+    changes = []
+    changes << "brand: #{brand_before_last_save} → #{brand}" if saved_change_to_brand?
+    changes << "model: #{model_before_last_save} → #{model}" if saved_change_to_model?
+    changes << "price: #{daily_price_before_last_save} → #{daily_price}" if saved_change_to_daily_price?
+    
+    Activity.log_activity(
+      vendor: vendor,
+      subject: self,
+      action: 'car_updated',
+      description: "#{vendor.company_name} updated car: #{full_name} (#{changes.join(', ')})",
+      metadata: { 
+        car_id: id,
+        changes: changes
+      }
+    )
+  end
+
+  def log_car_deleted
+    return unless vendor.present?
+    
+    Activity.log_activity(
+      vendor: vendor,
+      subject: self,
+      action: 'car_deleted',
+      description: "#{vendor.company_name} deleted car: #{full_name}",
+      metadata: { 
+        car_id: id,
+        brand: brand,
+        model: model,
+        year: year
+      }
+    )
   end
 end

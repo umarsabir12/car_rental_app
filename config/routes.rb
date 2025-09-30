@@ -36,6 +36,11 @@ Rails.application.routes.draw do
   namespace :admin do
     resources :dashboard, only: [:index]
     resources :analytics, only: [:index]
+    resources :activities, only: [:index, :show] do
+      collection do
+        get :export
+      end
+    end
     resources :customers do
       collection do
         get :download_report
@@ -50,6 +55,9 @@ Rails.application.routes.draw do
     resources :bookings do
       collection do
         get :download_report
+      end
+      member do
+        patch :update
       end
     end
     resources :cars do

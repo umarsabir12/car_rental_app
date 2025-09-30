@@ -10,18 +10,35 @@
         %div.text-gray-600.font-semibold
           = label.to_s.titleize
 
-
-  %div.bg-white.rounded-xl.shadow.p-8.mb-10
-    %h2.text-xl.font-bold.text-blue-900.mb-4 Recent Activity
-    %ul.divide-y.divide-gray-100
-      - @recent_activity.each do |activity|
-        %li.py-3.flex.justify-between
-          %span.font-medium.text-blue-900
-            = activity[:name]
-          %span.text-gray-600
-            = activity[:action]
-          %span.text-gray-400
-            = activity[:date] 
+  / Activity Tracker Section
+  .bg-white.rounded-xl.shadow.p-8.mb-10
+    .flex.items-center.justify-between.mb-6
+      %h2.text-xl.font-bold.text-blue-900 Activity Tracker
+      = link_to admin_activities_path, class: 'inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700' do
+        %i.fas.fa-chart-line.mr-2
+        View All Activities
+    
+    - recent_activities = Activity.includes(:user, :subject).recent.limit(10)
+    - if recent_activities.any?
+      .space-y-4
+        - recent_activities.each do |activity|
+          .flex.items-start.space-x-4.p-4.bg-gray-50.rounded-lg.hover:bg-gray-100.transition-colors
+            .flex-shrink-0
+              .w-8.h-8.rounded-full.bg-white.flex.items-center.justify-center.shadow-sm
+                %i{class: "#{activity.action_icon} #{activity.action_color} text-sm"}
+            .flex-1.min-w-0
+              %p.text-sm.font-medium.text-gray-900= activity.description
+              %p.text-xs.text-gray-500
+                %span.font-medium= activity.user.full_name
+                %span.mx-1 •
+                %span= activity.formatted_time
+            .flex-shrink-0
+              = link_to admin_activity_path(activity), class: 'text-blue-600 hover:text-blue-900' do
+                %i.fas.fa-eye.text-sm
+    - else
+      .text-center.py-8
+        %i.fas.fa-chart-line.text-4xl.text-gray-300.mb-4
+        %p.text-gray-500 No recent activities found. 
 
   / ==== Pending Documents Section ====
   - pending_docs = Document.includes(:user).where(status: 'pending')

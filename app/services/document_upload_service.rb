@@ -16,6 +16,14 @@ class DocumentUploadService
       document.images.attach(back)
       document.status = 'pending'
       if document.save
+        # Log document upload activity
+        Activity.log_activity(
+          user: document.user,
+          subject: document,
+          action: 'document_uploaded',
+          description: "#{document.user.full_name} uploaded #{document.doc_name}",
+          metadata: { document_type: document.doc_name }
+        )
         [true, "#{document.doc_name} uploaded successfully and is now pending review."]
       else
         [false, "Failed to upload #{document.doc_name}."]
@@ -39,6 +47,14 @@ class DocumentUploadService
         document.images.attach(params[:images].reject(&:blank?))
         document.status = 'pending'
         if document.save
+          # Log document upload activity
+          Activity.log_activity(
+            user: document.user,
+            subject: document,
+            action: 'document_uploaded',
+            description: "#{document.user.full_name} uploaded #{document.doc_name}",
+            metadata: { document_type: document.doc_name }
+          )
           [true, "#{document.doc_name} uploaded successfully and is now pending review."]
         else
           [false, "Failed to upload #{document.doc_name}."]

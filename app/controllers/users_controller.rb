@@ -28,6 +28,18 @@ class UsersController < ApplicationController
   def update
     @user = current_user
     if @user.update(user_params)
+      # Log profile update activity
+      Activity.log_activity(
+        user: @user,
+        subject: @user,
+        action: 'profile_updated',
+        description: "#{@user.full_name} updated their profile",
+        metadata: { 
+          updated_fields: user_params.keys,
+          nationality: @user.nationality
+        },
+        request: request
+      )
       redirect_to user_path(@user), notice: 'Profile updated successfully.'
     else
       flash.now[:alert] = 'Failed to update profile. Please check the errors below.'

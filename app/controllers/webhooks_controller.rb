@@ -46,6 +46,20 @@ class WebhooksController < ApplicationController
     
     # Create transaction record
     Transaction.create_from_checkout_session(session)
+    
+    # Log payment activity
+    Activity.log_activity(
+      user: booking.user,
+      subject: booking,
+      action: 'payment_completed',
+      description: "#{booking.user.full_name} completed payment for booking ##{booking.id}",
+      metadata: { 
+        amount: session['amount_total'],
+        currency: session['currency'],
+        stripe_session_id: session['id']
+      },
+      request: request
+    )
   end
 
   def handle_payment_intent_succeeded(payment_intent)
@@ -72,6 +86,21 @@ class WebhooksController < ApplicationController
       
       # Create failed transaction record
       Transaction.create_from_failed_payment(payment_intent)
+      
+      # Log payment failure activity
+      Activity.log_activity(
+        user: booking.user,
+        subject: booking,
+        action: 'payment_failed',
+        description: "#{booking.user.full_name}'s payment failed for booking ##{booking.id}",
+        metadata: { 
+          amount: payment_intent['amount'],
+          currency: payment_intent['currency'],
+          stripe_payment_intent_id: payment_intent['id'],
+          failure_reason: payment_intent['last_payment_error']&.dig('message')
+        },
+        request: request
+      )
     end
   end
 end

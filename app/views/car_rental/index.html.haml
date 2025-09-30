@@ -68,12 +68,12 @@
               %h3.text-xl.font-bold.text-white.text-center.px-4= car_class[:name]
 
   / Car Brands Banner
-  %section#brands.py-12.bg-white.border-t.border-b.border-gray-100
+  %section#brands.py-14.bg-white.border-t.border-b.border-gray-100
     .max-w-7xl.mx-auto.px-4.sm:px-6.lg:px-8
       .flex.flex-wrap.justify-center.items-center.gap-8.md:gap-12
         - (@brand_logos || []).each do |brand|
           = link_to cars_path(brand: (brand[:slug] || brand[:name].to_s.downcase)), title: brand[:name], class: 'flex items-center justify-center group hover:scale-105 transition-transform duration-200' do
-            %img{class: 'h-8 w-auto opacity-60 group-hover:opacity-80 transition-opacity duration-200', src: asset_path(brand[:image]), alt: "#{brand[:name]} logo", onerror: "this.onerror=null;this.src='/icon.png';"}
+            %img{class: 'h-12 w-auto group-hover:opacity-80 transition-opacity duration-200', src: asset_path(brand[:image]), alt: "#{brand[:name]} logo", onerror: "this.onerror=null;this.src='/icon.png';"}
 
   / Featured vehicles
   %section.py-14.bg-white
