@@ -1,20 +1,96 @@
 -# Vendor show page
 .container.mx-auto.px-4.py-8
-  .bg-white.shadow-lg.rounded-xl.overflow-hidden.p-8.flex.flex-col.md:flex-row.gap-8
-    -# %img.w-32.h-32.rounded-full.object-cover.shadow.mb-4.md:mb-0{ src: @vendor.company_logo.presence || image_path('placeholder-avatar.png'), alt: @vendor.company_name }
-    .flex-1
-      .flex.justify-between.items-center.mb-6
-        %h1.text-3xl.font-extrabold.text-blue-900.mb-2 Vendor Details
-        = button_tag type: 'button', class: 'items-center px-4 bg-blue-50 py-2 font-medium text-blue-600 hover:text-blue-800 hover:bg-blue-50 rounded-md transition-colors duration-200 flex gap-2', disabled: true do
-          %i.fas.fa-envelope.mr-2
-          Send Email
-      %h1.text-3xl.font-bold.text-gray-800.mb-2= @vendor.company_name
-      %div.text-lg.text-gray-600.mb-2= @vendor.name
-      %div.text-gray-500.mb-2= @vendor.address
-      %div.text-gray-500.mb-2= @vendor.phone
-      %div.text-gray-500.mb-2= @vendor.email
-      %div.text-gray-500.mb-2= @vendor.website
-      %p.text-gray-700.mt-4= @vendor.description
+  .bg-white.shadow-lg.rounded-xl.overflow-hidden.p-8
+    .mb-6
+      %h1.text-3xl.font-extrabold.text-blue-900 Vendor Details
+
+    / Main Content: Vendor Info + Trade License
+    .flex.flex-col.lg:flex-row.gap-8
+      / Left Side - Vendor Information
+      .flex-1
+        %h1.text-3xl.font-bold.text-gray-800.mb-2= @vendor.company_name
+        %div.text-lg.text-gray-600.mb-2= @vendor.name
+        %div.text-gray-500.mb-2= @vendor.address
+        %div.text-gray-500.mb-2= @vendor.phone
+        %div.text-gray-500.mb-2= @vendor.email
+        %div.text-gray-500.mb-2= @vendor.website
+        %p.text-gray-700.mt-4.mb-6= @vendor.description
+
+        / Send Email Button
+        = button_tag type: 'button', class: 'inline-flex items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors duration-200 shadow-md hover:shadow-lg gap-2' do
+          %i.fas.fa-envelope
+          %span Send Email
+
+      / Right Side - Trade License Card
+      .flex-shrink-0.w-full.lg:w-96
+        .bg-white.rounded-2xl.shadow-xl.border.border-gray-100.overflow-hidden.transition-all.duration-300
+          / Header Section
+          .bg-gradient-to-r.from-slate-50.to-gray-50.px-6.py-4.border-b.border-gray-100
+            %h2.text-xl.font-bold.flex.items-center.gap-3{style: 'color:#3A6363'}
+              .p-2.rounded-lg{style: 'background-color:#E6F0F0'}
+                %i.fas.fa-id-card{style: 'color:#3A6363'}
+              Trade License
+
+          / Content Section  
+          .p-6
+            - if @vendor.vendor_document.present? && @vendor.vendor_document.trade_license.attached?
+              .space-y-4
+                / Document Preview
+                .w-full.h-40.rounded-xl.overflow-hidden.bg-gradient-to-br.from-gray-50.to-gray-100.border-2.border-dashed.flex.items-center.justify-center.relative.group.transition-all.duration-300.hover:shadow-lg{style: 'border-color:#3A6363'}
+                  - content_type = @vendor.vendor_document.trade_license.content_type.to_s
+                  - if content_type.start_with?("image/")
+                    = image_tag url_for(@vendor.vendor_document.trade_license.variant(resize_to_fill: [320, 160])), class: 'w-full h-full object-cover transition-transform duration-300 group-hover:scale-110'
+                    .absolute.inset-0.bg-black.bg-opacity-0.group-hover:bg-opacity-20.transition-all.duration-300.flex.items-center.justify-center
+                      %i.fas.fa-search-plus.text-white.opacity-0.group-hover:opacity-100.text-xl
+                  - elsif content_type == 'application/pdf'
+                    .text-center.space-y-2
+                      %i.fas.fa-file-pdf.text-5xl.text-red-500
+                      %span.text-sm.font-medium.text-gray-600 PDF Document
+                  - else
+                    .text-center.space-y-2
+                      %i.fas.fa-file-alt.text-5xl.text-gray-400
+                      %span.text-sm.font-medium.text-gray-600 Document
+          
+                / Action Buttons & Status
+                .flex.flex-col.gap-3
+                  / Download Button
+                  = link_to url_for(@vendor.vendor_document.trade_license), target: '_blank', class: 'inline-flex items-center justify-center gap-2 px-4 py-2 text-white text-sm font-medium rounded-md transition-all duration-200 shadow hover:shadow-md w-full', style: 'background-color:#3A6363' do
+                    %i.fas.fa-download
+                    %span Download
+
+                  / Show Button
+                  - if @vendor.vendor_document.document_status == 'pending'
+                    = link_to admin_document_path(@vendor.vendor_document, type: 'trade_license'), target: '_blank', class: 'inline-flex items-center justify-center gap-2 px-4 py-2 text-white text-sm font-medium rounded-md transition-all duration-200 shadow hover:shadow-md w-full', style: 'background-color:#3A6363' do
+                      %i.fas.fa-eye
+                      %span View
+              
+                  / Status Badge
+                  - status = @vendor.vendor_document.document_status
+                  - case status
+                  - when 'approved'
+                    - badge_classes = 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                    - icon_class = 'fas fa-check-circle text-emerald-600'
+                  - when 'rejected'
+                    - badge_classes = 'bg-red-50 text-red-700 border-red-200'
+                    - icon_class = 'fas fa-times-circle text-red-600'
+                  - when 'pending'
+                    - badge_classes = 'bg-amber-50 text-amber-700 border-amber-200'
+                    - icon_class = 'fas fa-clock text-amber-600'
+                  - else
+                    - badge_classes = 'bg-gray-50 text-gray-700 border-gray-200'
+                    - icon_class = 'fas fa-question-circle text-gray-600'
+              
+                  .inline-flex.items-center.justify-center.gap-2.px-3.py-2.rounded-lg.text-sm.font-semibold.border-2.transition-all.duration-200.w-full{class: badge_classes}
+                    %i{class: icon_class}
+                    %span= status.to_s.titleize
+        
+            - else
+              / Empty State
+              .text-center.py-8.space-y-4
+                .w-20.h-20.mx-auto.rounded-full.flex.items-center.justify-center{style: 'background-color:#E6F0F0'}
+                  %i.fas.fa-file-plus.text-2xl{style: 'color:#3A6363'}
+                .space-y-2
+                  %h3.text-base.font-semibold.text-gray-800 No Trade License
 
   .mt-8
     %h2.text-2xl.font-bold.mb-4 Cars by this Vendor
@@ -36,4 +112,4 @@
             -# %div.text-blue-700.font-bold.mt-2= number_to_currency(car.daily_price) + " / day"
             = link_to 'View Car', admin_car_path(car), class: 'mt-3 inline-block bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded shadow text-sm font-bold'
     - else
-      %p.text-gray-500 No cars listed by this vendor yet. 
+      %p.text-gray-500 No cars listed by this vendor yet.
