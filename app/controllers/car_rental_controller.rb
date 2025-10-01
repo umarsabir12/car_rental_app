@@ -53,8 +53,8 @@ class CarRentalController < ApplicationController
       
     # Stats data
     @stats = [
-      {value: '990+', label: 'CARS RENTOUTS', icon: 'fa-car'},
-      {value: '230+', label: 'CARS SOLUTIONS', icon: 'fa-wrench'},
+      {value: '990+', label: 'BOOKINGS', icon: 'fa-calendar-check'},
+      {value: '230+', label: 'CARS', icon: 'fa-car'},
       {value: '660+', label: 'HAPPY CUSTOMER', icon: 'fa-users'}
     ]
       

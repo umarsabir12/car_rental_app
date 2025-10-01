@@ -69,7 +69,7 @@ class Car < ApplicationRecord
     { slug: 'lexus',        name: 'Lexus',        image: 'car_logo/logo_0007_pngwing.com-(25).png' },
     { slug: 'kia',          name: 'Kia',          image: 'car_logo/logo_0008_pngwing.com-(24).png' },
     { slug: 'cadillac',     name: 'Cadillac',     image: 'car_logo/logo_0009_pngwing.com-(23).png' },
-    { slug: 'gmc',          name: 'GMC',          image: 'car_logo/logo_0009_pngwing.com-(23).png' },
+    { slug: 'gmc',          name: 'GMC',          image: 'car_logo/logo_0010_pngwing.com-(22).png' },
     { slug: 'audi',         name: 'Audi',         image: 'car_logo/logo_0011_Layer-4.png' },
     { slug: 'mazda',        name: 'Mazda',        image: 'car_logo/logo_0012_Layer-3.png' },
     { slug: 'land-rover',   name: 'Land Rover',   image: 'car_logo/logo_0013_Layer-2.png' },
