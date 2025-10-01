@@ -1,20 +1,24 @@
-%nav.bg-white.shadow-lg.border-b.border-gray-100
+%nav.fixed.top-0.left-0.right-0.z-50{style: 'background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);'}
   .max-w-7xl.mx-auto.px-4.sm:px-6.lg:px-8
     .flex.justify-between.items-center.h-16
       / Logo
       .flex.items-center
         = link_to root_path, class: 'flex items-center space-x-2' do
-          %i{class: 'fas fa-car text-2xl', style: 'color: #3a6363'}
-          %span.text-xl.font-bold.text-gray-900 WheelsOnRent
+          - if user_signed_in? || vendor_signed_in?
+            %i{class: 'fas fa-car text-2xl text-gray-700'}
+            %span.text-xl.font-bold.text-gray-700 WheelsOnRent
+          - else
+            %i{class: 'fas fa-car text-2xl text-white'}
+            %span.text-xl.font-bold.text-white WheelsOnRent
       
       / Desktop Navigation
       .hidden.md:flex.items-center.space-x-8
         - unless user_signed_in? || vendor_signed_in?
-          = link_to 'Home', root_path, class: 'text-gray-700 font-medium transition navbar-link'
-          = link_to 'Rent A Car', cars_path, class: 'text-gray-700 font-medium transition navbar-link'
-          = link_to 'Car Brands', root_path(anchor: 'brands'), class: 'text-gray-700 font-medium transition navbar-link'
-          = link_to 'Car With Driver', cars_path(with_driver: 'true'), class: 'text-gray-700 font-medium transition navbar-link'
-          = link_to 'List Your Cars', '#', class: 'text-gray-700 font-medium transition navbar-link'
+          = link_to 'Home', root_path, class: 'text-white font-medium transition navbar-link'
+          = link_to 'Rent A Car', cars_path, class: 'text-white font-medium transition navbar-link'
+          = link_to 'Car Brands', root_path(anchor: 'brands'), class: 'text-white font-medium transition navbar-link'
+          = link_to 'Car With Driver', cars_path(with_driver: 'true'), class: 'text-white font-medium transition navbar-link'
+          -# = link_to 'List Your Cars', '#', class: 'text-gray-700 font-medium transition navbar-link'
         
         .flex.items-center.space-x-3
           - if user_signed_in?
@@ -89,7 +93,7 @@
           - else
             / Login dropdown with click
             .relative
-              %button#login-menu-button.flex.items-center.space-x-2.text-gray-700.font-medium.transition.duration-200.hover:text-gray-900{type: "button", onclick: "toggleLoginMenu()"}
+              %button#login-menu-button.flex.items-center.space-x-2.text-white.font-medium.transition.duration-200.hover:text-gray-900{type: "button", onclick: "toggleLoginMenu()"}
                 %i.fas.fa-user.text-sm
                 %span Login
                 %svg.w-4.h-4.text-gray-400.ml-1.transition-transform.duration-200{fill: "none", stroke: "currentColor", viewBox: "0 0 24 24", "stroke-width" => "2", id: "login-arrow"}
@@ -174,11 +178,11 @@
       
       - else
         / Unauthenticated mobile menu
-        = link_to 'Home', root_path, class: 'block px-3 py-2 text-gray-700 hover:bg-gray-50 font-medium transition rounded-md navbar-link'
-        = link_to 'Rent A Car', cars_path, class: 'block px-3 py-2 text-gray-700 hover:bg-gray-50 font-medium transition rounded-md navbar-link'
-        = link_to 'Car Brands', root_path(anchor: 'brands'), class: 'block px-3 py-2 text-gray-700 hover:bg-gray-50 font-medium transition rounded-md navbar-link'
-        = link_to 'Car With Driver', cars_path(with_driver: 'true'), class: 'block px-3 py-2 text-gray-700 hover:bg-gray-50 font-medium transition rounded-md navbar-link'
-        = link_to 'List Your Cars', '#', class: 'block px-3 py-2 text-gray-700 hover:bg-gray-50 font-medium transition rounded-md navbar-link'
+        = link_to 'Home', root_path, class: 'block px-3 py-2 text-white hover:bg-gray-50 font-medium transition rounded-md navbar-link'
+        = link_to 'Rent A Car', cars_path, class: 'block px-3 py-2 text-white hover:bg-gray-50 font-medium transition rounded-md navbar-link'
+        = link_to 'Car Brands', root_path(anchor: 'brands'), class: 'block px-3 py-2 text-white hover:bg-gray-50 font-medium transition rounded-md navbar-link'
+        = link_to 'Car With Driver', cars_path(with_driver: 'true'), class: 'block px-3 py-2 text-white hover:bg-gray-50 font-medium transition rounded-md navbar-link'
+        -# = link_to 'List Your Cars', '#', class: 'block px-3 py-2 text-gray-700 hover:bg-gray-50 font-medium transition rounded-md navbar-link'
         .border-t.border-gray-200.pt-4
           .px-3.py-2
             %p.text-sm.font-semibold.text-gray-500.mb-2 Login

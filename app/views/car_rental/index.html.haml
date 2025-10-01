@@ -1,6 +1,6 @@
 %div.min-h-screen.bg-white
   / Hero Section
-  %section.relative.text-white{style: 'height: 60vh; background: linear-gradient(135deg, #3a6363 0%, #2d4f4f 100%)'}
+  %section.relative.text-white.pt-16{style: 'height: 60vh; background: linear-gradient(135deg, #3a6363 0%, #2d4f4f 100%)'}
     .absolute.inset-0.opacity-30
       %img{class: "w-full h-full object-cover", src: asset_path('hero.jpg'), alt: 'Hero background'}
   
@@ -48,7 +48,7 @@
   %section.py-6.bg-white
     .max-w-7xl.mx-auto.px-4.sm:px-6.lg:px-8
       .relative.rounded-2xl.overflow-hidden.border.border-gray-100.shadow-sm
-        #promoSlider.relative.h-32.sm:h-40.md:h-48.lg:h-56
+        #promoSlider.relative.h-32.sm:h-40.md:h-48.lg:h-56{style: 'height: 20rem;'}
           %img.absolute.inset-0.w-full.h-full.object-cover.transition-opacity.duration-700.opacity-100{ src: image_path('tabby_banner.jpg'), alt: 'Tabby banner', 'data-index' => '0' }
           %img.absolute.inset-0.w-full.h-full.object-cover.transition-opacity.duration-700.opacity-0{ src: image_path('no_deposit_banner.jpg'), alt: 'No deposit banner', 'data-index' => '1' }
 
@@ -118,7 +118,7 @@
   %section.py-20.bg-white
     .max-w-7xl.mx-auto.px-4.sm:px-6.lg:px-8
       .grid.grid-cols-1.md:grid-cols-3.gap-16.text-center
-        - default_stats = [{value: '990 +', label: 'CARS RENTOUTS', icon: 'fa-car'}, {value: '230 +', label: 'CARS SOLUTIONS', icon: 'fa-shield-alt'}, {value: '660 +', label: 'HAPPY CUSTOMER', icon: 'fa-thumbs-up'}]
+        - default_stats = [{value: '990 +', label: 'BOOKINGS', icon: 'fa-calendar-check'}, {value: '230 +', label: 'CARS', icon: 'fa-car'}, {value: '660 +', label: 'HAPPY CUSTOMER', icon: 'fa-thumbs-up'}]
         - (@stats || default_stats).each do |s|
           .flex.flex-col.items-center
             .relative.inline-block
@@ -214,12 +214,12 @@
       .grid.grid-cols-1.md:grid-cols-3.gap-8
         .text-center.bg-white.rounded-2xl.shadow-sm.border.border-gray-100.p-8
           %div{class: 'rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4', style: 'background-color: #3a6363'}
-            %i{class: 'fas fa-shield-alt text-white text-2xl'}
+            %i{class: 'fas fa-handshake text-white text-2xl'}
           %h3.text-xl.font-bold.text-gray-900.mb-3 Affordable Rates
           %p.text-gray-600 We make car rentals simple and accessible for everyone. Enjoy transparent, competitive pricing with no hidden charges — the best value for your money.
         .text-center.bg-white.rounded-2xl.shadow-sm.border.border-gray-100.p-8
           %div{class: 'rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4', style: 'background-color: #3a6363'}
-            %i{class: 'fas fa-map-marked-alt text-white text-2xl'}
+            %i{class: 'fas fa-car text-white text-2xl'}
           %h3.text-xl.font-bold.text-gray-900.mb-3 Wide Range of Vehicles
           %p.text-gray-600 From budget-friendly cars to premium luxury models, SUVs, and vans, our diverse fleet is well-maintained to meet every travel need and occasion. 
         .text-center.bg-white.rounded-2xl.shadow-sm.border.border-gray-100.p-8
