@@ -53,7 +53,7 @@ class Admin::ActivitiesController < ApplicationController
   end
 
   def show
-    @activity = Activity.find(params[:id])
+    @activity = Activity.includes(:user, :vendor, :subject).find(params[:id])
   end
 
   def export

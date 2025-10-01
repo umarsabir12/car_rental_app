@@ -6,7 +6,7 @@
         .flex-1
           %h1.text-3xl.font-bold.text-gray-900 Activity Tracker
           %p.text-gray-600 Monitor all customer activities and system events
-        .flex.gap-3
+        -# .flex.gap-3
           = link_to admin_activities_path(format: :csv), class: 'inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50' do
             %i.fas.fa-download.mr-2
             Export CSV
@@ -115,9 +115,9 @@
                       = link_to admin_activity_path(activity), class: 'text-blue-600 hover:text-blue-900' do
                         %i.fas.fa-eye
                     
-                    .flex-shrink-0
-                      %button.text-gray-400.hover:text-gray-600{onclick: "toggleMetadata('#{activity.id}')"}
-                        %i.fas.fa-info-circle
+                    -# .flex-shrink-0
+                    -#   %button.text-gray-400.hover:text-gray-600{onclick: "toggleMetadata('#{activity.id}')"}
+                    -#     %i.fas.fa-info-circle
                 
                 - if activity.metadata.present?
                   .mt-4.hidden{id: "metadata-#{activity.id}"}
