@@ -1,14 +1,18 @@
 %div.min-h-screen.bg-white
   / Hero Section
   %section.relative.text-white.pt-16{style: 'height: 60vh; background: linear-gradient(135deg, #3a6363 0%, #2d4f4f 100%)'}
-    .absolute.inset-0.opacity-30
-      %img{class: "w-full h-full object-cover", src: asset_path('hero.jpg'), alt: 'Hero background'}
+    .absolute.inset-0
+      %img{class: "w-full h-full object-cover", src: asset_path('hero_new.png'), alt: 'Hero background'}
   
     .max-w-container.mx-auto.px-4.sm:px-6.lg:px-8.relative.z-10
       .grid.grid-cols-1.lg:grid-cols-2.gap-8.items-center.pt-40.lg:pt-40.pb-14.lg:pb-20.h-full
-        / Car Image - Left Side
+        / Car Image Slider - Left Side
         .order-1.lg:order-1.relative
-          %img{class: "w-full h-80 sm:h-96 lg:h-[16rem] object-contain", src: asset_path('hero_cars/car2.png'), alt: 'BMW sedan on road'}
+          #carHeroSlider.relative.h-80.sm:h-96.lg:h-64
+            %img.absolute.inset-0.w-full.h-full.object-contain.transition-opacity.duration-700.opacity-100{ src: asset_path('hero_cars/car1.png'), alt: 'Car 1', 'data-index' => '0' }
+            %img.absolute.inset-0.w-full.h-full.object-contain.transition-opacity.duration-700.opacity-0{ src: asset_path('hero_cars/car2.png'), alt: 'Car 2', 'data-index' => '1' }
+            %img.absolute.inset-0.w-full.h-full.object-contain.transition-opacity.duration-700.opacity-0{ src: asset_path('hero_cars/car3.png'), alt: 'Car 3', 'data-index' => '2' }
+            -# %img.absolute.inset-0.w-full.h-full.object-contain.transition-opacity.duration-700.opacity-0{ src: asset_path('hero_cars/car4.png'), alt: 'Car 4', 'data-index' => '3' }
       
         / Text Content - Right Side  
         .order-2.lg:order-2.relative
@@ -44,7 +48,7 @@
             .flex
               = f.submit 'Find a Car', class: 'w-full inline-flex justify-center items-center rounded-lg text-white font-semibold py-3 h-12 hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2', style: 'background-color: #3a6363; focus:ring-color: #3a6363'
 
-  / Promo Slider Banner (auto-rotates every 3s)
+  / Promo Slider Banner (auto-rotates every 5s)
   %section.py-6.bg-white
     .max-w-7xl.mx-auto.px-4.sm:px-6.lg:px-8
       .relative.rounded-2xl.overflow-hidden.border.border-gray-100.shadow-sm
@@ -282,8 +286,9 @@
 
 :javascript
   (function() {
-    function initPromoSlider() {
-      var container = document.getElementById('promoSlider');
+    // Generic slider function
+    function initSlider(containerId, interval) {
+      var container = document.getElementById(containerId);
       if (!container) return;
       var slides = Array.prototype.slice.call(container.querySelectorAll('img'));
       if (slides.length < 2) return;
@@ -302,22 +307,28 @@
       }
 
       // Clear any previous interval to avoid duplicates on Turbo renders
-      if (window._promoSliderInterval) {
-        clearInterval(window._promoSliderInterval);
-        window._promoSliderInterval = null;
+      var intervalKey = '_' + containerId + 'Interval';
+      if (window[intervalKey]) {
+        clearInterval(window[intervalKey]);
+        window[intervalKey] = null;
       }
 
       show(active);
-      window._promoSliderInterval = setInterval(function() {
+      window[intervalKey] = setInterval(function() {
         active = (active + 1) % slides.length;
         show(active);
-      }, 5000);
+      }, interval);
     }
 
-    document.addEventListener('DOMContentLoaded', initPromoSlider);
-    document.addEventListener('turbo:load', initPromoSlider);
-    document.addEventListener('turbo:render', initPromoSlider);
+    function initAllSliders() {
+      initSlider('promoSlider', 5000);  // Promo slider - 5 seconds
+      initSlider('carHeroSlider', 3000); // Hero car slider - 3 seconds
+    }
+
+    document.addEventListener('DOMContentLoaded', initAllSliders);
+    document.addEventListener('turbo:load', initAllSliders);
+    document.addEventListener('turbo:render', initAllSliders);
     if (document.readyState !== 'loading') {
-      setTimeout(initPromoSlider, 0);
+      setTimeout(initAllSliders, 0);
     }
   })();
