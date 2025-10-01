@@ -29,7 +29,7 @@
             .flex-1.min-w-0
               %p.text-sm.font-medium.text-gray-900= activity.description
               %p.text-xs.text-gray-500
-                %span.font-medium= activity.user.full_name
+                %span.font-medium= activity.user.full_name  if activity.user.present?
                 %span.mx-1 •
                 %span= activity.formatted_time
             .flex-shrink-0
