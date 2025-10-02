@@ -1,4 +1,4 @@
 class ApplicationMailer < ActionMailer::Base
-  default from: "WheelsOnRent <noreply@wheelsonrent.com>"
-  layout "mailer"
+  default from: ENV['FROM_EMAIL'] || 'noreply@yourapp.herokuapp.com'
+  layout 'mailer'
 end

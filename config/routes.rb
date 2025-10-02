@@ -36,6 +36,11 @@ Rails.application.routes.draw do
   namespace :admin do
     resources :dashboard, only: [:index]
     resources :analytics, only: [:index]
+    resources :email_test, only: [:index] do
+      collection do
+        post :send_test
+      end
+    end
     resources :activities, only: [:index, :show] do
       collection do
         get :export

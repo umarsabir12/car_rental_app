@@ -1,0 +1,18 @@
+<h2>Email Test Successful!</h2>
+<p>Hello!</p>
+<p>This is a test email from your Car Rental application running on Heroku.</p>
+<p>If you're receiving this email, your SendGrid configuration is working correctly!</p>
+<p><strong>Test Details:</strong></p>
+<ul>
+  <li>Sent to: <%= @user_email %></li>
+  <li>Sent at: <%= Time.current.strftime("%B %d, %Y at %I:%M %p") %></li>
+  <li>From: WheelsOnRent Car Rental Service</li>
+</ul>
+<p>You can now implement email notifications for:</p>
+<ul>
+  <li>Booking confirmations</li>
+  <li>Document approval/rejection notifications</li>
+  <li>Password reset emails</li>
+  <li>Payment confirmations</li>
+</ul>
+<p>Best regards,<br>WheelsOnRent Team</p>
