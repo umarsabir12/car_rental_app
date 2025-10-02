@@ -22,6 +22,26 @@ class Vendor < ApplicationRecord
   after_create :log_vendor_registration
   after_update :log_vendor_profile_update, if: :saved_change_to_company_name?
 
+  # Soft delete functionality
+  scope :active, -> { where(deleted_at: nil) }
+  scope :deleted, -> { where.not(deleted_at: nil) }
+
+  def soft_delete!
+    update!(deleted_at: Time.current)
+  end
+
+  def restore!
+    update!(deleted_at: nil)
+  end
+
+  def deleted?
+    deleted_at.present?
+  end
+
+  def active?
+    deleted_at.nil?
+  end
+
   scope :with_expired_emirates_id, -> {
     where.not(emirates_id: [nil, ""]).where("emirates_id_expires_on < ?", Date.current)
   }

@@ -20,6 +20,8 @@ class Activity < ApplicationRecord
     car_added
     car_updated
     car_deleted
+    vendor_deleted
+    vendor_restored
   ].freeze
 
   validates :action, inclusion: { in: ACTIONS }
@@ -67,8 +69,10 @@ class Activity < ApplicationRecord
       'fas fa-credit-card'
     when 'car_viewed', 'car_added', 'car_updated', 'car_deleted'
       'fas fa-car'
-    when 'registration_completed', 'vendor_registration'
+    when 'registration_completed', 'vendor_registration', 'vendor_restored'
       'fas fa-user-plus'
+    when 'vendor_deleted'
+      'fas fa-user-times'
     else
       'fas fa-circle'
     end
@@ -76,13 +80,13 @@ class Activity < ApplicationRecord
 
   def action_color
     case action
-    when 'booking_created', 'document_uploaded', 'payment_completed', 'registration_completed', 'vendor_registration', 'car_added'
+    when 'booking_created', 'document_uploaded', 'payment_completed', 'registration_completed', 'vendor_registration', 'car_added', 'vendor_restored'
       'text-blue-600'
     when 'booking_confirmed', 'document_approved', 'car_updated'
       'text-green-600'
-    when 'booking_cancelled', 'document_rejected', 'payment_failed', 'car_deleted'
+    when 'booking_cancelled', 'document_rejected', 'payment_failed', 'car_deleted', 'vendor_deleted'
       'text-red-600'
-    when 'profile_updated', 'car_viewed', 'vendor_profile_updated'
+    when 'profile_updated', 'car_viewed'
       'text-purple-600'
     else
       'text-gray-600'

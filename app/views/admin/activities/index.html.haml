@@ -15,7 +15,7 @@
             Back to Dashboard
 
     / Stats Cards
-    .grid.grid-cols-1.md:grid-cols-2.lg:grid-cols-4.gap-6.mb-8
+    .grid.grid-cols-1.md:grid-cols-2.lg:grid-cols-5.gap-6.mb-8
       .bg-white.overflow-hidden.shadow.rounded-lg
         .p-5
           .flex.items-center
@@ -30,21 +30,31 @@
         .p-5
           .flex.items-center
             .flex-shrink-0
-              %i.fas.fa-calendar-day.text-2xl.text-green-600
+              %i.fas.fa-users.text-2xl.text-blue-600
             .ml-5.w-0.flex-1
               %dl
-                %dt.text-sm.font-medium.text-gray-500.truncate Today
-                %dd.text-lg.font-medium.text-gray-900= @stats[:today_activities]
+                %dt.text-sm.font-medium.text-gray-500.truncate Customer Activities
+                %dd.text-lg.font-medium.text-gray-900= @stats[:user_activities]
       
       .bg-white.overflow-hidden.shadow.rounded-lg
         .p-5
           .flex.items-center
             .flex-shrink-0
-              %i.fas.fa-calendar-week.text-2xl.text-purple-600
+              %i.fas.fa-store.text-2xl.text-green-600
             .ml-5.w-0.flex-1
               %dl
-                %dt.text-sm.font-medium.text-gray-500.truncate This Week
-                %dd.text-lg.font-medium.text-gray-900= @stats[:this_week_activities]
+                %dt.text-sm.font-medium.text-gray-500.truncate Vendor Activities
+                %dd.text-lg.font-medium.text-gray-900= @stats[:vendor_activities]
+      
+      .bg-white.overflow-hidden.shadow.rounded-lg
+        .p-5
+          .flex.items-center
+            .flex-shrink-0
+              %i.fas.fa-calendar-day.text-2xl.text-purple-600
+            .ml-5.w-0.flex-1
+              %dl
+                %dt.text-sm.font-medium.text-gray-500.truncate Today
+                %dd.text-lg.font-medium.text-gray-900= @stats[:today_activities]
       
       .bg-white.overflow-hidden.shadow.rounded-lg
         .p-5
@@ -61,16 +71,14 @@
       .px-6.py-4
         = form_with url: admin_activities_path, method: :get, local: true, class: 'flex items-center gap-4 flex-wrap' do |f|
           .flex.items-center.gap-2
-            = f.label :action_filter, 'Type:', class: 'text-sm font-medium text-gray-700 whitespace-nowrap'
-            = f.select :action_filter, 
-                options_for_select([['All Activities', ''],['Booking Created', 'booking_created'],['Booking Confirmed', 'booking_confirmed'],['Booking Cancelled', 'booking_cancelled'],['Document Uploaded', 'document_uploaded'],['Document Approved', 'document_approved'],['Document Rejected', 'document_rejected'],['Payment Completed', 'payment_completed'],['Payment Failed', 'payment_failed'],['Profile Updated', 'profile_updated'],['Registration Completed', 'registration_completed']], params[:action_filter]), {}, { class: 'px-3 py-1 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 text-sm' }
+            = f.label :actor_type, 'Show:', class: 'text-sm font-medium text-gray-700 whitespace-nowrap'
+            = f.select :actor_type, 
+                options_for_select([['All Activities', ''],['Customer Activities', 'user'],['Vendor Activities', 'vendor']], params[:actor_type]), {}, { class: 'px-3 py-1 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 text-sm' }
           
           .flex.items-center.gap-2
-            = f.label :user_id, 'User:', class: 'text-sm font-medium text-gray-700 whitespace-nowrap'
-            = f.select :user_id, 
-                options_from_collection_for_select(User.order(:first_name), :id, :full_name, params[:user_id]), 
-                { prompt: 'All Users' }, 
-                { class: 'px-3 py-1 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 text-sm' }
+            = f.label :action_filter, 'Type:', class: 'text-sm font-medium text-gray-700 whitespace-nowrap'
+            = f.select :action_filter, 
+                options_for_select([['All Activities', ''],['Booking Created', 'booking_created'],['Booking Confirmed', 'booking_confirmed'],['Booking Cancelled', 'booking_cancelled'],['Document Uploaded', 'document_uploaded'],['Document Approved', 'document_approved'],['Document Rejected', 'document_rejected'],['Payment Completed', 'payment_completed'],['Payment Failed', 'payment_failed'],['Profile Updated', 'profile_updated'],['Registration Completed', 'registration_completed'],['Vendor Registration', 'vendor_registration'],['Car Added', 'car_added'],['Car Updated', 'car_updated'],['Car Deleted', 'car_deleted'],['Vendor Deleted', 'vendor_deleted'],['Vendor Restored', 'vendor_restored']], params[:action_filter]), {}, { class: 'px-3 py-1 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 text-sm' }
           
           .flex.items-center.gap-2
             = f.label :date_from, 'From:', class: 'text-sm font-medium text-gray-700 whitespace-nowrap'

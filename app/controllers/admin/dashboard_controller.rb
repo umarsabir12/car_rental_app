@@ -6,7 +6,7 @@ class Admin::DashboardController < ApplicationController
     @stats = {
       users: User.count,
       bookings: Booking.count,
-      vendors: Vendor.count,
+      vendors: Vendor.active.count,
       cars: Car.count
     }
     @recent_activity = [
