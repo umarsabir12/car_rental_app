@@ -1,17 +1,20 @@
 %div.min-h-screen.bg-white
   / Hero Section
-  %section.relative.text-white.pt-16{style: 'height: 60vh; background: linear-gradient(135deg, #3a6363 0%, #2d4f4f 100%)'}
-    .absolute.inset-0
-      %img{class: "w-full h-full object-cover", src: asset_path('hero_new.png'), alt: 'Hero background'}
+  %section.relative.text-white.pt-16{style: 'height: 90vh; background: linear-gradient(135deg, #3a6363 0%, #2d4f4f 100%)'}
+    #heroImageSlider.absolute.inset-0
+      %img.absolute.inset-0.w-full.h-full.object-cover.transition-opacity.duration-1000.opacity-100{src: asset_path('hero_image_1.png'), alt: 'Hero background 1', 'data-index' => '0'}
+      %img.absolute.inset-0.w-full.h-full.object-cover.transition-opacity.duration-1000.opacity-0{src: asset_path('hero_image_2.png'), alt: 'Hero background 2', 'data-index' => '1'}
+      %img.absolute.inset-0.w-full.h-full.object-cover.transition-opacity.duration-1000.opacity-0{src: asset_path('hero_image_3.png'), alt: 'Hero background 3', 'data-index' => '2'}
+      %img.absolute.inset-0.w-full.h-full.object-cover.transition-opacity.duration-1000.opacity-0{src: asset_path('hero_image_4.png'), alt: 'Hero background 4', 'data-index' => '3'}
   
     .max-w-container.mx-auto.px-4.sm:px-6.lg:px-8.relative.z-10
       .grid.grid-cols-1.lg:grid-cols-2.gap-8.items-center.pt-40.lg:pt-40.pb-14.lg:pb-20.h-full
         / Car Image Slider - Left Side
         .order-1.lg:order-1.relative
-          #carHeroSlider.relative.h-80.sm:h-96.lg:h-64.mt-5.ml-5
-            %img.absolute.inset-0.w-full.h-full.object-contain.transition-opacity.duration-700.opacity-100{ src: asset_path('hero_cars/car1.png'), alt: 'Car 1', 'data-index' => '0' }
-            %img.absolute.inset-0.w-full.h-full.object-contain.transition-opacity.duration-700.opacity-0{ src: asset_path('hero_cars/car2.png'), alt: 'Car 2', 'data-index' => '1' }
-            %img.absolute.inset-0.w-full.h-full.object-contain.transition-opacity.duration-700.opacity-0{ src: asset_path('hero_cars/car3.png'), alt: 'Car 3', 'data-index' => '2' }
+          -# #carHeroSlider.relative.h-80.sm:h-96.lg:h-64.mt-5.ml-5
+          -#   %img.absolute.inset-0.w-full.h-full.object-contain.transition-opacity.duration-700.opacity-100{ src: asset_path('hero_cars/car1.png'), alt: 'Car 1', 'data-index' => '0' }
+          -#   %img.absolute.inset-0.w-full.h-full.object-contain.transition-opacity.duration-700.opacity-0{ src: asset_path('hero_cars/car2.png'), alt: 'Car 2', 'data-index' => '1' }
+          -#   %img.absolute.inset-0.w-full.h-full.object-contain.transition-opacity.duration-700.opacity-0{ src: asset_path('hero_cars/car3.png'), alt: 'Car 3', 'data-index' => '2' }
             -# %img.absolute.inset-0.w-full.h-full.object-contain.transition-opacity.duration-700.opacity-0{ src: asset_path('hero_cars/car4.png'), alt: 'Car 4', 'data-index' => '3' }
       
         / Text Content - Right Side  
@@ -28,7 +31,7 @@
               = (@cta_label || 'Rent a Car')
 
   / Search bar
-  %section.-mt-8.relative.z-10
+  %section.-mt-14.relative.z-10
     .max-w-7xl.mx-auto.px-4.sm:px-6.lg:px-8
       %div{class: 'bg-white/95 backdrop-blur rounded-2xl shadow-xl border border-gray-100 p-4 sm:p-6'}
         = form_with url: (@cars_path || '#'), method: :get, local: true, role: 'search', 'aria-label' => 'Search vehicles' do |f|
@@ -321,8 +324,9 @@
     }
 
     function initAllSliders() {
-      initSlider('promoSlider', 5000);  // Promo slider - 5 seconds
-      initSlider('carHeroSlider', 3000); // Hero car slider - 3 seconds
+      initSlider('heroImageSlider', 4000); // Hero background slider - 5 seconds
+      initSlider('promoSlider', 5000);     // Promo slider - 5 seconds
+      initSlider('carHeroSlider', 3000);   // Hero car slider - 3 seconds (if uncommented)
     }
 
     document.addEventListener('DOMContentLoaded', initAllSliders);
