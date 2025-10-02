@@ -19,6 +19,9 @@ class Car < ApplicationRecord
   before_destroy :log_car_deleted
   
   scope :available, -> { where(status: 'available') }
+  scope :with_approved_mulkiya, -> { 
+    joins(:car_document).where(car_documents: { document_status: 'approved' }) 
+  }
 
   def full_name
     "#{brand} #{model} (#{year})"

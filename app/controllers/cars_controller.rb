@@ -1,6 +1,7 @@
 class CarsController < ApplicationController
   def index
-    @cars = Car.all
+    # Only show cars with approved mulkiya documents
+    @cars = Car.with_approved_mulkiya
 
     if params[:category].present?
       @selected_category = params[:category]
@@ -32,6 +33,6 @@ class CarsController < ApplicationController
       .map(&:to_s)
       .sort
     
-    @recommended_cars = Car.where.not(id: @car.id).where(featured: true).limit(4)
+    @recommended_cars = Car.with_approved_mulkiya.where.not(id: @car.id).where(featured: true).limit(4)
   end
 end

@@ -33,7 +33,15 @@
                         %i.fas.fa-times-circle.text-red-500.text-lg
                       - else
                         %i.fas.fa-file-alt.text-gray-400.text-lg
-                      %h3.font-semibold.text-gray-800= doc.doc_name
+                      %h3.font-semibold.text-gray-800
+                        - display_name = case doc.doc_name
+                        - when 'Home country driving license and IDP'
+                          - 'International Driving license'
+                        - when 'Copy of visa Entry Stamp'
+                          - 'Copy of visa'
+                        - else
+                          - doc.doc_name
+                        = display_name
                     - status_color = doc.status == 'not uploaded' ? 'bg-red-100 text-red-700' : doc.status == 'approved' ? 'bg-green-100 text-green-700' : doc.status == 'rejected' ? 'bg-red-100 text-red-700' : 'bg-yellow-100 text-yellow-700'
                     %span.inline-flex.items-center.px-2.py-1.rounded-full.text-xs.font-medium{class: status_color}
                       = doc.status.titleize

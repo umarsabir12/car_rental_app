@@ -34,6 +34,7 @@ class DocumentUploadService
       unless passport.present? && visa.present?
         return [false, 'Both passport and visa copies are required.']
       end
+      debugger
       document.images.attach(passport)
       document.images.attach(visa)
       document.status = 'pending'
