@@ -16,8 +16,8 @@
         - unless user_signed_in? || vendor_signed_in?
           = link_to 'Home', root_path, class: 'text-white font-medium transition navbar-link'
           = link_to 'Rent A Car', cars_path, class: 'text-white font-medium transition navbar-link'
-          = link_to 'Car Brands', root_path(anchor: 'brands'), class: 'text-white font-medium transition navbar-link'
-          = link_to 'Car With Driver', cars_path(with_driver: 'true'), class: 'text-white font-medium transition navbar-link'
+          -# = link_to 'Car Brands', root_path(anchor: 'brands'), class: 'text-white font-medium transition navbar-link'
+          -# = link_to 'Car With Driver', cars_path(with_driver: 'true'), class: 'text-white font-medium transition navbar-link'
           -# = link_to 'List Your Cars', '#', class: 'text-gray-700 font-medium transition navbar-link'
         
         .flex.items-center.space-x-3
@@ -180,8 +180,8 @@
         / Unauthenticated mobile menu
         = link_to 'Home', root_path, class: 'block px-3 py-2 text-white hover:bg-gray-50 font-medium transition rounded-md navbar-link'
         = link_to 'Rent A Car', cars_path, class: 'block px-3 py-2 text-white hover:bg-gray-50 font-medium transition rounded-md navbar-link'
-        = link_to 'Car Brands', root_path(anchor: 'brands'), class: 'block px-3 py-2 text-white hover:bg-gray-50 font-medium transition rounded-md navbar-link'
-        = link_to 'Car With Driver', cars_path(with_driver: 'true'), class: 'block px-3 py-2 text-white hover:bg-gray-50 font-medium transition rounded-md navbar-link'
+        -# = link_to 'Car Brands', root_path(anchor: 'brands'), class: 'block px-3 py-2 text-white hover:bg-gray-50 font-medium transition rounded-md navbar-link'
+        -# = link_to 'Car With Driver', cars_path(with_driver: 'true'), class: 'block px-3 py-2 text-white hover:bg-gray-50 font-medium transition rounded-md navbar-link'
         -# = link_to 'List Your Cars', '#', class: 'block px-3 py-2 text-gray-700 hover:bg-gray-50 font-medium transition rounded-md navbar-link'
         .border-t.border-gray-200.pt-4
           .px-3.py-2
