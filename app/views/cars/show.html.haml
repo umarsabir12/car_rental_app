@@ -1,5 +1,17 @@
 - content_for :head do
   %meta{ name: "booked-dates", content: @booked_dates.to_json, "data-turbo-track" => "reload" }
+  :css
+    /* Car show page specific navbar styling */
+    nav {
+      background: rgba(255, 255, 255, 0.9) !important;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.1) !important;
+    }
+    nav .text-white {
+      color: #374151 !important; /* text-gray-700 */
+    }
+    nav .text-white:hover {
+      color: #111827 !important; /* text-gray-900 */
+    }
 
 %div.w-full.bg-gray-50.min-h-screen.pt-16
   / Header Section
