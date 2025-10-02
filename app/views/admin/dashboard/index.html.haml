@@ -26,10 +26,9 @@
           Customer Activities
         %span.text-sm.text-gray-500.bg-blue-100.text-blue-800.px-2.py-1.rounded-full= Activity.user_activities.count
       
-      - user_activities = Activity.user_activities.includes(:user, :subject).recent.limit(5)
-      - if user_activities.any?
+      - if @recent_user_activities.any?
         .space-y-3
-          - user_activities.each do |activity|
+          - @recent_user_activities.each do |activity|
             .flex.items-start.space-x-3.p-3.bg-blue-50.rounded-lg.hover:bg-blue-100.transition-colors
               .flex-shrink-0
                 .w-6.h-6.rounded-full.bg-white.flex.items-center.justify-center.shadow-sm
@@ -56,10 +55,9 @@
           Vendor Activities
         %span.text-sm.text-gray-500.bg-green-100.text-green-800.px-2.py-1.rounded-full= Activity.vendor_activities.count
       
-      - vendor_activities = Activity.vendor_activities.includes(:vendor, :subject).recent.limit(5)
-      - if vendor_activities.any?
+      - if @recent_vendor_activities.any?
         .space-y-3
-          - vendor_activities.each do |activity|
+          - @recent_vendor_activities.each do |activity|
             .flex.items-start.space-x-3.p-3.bg-green-50.rounded-lg.hover:bg-green-100.transition-colors
               .flex-shrink-0
                 .w-6.h-6.rounded-full.bg-white.flex.items-center.justify-center.shadow-sm

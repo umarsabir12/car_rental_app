@@ -58,13 +58,45 @@ class User < ApplicationRecord
     return nil unless has_pending_booking
     if docs.any? { |d| d.status == 'rejected' }
       'Some of your documents have been rejected. Please review and re-upload them to proceed with your booking.'
-    elsif docs.any? { |d| d.status == 'not uploaded' }
-      'Please submit all required documents to proceed with your payment and complete the booking process.'
-    elsif docs.any? { |d| d.status == 'pending' }
-      'Your documents are in review. Once they are approved, you are good to go with the payment.'
     else
       nil
     end
+  end
+
+  # Notification helper methods
+  def missing_documents
+    documents.where(status: 'not uploaded')
+  end
+
+  def pending_documents
+    documents.where(status: 'pending')
+  end
+
+  def rejected_documents
+    documents.where(status: 'rejected')
+  end
+
+  def approved_documents
+    documents.where(status: 'approved')
+  end
+
+  def unpaid_bookings
+    bookings.where(payment_processed: [false, nil])
+  end
+
+  def failed_payments
+    Transaction.joins(:booking).where(bookings: { user_id: id }, status: 'failed')
+  end
+
+  def document_completion_percentage
+    total_required = nationality == "resident" ? Document::RESIDENT.count : Document::TOURIST.count
+    approved_count = approved_documents.count
+    return 0 if total_required == 0
+    ((approved_count.to_f / total_required) * 100).round
+  end
+
+  def has_notifications?
+    missing_documents.any? || pending_documents.any? || rejected_documents.any? || unpaid_bookings.any? || failed_payments.any?
   end
 
   private

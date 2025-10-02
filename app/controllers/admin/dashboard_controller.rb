@@ -9,10 +9,10 @@ class Admin::DashboardController < ApplicationController
       vendors: Vendor.active.count,
       cars: Car.count
     }
-    @recent_activity = [
-      { name: 'Alice Smith', action: 'Booked a car', date: '2024-06-01' },
-      { name: 'Bob Johnson', action: 'Registered as user', date: '2024-06-02' },
-      { name: 'Speedy Rentals', action: 'Added a new car', date: '2024-06-03' }
-    ]    
+    
+    # Load recent activities for dashboard
+    @recent_user_activities = Activity.user_activities.includes(:user, :subject).recent.limit(5)
+    @recent_vendor_activities = Activity.vendor_activities.includes(:vendor, :subject).recent.limit(5)
+    @latest_activities = Activity.includes(:user, :vendor, :subject).recent.limit(10)
   end
 end 
