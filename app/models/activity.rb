@@ -9,6 +9,7 @@ class Activity < ApplicationRecord
     booking_confirmed
     booking_cancelled
     document_uploaded
+    document_pending
     document_approved
     document_rejected
     payment_completed
@@ -63,7 +64,7 @@ class Activity < ApplicationRecord
     case action
     when 'booking_created', 'booking_confirmed', 'booking_cancelled'
       'fas fa-calendar-check'
-    when 'document_uploaded', 'document_approved', 'document_rejected'
+    when 'document_uploaded', 'document_pending', 'document_approved', 'document_rejected'
       'fas fa-file-upload'
     when 'payment_completed', 'payment_failed'
       'fas fa-credit-card'
@@ -80,7 +81,7 @@ class Activity < ApplicationRecord
 
   def action_color
     case action
-    when 'booking_created', 'document_uploaded', 'payment_completed', 'registration_completed', 'vendor_registration', 'car_added', 'vendor_restored'
+    when 'booking_created', 'document_uploaded', 'document_pending', 'payment_completed', 'registration_completed', 'vendor_registration', 'car_added', 'vendor_restored'
       'text-blue-600'
     when 'booking_confirmed', 'document_approved', 'car_updated'
       'text-green-600'

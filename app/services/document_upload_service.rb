@@ -15,7 +15,7 @@ class DocumentUploadService
       document.images.attach(front)
       document.images.attach(back)
       document.status = 'pending'
-      if document.save
+      if document.save!
         # Log document upload activity
         Activity.log_activity(
           user: document.user,
@@ -34,7 +34,6 @@ class DocumentUploadService
       unless passport.present? && visa.present?
         return [false, 'Both passport and visa copies are required.']
       end
-      debugger
       document.images.attach(passport)
       document.images.attach(visa)
       document.status = 'pending'
