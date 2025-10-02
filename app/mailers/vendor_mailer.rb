@@ -1,5 +1,5 @@
 class VendorMailer < ApplicationMailer
-  default from: 'no-reply@wheelsonrent.com'
+  # Remove the hardcoded from address - will use ApplicationMailer's default
 
   def invite_email(vendor)
     @vendor = vendor
