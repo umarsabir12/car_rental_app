@@ -18,27 +18,65 @@
         %i.fas.fa-chart-line.mr-2
         View All Activities
     
-    - recent_activities = Activity.includes(:user, :subject).recent.limit(10)
-    - if recent_activities.any?
-      .space-y-4
-        - recent_activities.each do |activity|
-          .flex.items-start.space-x-4.p-4.bg-gray-50.rounded-lg.hover:bg-gray-100.transition-colors
-            .flex-shrink-0
-              .w-8.h-8.rounded-full.bg-white.flex.items-center.justify-center.shadow-sm
-                %i{class: "#{activity.action_icon} #{activity.action_color} text-sm"}
-            .flex-1.min-w-0
-              %p.text-sm.font-medium.text-gray-900= activity.description
-              %p.text-xs.text-gray-500
-                %span.font-medium= activity.user.full_name  if activity.user.present?
-                %span.mx-1 •
-                %span= activity.formatted_time
-            .flex-shrink-0
-              = link_to admin_activity_path(activity), class: 'text-blue-600 hover:text-blue-900' do
-                %i.fas.fa-eye.text-sm
-    - else
-      .text-center.py-8
-        %i.fas.fa-chart-line.text-4xl.text-gray-300.mb-4
-        %p.text-gray-500 No recent activities found. 
+    / User Activities Section
+    .mb-8
+      .flex.items-center.justify-between.mb-4
+        %h3.text-lg.font-semibold.text-blue-800.flex.items-center.gap-2
+          %i.fas.fa-users.text-blue-600
+          Customer Activities
+        %span.text-sm.text-gray-500.bg-blue-100.text-blue-800.px-2.py-1.rounded-full= Activity.user_activities.count
+      
+      - user_activities = Activity.user_activities.includes(:user, :subject).recent.limit(5)
+      - if user_activities.any?
+        .space-y-3
+          - user_activities.each do |activity|
+            .flex.items-start.space-x-3.p-3.bg-blue-50.rounded-lg.hover:bg-blue-100.transition-colors
+              .flex-shrink-0
+                .w-6.h-6.rounded-full.bg-white.flex.items-center.justify-center.shadow-sm
+                  %i{class: "#{activity.action_icon} #{activity.action_color} text-xs"}
+              .flex-1.min-w-0
+                %p.text-sm.font-medium.text-gray-900= activity.description
+                %p.text-xs.text-gray-500
+                  %span.font-medium= activity.user.full_name
+                  %span.mx-1 •
+                  %span= activity.formatted_time
+              .flex-shrink-0
+                = link_to admin_activity_path(activity), class: 'text-blue-600 hover:text-blue-900' do
+                  %i.fas.fa-eye.text-xs
+      - else
+        .text-center.py-6
+          %i.fas.fa-users.text-2xl.text-gray-300.mb-2
+          %p.text-gray-500.text-sm No customer activities found
+
+    / Vendor Activities Section
+    .mb-8
+      .flex.items-center.justify-between.mb-4
+        %h3.text-lg.font-semibold.text-green-800.flex.items-center.gap-2
+          %i.fas.fa-store.text-green-600
+          Vendor Activities
+        %span.text-sm.text-gray-500.bg-green-100.text-green-800.px-2.py-1.rounded-full= Activity.vendor_activities.count
+      
+      - vendor_activities = Activity.vendor_activities.includes(:vendor, :subject).recent.limit(5)
+      - if vendor_activities.any?
+        .space-y-3
+          - vendor_activities.each do |activity|
+            .flex.items-start.space-x-3.p-3.bg-green-50.rounded-lg.hover:bg-green-100.transition-colors
+              .flex-shrink-0
+                .w-6.h-6.rounded-full.bg-white.flex.items-center.justify-center.shadow-sm
+                  %i{class: "#{activity.action_icon} #{activity.action_color} text-xs"}
+              .flex-1.min-w-0
+                %p.text-sm.font-medium.text-gray-900= activity.description
+                %p.text-xs.text-gray-500
+                  %span.font-medium= activity.vendor.company_name
+                  %span.mx-1 •
+                  %span= activity.formatted_time
+              .flex-shrink-0
+                = link_to admin_activity_path(activity), class: 'text-green-600 hover:text-green-900' do
+                  %i.fas.fa-eye.text-xs
+      - else
+        .text-center.py-6
+          %i.fas.fa-store.text-2xl.text-gray-300.mb-2
+          %p.text-gray-500.text-sm No vendor activities found 
 
   / ==== Pending Documents Section ====
   - pending_docs = Document.includes(:user).where(status: 'pending')
@@ -66,14 +104,16 @@
 
   / ==== Pending Car Documents Section ====
   - pending_car_docs = CarDocument.includes(car: :vendor).where(document_status: CarDocument.document_statuses[:pending])
-  - if pending_car_docs.any?
+  - pending_vendor_trade_license = VendorDocument.includes(:vendor).where(document_status: VendorDocument.document_statuses[:pending])
+  - if pending_car_docs.any? || pending_vendor_trade_license.any?
     .bg-white.rounded-xl.shadow.p-8.mb-8
-      %h2.text-xl.font-bold.text-blue-900.mb-4 Pending Car Documents
+      %h2.text-xl.font-bold.text-blue-900.mb-4 Vendor Pending Documents
       %table.min-w-full.border-separate{ style: "border-spacing: 0 0.75rem;" }
         %thead
           %tr
-            %th.px-6.py-3.text-left.text-xs.font-bold.text-blue-700.uppercase.bg-blue-50.rounded-l-lg Car
+            %th.px-6.py-3.text-left.text-xs.font-bold.text-blue-700.uppercase.bg-blue-50.rounded-l-lg Item
             %th.px-6.py-3.text-left.text-xs.font-bold.text-blue-700.uppercase.bg-blue-50 Vendor
+            %th.px-6.py-3.text-left.text-xs.font-bold.text-blue-700.uppercase.bg-blue-50 Document Type
             %th.px-6.py-3.text-left.text-xs.font-bold.text-blue-700.uppercase.bg-blue-50 Status
             %th.px-6.py-3.text-left.text-xs.font-bold.text-blue-700.uppercase.bg-blue-50.rounded-r-lg Actions
         %tbody
@@ -81,37 +121,27 @@
             %tr.bg-blue-50.rounded-lg.shadow.hover:bg-blue-100.transition
               %td.px-6.py-4.font-medium.text-gray-900.rounded-l-lg= car_doc.car&.full_name
               %td.px-6.py-4.text-gray-700= car_doc.car&.vendor&.display_name || '-'
+              %td.px-6.py-4.text-gray-700
+                %span.inline-flex.items-center.px-2.5.py-0.5.rounded-full.text-xs.font-medium.bg-purple-100.text-purple-800
+                  %i.fas.fa-car.mr-1
+                  Car Document
               %td.px-6.py-4.text-yellow-700 Pending
               %td.px-6.py-4.rounded-r-lg.flex.gap-2
                 - if car_doc.mulkiya.attached?  
                   = link_to 'View', admin_document_path(car_doc, type: 'car_document'), class: 'inline-block bg-blue-100 text-blue-800 font-semibold px-4 py-1 rounded-lg hover:bg-blue-200 transition'
-  - else
-    .bg-white.rounded-xl.shadow.p-8.mb-8
-      %h2.text-xl.font-bold.text-blue-900.mb-4 Pending Car Documents
-      %p.text-gray-500 No pending car documents found.
-
-  / ==== Pending Vendor Trade License Section ====
-  - pending_vendor_trade_license = VendorDocument.includes(:vendor).where(document_status: VendorDocument.document_statuses[:pending])
-  - if pending_vendor_trade_license.any?
-    .bg-white.rounded-xl.shadow.p-8.mb-8
-      %h2.text-xl.font-bold.text-blue-900.mb-4 Pending Vendor Trade Licenses
-      %table.min-w-full.border-separate{ style: "border-spacing: 0 0.75rem;" }
-        %thead
-          %tr
-            %th.px-6.py-3.text-left.text-xs.font-bold.text-blue-700.uppercase.bg-blue-50.rounded-l-lg ID
-            %th.px-6.py-3.text-left.text-xs.font-bold.text-blue-700.uppercase.bg-blue-50 Vendor
-            %th.px-6.py-3.text-left.text-xs.font-bold.text-blue-700.uppercase.bg-blue-50 Status
-            %th.px-6.py-3.text-left.text-xs.font-bold.text-blue-700.uppercase.bg-blue-50.rounded-r-lg Actions
-        %tbody
           - pending_vendor_trade_license.each do |vendor_doc|
             %tr.bg-blue-50.rounded-lg.shadow.hover:bg-blue-100.transition
-              %td.px-6.py-4.font-medium.text-gray-900.rounded-l-lg= vendor_doc.vendor.id
+              %td.px-6.py-4.font-medium.text-gray-900.rounded-l-lg= vendor_doc.vendor.company_name
               %td.px-6.py-4.text-gray-700= vendor_doc.vendor&.display_name || '-'
+              %td.px-6.py-4.text-gray-700
+                %span.inline-flex.items-center.px-2.5.py-0.5.rounded-full.text-xs.font-medium.bg-green-100.text-green-800
+                  %i.fas.fa-store.mr-1
+                  Trade License
               %td.px-6.py-4.text-yellow-700 Pending
               %td.px-6.py-4.rounded-r-lg.flex.gap-2
                 - if vendor_doc.trade_license.attached?  
                   = link_to 'View', admin_document_path(vendor_doc, type: 'trade_license'), class: 'inline-block bg-blue-100 text-blue-800 font-semibold px-4 py-1 rounded-lg hover:bg-blue-200 transition'
   - else
     .bg-white.rounded-xl.shadow.p-8.mb-8
-      %h2.text-xl.font-bold.text-blue-900.mb-4 Pending Vendor Trade Licenses
-      %p.text-gray-500 No pending vendor trade licenses found.
+      %h2.text-xl.font-bold.text-blue-900.mb-4 Vendor Pending Documents
+      %p.text-gray-500 No pending car documents found.

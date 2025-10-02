@@ -8,87 +8,10 @@
 
   .bg-white.shadow-lg.rounded-xl.overflow-hidden
     %div{ class: "md:flex" }
-      / ==== Left Column: Car Images + Mulkiya ====
+      / ==== Left Column: Car Images ====
       %div{ class: "md:w-1/2" }
         / Car Images Slider
         = car_image_slider(@car, height: 'h-96', show_counter: true, show_navigation: true, show_pagination: true)
-        
-        / ==== Enhanced Mulkiya Card ====
-        .bg-white.rounded-2xl.shadow-xl.border.border-gray-100.overflow-hidden.transition-all.duration-300.mt-6.mx-4.mb-4
-          / Header Section
-          .bg-gradient-to-r.from-blue-50.to-indigo-50.px-6.py-4.border-b.border-blue-100
-            %h2.text-xl.font-bold.flex.items-center.gap-3.text-blue-700
-              .p-2.rounded-lg.bg-blue-100
-                %i.fas.fa-id-card.text-blue-600
-              Mulkiya
-
-          / Content Section  
-          .p-6
-            - if @car.car_document.present? && @car.car_document.mulkiya.attached?
-              .space-y-4
-                / Document Preview & Actions Row
-                .flex.flex-col.lg:flex-row.gap-4.items-start
-                  / Document Preview
-                  .flex-shrink-0.w-full.lg:w-40
-                    .w-full.lg:w-40.h-32.rounded-xl.overflow-hidden.bg-gradient-to-br.from-gray-50.to-gray-100.border-2.border-dashed.border-blue-300.flex.items-center.justify-center.relative.group.transition-all.duration-300.hover:shadow-lg
-                      - content_type = @car.car_document.mulkiya.content_type.to_s
-                      - if content_type.start_with?("image/")
-                        = image_tag url_for(@car.car_document.mulkiya.variant(resize_to_fill: [160, 128])), class: 'w-full h-full object-cover transition-transform duration-300 group-hover:scale-110'
-                        .absolute.inset-0.bg-black.bg-opacity-0.group-hover:bg-opacity-20.transition-all.duration-300.flex.items-center.justify-center
-                          %i.fas.fa-search-plus.text-white.opacity-0.group-hover:opacity-100.text-xl
-                      - elsif content_type == 'application/pdf'
-                        .text-center.space-y-2
-                          %i.fas.fa-file-pdf.text-4xl.text-red-500
-                          %span.text-xs.font-medium.text-gray-600 PDF Document
-                      - else
-                        .text-center.space-y-2
-                          %i.fas.fa-file-alt.text-4xl.text-gray-400
-                          %span.text-xs.font-medium.text-gray-600 Document
-                
-                  / Document Info & Actions
-                  .flex-1.min-w-0.space-y-4
-                  
-                    / Action Buttons & Status
-                    .flex.flex-col.sm:flex-row.gap-3.items-start.sm:items-center.justify-between.flex-wrap
-                      / Download Button
-                      = link_to url_for(@car.car_document.mulkiya), target: '_blank', class: 'inline-flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-all duration-200 shadow hover:shadow-md whitespace-nowrap' do
-                        %i.fas.fa-download
-                        %span Download
-
-                      / Show Button
-                      = link_to admin_document_path(@car.car_document, type: 'car_document'), target: '_blank', class: 'inline-flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-all duration-200 shadow hover:shadow-md whitespace-nowrap' do
-                        %i.fas.fa-eye
-                        %span View
-                      
-                      / Status Badge
-                      - status = @car.car_document.document_status
-                      - case status
-                      - when 'approved'
-                        - badge_classes = 'bg-emerald-50 text-emerald-700 border-emerald-200'
-                        - icon_class = 'fas fa-check-circle text-emerald-600'
-                      - when 'rejected'
-                        - badge_classes = 'bg-red-50 text-red-700 border-red-200'
-                        - icon_class = 'fas fa-times-circle text-red-600'
-                      - when 'pending'
-                        - badge_classes = 'bg-amber-50 text-amber-700 border-amber-200'
-                        - icon_class = 'fas fa-clock text-amber-600'
-                      - else
-                        - badge_classes = 'bg-gray-50 text-gray-700 border-gray-200'
-                        - icon_class = 'fas fa-question-circle text-gray-600'
-                      
-                      .inline-flex.items-center.gap-2.px-3.py-2.rounded-lg.text-sm.font-semibold.border-2.transition-all.duration-200.whitespace-nowrap{class: badge_classes}
-                        %i{class: icon_class}
-                        %span= status.to_s.titleize
-              
-            - else
-              / Empty State
-              .text-center.py-12.space-y-6
-                .w-24.h-24.mx-auto.rounded-full.bg-blue-50.flex.items-center.justify-center
-                  %i.fas.fa-file-plus.text-3xl.text-blue-600
-                .space-y-2
-                  %h3.text-lg.font-semibold.text-gray-800 No Mulkiya Document
-                  %p.text-sm.text-gray-600.max-w-md.mx-auto.leading-relaxed
-                    Upload Mulkiya document to complete your car profile and enable verification.
 
       / ==== Right Column: Car Details ====
       %div{ class: "md:w-1/2 p-6 flex flex-col" }
@@ -154,6 +77,105 @@
           -# = link_to "Book Now", new_booking_path(car_id: @car.id), class: "bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded shadow text-lg font-bold"
 
         %p.text-xs.text-gray-400.mt-4 Last updated: #{@car.updated_at.strftime('%b %d, %Y')}
+
+  / ==== Car Document Section ====
+  .bg-white.shadow-lg.rounded-xl.overflow-hidden.mt-8
+    / Header Section
+    .bg-gradient-to-r.from-blue-50.to-indigo-50.px-6.py-4.border-b.border-blue-100
+      %h2.text-xl.font-bold.flex.items-center.gap-3.text-blue-700
+        .p-2.rounded-lg.bg-blue-100
+          %i.fas.fa-id-card.text-blue-600
+        Car Document (Mulkiya)
+
+    / Content Section  
+    .p-6
+      - if @car.car_document.present? && @car.car_document.mulkiya.attached?
+        .space-y-6
+          / Document Preview & Actions Row
+          .flex.flex-col.lg:flex-row.gap-6.items-start
+            / Document Preview
+            .flex-shrink-0.w-full.lg:w-48
+              .w-full.lg:w-48.h-36.rounded-xl.overflow-hidden.bg-gradient-to-br.from-gray-50.to-gray-100.border-2.border-dashed.border-blue-300.flex.items-center.justify-center.relative.group.transition-all.duration-300.hover:shadow-lg
+                - content_type = @car.car_document.mulkiya.content_type.to_s
+                - if content_type.start_with?("image/")
+                  = image_tag url_for(@car.car_document.mulkiya.variant(resize_to_fill: [192, 144])), class: 'w-full h-full object-cover transition-transform duration-300 group-hover:scale-110'
+                  .absolute.inset-0.bg-black.bg-opacity-0.group-hover:bg-opacity-20.transition-all.duration-300.flex.items-center.justify-center
+                    %i.fas.fa-search-plus.text-white.opacity-0.group-hover:opacity-100.text-xl
+                - elsif content_type == 'application/pdf'
+                  .text-center.space-y-2
+                    %i.fas.fa-file-pdf.text-5xl.text-red-500
+                    %span.text-sm.font-medium.text-gray-600 PDF Document
+                - else
+                  .text-center.space-y-2
+                    %i.fas.fa-file-alt.text-5xl.text-gray-400
+                    %span.text-sm.font-medium.text-gray-600 Document
+            
+            / Document Info & Actions
+            .flex-1.min-w-0.space-y-4
+              / Document Details
+              .bg-gray-50.rounded-lg.p-4
+                %h3.text-lg.font-semibold.text-gray-800.mb-2 Document Information
+                .grid.grid-cols-1.md:grid-cols-2.gap-3.text-sm
+                  %div
+                    %span.font-medium.text-gray-600 File Name:
+                    %span.ml-2.text-gray-800= @car.car_document.mulkiya.filename
+                  %div
+                    %span.font-medium.text-gray-600 File Size:
+                    %span.ml-2.text-gray-800= number_to_human_size(@car.car_document.mulkiya.byte_size)
+                  %div
+                    %span.font-medium.text-gray-600 Uploaded:
+                    %span.ml-2.text-gray-800= @car.car_document.mulkiya.created_at.strftime('%b %d, %Y at %I:%M %p')
+                  %div
+                    %span.font-medium.text-gray-600 Content Type:
+                    %span.ml-2.text-gray-800= @car.car_document.mulkiya.content_type
+              
+              / Action Buttons & Status
+              .flex.flex-col.sm:flex-row.gap-3.items-start.sm:items-center.justify-between.flex-wrap
+                / Action Buttons
+                .flex.flex-wrap.gap-3
+                  / Download Button
+                  = link_to url_for(@car.car_document.mulkiya), target: '_blank', class: 'inline-flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-all duration-200 shadow hover:shadow-md whitespace-nowrap' do
+                    %i.fas.fa-download
+                    %span Download
+
+                  / Show Button
+                  = link_to admin_document_path(@car.car_document, type: 'car_document'), target: '_blank', class: 'inline-flex items-center gap-2 px-4 py-2 bg-green-600 hover:bg-green-700 text-white text-sm font-medium rounded-lg transition-all duration-200 shadow hover:shadow-md whitespace-nowrap' do
+                    %i.fas.fa-eye
+                    %span View Document
+                
+                / Status Badge
+                - status = @car.car_document.document_status
+                - case status
+                - when 'approved'
+                  - badge_classes = 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                  - icon_class = 'fas fa-check-circle text-emerald-600'
+                - when 'rejected'
+                  - badge_classes = 'bg-red-50 text-red-700 border-red-200'
+                  - icon_class = 'fas fa-times-circle text-red-600'
+                - when 'pending'
+                  - badge_classes = 'bg-amber-50 text-amber-700 border-amber-200'
+                  - icon_class = 'fas fa-clock text-amber-600'
+                - else
+                  - badge_classes = 'bg-gray-50 text-gray-700 border-gray-200'
+                  - icon_class = 'fas fa-question-circle text-gray-600'
+                
+                .inline-flex.items-center.gap-2.px-4.py-2.rounded-lg.text-sm.font-semibold.border-2.transition-all.duration-200.whitespace-nowrap{class: badge_classes}
+                  %i{class: icon_class}
+                  %span= status.to_s.titleize
+        
+      - else
+        / Empty State
+        .text-center.py-16.space-y-6
+          .w-32.h-32.mx-auto.rounded-full.bg-blue-50.flex.items-center.justify-center
+            %i.fas.fa-file-plus.text-4xl.text-blue-600
+          .space-y-3
+            %h3.text-xl.font-semibold.text-gray-800 No Car Document Found
+            %p.text-gray-600.max-w-md.mx-auto.leading-relaxed
+              This car doesn't have a Mulkiya document uploaded yet. The vendor needs to upload the car's registration document to complete the verification process.
+            .mt-6
+              %span.inline-flex.items-center.px-4.py-2.rounded-lg.text-sm.font-medium.bg-gray-100.text-gray-600
+                %i.fas.fa-info-circle.mr-2
+                Document required for car verification
 
 :javascript
   document.addEventListener('DOMContentLoaded', function() {

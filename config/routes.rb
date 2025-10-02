@@ -50,6 +50,10 @@ Rails.application.routes.draw do
       collection do
         get :download_report
       end
+      member do
+        delete :destroy
+        patch :restore
+      end
     end
     resources :invited_vendors, only: [:index, :new, :create]
     resources :bookings do
