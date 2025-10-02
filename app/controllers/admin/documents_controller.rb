@@ -6,6 +6,36 @@ class Admin::DocumentsController < ApplicationController
   def approve
     if @is_car_document || @is_vendor_document
       @document.update(document_status: :approved)
+      
+      # Log activity for car document approval
+      if @is_car_document
+        Activity.log_activity(
+          vendor: @document.car.vendor,
+          subject: @document,
+          action: 'car_document_approved',
+          description: "Admin approved mulkiya document for #{@document.car.full_name}",
+          metadata: { 
+            car_id: @document.car.id,
+            car_name: @document.car.full_name,
+            admin_action: 'approved'
+          }
+        )
+      end
+      
+      # Log activity for vendor trade license approval
+      if @is_vendor_document
+        Activity.log_activity(
+          vendor: @document.vendor,
+          subject: @document,
+          action: 'vendor_document_approved',
+          description: "Admin approved trade license for #{@document.vendor.company_name}",
+          metadata: { 
+            vendor_id: @document.vendor.id,
+            vendor_name: @document.vendor.company_name,
+            admin_action: 'approved'
+          }
+        )
+      end
     else
       @document.update(status: 'approved', reason: nil)
     end
@@ -15,6 +45,37 @@ class Admin::DocumentsController < ApplicationController
   def reject
     if @is_car_document || @is_vendor_document
       @document.update(document_status: :rejected)
+      
+      # Log activity for car document rejection
+      if @is_car_document
+        Activity.log_activity(
+          vendor: @document.car.vendor,
+          subject: @document,
+          action: 'car_document_rejected',
+          description: "Admin rejected mulkiya document for #{@document.car.full_name}",
+          metadata: { 
+            car_id: @document.car.id,
+            car_name: @document.car.full_name,
+            admin_action: 'rejected'
+          }
+        )
+      end
+      
+      # Log activity for vendor trade license rejection
+      if @is_vendor_document
+        Activity.log_activity(
+          vendor: @document.vendor,
+          subject: @document,
+          action: 'vendor_document_rejected',
+          description: "Admin rejected trade license for #{@document.vendor.company_name}",
+          metadata: { 
+            vendor_id: @document.vendor.id,
+            vendor_name: @document.vendor.company_name,
+            admin_action: 'rejected'
+          }
+        )
+      end
+      
       redirect_to admin_dashboard_index_path
     else
       if params[:reason].present?

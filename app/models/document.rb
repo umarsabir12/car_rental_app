@@ -5,7 +5,7 @@ class Document < ApplicationRecord
   # before_create :set_pending_status
 
   TOURIST =  ["Home country driving license and IDP", "Passport Copy", "Copy of visa Entry Stamp"]
-  RESIDENT = ["A Valid UAE driving license", "Emirates ID front and back", "Passport and Visa copy"]
+  RESIDENT = ["A Valid UAE driving license", "Emirates ID front and back"]
 
   DOC_FIELDS = {
     'uae_license' => ['A Valid UAE driving license', 'uae_license'],

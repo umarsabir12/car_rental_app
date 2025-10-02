@@ -23,6 +23,10 @@ class Activity < ApplicationRecord
     car_deleted
     vendor_deleted
     vendor_restored
+    car_document_approved
+    car_document_rejected
+    vendor_document_approved
+    vendor_document_rejected
   ].freeze
 
   validates :action, inclusion: { in: ACTIONS }
@@ -64,7 +68,7 @@ class Activity < ApplicationRecord
     case action
     when 'booking_created', 'booking_confirmed', 'booking_cancelled'
       'fas fa-calendar-check'
-    when 'document_uploaded', 'document_pending', 'document_approved', 'document_rejected'
+    when 'document_uploaded', 'document_pending', 'document_approved', 'document_rejected', 'car_document_approved', 'car_document_rejected', 'vendor_document_approved', 'vendor_document_rejected'
       'fas fa-file-upload'
     when 'payment_completed', 'payment_failed'
       'fas fa-credit-card'
@@ -81,11 +85,11 @@ class Activity < ApplicationRecord
 
   def action_color
     case action
-    when 'booking_created', 'document_uploaded', 'document_pending', 'payment_completed', 'registration_completed', 'vendor_registration', 'car_added', 'vendor_restored'
+    when 'booking_created', 'document_uploaded', 'document_pending', 'payment_completed', 'registration_completed', 'vendor_registration', 'car_added', 'vendor_restored', 'car_document_approved', 'vendor_document_approved'
       'text-blue-600'
     when 'booking_confirmed', 'document_approved', 'car_updated'
       'text-green-600'
-    when 'booking_cancelled', 'document_rejected', 'payment_failed', 'car_deleted', 'vendor_deleted'
+    when 'booking_cancelled', 'document_rejected', 'payment_failed', 'car_deleted', 'vendor_deleted', 'car_document_rejected', 'vendor_document_rejected'
       'text-red-600'
     when 'profile_updated', 'car_viewed'
       'text-purple-600'
