@@ -29,7 +29,7 @@ class Vendors::RegistrationsController <  Devise::RegistrationsController
   private
 
   def vendor_params
-    params.require(:vendor).permit(:email, :first_name, :last_name, :password, :password_confirmation, :company_name, :invite_token)
+    params.require(:vendor).permit(:email, :first_name, :last_name, :password, :password_confirmation, :company_name, :invite_token, :payment_mode)
   end
 
   def check_invite_token
