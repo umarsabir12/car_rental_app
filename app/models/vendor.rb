@@ -16,7 +16,7 @@ class Vendor < ApplicationRecord
   validates :company_logo, format: { with: URI::regexp(%w[http https]) }, allow_blank: true
 
   # Payment mode enum
-  enum payment_mode: { Cash: 0, Online: 1 }, _default: :Online
+  enum payment_mode: { CreditCard: 0, AmericanExpress: 1 }, _default: :CreditCard
 
   # Emirates ID validations
   validates :emirates_id, format: { with: /\A\d{15}\z/ }, allow_blank: true

@@ -81,11 +81,11 @@
           - if @vendor.errors[:address].any?
             %p.text-red-600.text-sm.mt-1= @vendor.errors[:address].join(', ')
         
-        .field.space-y-2.md:col-span-2
-          = f.label :description, 'Company Description', class: 'block text-sm font-medium text-gray-700'
-          = f.text_area :description, rows: 4, class: 'w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition', placeholder: 'Tell customers about your company, services, and what makes you unique...'
-          - if @vendor.errors[:description].any?
-            %p.text-red-600.text-sm.mt-1= @vendor.errors[:description].join(', ')
+        -# .field.space-y-2.md:col-span-2
+        -#   = f.label :description, 'Company Description', class: 'block text-sm font-medium text-gray-700'
+        -#   = f.text_area :description, rows: 4, class: 'w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition', placeholder: 'Tell customers about your company, services, and what makes you unique...'
+        -#   - if @vendor.errors[:description].any?
+        -#     %p.text-red-600.text-sm.mt-1= @vendor.errors[:description].join(', ')
 
       / Account Information Section
       %h2.text-xl.font-bold.mb-6.mt-8{style: 'color: #3a6363'} Account Information

@@ -27,7 +27,7 @@
 
       .field.space-y-2
         = f.label :payment_mode, "Preferred Payment Mode", class: "block text-sm font-medium text-gray-700"
-        = f.select :payment_mode, options_for_select([['Online Payment', 'Online'],['Cash Payment', 'Cash']], @vendor&.payment_mode || 'Online'),{},{ class: "w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" }
+        = f.select :payment_mode, options_for_select([['Credit/Debit Card Payment', 'CreditCard'],['American Express Payment', 'AmericanExpress']], @vendor&.payment_mode || 'CreditCard'),{},{ class: "w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" }
         %p.text-xs.text-gray-500.mt-1 Choose how you prefer to receive payments from customers
 
       .field.space-y-2
