@@ -96,7 +96,7 @@ Rails.application.configure do
 
   # Default URL options for ActionMailer
   config.action_mailer.default_url_options = { 
-    host: ENV["HEROKU_APP_NAME"] ? "#{ENV["HEROKU_APP_NAME"]}.herokuapp.com" : "yourapp.herokuapp.com",
+    host: ENV["HEROKU_APP_NAME"] ? "#{ENV["HEROKU_APP_NAME"]}.herokuapp.com" : "rental-car-app-ed1c718ca45b.herokuapp.com",
     protocol: 'https'
   }
 
