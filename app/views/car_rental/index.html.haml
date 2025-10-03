@@ -261,7 +261,7 @@
       .grid.grid-cols-1.md:grid-cols-4.gap-8
         .space-y-4
           .flex.items-center
-            %i{class: 'fas fa-car text-2xl', style: 'color: #3a6363'}
+            %img{src: asset_path('new_logo.png'), alt: 'WheelsOnRent', class: 'w-10 h-10'}
             %span.text-xl.font-extrabold.ml-2= (@company && @company[:name]) || 'WheelsOnRent'
           %p.text-gray-300= (@company && @company[:blurb]) || 'Your trusted partner for car rentals.'
         .space-y-4
