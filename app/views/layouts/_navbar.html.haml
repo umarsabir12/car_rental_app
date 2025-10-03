@@ -5,10 +5,10 @@
       .flex.items-center
         = link_to root_path, class: 'flex items-center space-x-2' do
           - if user_signed_in? || vendor_signed_in?
-            %i{class: 'fas fa-car text-2xl text-gray-700'}
+            %img{src: asset_path('new_logo.png'), alt: 'WheelsOnRent', class: 'w-10 h-10'}
             %span.text-xl.font-bold.text-gray-700 WheelsOnRent
           - else
-            %i{class: 'fas fa-car text-2xl text-white'}
+            %img{src: asset_path('new_logo.png'), alt: 'WheelsOnRent', class: 'w-10 h-10'}
             %span.text-xl.font-bold.text-white WheelsOnRent
       
       / Desktop Navigation
