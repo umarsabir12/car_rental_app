@@ -124,7 +124,7 @@
             %div.hidden.absolute.inset-0.w-full.h-full.flex.items-center.justify-center.rounded-xl{id: 'preview-file-trade-license'}
               %i.fas.fa-file-pdf.text-3xl.text-red-500
             .absolute.-top-2.-right-2.bg-red-500.text-white.text-xs.px-2.py-1.rounded-full.font-bold Required
-          = f.file_field :trade_license, id: 'vendor_trade_license', accept: 'application/pdf,image/*,.heic,.heif', required: true, class: 'hidden'
+          = f.file_field :trade_license, id: 'vendor_trade_license', accept: 'application/pdf,image/*,.heic,.heif', class: 'hidden'
         .flex.flex-col.justify-center
           %span.text-sm.text-gray-700.font-medium Selected:
           %span#trade-license-filename.text-sm.text-gray-500 None
