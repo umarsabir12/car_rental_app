@@ -2,7 +2,12 @@ class Vendors::RegistrationsController <  Devise::RegistrationsController
   before_action :check_invite_token, only: [:new]
 
   def new
-    @vendor = Vendor.new(email: @invited_vendor.email, first_name: @invited_vendor.first_name, last_name: @invited_vendor.last_name) if @invited_vendor.present?
+    if @invited_vendor.present?
+      @vendor = Vendor.new(email: @invited_vendor.email, first_name: @invited_vendor.first_name, last_name: @invited_vendor.last_name)
+    else
+      # Redirect to login page if no valid invite token
+      redirect_to new_vendor_session_path, alert: "You need a valid invitation link to register as a vendor"
+    end
   end
 
   def create
@@ -15,7 +20,7 @@ class Vendors::RegistrationsController <  Devise::RegistrationsController
     if @vendor.save
       @invited_vendor.update(status: "accepted", invite_token: nil)
       sign_in(@vendor)
-      redirect_to vendors_profile_path, notice: "Vendor created successfully"
+      redirect_to vendor_path(@vendor), notice: "Vendor created successfully"
     else
       render :new, alert: "Vendor creation failed"
     end
@@ -33,6 +38,9 @@ class Vendors::RegistrationsController <  Devise::RegistrationsController
       unless @invited_vendor.present? && @invited_vendor.expires_at > Time.current
         redirect_to new_vendor_session_path, alert: "Invalid or expired invite token"
       end
+    else
+      # No token provided - redirect to login
+      redirect_to new_vendor_session_path, alert: "You need a valid invitation link to register as a vendor"
     end
   end
 end
