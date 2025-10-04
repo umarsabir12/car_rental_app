@@ -77,10 +77,10 @@
           onblur: "this.style.borderColor='#d1d5db'; this.style.boxShadow='none'"
 
       .field.flex.items-center
-        = f.check_box :terms_accepted, required: true, class: "h-4 w-4 border-gray-300 rounded transition", style: "color: #3a6363; accent-color: #3a6363"
+        = f.check_box :terms_accepted, required: true, id: "user_agree_terms", class: "h-4 w-4 border-gray-300 rounded transition", style: "color: #3a6363; accent-color: #3a6363"
         = f.label :terms_accepted, class: "ml-2 block text-sm text-gray-700" do
           | I agree to the
-          %a.font-medium.transition-colors.hover:underline{href: "#", onclick: "openTermsModal()", tabindex: 0, role: "button", style: "color: #3a6363"} Terms & Conditions
+          %a.font-medium.transition-colors.hover:underline{href: "#", onclick: "openTermsModal(); return false;", tabindex: 0, role: "button", style: "color: #3a6363"} Terms & Conditions
 
       .actions
         = f.submit "Create Account",
@@ -100,20 +100,68 @@
       .mt-4.p-3.text-green-700.rounded-lg.text-sm.border{style: 'background-color: #f0f9f0; border-color: #3a6363'}= notice
 
   / Terms & Conditions Modal
-  #terms-modal.fixed.inset-0.z-50.flex.items-center.justify-center.bg-black.bg-opacity-40{style: "display:none"}
-    .bg-white.rounded-lg.shadow-lg.max-w-lg.w-full.p-6.relative.flex.flex-col
-      %h3.text-xl.font-bold.mb-4.text-gray-800 Terms & Conditions
-      .overflow-y-auto.max-h-64.mb-6.pr-2
-        %p.text-gray-700.mb-2
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque euismod, urna eu tincidunt consectetur, nisi nisl aliquam nunc, eget aliquam massa nisl quis neque. Etiam euismod, urna eu tincidunt consectetur, nisi nisl aliquam nunc, eget aliquam massa nisl quis neque.
-        %p.text-gray-700.mb-2
-          Mauris non tempor quam, et lacinia sapien. Mauris accumsan eros eget libero posuere vulputate. Etiam elit elit, elementum sed varius at, adipiscing vitae est. Sed nec felis pellentesque, lacinia dui sed, ultricies sapien.
-        %p.text-gray-700.mb-2
-          Mauris non tempor quam, et lacinia sapien. Mauris accumsan eros eget libero posuere vulputate. Etiam elit elit, elementum sed varius at, adipiscing vitae est. Sed nec felis pellentesque, lacinia dui sed, ultricies sapien.
-        %p.text-gray-700.mb-2
-          Sed nec felis pellentesque, lacinia dui sed, ultricies sapien. Nullam in magna eget dolor cursus bibendum. Proin viverra, nunc eget cursus bibendum, nunc eget cursus bibendum, nunc eget cursus bibendum.
-      %button.mt-auto.text-white.font-semibold.py-2.px-6.rounded-lg.shadow-md.transition.duration-200.hover:shadow-lg{type: "button", onclick: "closeTermsModal()", style: "background-color: #3a6363; hover:background-color: #2d4d4d"} Done
-    %button.absolute.top-2.right-2.text-gray-400.hover:text-gray-600.text-2xl.font-bold.bg-transparent.border-0.transition{type: "button", onclick: "closeTermsModal()"} ×
+  / Terms and Conditions Modal - Larger size with scrollable content
+  #terms-modal.fixed.inset-0.z-50.flex.items-center.justify-center.bg-black.bg-opacity-50{style: "display:none"}
+    .bg-white.rounded-xl.shadow-2xl{class: "w-11/12 max-w-4xl h-5/6 p-4 relative flex flex-col"}
+      / Header
+      .flex.items-center.justify-between.pb-4.border-b.border-gray-200
+        %h3.text-2xl.font-bold.text-gray-800 Terms & Conditions
+        %button.text-gray-400.hover:text-gray-600.text-3xl.font-bold.bg-transparent.border-0.transition{type: "button", onclick: "closeTermsModal()", title: "Close"} ×
+      
+      / Content Area with Scroll
+      .flex-1.overflow-y-auto.px-2.py-4.custom-scrollbar
+        = render 'shared/terms_and_conditions_content'
+      
+      / Footer with Action Button
+      .pt-4.border-t.border-gray-200
+        .flex.justify-end.space-x-3
+          %button.text-gray-600.font-semibold.py-2.px-4.rounded-lg.border.border-gray-300.hover:bg-gray-50.transition{type: "button", onclick: "closeTermsModal()"} Cancel
+          %button.text-white.font-semibold.py-2.px-6.rounded-lg.shadow-md.transition.duration-200.hover:shadow-lg{type: "button", onclick: "acceptTerms()", style: "background-color: #3a6363; hover:background-color: #2d4d4d"} I Accept Terms
+
+:css
+  / Custom scrollbar styling for terms modal
+  .custom-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: #3a6363 #f1f5f9;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: #f1f5f9;
+    border-radius: 3px;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: #3a6363;
+    border-radius: 3px;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: #2d4d4d;
+  }
+
+  / Ensure bullet points are visible in terms modal
+  #terms-modal .text-gray-700 ul,
+  #terms-modal ul.text-gray-700 {
+    list-style-type: disc !important;
+    padding-left: 1.5rem !important;
+    margin-left: 0.5rem !important;
+    list-style-position: outside !important;
+  }
+  
+  #terms-modal li {
+    display: list-item !important;
+    margin-bottom: 0.5rem !important;
+    padding-left: 0.25rem !important;
+  }
+  
+  / Override any Tailwind CSS resets
+  #terms-modal ul[class*="text-gray"] {
+    list-style-type: disc !important;
+  }
 
 :javascript
   function togglePassword(button) {
@@ -129,11 +177,30 @@
   }
 
   function openTermsModal() {
+    console.log('Opening terms modal...'); // Debug line
     document.getElementById('terms-modal').style.display = 'flex';
   }
   
   function closeTermsModal() {
     document.getElementById('terms-modal').style.display = 'none';
+  }
+  
+  function acceptTerms() {
+    // Check the terms checkbox if it exists
+    const checkbox = document.getElementById('user_agree_terms')
+    if (checkbox) {
+      checkbox.checked = true
+    }
+    
+    // Close the modal
+    closeTermsModal()
+    
+    // Optional: Show a confirmation message
+    const termsLink = document.querySelector('[onclick="openTermsModal()"]')
+    if (termsLink) {
+      termsLink.style.color = '#3a6363'
+      termsLink.textContent = termsLink.textContent.replace('Read', '✓ Read')
+    }
   }
 
   // Enhanced styling for form elements
