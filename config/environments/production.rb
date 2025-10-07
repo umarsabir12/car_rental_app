@@ -82,21 +82,21 @@ Rails.application.configure do
   # Set this to true and configure the email server for immediate delivery to raise delivery errors.
   config.action_mailer.raise_delivery_errors = true
 
-  # SendGrid Configuration
+  # ✅ CHANGED: SendGrid Configuration - Updated domain to custom domain
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = {
     user_name: "apikey", # this is literally "apikey"
     password: ENV["SENDGRID_API_KEY"],
-    domain: ENV["HEROKU_APP_NAME"] ? "#{ENV["HEROKU_APP_NAME"]}.herokuapp.com" : "yourapp.herokuapp.com",
+    domain: "wheelsonrent.ae", # ✅ CHANGED from herokuapp.com to custom domain
     address: "smtp.sendgrid.net",
     port: 587,
     authentication: :plain,
     enable_starttls_auto: true
   }
 
-  # Default URL options for ActionMailer
+  # ✅ CHANGED: Default URL options for ActionMailer - Updated to custom domain
   config.action_mailer.default_url_options = { 
-    host: ENV["HEROKU_APP_NAME"] ? "#{ENV["HEROKU_APP_NAME"]}.herokuapp.com" : "rental-car-app-ed1c718ca45b.herokuapp.com",
+    host: "wheelsonrent.ae", # ✅ CHANGED from herokuapp.com to custom domain
     protocol: 'https'
   }
 
@@ -110,11 +110,14 @@ Rails.application.configure do
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
 
-  # Enable DNS rebinding protection and other `Host` header attacks.
-  # config.hosts = [
-  #   "example.com",     # Allow requests from example.com
-  #   /.*\.example\.com/ # Allow requests from subdomains like `www.example.com`
-  # ]
+  # ✅ ADDED: Enable DNS rebinding protection and other `Host` header attacks.
+  # This allows requests from your custom domain - CRITICAL!
+  config.hosts = [
+    "wheelsonrent.ae",      # Allow requests from root domain
+    "www.wheelsonrent.ae",  # Allow requests from www subdomain
+    ".herokuapp.com"        # Keep Heroku domain working too
+  ]
+  
   # Skip DNS rebinding protection for the default health check endpoint.
   # config.host_authorization = { exclude: ->(request) { request.path == "/up" } }
 end
