@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_10_04_172448) do
+ActiveRecord::Schema[7.2].define(version: 2025_10_08_071959) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -139,6 +139,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_10_04_172448) do
     t.integer "daily_milleage", default: 0
     t.integer "weekly_milleage", default: 0
     t.integer "monthly_milleage", default: 0
+    t.string "insurance_policy_number", default: ""
     t.string "insurance_policy", default: ""
     t.integer "additional_mileage_charge", default: 0
     t.integer "bookings_count", default: 0, null: false
@@ -165,7 +166,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_10_04_172448) do
     t.string "invite_token"
     t.boolean "invite_sent", default: false
     t.string "status", default: "pending"
-    t.datetime "expires_at", default: "2025-08-01 14:12:06"
+    t.datetime "expires_at", default: "2025-09-25 09:01:03"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -215,6 +216,15 @@ ActiveRecord::Schema[7.2].define(version: 2025_10_04_172448) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["vendor_id"], name: "index_vendor_documents_on_vendor_id"
+  end
+
+  create_table "vendor_requests", force: :cascade do |t|
+    t.string "email"
+    t.string "first_name"
+    t.string "last_name"
+    t.integer "status", default: 0
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "vendors", force: :cascade do |t|

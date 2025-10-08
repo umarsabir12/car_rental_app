@@ -61,6 +61,12 @@ Rails.application.routes.draw do
       end
     end
     resources :invited_vendors, only: [:index, :new, :create]
+    resources :vendor_requests, only: [:index] do
+      member do
+        patch :approve
+        patch :reject
+      end
+    end
     resources :bookings do
       collection do
         get :download_report
@@ -119,6 +125,8 @@ Rails.application.routes.draw do
   resources :documents, only: [:create]
   resources :cars
   resources :bookings, only: [:new, :create]
+
+  resources :vendor_requests, only: [:new, :create]
 
   # resource :user, only: [:show, :edit, :update] do
   #   patch :update_nationality
