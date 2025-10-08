@@ -22,4 +22,18 @@ class VendorMailer < ApplicationMailer
       subject: 'Your Emirates ID has expired – action required'
     )
   end
+
+  def reject_email(vendor_email, first_name, last_name)
+
+    @first_name = first_name
+    @last_name = last_name
+    
+    Rails.logger.info "VendorMailer: Sending reject email to #{vendor_email}"
+    Rails.logger.info "VendorMailer: From address: #{ApplicationMailer.default[:from]}"
+    
+    mail(
+      to: vendor_email, 
+      subject: 'Your request have been rejected to join WheelsOnRent as a Vendor'
+    )
+  end
 end 

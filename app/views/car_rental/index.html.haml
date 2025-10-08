@@ -140,7 +140,7 @@
   / Requirements Section
   .max-w-7xl.mx-auto.px-4.sm:px-6.lg:px-8.pb-8
     .bg-white.rounded-xl.shadow-md.p-8
-      %h2.text-2xl.font-bold.mb-6{style: 'color: #2d4f4f'} REQUIREMENTS TO RENT THIS CAR
+      %h2.text-2xl.font-bold.mb-6{style: 'color: #2d4f4f'} REQUIREMENTS TO RENT A CAR
       .grid.grid-cols-1.lg:grid-cols-2.gap-8
         / Card: UAE Residents
         .rounded-3xl.border.border-gray-200.bg-white.shadow-sm.overflow-hidden
@@ -230,24 +230,24 @@
           %p.text-gray-600 With our user-friendly platform, you can book your car in just a few clicks online — quickly and conveniently.
 
   / Vendor CTA Banner under Stats
-  -# %section.py-12.bg-white
-  -#   .max-w-7xl.mx-auto.px-4.sm:px-6.lg:px-8
-  -#     .rounded-3xl.border.border-gray-200.bg-white.overflow-hidden
-  -#       .grid.grid-cols-1.lg:grid-cols-2.items-center
-  -#         / Left image
-  -#         %div.relative.h-56.sm:h-64.lg:h-72
-  -#           %img{class: 'absolute inset-0 w-full h-full object-cover fade-right', src: image_path('join_us_image.png'), alt: 'Work with us'}
-  -#         / Right content
-  -#         .p-8.lg:p-12
-  -#           %h3.text-3xl.font-bold.text-gray-900.mb-3 Are you a car rental company?
-  -#           %p.text-lg.text-gray-600.mb-6 Join Us – List Your Fleet, Get Confirmed Bookings, Double Your Profit!
-  -#           .flex.items-center.gap-3
-  -#             = link_to ((@list_cars_path) || '#'), class: 'inline-flex items-center rounded-xl border px-6 py-3 font-semibold transition hover:bg-gray-50', style: 'color: #3a6363; border-color: #3a6363' do
-  -#               %span List Your Cars
-  -#               %i{class: 'fas fa-arrow-right ml-3'}
-  -#             = link_to companies_path, class: 'inline-flex items-center rounded-xl border px-6 py-3 font-semibold transition hover:bg-gray-50', style: 'color: #3a6363; border-color: #3a6363' do
-  -#               %span Registered Companies
-  -#               %i{class: 'fas fa-building ml-3'}
+  %section.py-12.bg-gray-50
+    .max-w-7xl.mx-auto.px-4.sm:px-6.lg:px-8
+      .rounded-3xl.border.border-gray-200.bg-white.overflow-hidden
+        .grid.grid-cols-1.lg:grid-cols-2.items-center
+          / Left image
+          %div.relative.h-56.sm:h-64.lg:h-72
+            %img{class: 'absolute inset-0 w-full h-full object-cover fade-right', src: image_path('join_us_image.png'), alt: 'Work with us'}
+          / Right content
+          .p-8.lg:p-12
+            %h3.text-3xl.font-bold.text-gray-900.mb-3 Are you a car rental company?
+            %p.text-lg.text-gray-600.mb-6 Join Us – List Your Fleet, Get Confirmed Bookings, Double Your Profit!
+            .flex.items-center.gap-3
+              = link_to ( new_vendor_request_path || '#'), class: 'inline-flex items-center rounded-xl border px-6 py-3 font-semibold transition hover:bg-gray-50', style: 'color: #3a6363; border-color: #3a6363' do
+                %span List Your Cars
+                %i{class: 'fas fa-arrow-right ml-3'}
+              = link_to companies_path, class: 'inline-flex items-center rounded-xl border px-6 py-3 font-semibold transition hover:bg-gray-50', style: 'color: #3a6363; border-color: #3a6363' do
+                %span Registered Companies
+                %i{class: 'fas fa-building ml-3'}
 
 - content_for :footer do
   %footer.bg-gray-900.text-white
