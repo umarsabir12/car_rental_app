@@ -36,4 +36,15 @@ class VendorMailer < ApplicationMailer
       subject: 'Your request have been rejected to join WheelsOnRent as a Vendor'
     )
   end
+
+  def request_email(vendor_request_id)
+
+    vendor_request = VendorRequest.find_by_id(vendor_request_id)
+    @vendor_request = vendor_request
+    
+    mail(
+      to: ENV['FROM_EMAIL'], 
+      subject: 'New request to join WheelsOnRent as a Vendor'
+    )
+  end
 end 
