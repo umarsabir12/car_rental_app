@@ -11,6 +11,8 @@ class CarRentalController < ApplicationController
       { id: 'sharjah', name: 'Sharjah' },
       { id: 'ajman', name: 'Ajman' }
     ]
+
+    @car_categories = Car.with_approved_mulkiya.where.not(category: [nil, '']).distinct.pluck(:category).sort
       
     # Popular cars data
     @featured_cars = Car.order(bookings_count: :desc).limit(3).map do |car|

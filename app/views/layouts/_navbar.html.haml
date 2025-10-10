@@ -1,3 +1,6 @@
+-# At the top of the file, fetch categories from database
+- @car_categories = Car.with_approved_mulkiya.where.not(category: [nil, '']).distinct.pluck(:category).sort
+
 %nav.fixed.top-0.left-0.right-0.z-50{style: 'background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);'}
   .max-w-7xl.mx-auto.px-4.sm:px-6.lg:px-8
     .flex.justify-between.items-center.h-16
@@ -15,10 +18,19 @@
       .hidden.md:flex.items-center.space-x-8
         - unless user_signed_in? || vendor_signed_in?
           = link_to 'Home', root_path, class: 'text-white font-medium transition navbar-link'
-          = link_to 'Rent A Car', cars_path, class: 'text-white font-medium transition navbar-link'
-          -# = link_to 'Car Brands', root_path(anchor: 'brands'), class: 'text-white font-medium transition navbar-link'
-          -# = link_to 'Car With Driver', cars_path(with_driver: 'true'), class: 'text-white font-medium transition navbar-link'
-          -# = link_to 'List Your Cars', '#', class: 'text-gray-700 font-medium transition navbar-link'
+          
+          / Rent A Car Dropdown
+          .relative
+            %button#rent-car-menu-button.flex.items-center.space-x-1.text-white.font-medium.transition.duration-200.hover:text-gray-200{type: "button", onclick: "toggleRentCarMenu()"}
+              %span Rent A Car
+              %svg.w-4.h-4.text-white.ml-1.transition-transform.duration-200{fill: "none", stroke: "currentColor", viewBox: "0 0 24 24", "stroke-width" => "2", id: "rent-car-arrow"}
+                %path{"stroke-linecap" => "round", "stroke-linejoin" => "round", d: "M19 9l-7 7-7-7"}
+            #rent-car-dropdown.absolute.left-0.mt-2.w-56.bg-white.rounded-xl.shadow-xl.border.border-gray-100.hidden.z-50.overflow-hidden
+              .py-2
+                - @car_categories.each do |category|
+                  = link_to cars_path(category: category), class: "flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 transition-all duration-150" do
+                    %i{class: "fas fa-car mr-3 w-4", style: 'color: #3a6363'}
+                    = category
         
         .flex.items-center.space-x-3
           - if user_signed_in?
@@ -179,10 +191,19 @@
       - else
         / Unauthenticated mobile menu
         = link_to 'Home', root_path, class: 'block px-3 py-2 text-white hover:bg-gray-50 font-medium transition rounded-md navbar-link'
-        = link_to 'Rent A Car', cars_path, class: 'block px-3 py-2 text-white hover:bg-gray-50 font-medium transition rounded-md navbar-link'
-        -# = link_to 'Car Brands', root_path(anchor: 'brands'), class: 'block px-3 py-2 text-white hover:bg-gray-50 font-medium transition rounded-md navbar-link'
-        -# = link_to 'Car With Driver', cars_path(with_driver: 'true'), class: 'block px-3 py-2 text-white hover:bg-gray-50 font-medium transition rounded-md navbar-link'
-        -# = link_to 'List Your Cars', '#', class: 'block px-3 py-2 text-gray-700 hover:bg-gray-50 font-medium transition rounded-md navbar-link'
+        
+        / Mobile Rent A Car Dropdown
+        .px-3.py-2
+          %button#mobile-rent-car-button.flex.items-center.justify-between.w-full.text-white.font-medium.transition{type: "button", onclick: "toggleMobileRentCar()"}
+            %span Rent A Car
+            %svg.w-4.h-4.transition-transform.duration-200{fill: "none", stroke: "currentColor", viewBox: "0 0 24 24", "stroke-width" => "2", id: "mobile-rent-car-arrow"}
+              %path{"stroke-linecap" => "round", "stroke-linejoin" => "round", d: "M19 9l-7 7-7-7"}
+          #mobile-rent-car-menu.hidden.mt-2.pl-4.space-y-1
+            - @car_categories.each do |category|
+              = link_to cars_path(category: category), class: 'flex items-center px-3 py-2 text-sm text-gray-600 hover:bg-gray-50 transition rounded-md' do
+                %i{class: 'fas fa-car mr-2 w-4', style: 'color: #3a6363'}
+                = category
+
         .border-t.border-gray-200.pt-4
           .px-3.py-2
             %p.text-sm.font-semibold.text-gray-500.mb-2 Login
@@ -248,6 +269,26 @@
     }
   }
 
+  // Rent A Car dropdown toggle (Desktop)
+  function toggleRentCarMenu() {
+    const dropdown = document.getElementById('rent-car-dropdown');
+    const arrow = document.getElementById('rent-car-arrow');
+    dropdown.classList.toggle('hidden');
+    if (arrow) {
+      arrow.classList.toggle('rotate-180');
+    }
+  }
+
+  // Rent A Car dropdown toggle (Mobile)
+  function toggleMobileRentCar() {
+    const menu = document.getElementById('mobile-rent-car-menu');
+    const arrow = document.getElementById('mobile-rent-car-arrow');
+    menu.classList.toggle('hidden');
+    if (arrow) {
+      arrow.classList.toggle('rotate-180');
+    }
+  }
+
   // Close dropdowns when clicking outside
   document.addEventListener('click', function(event) {
     const userDropdown = document.getElementById('user-dropdown');
@@ -258,6 +299,8 @@
     const loginButton = document.getElementById('login-menu-button');
     const signupDropdown = document.getElementById('signup-dropdown');
     const signupButton = document.getElementById('signup-menu-button');
+    const rentCarDropdown = document.getElementById('rent-car-dropdown');
+    const rentCarButton = document.getElementById('rent-car-menu-button');
 
     // Close user dropdown
     if (userDropdown && userButton && !userButton.contains(event.target) && !userDropdown.contains(event.target)) {
@@ -284,6 +327,13 @@
     if (signupDropdown && signupButton && !signupButton.contains(event.target) && !signupDropdown.contains(event.target)) {
       signupDropdown.classList.add('hidden');
       const arrow = document.getElementById('signup-arrow');
+      if (arrow) arrow.classList.remove('rotate-180');
+    }
+
+    // Close rent-a-car dropdown
+    if (rentCarDropdown && rentCarButton && !rentCarButton.contains(event.target) && !rentCarDropdown.contains(event.target)) {
+      rentCarDropdown.classList.add('hidden');
+      const arrow = document.getElementById('rent-car-arrow');
       if (arrow) arrow.classList.remove('rotate-180');
     }
   });
