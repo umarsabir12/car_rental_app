@@ -2,7 +2,7 @@ class VendorRequest < ApplicationRecord
 
   enum status: { pending: 0, approved: 1, rejected: 2 }, _default: :pending
 
-  validates :email, :first_name, :last_name, presence: true
+  validates :email, :first_name, :last_name, :description, presence: true
   validates :email, format: { with: URI::MailTo::EMAIL_REGEXP }, if: :email?
 
   scope :pending, -> { where(status: 'pending') }
