@@ -21,6 +21,18 @@ class Admin::VendorsController < ApplicationController
     Rails.logger.info "Attempting to delete vendor: #{@vendor.id} - #{@vendor.company_name}"
     
     @vendor.soft_delete!
+
+    Activity.log_activity(
+      vendor: @vendor,
+      subject: @vendor,
+      action: 'vendor_deleted',
+      description: "Vendor #{@vendor.company_name} was removed by admin",
+      metadata: { 
+        vendor_id: @vendor.id,
+        vendor_name: @vendor.company_name,
+        removed_by: current_admin.email
+      }
+    )
     
     Rails.logger.info "Vendor deleted successfully: #{@vendor.id}"
     redirect_to admin_vendors_path, notice: 'Vendor has been deleted successfully.'
