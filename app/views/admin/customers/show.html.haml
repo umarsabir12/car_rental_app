@@ -8,15 +8,95 @@
         = button_tag type: 'button', class: 'items-center px-4 bg-blue-50 py-2 font-medium text-blue-600 hover:text-blue-800 hover:bg-blue-50 rounded-md transition-colors duration-200 flex gap-2', disabled: true do
           %i.fas.fa-envelope.mr-2
           Send Email
-      %h1.text-3xl.font-bold.text-gray-800.mb-2= @user.full_name.presence || @user.email
-      %div.text-lg.text-gray-600.mb-2= @user.email
-      %div.text-gray-500.mb-2= @user.phone
-      %div.text-gray-500.mb-2= @user.home_address
-      %div.text-gray-500.mb-2= @user.nationality
-      %div.text-gray-500.mb-2= @user.created_at.strftime('%b %d, %Y')
-      %div.text-gray-500.mb-2= @user.terms_accepted ? 'Terms Accepted' : 'Terms Not Accepted'
-      %div.text-gray-500.mb-2= @user.payment_done ? 'Payment Done' : 'Payment Not Done'
-      / Add more user info as needed
+      
+      / Customer Information
+      .space-y-3
+        / Name
+        .flex.items-start
+          %i.fas.fa-user.text-blue-600.w-6.mt-1
+          .ml-3
+            %p.text-xs.font-semibold.text-gray-500.uppercase Name
+            %p.text-lg.font-bold.text-gray-800= @user.full_name.presence || 'Not provided'
+        
+        / Email
+        .flex.items-start
+          %i.fas.fa-envelope.text-blue-600.w-6.mt-1
+          .ml-3
+            %p.text-xs.font-semibold.text-gray-500.uppercase Email
+            %p.text-lg.text-gray-700= @user.email
+        
+        / Phone
+        .flex.items-start
+          %i.fas.fa-phone.text-blue-600.w-6.mt-1
+          .ml-3
+            %p.text-xs.font-semibold.text-gray-500.uppercase Phone Number
+            %p.text-lg.text-gray-700= @user.phone.presence || 'Not provided'
+        
+        / WhatsApp Number
+        .flex.items-start
+          %i.fab.fa-whatsapp.text-green-600.w-6.mt-1.text-xl
+          .ml-3
+            %p.text-xs.font-semibold.text-gray-500.uppercase.flex.items-center
+              WhatsApp Number
+            - if @user.whatsapp_number.present?
+              .flex.items-center.gap-3
+                %p.text-lg.text-gray-700= @user.whatsapp_display || @user.whatsapp_number
+                = link_to @user.whatsapp_link, target: '_blank', class: 'inline-flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white font-semibold px-3 py-1 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg text-sm' do
+                  %i.fab.fa-whatsapp
+                  %span Chat
+            - else
+              %p.text-lg.text-gray-500.italic Not provided
+        
+        / Address
+        - if @user.home_address.present?
+          .flex.items-start
+            %i.fas.fa-home.text-blue-600.w-6.mt-1
+            .ml-3
+              %p.text-xs.font-semibold.text-gray-500.uppercase Home Address
+              %p.text-lg.text-gray-700= @user.home_address
+        
+        / Nationality
+        .flex.items-start
+          %i.fas.fa-globe.text-blue-600.w-6.mt-1
+          .ml-3
+            %p.text-xs.font-semibold.text-gray-500.uppercase Status
+            - if @user.nationality.present?
+              %span.inline-flex.items-center.px-3.py-1.rounded-full.text-sm.font-semibold{class: @user.nationality == 'resident' ? 'bg-blue-100 text-blue-700' : 'bg-yellow-100 text-yellow-700'}
+                %i{class: @user.nationality == 'resident' ? 'fas fa-home mr-2' : 'fas fa-plane mr-2'}
+                = @user.nationality.capitalize
+            - else
+              %p.text-lg.text-gray-500.italic Not specified
+        
+        / Member Since
+        .flex.items-start
+          %i.fas.fa-calendar-plus.text-blue-600.w-6.mt-1
+          .ml-3
+            %p.text-xs.font-semibold.text-gray-500.uppercase Member Since
+            %p.text-lg.text-gray-700= @user.created_at.strftime('%B %d, %Y')
+        
+        / Terms & Payment Status
+        .flex.items-start.gap-4.pt-2
+          .flex.items-center
+            %i.fas.fa-file-contract.text-blue-600.mr-2
+            - if @user.terms_accepted?
+              %span.inline-flex.items-center.px-3.py-1.rounded-full.text-xs.font-semibold.bg-green-100.text-green-700
+                %i.fas.fa-check-circle.mr-1
+                Terms Accepted
+            - else
+              %span.inline-flex.items-center.px-3.py-1.rounded-full.text-xs.font-semibold.bg-red-100.text-red-700
+                %i.fas.fa-times-circle.mr-1
+                Terms Not Accepted
+          
+          .flex.items-center
+            %i.fas.fa-credit-card.text-blue-600.mr-2
+            - if @user.payment_done?
+              %span.inline-flex.items-center.px-3.py-1.rounded-full.text-xs.font-semibold.bg-green-100.text-green-700
+                %i.fas.fa-check-circle.mr-1
+                Payment Done
+            - else
+              %span.inline-flex.items-center.px-3.py-1.rounded-full.text-xs.font-semibold.bg-red-100.text-red-700
+                %i.fas.fa-times-circle.mr-1
+                Payment Not Done
 
   .mt-10
     %h2.text-2xl.font-bold.text-blue-900.mb-4 Bookings
@@ -45,6 +125,9 @@
                     %span.inline-block.bg-red-100.text-red-700.rounded-full.px-3.py-1.text-xs.font-semibold Unpaid
                 %td.px-6.py-4.rounded-r-lg
                   = link_to 'View Car', admin_car_path(booking.car), class: 'inline-block bg-blue-100 text-blue-800 font-semibold px-4 py-1 rounded-lg hover:bg-blue-200 transition'
+    - else
+      %p.text-gray-500 No bookings found for this user.
+      
   .mt-10
     %h2.text-2xl.font-bold.text-blue-900.mb-4 Documents
     - if @user.documents.any?
@@ -70,4 +153,4 @@
                   - else
                     %span.text-gray-400 Not Uploaded
     - else
-      %p.text-gray-500 No documents found for this user. 
+      %p.text-gray-500 No documents found for this user.

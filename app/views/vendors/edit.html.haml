@@ -35,6 +35,29 @@
           - if @vendor.errors[:email].any?
             %p.text-red-600.text-sm.mt-1= @vendor.errors[:email].join(', ')
 
+      %h2.text-xl.font-bold.mb-6{style: 'color: #3a6363'} Contact Information
+      .grid.grid-cols-1.md:grid-cols-2.gap-6
+        .field.space-y-2
+          = f.label :phone, 'Phone Number', class: 'block text-sm font-medium text-gray-700'
+          .relative
+            .absolute.inset-y-0.left-0.pl-4.flex.items-center.pointer-events-none
+              %i.fas.fa-phone.text-gray-400
+            = f.telephone_field :phone, class: 'w-full pl-12 pr-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition', placeholder: '+971 50 123 4567'
+          - if @vendor.errors[:phone].any?
+            %p.text-red-600.text-sm.mt-1= @vendor.errors[:phone].join(', ')
+        
+        .field.space-y-2
+          = f.label :whatsapp_number, class: 'block text-sm font-medium text-gray-700' do
+            %span WhatsApp Number
+            %i.fab.fa-whatsapp.text-green-500.ml-1
+          .relative
+            .absolute.inset-y-0.left-0.pl-4.flex.items-center.pointer-events-none
+              %i.fab.fa-whatsapp.text-green-500.text-lg
+            = f.telephone_field :whatsapp_number, class: 'w-full pl-12 pr-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-green-500 focus:border-green-500 transition', placeholder: '+971501234567', pattern: '\+[0-9]{7,15}', title: 'Enter phone number with country code (e.g., +971501234567)'
+          %small.text-gray-500.text-xs.mt-1.block Include country code (e.g., +971501234567)
+          - if @vendor.errors[:whatsapp_number].any?
+            %p.text-red-600.text-sm.mt-1= @vendor.errors[:whatsapp_number].join(', ')
+
       %h2.text-xl.font-bold.mb-6{style: 'color: #3a6363'} Emirates ID
       .grid.grid-cols-1.md:grid-cols-2.gap-6
         .field.space-y-2
@@ -42,17 +65,12 @@
           = f.text_field :emirates_id, class: 'w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition', placeholder: '15-digit Emirates ID'
           - if @vendor.errors[:emirates_id].any?
             %p.text-red-600.text-sm.mt-1= @vendor.errors[:emirates_id].join(', ')
+        
         .field.space-y-2
           = f.label :emirates_id_expires_on, 'Emirates ID Expiry Date *', class: 'block text-sm font-medium text-gray-700'
           = f.date_field :emirates_id_expires_on, class: 'w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition'
           - if @vendor.errors[:emirates_id_expires_on].any?
             %p.text-red-600.text-sm.mt-1= @vendor.errors[:emirates_id_expires_on].join(', ')
-        
-        .field.space-y-2
-          = f.label :phone, 'Phone Number', class: 'block text-sm font-medium text-gray-700'
-          = f.telephone_field :phone, class: 'w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition', placeholder: '+1 (555) 123-4567'
-          - if @vendor.errors[:phone].any?
-            %p.text-red-600.text-sm.mt-1= @vendor.errors[:phone].join(', ')
 
       / Company Information Section
       %h2.text-xl.font-bold.mb-6.mt-8{style: 'color: #3a6363'} Company Information

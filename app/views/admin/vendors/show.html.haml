@@ -8,16 +8,72 @@
     .flex.flex-col.lg:flex-row.gap-8
       / Left Side - Vendor Information
       .flex-1
-        %h1.text-3xl.font-bold.text-gray-800.mb-2= @vendor.company_name
-        %div.text-lg.text-gray-600.mb-2= @vendor.name
-        %div.text-gray-500.mb-2= @vendor.address
-        %div.text-gray-500.mb-2= @vendor.phone
-        %div.text-gray-500.mb-2= @vendor.email
-        %div.text-gray-500.mb-2= @vendor.website
-        %p.text-gray-700.mt-4.mb-6= @vendor.description
+        / Company Name
+        %h1.text-3xl.font-bold.text-gray-800.mb-4= @vendor.company_name
+        
+        / Vendor Details with Icons
+        .space-y-3
+          / Contact Person
+          .flex.items-start
+            %i.fas.fa-user.text-blue-600.w-6.mt-1
+            .ml-3
+              %p.text-xs.font-semibold.text-gray-500.uppercase Name
+              %p.text-lg.text-gray-700= @vendor.name
+          
+          / Address
+          - if @vendor.address.present?
+            .flex.items-start
+              %i.fas.fa-map-marker-alt.text-blue-600.w-6.mt-1
+              .ml-3
+                %p.text-xs.font-semibold.text-gray-500.uppercase Address
+                %p.text-lg.text-gray-700= @vendor.address
+          
+          / Phone Number
+          - if @vendor.phone.present?
+            .flex.items-start
+              %i.fas.fa-phone.text-blue-600.w-6.mt-1
+              .ml-3
+                %p.text-xs.font-semibold.text-gray-500.uppercase Phone Number
+                %p.text-lg.text-gray-700= @vendor.phone
+          
+          / WhatsApp Number
+          .flex.items-start
+            %i.fab.fa-whatsapp.text-green-600.w-6.mt-1.text-xl
+            .ml-3
+              %p.text-xs.font-semibold.text-gray-500.uppercase.flex.items-center
+                WhatsApp Number
+              - if @vendor.whatsapp_number.present?
+                .flex.items-center.gap-3
+                  %p.text-lg.text-gray-700= @vendor.whatsapp_display || @vendor.whatsapp_number
+                  = link_to @vendor.whatsapp_link, target: '_blank', class: 'inline-flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white font-semibold px-3 py-1 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg text-sm' do
+                    %i.fab.fa-whatsapp
+                    %span Chat
+              - else
+                %p.text-lg.text-gray-500.italic Not provided
+          
+          / Email
+          .flex.items-start
+            %i.fas.fa-envelope.text-blue-600.w-6.mt-1
+            .ml-3
+              %p.text-xs.font-semibold.text-gray-500.uppercase Email
+              %p.text-lg.text-gray-700= @vendor.email
+          
+          / Website
+          - if @vendor.website.present?
+            .flex.items-start
+              %i.fas.fa-globe.text-blue-600.w-6.mt-1
+              .ml-3
+                %p.text-xs.font-semibold.text-gray-500.uppercase Website
+                = link_to @vendor.website, @vendor.website, target: '_blank', class: 'text-lg text-blue-600 hover:text-blue-800 hover:underline'
+        
+        / Description
+        - if @vendor.description.present?
+          .mt-6.p-4.bg-gray-50.rounded-lg.border.border-gray-200
+            %p.text-xs.font-semibold.text-gray-500.uppercase.mb-2 Description
+            %p.text-gray-700.leading-relaxed= @vendor.description
 
         / Action Buttons
-        .flex.flex-wrap.gap-4.mt-6
+        .flex.flex-wrap.gap-4.mt-8
           = button_tag type: 'button', class: 'inline-flex items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors duration-200 shadow-md hover:shadow-lg gap-2' do
             %i.fas.fa-envelope
             %span Send Email
