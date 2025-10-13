@@ -19,6 +19,9 @@ gem "jbuilder"
 # Use Redis adapter to run Action Cable in production
 gem "redis", ">= 4.0.1"
 
+# Use this for phone number validations
+gem 'phonelib'
+
 gem 'rack-cors'
 gem 'devise'
 gem 'devise-jwt'

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_10_08_133245) do
+ActiveRecord::Schema[7.2].define(version: 2025_10_13_124019) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -206,8 +206,12 @@ ActiveRecord::Schema[7.2].define(version: 2025_10_08_133245) do
     t.string "card_cvc"
     t.boolean "payment_done"
     t.string "nationality"
+    t.string "whatsapp_number", limit: 20
+    t.string "whatsapp_country_code", limit: 3
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
+    t.index ["whatsapp_country_code"], name: "index_users_on_whatsapp_country_code"
+    t.index ["whatsapp_number"], name: "index_users_on_whatsapp_number"
   end
 
   create_table "vendor_documents", force: :cascade do |t|
@@ -249,9 +253,13 @@ ActiveRecord::Schema[7.2].define(version: 2025_10_08_133245) do
     t.datetime "deleted_at"
     t.integer "payment_mode", default: 1
     t.boolean "terms_accepted", default: false
+    t.string "whatsapp_number", limit: 20
+    t.string "whatsapp_country_code", limit: 3
     t.index ["email"], name: "index_vendors_on_email", unique: true
     t.index ["emirates_id"], name: "index_vendors_on_emirates_id", unique: true, where: "(emirates_id IS NOT NULL)"
     t.index ["reset_password_token"], name: "index_vendors_on_reset_password_token", unique: true
+    t.index ["whatsapp_country_code"], name: "index_vendors_on_whatsapp_country_code"
+    t.index ["whatsapp_number"], name: "index_vendors_on_whatsapp_number"
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"

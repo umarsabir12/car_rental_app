@@ -45,7 +45,7 @@ class VendorsController < ApplicationController
     params.require(:vendor).permit(
       :first_name, :last_name, :email, :phone, :company_name,
       :company_logo, :address, :website, :description,
-      :emirates_id, :emirates_id_expires_on, :trade_license
+      :emirates_id, :emirates_id_expires_on, :trade_license, :whatsapp_number
     )
   end
 end 

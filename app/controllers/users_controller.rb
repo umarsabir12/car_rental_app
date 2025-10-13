@@ -36,7 +36,8 @@ class UsersController < ApplicationController
         description: "#{@user.full_name} updated their profile",
         metadata: { 
           updated_fields: user_params.keys,
-          nationality: @user.nationality
+          nationality: @user.nationality,
+          whatsapp_number: @user.whatsapp_number
         },
         request: request
       )
@@ -60,7 +61,7 @@ class UsersController < ApplicationController
   def user_params
     params.require(:user).permit(
       :first_name, :last_name, :email, :phone, :home_address, 
-      :nationality, :terms_accepted
+      :nationality, :terms_accepted, :whatsapp_number
     )
   end
 
