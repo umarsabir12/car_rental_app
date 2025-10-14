@@ -349,13 +349,56 @@
 
   / Requirements Section
   .mt-8
-    .bg-white.rounded-xl.shadow-lg.p-8
-      %h2.text-2xl.font-bold.mb-6{style: 'color: #2d4f4f'} Requirements To Rent This Car
-      .space-y-3.text-gray-700
-        %p • Valid UAE driving license
-        %p • Emirates ID or Passport
-        %p • Security deposit required
-        %p • Minimum age: 21 years
+    / Requirements Section
+    .max-w-7xl.mx-auto.px-4.sm:px-6.lg:px-8.pb-8
+      .bg-white.rounded-xl.shadow-md.p-8
+        %h2.text-2xl.font-bold.mb-6{style: 'color: #2d4f4f'} REQUIRED DOCUMENTS
+        .grid.grid-cols-1.lg:grid-cols-2.gap-8
+          / Card: UAE Residents
+          .rounded-3xl.border.border-gray-200.bg-white.shadow-sm.overflow-hidden
+            .bg-gray-100.py-4.text-center
+              %h3.text-lg.font-semibold.text-gray-800 For UAE Residents
+            .p-6
+              .grid.grid-cols-1.md:grid-cols-2.gap-6.items-center
+                %div.flex.items-end.justify-center
+                  %img{class: 'w-64 h-40 object-contain', src: asset_path('hero_cars/car3.png'), alt: 'UAE Resident documents'}
+                %ul.space-y-4
+                  %li.flex.items-start.gap-3
+                    %span.inline-flex.items-center.justify-center.rounded-full.w-6.h-6{style: 'background-color: #e8f1f1; color: #3a6363'}
+                      %i{class: 'fas fa-check text-sm'}
+                    %span.text-gray-700 UAE Driving License
+                  %li.flex.items-start.gap-3
+                    %span.inline-flex.items-center.justify-center.rounded-full.w-6.h-6{style: 'background-color: #e8f1f1; color: #3a6363'}
+                      %i{class: 'fas fa-check text-sm'}
+                    %span.text-gray-700 Emirates ID
+                  %li.flex.items-start.gap-3
+                    %span.text-gray-700 (Residential Visa may be acceptable)
+          
+          / Card: Tourists visiting the UAE
+          .rounded-3xl.border.border-gray-200.bg-white.shadow-sm.overflow-hidden
+            .bg-gray-100.py-4.text-center
+              %h3.text-lg.font-semibold.text-gray-800 For Tourists visiting the UAE
+            .p-6
+              .grid.grid-cols-1.md:grid-cols-2.gap-6.items-center
+                %div.flex.items-end.justify-center
+                  %img{class: 'w-64 h-40 object-contain', src: asset_path('hero_cars/car4.png'), alt: 'Tourist documents'}
+                %ul.space-y-4
+                  %li.flex.items-start.gap-3
+                    %span.inline-flex.items-center.justify-center.rounded-full.w-6.h-6{style: 'background-color: #e8f1f1; color: #3a6363'}
+                      %i{class: 'fas fa-check text-sm'}
+                    %span.text-gray-700 Passport
+                  %li.flex.items-start.gap-3
+                    %span.inline-flex.items-center.justify-center.rounded-full.w-6.h-6{style: 'background-color: #e8f1f1; color: #3a6363'}
+                      %i{class: 'fas fa-check text-sm'}
+                    %span.text-gray-700 Visit Visa
+                  %li.flex.items-start.gap-3
+                    %span.inline-flex.items-center.justify-center.rounded-full.w-6.h-6{style: 'background-color: #e8f1f1; color: #3a6363'}
+                      %i{class: 'fas fa-check text-sm'}
+                    %span.text-gray-700 Home Country Driving License
+                  %li.flex.items-start.gap-3
+                    %span.inline-flex.items-center.justify-center.rounded-full.w-6.h-6{style: 'background-color: #e8f1f1; color: #3a6363'}
+                      %i{class: 'fas fa-check text-sm'}
+                    %span.text-gray-700 International Driving Permit (IDP)
 
   / Bookings Section
   .mt-8

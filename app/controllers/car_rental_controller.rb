@@ -12,7 +12,7 @@ class CarRentalController < ApplicationController
       { id: 'ajman', name: 'Ajman' }
     ]
 
-    @car_categories = Car.with_approved_mulkiya.where.not(category: [nil, '']).distinct.pluck(:category).sort
+    @car_categories = AppConstants::CAR_CATEGORIES
       
     # Popular cars data
     @featured_cars = Car.order(bookings_count: :desc).limit(3).map do |car|
@@ -20,7 +20,7 @@ class CarRentalController < ApplicationController
         id: car.id,
         name: car.full_name,
         car_type: car.category,
-        image_url: car.main_image_url,
+        image_url: url_for(car.images.first),
         daily_price: car.daily_price,
         features: car.active_features
       }
@@ -69,8 +69,8 @@ class CarRentalController < ApplicationController
     # Contact info
     @contact = {
       phone: '1-800-WheelsOnRent',
-      email: 'support@wheelsonrent.com',
-      address: '123 Rental Street, Dubai, UAE'
+      email: 'info@wheelsonrent.ae',
+      address: 'Building A1, Dubai Digital Park, Dubai Silicon Oasis, Dubai'
     }
       
     # Set paths (adjust according to your routes)
@@ -78,7 +78,7 @@ class CarRentalController < ApplicationController
 
     @car_classes = [
       {name: 'Economy', image: 'https://images.unsplash.com/photo-1552519507-da3b142c6e3d?q=80&w=400&auto=format&fit=crop', daily_price: '$20/day'},
-      {name: 'Standard', image: 'https://images.unsplash.com/photo-1583121274602-3e2820c69888?q=80&w=400&auto=format&fit=crop', daily_price: '$35/day'},
+      {name: 'SUV', image: 'https://images.unsplash.com/photo-1583121274602-3e2820c69888?q=80&w=400&auto=format&fit=crop', daily_price: '$35/day'},
       {name: 'Convertible', image: 'https://images.unsplash.com/photo-1617788138017-80ad40651399?q=80&w=400&auto=format&fit=crop', daily_price: '$55/day'},
       {name: 'Sport', image: 'https://images.unsplash.com/photo-1544636331-e26879cd4d9b?q=80&w=400&auto=format&fit=crop', daily_price: '$75/day'},
       {name: 'Luxury', image: 'https://images.unsplash.com/photo-1563720223185-11003d516935?q=80&w=400&auto=format&fit=crop', daily_price: '$120/day'},
