@@ -12,6 +12,7 @@ class DocumentUploadService
       unless front.present? && back.present?
         return [false, 'Both front and back images are required.']
       end
+      document.images.purge
       document.images.attach(front)
       document.images.attach(back)
       document.status = 'pending'

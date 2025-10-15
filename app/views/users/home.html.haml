@@ -43,7 +43,7 @@
                   .flex-1
                     %h3.font-semibold.text-yellow-800.mb-1 Pending Review
                     %p.text-yellow-700.text-sm.mb-2
-                      #{current_user.pending_documents.count} document#{current_user.pending_documents.count == 1 ? '' : 's'} under review
+                      #{current_user.pending_documents.count} document#{current_user.pending_documents.count == 1 ? '' : 's'} under review, you will be updated shortly
                     %ul.text-yellow-600.text-xs.space-y-1.mb-3
                       - current_user.pending_documents.limit(3).each do |doc|
                         %li.flex.items-center.gap-1
