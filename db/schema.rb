@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_10_13_124019) do
+ActiveRecord::Schema[7.2].define(version: 2025_10_17_092034) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -139,7 +139,6 @@ ActiveRecord::Schema[7.2].define(version: 2025_10_13_124019) do
     t.integer "daily_milleage", default: 0
     t.integer "weekly_milleage", default: 0
     t.integer "monthly_milleage", default: 0
-    t.string "insurance_policy_number", default: ""
     t.string "insurance_policy", default: ""
     t.integer "additional_mileage_charge", default: 0
     t.integer "bookings_count", default: 0, null: false
@@ -166,9 +165,24 @@ ActiveRecord::Schema[7.2].define(version: 2025_10_13_124019) do
     t.string "invite_token"
     t.boolean "invite_sent", default: false
     t.string "status", default: "pending"
-    t.datetime "expires_at", default: "2025-09-25 09:01:03"
+    t.datetime "expires_at", default: "2025-10-22 19:25:50"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "invoices", force: :cascade do |t|
+    t.bigint "vendor_id", null: false
+    t.date "due_date"
+    t.string "payment_status", default: "pending"
+    t.string "billing_type"
+    t.decimal "amount", precision: 10, scale: 2
+    t.date "from_date"
+    t.date "to_date"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["billing_type"], name: "index_invoices_on_billing_type"
+    t.index ["payment_status"], name: "index_invoices_on_payment_status"
+    t.index ["vendor_id"], name: "index_invoices_on_vendor_id"
   end
 
   create_table "transactions", force: :cascade do |t|
@@ -272,6 +286,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_10_13_124019) do
   add_foreign_key "car_documents", "cars"
   add_foreign_key "cars", "vendors"
   add_foreign_key "documents", "users"
+  add_foreign_key "invoices", "vendors"
   add_foreign_key "transactions", "bookings"
   add_foreign_key "vendor_documents", "vendors"
 end

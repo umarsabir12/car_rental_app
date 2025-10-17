@@ -1,0 +1,91 @@
+.container.mx-auto.px-4.py-8
+  .max-w-4xl.mx-auto
+    .bg-white.shadow-lg.rounded-xl.overflow-hidden
+      / Header
+      .bg-gradient-to-r.from-blue-600.to-blue-700.px-8.py-6.text-white
+        .flex.justify-between.items-start
+          %div
+            %h1.text-2xl.font-bold Invoice Details
+            %p.text-blue-100.mt-1
+              Invoice #
+              %span.font-mono= @invoice.id
+          / Status Badge
+          - case @invoice.payment_status
+          - when 'paid'
+            %span.inline-flex.items-center.px-4.py-2.rounded-full.text-sm.font-semibold.bg-green-500.text-white
+              %i.fas.fa-check-circle.mr-2
+              Paid
+          - when 'pending'
+            %span.inline-flex.items-center.px-4.py-2.rounded-full.text-sm.font-semibold.bg-yellow-500.text-white
+              %i.fas.fa-clock.mr-2
+              Pending Payment
+          - when 'overdue'
+            %span.inline-flex.items-center.px-4.py-2.rounded-full.text-sm.font-semibold.bg-red-500.text-white
+              %i.fas.fa-exclamation-circle.mr-2
+              Overdue
+          - when 'cancelled'
+            %span.inline-flex.items-center.px-4.py-2.rounded-full.text-sm.font-semibold.bg-gray-500.text-white
+              %i.fas.fa-ban.mr-2
+              Cancelled
+
+      / Content
+      .p-8
+        / Invoice Details
+        .mb-8
+          %h2.text-lg.font-semibold.text-gray-900.mb-4 #{@invoice.payment_status.humanize} Invoice
+          
+          .grid.grid-cols-1.md:grid-cols-2.gap-6.mb-6
+            / Billing Period
+            .bg-blue-50.rounded-lg.p-4.border.border-blue-200
+              .flex.items-center.mb-2
+                %i.fas.fa-calendar-alt.text-blue-600.mr-2
+                %p.text-sm.font-medium.text-blue-900 Billing Period
+              %p.text-lg.font-semibold.text-gray-900
+                = @invoice.from_date.strftime('%B %d, %Y')
+              %p.text-sm.text-gray-600.mb-2 to
+              %p.text-lg.font-semibold.text-gray-900
+                = @invoice.to_date.strftime('%B %d, %Y')
+              %span.inline-block.mt-2.px-3.py-1.bg-blue-100.text-blue-800.text-xs.font-medium.rounded-full
+                = @invoice.billing_type.capitalize
+
+            / Amount & Due Date
+            .bg-emerald-50.rounded-lg.p-4.border.border-emerald-200
+              .flex.items-center.mb-2
+                %i.fas.fa-dollar-sign.text-emerald-600.mr-2
+                %p.text-sm.font-medium.text-emerald-900 Amount Due
+              %p.text-3xl.font-bold.text-gray-900= number_to_currency(@invoice.amount)
+              .mt-3.pt-3.border-t.border-emerald-200
+                %p.text-sm.text-gray-600 Due Date
+                %p.text-lg.font-semibold.text-gray-900= @invoice.due_date.strftime('%B %d, %Y')
+                - if @invoice.overdue?
+                  %span.inline-block.mt-2.px-3.py-1.bg-red-100.text-red-800.text-xs.font-bold.rounded-full
+                    %i.fas.fa-exclamation-circle.mr-1
+                    OVERDUE
+
+          / Payment Instructions
+          - if @invoice.payment_status == 'pending' || @invoice.payment_status == 'overdue'
+            .bg-yellow-50.rounded-lg.p-4.border.border-yellow-200
+              .flex.items-start
+                %i.fas.fa-info-circle.text-yellow-600.mt-1.mr-3
+                %div
+                  %p.text-sm.font-medium.text-yellow-900.mb-1 Payment Required
+                  %p.text-sm.text-yellow-800
+                    Please contact the administrator to arrange payment for this invoice.
+
+          / Created Date
+          .text-sm.text-gray-500.mt-4
+            %i.fas.fa-calendar-plus.mr-2
+            Invoice created on
+            = @invoice.created_at.strftime('%B %d, %Y at %I:%M %p')
+
+        %hr.my-6
+
+        / Action Buttons
+        .flex.flex-wrap.gap-3
+          = link_to vendors_invoices_path, class: 'inline-flex items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors duration-200 shadow-md hover:shadow-lg gap-2' do
+            %i.fas.fa-list
+            %span View All Invoices
+
+          = link_to vendors_dashboard_path, class: 'inline-flex items-center px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white font-medium rounded-lg transition-colors duration-200 gap-2' do
+            %i.fas.fa-arrow-left
+            %span Back to Dashboard
