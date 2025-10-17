@@ -6,6 +6,7 @@ class Vendor < ApplicationRecord
 
   has_many :cars, dependent: :destroy
   has_many :activities, dependent: :destroy
+  has_many :invoices, dependent: :destroy
   has_one :vendor_document
   has_many_attached :avatar
 
@@ -122,6 +123,14 @@ class Vendor < ApplicationRecord
     return nil unless whatsapp_e164
     base_url = "https://wa.me/#{whatsapp_e164.delete('+')}"
     message ? "#{base_url}?text=#{ERB::Util.url_encode(message)}" : base_url
+  end
+
+  def total_pending_amount
+    invoices.pending.sum(:amount)
+  end
+
+  def total_paid_amount
+    invoices.paid.sum(:amount)
   end
 
   private

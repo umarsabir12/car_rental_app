@@ -58,8 +58,19 @@ Rails.application.routes.draw do
       member do
         delete :destroy
         patch :restore
+        post :invoice
+      end
+      # Nested invoices routes - admin can create invoices for vendors
+      resources :invoices, only: [:index, :new, :create]
+    end
+    
+    # Standalone invoices routes - admin can manage all invoices
+    resources :invoices, only: [:show, :edit, :update, :destroy] do
+      member do
+        patch :mark_as_paid
       end
     end
+    
     resources :invited_vendors, only: [:index, :new, :create]
     resources :vendor_requests, only: [:index] do
       member do
@@ -117,6 +128,8 @@ Rails.application.routes.draw do
     resources :bookings
     resources :documents
     resources :payments, only: [:index, :show]
+    # Vendors can only VIEW their invoices (read-only)
+    resources :invoices, only: [:index, :show]
   end
 
   # Vendor profile routes (outside namespace for simpler URLs)

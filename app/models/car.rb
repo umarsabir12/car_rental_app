@@ -139,8 +139,6 @@ class Car < ApplicationRecord
     update(stripe_price_id: stripe_price.id)
   end
 
-  private
-
   def log_car_added
     return unless vendor.present?
     
