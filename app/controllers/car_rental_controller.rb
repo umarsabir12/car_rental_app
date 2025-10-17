@@ -68,8 +68,8 @@ class CarRentalController < ApplicationController
       
     # Contact info
     @contact = {
-      phone: '1-800-WheelsOnRent',
-      email: 'info@wheelsonrent.ae',
+      phone: '+971506336408',
+      email: 'booking@wheelsonrent.ae',
       address: 'Building A1, Dubai Digital Park, Dubai Silicon Oasis, Dubai'
     }
       
