@@ -8,16 +8,33 @@ Rails.application.routes.draw do
     registrations: 'vendors/registrations',
     passwords: 'vendors/passwords'
   }
+
   devise_for :users, controllers: {
     sessions: 'users/sessions',
     registrations: 'users/registrations',
     passwords: 'users/passwords'
   }
+  
   devise_for :admins, controllers: { sessions: 'admins/sessions' }
   
   # Admin profile routes (outside namespace for simpler URLs)
   resource :admins, only: [:show, :edit, :update, :index], path: 'admin'
   
+  # Manual OmniAuth routes for Users - accept both GET and POST
+  match '/users/auth/google_oauth2', 
+    to: 'users/omniauth_callbacks#passthru', 
+    as: :user_google_oauth2_omniauth_authorize,
+    via: [:get, :post]
+  
+  # Manual OmniAuth routes for Vendors - accept both GET and POST
+  match '/vendors/auth/google_oauth2', 
+    to: 'vendors/omniauth_callbacks#passthru', 
+    as: :vendor_google_oauth2_omniauth_authorize,
+    via: [:get, :post]
+  
+  # Callback route
+  get '/auth/google_oauth2/callback', to: 'omniauth_callbacks#google_oauth2'
+
   namespace :users do
     get 'documents', to: 'documents#index'
     get 'bookings', to: 'bookings#index'

@@ -1,4 +1,6 @@
 class User < ApplicationRecord
+  attr_accessor :from_omniauth
+
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   devise :database_authenticatable, :registerable,
@@ -35,6 +37,38 @@ class User < ApplicationRecord
   
   def full_name
     "#{self.first_name} #{self.last_name}"
+  end
+
+  def self.from_omniauth(auth)
+    user = where(provider: auth.provider, uid: auth.uid).first
+
+    # If user exists, return it
+    return user if user.present?
+
+    # Create new user without validation
+    user = new do |u|
+      u.provider = auth.provider
+      u.uid = auth.uid
+      u.email = auth.info.email
+      u.password = Devise.friendly_token[0, 20]
+      
+      if auth.info.first_name.present? && auth.info.last_name.present?
+        u.first_name = auth.info.first_name
+        u.last_name = auth.info.last_name
+      else
+        # Fallback: split full name if first_name/last_name not available
+        name_parts = auth.info.name.to_s.split(' ', 2)
+        u.first_name = name_parts.first
+        u.last_name = name_parts.last || ''
+      end
+      
+      # Set default values for any required fields
+      # Example: u.phone = '' # if phone is required but can be blank
+    end
+    
+    # Save without validation
+    user.save(validate: false)
+    user
   end
 
   def display_name
