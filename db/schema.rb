@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_10_17_092034) do
+ActiveRecord::Schema[7.2].define(version: 2025_10_18_064939) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -222,6 +222,8 @@ ActiveRecord::Schema[7.2].define(version: 2025_10_17_092034) do
     t.string "nationality"
     t.string "whatsapp_number", limit: 20
     t.string "whatsapp_country_code", limit: 3
+    t.string "provider"
+    t.string "uid"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
     t.index ["whatsapp_country_code"], name: "index_users_on_whatsapp_country_code"
@@ -269,6 +271,8 @@ ActiveRecord::Schema[7.2].define(version: 2025_10_17_092034) do
     t.boolean "terms_accepted", default: false
     t.string "whatsapp_number", limit: 20
     t.string "whatsapp_country_code", limit: 3
+    t.string "provider"
+    t.string "uid"
     t.index ["email"], name: "index_vendors_on_email", unique: true
     t.index ["emirates_id"], name: "index_vendors_on_emirates_id", unique: true, where: "(emirates_id IS NOT NULL)"
     t.index ["reset_password_token"], name: "index_vendors_on_reset_password_token", unique: true

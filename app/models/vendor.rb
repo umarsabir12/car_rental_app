@@ -1,4 +1,6 @@
 class Vendor < ApplicationRecord
+  attr_accessor :from_omniauth
+
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   devise :database_authenticatable, :registerable,
@@ -71,6 +73,31 @@ class Vendor < ApplicationRecord
 
   def full_name
     name
+  end
+
+  def self.from_omniauth(auth)
+    vendor = where(provider: auth.provider, uid: auth.uid).first_or_initialize do |v|
+      v.email = auth.info.email
+      v.password = Devise.friendly_token[0, 20]
+      
+      # Extract first and last name
+      if auth.info.first_name.present? && auth.info.last_name.present?
+        v.first_name = auth.info.first_name
+        v.last_name = auth.info.last_name
+      else
+        # Fallback: split full name if first_name/last_name not available
+        name_parts = auth.info.name.to_s.split(' ', 2)
+        v.first_name = name_parts.first
+        v.last_name = name_parts.last || ''
+      end
+      
+      # Set the flag to skip non-essential validations
+      v.from_omniauth = true
+    end
+    
+    vendor.define_singleton_method(:skip_omniauth_validations?) { true }
+    vendor.save(validate: false)
+    vendor
   end
 
   def display_name
