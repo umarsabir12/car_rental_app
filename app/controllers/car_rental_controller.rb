@@ -13,6 +13,8 @@ class CarRentalController < ApplicationController
     ]
 
     @car_categories = AppConstants::CAR_CATEGORIES
+    @car_brands = Car.distinct.pluck(:brand).compact.map { |b| [b.titleize, b] }
+    @car_models = Car.distinct.pluck(:model).compact.map { |m| [m.titleize, m] }
       
     # Popular cars data
     @featured_cars = Car.order(bookings_count: :desc).limit(3).map do |car|

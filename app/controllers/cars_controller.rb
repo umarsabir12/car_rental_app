@@ -1,7 +1,11 @@
 class CarsController < ApplicationController
   def index
+    @car_models = Car.distinct.pluck(:model).compact.map { |m| [m.titleize, m] }
+    @car_brands = Car.distinct.pluck(:brand).compact.map { |b| [b.titleize, b] }
+
     # Only show cars with approved mulkiya documents
     @cars = Car.with_approved_mulkiya
+    
 
     if params[:category].present?
       @selected_category = params[:category]
