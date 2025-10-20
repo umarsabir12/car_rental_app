@@ -17,13 +17,6 @@ class CarsController < ApplicationController
       @cars = Car.filter_by_brand(@cars, @selected_brand)
     end
 
-    if params[:with_driver].present?
-      # Accept truthy values like '1', 'true', 'yes'
-      truthy = %w[1 true yes].include?(params[:with_driver].to_s.downcase)
-      @with_driver = truthy
-      @cars = @cars.where(with_driver: true) if truthy
-    end
-
     @cars = @cars.order(created_at: :desc)
   end
 

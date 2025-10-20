@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_10_20_130940) do
+ActiveRecord::Schema[7.2].define(version: 2025_10_20_141936) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -132,7 +132,6 @@ ActiveRecord::Schema[7.2].define(version: 2025_10_20_130940) do
     t.bigint "vendor_id"
     t.string "stripe_product_id"
     t.string "stripe_price_id"
-    t.boolean "with_driver", default: false
     t.integer "weekly_price"
     t.integer "monthly_price"
     t.integer "daily_milleage", default: 0

@@ -135,7 +135,7 @@ class Vendors::CarsController < ApplicationController
         :model, :brand, :category, :color, :year, :daily_price, :weekly_price, :monthly_price, :status, :description,
         :transmission, :fuel_type, :seats, :engine_size,
         :air_conditioning, :gps, :sunroof, :bluetooth, :daily_milleage, :weekly_milleage, :monthly_milleage, :featured,
-        :with_driver, :main_image_url, :insurance_policy, :additional_mileage_charge, :mulkiya, images: []
+        :main_image_url, :insurance_policy, :additional_mileage_charge, :mulkiya, images: []
       )
     end
 end 
