@@ -123,9 +123,6 @@
             %span.font-medium.text-gray-600 Seats
             %span.text-gray-900= @car.seats.presence || '—'
           .flex.justify-between.py-2.border-b.border-gray-100
-            %span.font-medium.text-gray-600 Total Mileage
-            %span.text-gray-900= @car.mileage.presence || '—'
-          .flex.justify-between.py-2.border-b.border-gray-100
             %span.font-medium.text-gray-600 Daily Mileage
             %span.text-gray-900= @car.daily_milleage.presence || '—'
           .flex.justify-between.py-2.border-b.border-gray-100
@@ -327,11 +324,6 @@
             %span.text-sm.text-gray-500 Fuel
             %p.font-medium= @car.fuel_type || 'Petrol'
         .flex.items-center.space-x-3
-          %i.fas.fa-tachometer-alt.text-gray-400.w-5
-          .div
-            %span.text-sm.text-gray-500 Mileage
-            %p.font-medium= @car.mileage || '50,000'
-        .flex.items-center.space-x-3
           %i.fas.fa-cogs.text-gray-400.w-5
           .div
             %span.text-sm.text-gray-500 Transmission
@@ -347,58 +339,44 @@
             %span.text-sm.text-gray-500 Engine CC
             %p.font-medium= @car.engine_size || '2.0L'
 
-  / Requirements Section
+  / Required Document Section
   .mt-8
-    / Requirements Section
-    .max-w-7xl.mx-auto.px-4.sm:px-6.lg:px-8.pb-8
-      .bg-white.rounded-xl.shadow-md.p-8
-        %h2.text-2xl.font-bold.mb-6{style: 'color: #2d4f4f'} REQUIRED DOCUMENTS
-        .grid.grid-cols-1.lg:grid-cols-2.gap-8
-          / Card: UAE Residents
-          .rounded-3xl.border.border-gray-200.bg-white.shadow-sm.overflow-hidden
-            .bg-gray-100.py-4.text-center
-              %h3.text-lg.font-semibold.text-gray-800 For UAE Residents
-            .p-6
-              .grid.grid-cols-1.md:grid-cols-2.gap-6.items-center
-                %div.flex.items-end.justify-center
-                  %img{class: 'w-64 h-40 object-contain', src: asset_path('hero_cars/car3.png'), alt: 'UAE Resident documents'}
-                %ul.space-y-4
-                  %li.flex.items-start.gap-3
-                    %span.inline-flex.items-center.justify-center.rounded-full.w-6.h-6{style: 'background-color: #e8f1f1; color: #3a6363'}
-                      %i{class: 'fas fa-check text-sm'}
-                    %span.text-gray-700 UAE Driving License
-                  %li.flex.items-start.gap-3
-                    %span.inline-flex.items-center.justify-center.rounded-full.w-6.h-6{style: 'background-color: #e8f1f1; color: #3a6363'}
-                      %i{class: 'fas fa-check text-sm'}
-                    %span.text-gray-700 Emirates ID
-                  %li.flex.items-start.gap-3
-                    %span.text-gray-700 (Residential Visa may be acceptable)
-          
-          / Card: Tourists visiting the UAE
-          .rounded-3xl.border.border-gray-200.bg-white.shadow-sm.overflow-hidden
-            .bg-gray-100.py-4.text-center
-              %h3.text-lg.font-semibold.text-gray-800 For Tourists visiting the UAE
-            .p-6
-              .grid.grid-cols-1.md:grid-cols-2.gap-6.items-center
-                %div.flex.items-end.justify-center
-                  %img{class: 'w-64 h-40 object-contain', src: asset_path('hero_cars/car4.png'), alt: 'Tourist documents'}
-                %ul.space-y-4
-                  %li.flex.items-start.gap-3
-                    %span.inline-flex.items-center.justify-center.rounded-full.w-6.h-6{style: 'background-color: #e8f1f1; color: #3a6363'}
-                      %i{class: 'fas fa-check text-sm'}
-                    %span.text-gray-700 Passport
-                  %li.flex.items-start.gap-3
-                    %span.inline-flex.items-center.justify-center.rounded-full.w-6.h-6{style: 'background-color: #e8f1f1; color: #3a6363'}
-                      %i{class: 'fas fa-check text-sm'}
-                    %span.text-gray-700 Visit Visa
-                  %li.flex.items-start.gap-3
-                    %span.inline-flex.items-center.justify-center.rounded-full.w-6.h-6{style: 'background-color: #e8f1f1; color: #3a6363'}
-                      %i{class: 'fas fa-check text-sm'}
-                    %span.text-gray-700 Home Country Driving License
-                  %li.flex.items-start.gap-3
-                    %span.inline-flex.items-center.justify-center.rounded-full.w-6.h-6{style: 'background-color: #e8f1f1; color: #3a6363'}
-                      %i{class: 'fas fa-check text-sm'}
-                    %span.text-gray-700 International Driving Permit (IDP)
+    .mx-auto
+      .bg-white.rounded-2xl.shadow-lg.p-8
+
+        / Required Documents Section
+        .mb-8
+          .text-xl.font-bold.text-gray-800.mb-4 ✅ Required Documents
+          %ul.text-gray-700.text-left.max-w-2xl.mx-10.list-disc.pl-6.space-y-2
+            %li
+              %strong Tourists / Non-Residents:
+              | Passport copy, home country license, International Driving Permit (if required), Visa Copy.
+            %li
+              %strong Residents:
+              | Emirates ID, UAE driving license.
+            %li
+              %strong GCC Nationals:
+              | GCC ID or Passport, GCC driving license.
+
+        / Before Delivery Section
+        .mb-8
+          .text-xl.font-bold.text-gray-800.mb-4 ✅ Before Delivery
+          %ul.text-gray-700.text-left.max-w-2xl.mx-10.list-disc.pl-6.space-y-2
+            %li Customers must present the receipt received during booking with Wheelsonrent at the time of car collection.
+            %li Collect payment receipt.
+            %li Collect a copy of the rental agreement.
+
+        / Note Section
+        .mb-8
+          .text-xl.font-bold.text-gray-800.mb-4 ⚠️ Note
+          %ul.text-gray-700.text-left.max-w-2xl.mx-10.list-disc.pl-6.space-y-2
+            %li Wheelsonrent platform only displays cars and manages reservations.
+            %li Wheelsonrent bears no responsibility for rental payments made between the customer and the car rental company.
+        
+        / Additional Note
+        .mt-6
+          %p.text-gray-600.italic.text-left.max-w-2xl.mx-10
+            * Customers must present the booking confirmation received during booking with Wheelsonrent at the time of car collection.
 
   / Bookings Section
   .mt-8
@@ -511,7 +489,7 @@
       return {
         mileage: {
           title: 'Mileage Policy',
-          content: 'This rental includes limited mileage. Additional charges apply for exceeding the daily mileage limit of ' + (#{@car.daily_milleage || 200}) + ' km per day. Extra mileage is charged at AED 1 per kilometer.'
+          content: 'Most rentals come with a daily mileage limit (200-250 km per day). Exceeding this limit will result in additional charges of AED 0.50 per extra kilometer. Some rental companies also offer unlimited mileage or extra mileage packages.'
         },
         fuel: {
           title: 'Fuel Policy',
@@ -519,7 +497,7 @@
         },
         rental: {
           title: 'Rental Policy',
-          content: 'Minimum rental age is 21 years. A valid UAE driving license is required for UAE residents, or an International Driving Permit for tourists. The renter is responsible for all traffic fines incurred during the rental period. Vehicle must be returned to the same location unless prior arrangements are made.'
+          content: "Renters must be at least 21 years old. UAE residents need a valid UAE driving license, and tourists must provide an International Driving Permit. Any traffic fines incurred during the rental period are the renter’s responsibility. Vehicles should be returned to the original pickup location unless alternative arrangements have been approved in advance."
         },
         min_days: {
           title: 'Minimum Rental Duration',

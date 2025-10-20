@@ -27,10 +27,6 @@ class Car < ApplicationRecord
     "#{brand} #{model} (#{year})"
   end
 
-  def with_driver?
-    with_driver == true
-  end
-
   def booking_status
     if bookings.any?
       bookings.exists?(['start_date <= ? AND end_date >= ?', Date.today, Date.today]) ? 'rented' : 'available'

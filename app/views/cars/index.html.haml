@@ -6,37 +6,33 @@
   / Filter/Search Bar at Top
   .bg-white.rounded-xl.shadow-md.p-6.mb-10
     -# %h2.text-lg.font-bold.text-blue-800.mb-4 Filter/Search
-    = form_with url: cars_path, method: :get, local: true, class: "grid grid-cols-1 md:grid-cols-5 gap-4 items-end" do |f|
+    = form_with url: cars_path, method: :get, local: true, class: "grid grid-cols-1 md:grid-cols-4 gap-4 items-end" do |f|
       .flex.flex-col
         = f.label :model, "Model", class: "text-xs font-semibold text-gray-700 mb-1"
-        = f.text_field :model, value: params[:model], class: "px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:border-teal-600 focus:ring-teal-600"
+        = f.select :model, options_for_select([["All Models", ""]] + (@car_models || []), params[:model]), {}, class: "block w-full px-4 py-2 border border-gray-200 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:border-teal-600 focus:ring-teal-600 bg-white text-gray-700"
       .flex.flex-col
         = f.label :brand, "Brand", class: "text-xs font-semibold text-gray-700 mb-1"
-        = f.text_field :brand, value: params[:brand], class: "px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:border-teal-600 focus:ring-teal-600"
-      -# .flex.flex-col
-        = f.label :year, "Year", class: "text-xs font-semibold text-blue-700 mb-1"
-        = f.number_field :year, value: params[:year], class: "px-3 py-2 border border-blue-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+        = f.select :brand, options_for_select([["All Brands", ""]] + (@car_brands || []), params[:brand]), {}, class: "block w-full px-4 py-2 border border-gray-200 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:border-teal-600 focus:ring-teal-600 bg-white text-gray-700"
       .flex.flex-col
         = f.label :category, "Category", class: "text-xs font-semibold text-gray-700 mb-1"
         = f.select :category, options_for_select([["All Categories", ""]] + AppConstants::CAR_CATEGORIES, params[:category]), {}, class: "block w-full px-4 py-2 border border-gray-200 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:border-teal-600 focus:ring-teal-600 bg-white text-gray-700"
-      .flex.flex-col
-        = f.label :with_driver, "Driver Option", class: "text-xs font-semibold text-gray-700 mb-1"
-        = f.select :with_driver, options_for_select([["All Cars", ""], ["With Driver", "true"], ["Self Drive", "false"]], params[:with_driver]), {}, class: "block w-full px-4 py-2 border border-gray-200 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:border-teal-600 focus:ring-teal-600 bg-white text-gray-700"
       = f.submit "Search", class: "text-white font-bold px-6 py-2 rounded-lg shadow transition w-full", style: "background-color: #3a6363" 
 
   / Filter Summary
-  - if params[:with_driver].present? || params[:category].present? || params[:model].present? || params[:brand].present? || params[:year].present?
+  - if params[:category].present? || params[:model].present? || params[:brand].present? || params[:year].present?
     .mb-6.p-4.rounded-lg.border{style: 'background-color: #f0f6f6; border-color: #cfe5e5'}
       .flex.items-center.justify-between
         .flex.items-center
           %i.fas.fa-filter.mr-2{style: 'color: #3a6363'}
           %span.text-sm.font-medium{style: 'color: #2d4f4f'}
-            - if params[:with_driver] == 'true'
-              Showing #{@cars.count} car#{@cars.count == 1 ? '' : 's'} with driver
-            - elsif params[:with_driver] == 'false'
-              Showing #{@cars.count} self-drive car#{@cars.count == 1 ? '' : 's'}
-            - elsif params[:category].present?
+            - if params[:category].present?
               Showing #{@cars.count} #{params[:category].capitalize} car#{@cars.count == 1 ? '' : 's'}
+            - elsif params[:model].present?
+              Showing #{@cars.count} #{params[:model].capitalize} car#{@cars.count == 1 ? '' : 's'}
+            - elsif params[:brand].present?
+              Showing #{@cars.count} #{params[:brand].capitalize} car#{@cars.count == 1 ? '' : 's'}
+            - elsif params[:year].present?
+              Showing #{@cars.count} #{params[:year]} car#{@cars.count == 1 ? '' : 's'}
             - else
               Showing #{@cars.count} filtered car#{@cars.count == 1 ? '' : 's'}
         = link_to 'Clear Filters', cars_path, class: 'text-sm underline', style: 'color: #3a6363'
@@ -53,10 +49,6 @@
           .absolute.top-3.right-3.flex.flex-col.space-y-1
             - status_classes = {'Available' => 'bg-green-500 text-white','Rented' => 'bg-red-500 text-white'}[car.status] || 'bg-teal-600 text-white'
             %span.inline-block.rounded-full.text-xs.font-semibold.px-2.py-1{ class: status_classes }= car.status
-            - if car.with_driver?
-              %span.inline-block.rounded-full.text-xs.font-semibold.px-2.py-1.bg-purple-500.text-white
-                %i.fas.fa-user.mr-1
-                With Driver
           
         .p-6.flex-1.flex.flex-col
           %div.flex.items-center.justify-between.mb-2

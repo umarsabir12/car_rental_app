@@ -103,10 +103,6 @@
           = f.number_field :seats, min: 1, max: 15, class: 'w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition', placeholder: 'e.g., 5'
         
         .field.space-y-2
-          = f.label :mileage, 'Total Mileage (km)', class: 'block text-sm font-medium text-gray-700'
-          = f.number_field :mileage, min: 0, class: 'w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition', placeholder: 'e.g., 15000'
-        
-        .field.space-y-2
           = f.label :daily_milleage, 'Daily Mileage (km)', class: 'block text-sm font-medium text-gray-700'
           = f.number_field :daily_milleage, min: 0, class: 'w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition', placeholder: 'e.g., 100'
         
@@ -149,11 +145,6 @@
           .flex.items-center
             = f.check_box :featured, class: 'h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded'
             = f.label :featured, 'Featured Car', class: 'ml-2 block text-sm font-medium text-gray-700'
-        
-        .field.space-y-2
-          .flex.items-center
-            = f.check_box :with_driver, class: 'h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded'
-            = f.label :with_driver, 'Rent with Driver', class: 'ml-2 block text-sm font-medium text-gray-700'
 
       / Insurance Section
       %h2.text-lg.font-bold.mb-4.mt-8{style: 'color: #3a6363'} Insurance
@@ -191,7 +182,7 @@
 
       .flex.gap-6.mb-6
         .relative.group
-          %div.flex.items-center.justify-center.w-32.h-24.bg-blue-50.rounded-xl.shadow.border-2.border-dashed.border-blue-300.group-hover:border-blue-500.transition-all.duration-200{id: 'plus-card-mulkiya'}
+          %div.flex.items-center.justify-center.w-32.h-24.bg-red-50.rounded-xl.shadow.border-2.border-dashed.border-red-400.group-hover:border-blue-500.transition-all.duration-200{id: 'plus-card-mulkiya'}
             %i.fas.fa-plus.text-3xl.text-blue-400{id: 'plus-icon-mulkiya'}
             %img.hidden.absolute.inset-0.w-full.h-full.object-cover.rounded-xl{id: 'preview-img-mulkiya'}
             %div.hidden.absolute.inset-0.w-full.h-full.flex.items-center.justify-center.rounded-xl{id: 'preview-file-mulkiya'}
