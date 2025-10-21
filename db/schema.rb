@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_10_20_141936) do
+ActiveRecord::Schema[7.2].define(version: 2025_10_21_112109) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -108,6 +108,16 @@ ActiveRecord::Schema[7.2].define(version: 2025_10_20_141936) do
     t.index ["car_id"], name: "index_car_documents_on_car_id"
   end
 
+  create_table "car_features", force: :cascade do |t|
+    t.bigint "car_id", null: false
+    t.bigint "feature_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["car_id", "feature_id"], name: "index_car_features_on_car_id_and_feature_id", unique: true
+    t.index ["car_id"], name: "index_car_features_on_car_id"
+    t.index ["feature_id"], name: "index_car_features_on_feature_id"
+  end
+
   create_table "cars", force: :cascade do |t|
     t.string "model"
     t.string "brand"
@@ -154,6 +164,14 @@ ActiveRecord::Schema[7.2].define(version: 2025_10_20_141936) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_documents_on_user_id"
+  end
+
+  create_table "features", force: :cascade do |t|
+    t.string "name"
+    t.boolean "common", default: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["name"], name: "index_features_on_name"
   end
 
   create_table "invited_vendors", force: :cascade do |t|
@@ -286,6 +304,8 @@ ActiveRecord::Schema[7.2].define(version: 2025_10_20_141936) do
   add_foreign_key "bookings", "users"
   add_foreign_key "bookings", "vendors"
   add_foreign_key "car_documents", "cars"
+  add_foreign_key "car_features", "cars"
+  add_foreign_key "car_features", "features"
   add_foreign_key "cars", "vendors"
   add_foreign_key "documents", "users"
   add_foreign_key "invoices", "vendors"

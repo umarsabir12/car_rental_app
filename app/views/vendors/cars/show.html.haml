@@ -135,54 +135,30 @@
             %span.font-medium.text-gray-600 Engine Size
             %span.text-gray-900= @car.engine_size.presence || '—'
 
-      / Features & Specs Section (two-column like public page)
+      / Features & Specs Section
       .bg-white.rounded-xl.shadow-lg.p-6
-        %h2.text-xl.font-bold.mb-4.flex.items-center.gap-2{style: 'color:#2d4f4f'}
-          %i.fas.fa-star{style: 'color: #3a6363'}
-          Features & Specs
-        .grid.grid-cols-1.md:grid-cols-2.gap-8
-          .div
-            %h3.font-semibold.mb-4.text-gray-700 Technical Features
-            .space-y-3
-              .flex.items-center
-                - if @car.air_conditioning
-                  %i.fas.fa-check-circle.text-green-500.mr-3
-                - else
-                  %i.fas.fa-times-circle.text-red-500.mr-3
-                %span Automatic Emergency Braking
-              .flex.items-center
-                - if @car.bluetooth
-                  %i.fas.fa-check-circle.text-green-500.mr-3
-                - else
-                  %i.fas.fa-times-circle.text-red-500.mr-3
-                %span Bluetooth Connectivity
-              .flex.items-center
-                %i.fas.fa-check-circle.text-green-500.mr-3
-                %span Power Windows
-              .flex.items-center
-                %i.fas.fa-check-circle.text-green-500.mr-3
-                %span Power Door Locks
-          .div
-            %h3.font-semibold.mb-4.text-gray-700 Other Features
-            .space-y-3
-              .flex.items-center
-                - if @car.sunroof
-                  %i.fas.fa-check-circle.text-green-500.mr-3
-                - else
-                  %i.fas.fa-times-circle.text-red-500.mr-3
-                %span Panoramic Sunroof
-              .flex.items-center
-                - if @car.gps
-                  %i.fas.fa-check-circle.text-green-500.mr-3
-                - else
-                  %i.fas.fa-times-circle.text-red-500.mr-3
-                %span GPS Navigation
-              .flex.items-center
-                %i.fas.fa-check-circle.text-green-500.mr-3
-                %span USB Chargers
-              .flex.items-center
-                %i.fas.fa-check-circle.text-green-500.mr-3
-                %span LED Screens
+        %h2.text-2xl.font-bold.mb-6{style: 'color: #2d4f4f'} FEATURES & SPECS
+        
+        - if @car.features.any?
+          .relative
+            #featuresGrid.grid.grid-cols-1.sm:grid-cols-2.md:grid-cols-3.lg:grid-cols-4.gap-4
+              - @car.features.each_with_index do |feature, index|
+                .flex.items-center.feature-item{class: index >= 12 ? 'hidden' : '', 'data-index': index}
+                  %i.fas.fa-check-circle.mr-3{class: feature.common ? 'text-green-500' : 'text-purple-500'}
+                  %span.text-gray-700
+                    = feature.name
+                    - unless feature.common
+                      %span.ml-1.text-xs.text-purple-600 ⭐
+            
+            - if @car.features.count > 12
+              .mt-6.text-center
+                %button#showMoreFeaturesBtn.px-6.py-3.text-white.rounded-lg.font-semibold.transition-all.duration-200.shadow-md.hover:shadow-lg.flex.items-center.justify-center.mx-auto.gap-2{style: 'background-color: #3a6363'}
+                  %span#btnText Show More Features
+                  %i.fas.fa-chevron-down#btnIcon
+        - else
+          .text-center.py-8.text-gray-500
+            %i.fas.fa-info-circle.text-3xl.mb-3
+            %p No features available for this vehicle
 
       / Description Card
       - if @car.description.present?
@@ -480,6 +456,60 @@
     });
   }
 
+  // Show More Features functionality
+  function initializeFeaturesToggle() {
+    const showMoreBtn = document.getElementById('showMoreFeaturesBtn');
+    const btnText = document.getElementById('btnText');
+    const btnIcon = document.getElementById('btnIcon');
+    
+    if (!showMoreBtn) return; // Exit if button doesn't exist
+    
+    let isExpanded = false;
+    
+    // Remove any existing event listeners to avoid duplicates
+    const newBtn = showMoreBtn.cloneNode(true);
+    showMoreBtn.parentNode.replaceChild(newBtn, showMoreBtn);
+    
+    newBtn.addEventListener('click', function() {
+      const allFeatures = document.querySelectorAll('.feature-item');
+      const newBtnText = this.querySelector('#btnText');
+      const newBtnIcon = this.querySelector('#btnIcon');
+      
+      if (!isExpanded) {
+        // Show all features
+        allFeatures.forEach(function(feature) {
+          feature.classList.remove('hidden');
+        });
+        if (newBtnText) newBtnText.textContent = 'Show Less Features';
+        if (newBtnIcon) {
+          newBtnIcon.classList.remove('fa-chevron-down');
+          newBtnIcon.classList.add('fa-chevron-up');
+        }
+        isExpanded = true;
+      } else {
+        // Hide features after index 11
+        allFeatures.forEach(function(feature) {
+          const index = parseInt(feature.getAttribute('data-index'));
+          if (index >= 12) {
+            feature.classList.add('hidden');
+          }
+        });
+        if (newBtnText) newBtnText.textContent = 'Show More Features';
+        if (newBtnIcon) {
+          newBtnIcon.classList.remove('fa-chevron-up');
+          newBtnIcon.classList.add('fa-chevron-down');
+        }
+        isExpanded = false;
+        
+        // Scroll back to features section
+        const featuresGrid = document.querySelector('#featuresGrid');
+        if (featuresGrid) {
+          featuresGrid.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+      }
+    });
+  }
+
   // Policy Drawer content (Turbo-friendly, delegated listeners)
   (function() {
     if (window._policyDrawerInit) return; // avoid duplicate bindings
@@ -497,7 +527,7 @@
         },
         rental: {
           title: 'Rental Policy',
-          content: "Renters must be at least 21 years old. UAE residents need a valid UAE driving license, and tourists must provide an International Driving Permit. Any traffic fines incurred during the rental period are the renter’s responsibility. Vehicles should be returned to the original pickup location unless alternative arrangements have been approved in advance."
+          content: "Renters must be at least 21 years old. UAE residents need a valid UAE driving license, and tourists must provide an International Driving Permit. Any traffic fines incurred during the rental period are the renter's responsibility. Vehicles should be returned to the original pickup location unless alternative arrangements have been approved in advance."
         },
         min_days: {
           title: 'Minimum Rental Duration',
@@ -550,6 +580,7 @@
 
     function init() {
       bindPolicyDrawer();
+      initializeFeaturesToggle(); // Initialize features toggle
     }
 
     document.addEventListener('DOMContentLoaded', init);
@@ -561,12 +592,25 @@
   })();
 
   // Multiple initialization triggers for different scenarios
-  document.addEventListener('DOMContentLoaded', initializeSwiper);
-  document.addEventListener('turbo:load', initializeSwiper);
-  document.addEventListener('turbo:render', initializeSwiper);
+  document.addEventListener('DOMContentLoaded', function() {
+    initializeSwiper();
+    initializeFeaturesToggle();
+  });
+  
+  document.addEventListener('turbo:load', function() {
+    initializeSwiper();
+    initializeFeaturesToggle();
+  });
+  
+  document.addEventListener('turbo:render', function() {
+    initializeSwiper();
+    initializeFeaturesToggle();
+  });
   
   // Immediate initialization if DOM is already ready
   if (document.readyState !== 'loading') {
-    setTimeout(initializeSwiper, 100);
+    setTimeout(function() {
+      initializeSwiper();
+      initializeFeaturesToggle();
+    }, 100);
   }
-
