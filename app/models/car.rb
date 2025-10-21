@@ -4,6 +4,8 @@ class Car < ApplicationRecord
   has_many :bookings
   has_one :car_document
   has_many :activities, as: :subject, dependent: :destroy
+  has_many :car_features, dependent: :destroy
+  has_many :features, through: :car_features
 
   validates :images, presence: { message: 'at least one image is required' }
   validate :images_presence_on_create, on: :create
@@ -14,7 +16,7 @@ class Car < ApplicationRecord
     FEATURE_COLUMNS.select { |feature| send(feature) }.map { |feature| feature.humanize }
   end
   
-  after_create :create_stripe_product, :create_stripe_price, :log_car_added
+  after_create :create_stripe_product, :create_stripe_price, :log_car_added, :create_common_features
   after_update :log_car_updated, if: :saved_change_to_brand? || :saved_change_to_model? || :saved_change_to_daily_price?
   before_destroy :log_car_deleted
   
@@ -188,5 +190,9 @@ class Car < ApplicationRecord
         year: year
       }
     )
+  end
+
+  def create_basic_features
+    self.feature_ids = Feature.common.ids
   end
 end

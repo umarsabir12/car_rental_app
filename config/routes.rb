@@ -132,6 +132,7 @@ Rails.application.routes.draw do
         post :reject
       end
     end
+    resources :features, except: [:show, :new]
   end
 
   namespace :vendors do
