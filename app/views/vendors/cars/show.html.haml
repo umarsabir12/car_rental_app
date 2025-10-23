@@ -1,3 +1,6 @@
+- content_for :title, "Rent #{@car.full_name} in Dubai | Wheels on Rent"
+- content_for :description, "Rent #{@car.full_name} in Dubai starting from AED #{@car.daily_price}/day. #{@car.description.truncate(120)}"
+
 .container.mx-auto.max-w-7xl.p-6
   = render partial: "vendors/navbar"
   
