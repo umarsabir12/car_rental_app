@@ -36,11 +36,11 @@
         .bg-white.rounded-xl.shadow-sm.overflow-hidden.mb-6
           - if @car.images.attached? && @car.images.any?
             .relative
-              .swiper-container.h-80
+              .swiper-container.h-80.pt-3
                 .swiper-wrapper
                   - @car.images.each do |image|
                     .swiper-slide
-                      %img.w-full.h-full.object-cover{ src: url_for(image), alt: "#{@car.brand} #{@car.model}" }
+                      %img.h-full.object-cover{ src: url_for(image), alt: "#{@car.brand} #{@car.model}" }
                 / Navigation
                 .swiper-button-prev
                 .swiper-button-next

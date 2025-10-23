@@ -32,7 +32,10 @@ class OmniauthCallbacksController < ApplicationController
   private
 
   def handle_user_callback(auth)
-    @user = User.from_omniauth(auth)
+    # Get nationality from session
+    nationality = session[:oauth_nationality]
+    
+    @user = User.from_omniauth(auth, nationality)
     
     if @user.persisted?
       sign_in @user

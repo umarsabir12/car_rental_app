@@ -30,6 +30,14 @@ class CarsController < ApplicationController
       .map(&:to_s)
       .sort
     
-    @recommended_cars = Car.with_approved_mulkiya.where.not(id: @car.id).where(featured: true).limit(4)
+    @recommended_cars = ['SUV', 'Luxury', 'Sports'].flat_map do |category|
+      Car.with_approved_mulkiya
+         .where(category: category)
+         .left_joins(:bookings)
+         .select('cars.*, COUNT(bookings.id) as total_bookings')
+         .group('cars.id')
+         .order('total_bookings DESC, cars.created_at DESC')
+         .limit(4)
+    end
   end
 end

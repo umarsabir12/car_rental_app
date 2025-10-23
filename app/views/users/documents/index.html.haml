@@ -16,6 +16,33 @@
             %i.fas.fa-file-upload.text-blue-600
             Required Documents
           %p.text-gray-600.mb-8 Please upload all required documents to complete your profile and proceed with bookings.
+
+          / Pending Documents Notification
+          - if current_user.pending_documents.any?
+            .mb-6.bg-yellow-50.border-l-4.border-yellow-500.rounded-lg.p-6.shadow-sm
+              .flex.items-start.gap-4
+                %i.fas.fa-clock.text-yellow-500.text-2xl.mt-1
+                .flex-1
+                  %h3.font-semibold.text-yellow-800.text-lg.mb-2 Pending Review
+                  %p.text-yellow-700.text-sm.mb-3
+                    #{current_user.pending_documents.count} document#{current_user.pending_documents.count == 1 ? '' : 's'} under review, you will be updated shortly
+                  %ul.text-yellow-600.text-sm.space-y-2.mb-3
+                    - current_user.pending_documents.each do |doc|
+                      %li.flex.items-center.gap-2
+                        %i.fas.fa-circle.text-xs
+                        - display_name = case doc.doc_name
+                        - when 'Home country driving license and IDP'
+                          - 'International Driving license'
+                        - when 'Copy of visa Entry Stamp'
+                          - 'Copy of visa'
+                        - when 'A Valid UAE driving license'
+                          - 'A Valid UAE driving license or IDP'
+                        - else
+                          - doc.doc_name
+                        = display_name
+                  %p.text-yellow-600.text-sm.font-medium.flex.items-center.gap-2
+                    %i.fas.fa-info-circle
+                    Approval typically takes 24-48 hours
           
           / Document cards grid
           .grid.grid-cols-1.md:grid-cols-2.lg:grid-cols-3.gap-6
