@@ -43,8 +43,6 @@ class Vendors::CarsController < ApplicationController
     end
 
     if @car.save
-      # Assign common features automatically
-      assign_common_features(@car)
       
       # Assign selected premium features
       if params[:car][:feature_ids].present?

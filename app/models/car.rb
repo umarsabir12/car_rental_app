@@ -2,7 +2,7 @@ class Car < ApplicationRecord
   belongs_to :vendor, optional: true
   has_many_attached :images
   has_many :bookings
-  has_one :car_document
+  has_one :car_document, dependent: :destroy
   has_many :activities, as: :subject, dependent: :destroy
   has_many :car_features, dependent: :destroy
   has_many :features, through: :car_features
@@ -16,9 +16,9 @@ class Car < ApplicationRecord
     FEATURE_COLUMNS.select { |feature| send(feature) }.map { |feature| feature.humanize }
   end
   
-  after_create :create_stripe_product, :create_stripe_price, :log_car_added, :create_common_features
+  after_create :log_car_added, :create_common_features
   after_update :log_car_updated, if: :saved_change_to_brand? || :saved_change_to_model? || :saved_change_to_daily_price?
-  before_destroy :log_car_deleted
+  before_destroy :log_car_deleted, :purge_attachments
   
   scope :available, -> { where(status: 'available') }
   scope :with_approved_mulkiya, -> { 
@@ -194,5 +194,9 @@ class Car < ApplicationRecord
 
   def create_common_features
     self.feature_ids = Feature.common.ids
+  end
+
+  def purge_attachments
+    images.purge if images.attached?
   end
 end

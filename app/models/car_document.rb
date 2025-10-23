@@ -12,8 +12,13 @@ class CarDocument < ApplicationRecord
 
   validate :mulkiya_presence_on_create, on: :create
   validate :mulkiya_content_type
+  before_destroy :purge_attachment
 
   private
+
+  def purge_attachment
+    mulkiya.purge if mulkiya.attached?
+  end
 
   def mulkiya_presence_on_create
     if new_record? && !mulkiya.attached?
