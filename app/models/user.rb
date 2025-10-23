@@ -39,12 +39,17 @@ class User < ApplicationRecord
     "#{self.first_name} #{self.last_name}"
   end
 
-  def self.from_omniauth(auth)
+  def self.from_omniauth(auth, nationality = nil)
     user = where(provider: auth.provider, uid: auth.uid).first
-
-    # If user exists, return it
-    return user if user.present?
-
+  
+    # If user exists, update nationality if provided and not already set
+    if user.present?
+      if nationality.present? && user.nationality.blank?
+        user.update_column(:nationality, nationality)
+      end
+      return user
+    end
+  
     # Create new user without validation
     user = new do |u|
       u.provider = auth.provider
@@ -61,6 +66,9 @@ class User < ApplicationRecord
         u.first_name = name_parts.first
         u.last_name = name_parts.last || ''
       end
+      
+      # Set nationality if provided
+      u.nationality = nationality if nationality.present?
       
       # Set default values for any required fields
       # Example: u.phone = '' # if phone is required but can be blank

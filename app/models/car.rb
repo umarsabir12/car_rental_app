@@ -192,7 +192,7 @@ class Car < ApplicationRecord
     )
   end
 
-  def create_basic_features
+  def create_common_features
     self.feature_ids = Feature.common.ids
   end
 end

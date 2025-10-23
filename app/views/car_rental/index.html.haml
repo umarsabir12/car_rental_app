@@ -72,44 +72,64 @@
           = link_to cars_path(brand: (brand[:slug] || brand[:name].to_s.downcase)), title: brand[:name], class: 'flex items-center justify-center group hover:scale-105 transition-transform duration-200' do
             %img{class: 'h-12 w-auto group-hover:opacity-80 transition-opacity duration-200', src: asset_path(brand[:image]), alt: "#{brand[:name]} logo", onerror: "this.onerror=null;this.src='/icon.png';"}
 
-  / Featured vehicles
-  %section.py-14.bg-white
-    .max-w-7xl.mx-auto.px-4.sm:px-6.lg:px-8
-      .text-center.mb-10
-        %h2.text-3xl.font-bold.text-gray-900.mb-2 Discover our most popular rental cars
-      .grid.grid-cols-1.md:grid-cols-3.gap-6
-        - (@featured_cars || []).each do |car|
-          %article.group.bg-white.rounded-2xl.shadow-md.border.border-gray-100.overflow-hidden.hover:shadow-lg.transition
-            %img.w-full.h-48.object-cover{src: car[:image_url], alt: car[:name]}
-            .p-5
-              .flex.items-start.justify-between.mb-2
-                %h3.text-lg.font-semibold.text-gray-900= car[:name]
-                %span{class: 'inline-flex items-center rounded-full text-xs font-semibold px-2 py-1 text-white', style: 'background-color: #3a6363'}= car[:car_type]
-              %p.text-sm.text-gray-600.line-clamp-2.mb-4= (car[:features] || []).join(' • ')
-              .flex.items-center.justify-between
-                %div
-                  %span.text-2xl.font-extrabold.text-gray-900= number_to_currency(car[:daily_price], precision: 0)
-                  %span.text-gray-500 /day
-                = link_to 'Book Now', (car_path(car) || '#'), class: 'inline-flex items-center rounded-lg text-white font-semibold px-4 py-2 hover:opacity-90 focus:outline-none focus:ring-2', style: 'background-color: #3a6363; focus:ring-color: #3a6363'
+  / Car Categories
+  - (@categories_to_display).each do |category|
+    %section.py-12{class: 'bg-white'}
+      .max-w-7xl.mx-auto.px-4.sm:px-6.lg:px-8
+        / Header with title and View Offers button
+        .flex.items-center.justify-between.mb-4.flex-wrap.gap-4
+          %div.flex-1
+            %h2.text-2xl.md:text-3xl.font-bold.text-gray-900.mb-2
+              = "#{category[:name]} for rent in Dubai"
+            %p.text-sm.md:text-base.text-gray-600.max-w-4xl
+              = category[:description]
+          = link_to cars_path(category: category[:slug]), class: 'inline-flex items-center rounded-full font-semibold px-6 py-2.5 shadow-sm hover:shadow-md transition whitespace-nowrap text-sm md:text-base', style: 'background-color: #3a6363; color: white;' do
+            View More
+            %i.fas.fa-arrow-right.ml-2
 
-  / CTA banner - Updated to match required design
-  %section.text-white{class: 'bg-cover-center', style: "background-image: linear-gradient(rgba(44,95,95,0.6), rgba(58,99,99,0.6)), url('#{image_path('secondary_hero.png')}')"}
-    .absolute.inset-0.pointer-events-none{style: 'background: linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.2) 60%, rgba(0,0,0,0.6) 100%)'}
+        / Cars Grid - Initially showing 4 cars
+        .car-grid.mt-8{data: { expanded: 'false' }}
+          / Get cars for this category
+          - category_cars = (@category_cars || []).select { |c| c[:category]&.include?(category[:slug]) }
+          - category_cars = category_cars.presence || []
+          
+          - if category_cars.any?
+            .grid.grid-cols-1.sm:grid-cols-2.lg:grid-cols-3.xl:grid-cols-4.gap-6.transition-all.duration-500
+              - category_cars.each_with_index do |car, index|
+                = link_to car_path(car), class: 'block bg-white rounded-2xl shadow-xl overflow-hidden relative transition transform hover:scale-105 hover:shadow-2xl' do
+                  .relative.h-48.bg-gray-100.overflow-hidden
+                    = car_main_image(car, size: [400, 300])
+                    
+                    .absolute.top-3.right-3.flex.flex-col.space-y-1
+                      - status_classes = {'Available' => 'bg-green-500 text-white','Rented' => 'bg-red-500 text-white'}[car.status] || 'bg-teal-600 text-white'
+                      %span.inline-block.rounded-full.text-xs.font-semibold.px-2.py-1{ class: status_classes }= car.status
+                    
+                  .p-6.flex.flex-col.flex-1
+                    %div.flex.items-center.justify-between.mb-2
+                      %span.text-lg.font-bold.text-gray-900= car.brand
+                      %span.text-sm.text-gray-500= car.year
+                    %div.text-xl.font-semibold.text-gray-900.mb-2= car.model
+                    %div.text-gray-700.mb-3
+                      = car.color
+                      - if car.category.present?
+                        %span.text-gray-500.ml-2 •
+                        %span.text-gray-500= car.category.capitalize
+                    %div.flex.items-center.justify-between
+                      %span.text-2xl.font-bold{style: 'color: #3a6363'}= car.daily_price ? number_to_currency(car.daily_price) : 'N/A'
+                      %span.text-sm.text-gray-500 /day 
 
+            / View More Button
+            - if category_cars.length > 4
+              .text-center.mt-8
+                %button.view-more-btn.inline-flex.items-center.gap-2.px-8.py-3.rounded-full.font-semibold.transition-all.duration-300.shadow-md.hover:shadow-lg{class: 'border-2', style: 'border-color: #3a6363; color: #3a6363;', onclick: "toggleCategory('#{category[:slug]}')"}
+                  %span.btn-text View More
+                  %i.fas.fa-chevron-down.transition-transform.duration-300
+          - else
+            .text-center.py-12
+              %p.text-gray-500.text-lg No cars available in this category at the moment.
+    / Divider line after each category (except the last one)
     .max-w-7xl.mx-auto.px-4.sm:px-6.lg:px-8
-      .grid.grid-cols-1.lg:grid-cols-2.gap-12.items-center.py-16
-        / Text content - now on the left
-        .order-1.lg:order-1
-          %h1.text-4xl.lg:text-5xl.font-bold.mb-6.leading-tight= (@cta_title || 'Save Time & Money with Top Car Rent Services')
-          %p.text-lg.mb-8.leading-relaxed{style: 'color: rgba(255,255,255,1)'}= (@cta_copy || 'Experience premium car rental service with the best prices and excellent customer support.')
-          = link_to ((@cta_action && @cta_action[:href]) || @cars_path || '#'), class: 'inline-flex items-center rounded-lg bg-white font-semibold px-8 py-4 text-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-white transition-colors duration-300', style: 'color: #3a6363' do
-            %i{class: 'fa fa-car mr-3'}
-            = ((@cta_action && @cta_action[:label]) || 'Start Browsing Cars')
-      
-        / Image content - now on the right
-        .order-2.lg:order-2.self-end
-          %div.relative.flex.items-end.h-full
-            -# %img{class: 'w-full h-64 sm:h-80 lg:h-[32rem] xl:h-[36rem] object-contain object-bottom drop-shadow-2xl', src: image_path('car_fleet.png'), alt: 'Luxury cars lineup'}
+      %hr.border-t.border-gray-200.my-8
 
   / Stats Section - Design 1 with proper icon circles
   %section.py-20.bg-white
@@ -259,7 +279,7 @@
         .space-y-4
           %h4.text-white.font-semibold Support
           %ul.space-y-2
-            - default_support_links = [{label:'Help Center',href:'#'},{label:'Terms of Service',href:'#'},{label:'Privacy Policy',href:'#'},{label:'Insurance',href:'#'}]
+            - default_support_links = [{label:'Help Center',href:'#'},{label:'Terms of Service',href:'#'},{label:'Privacy Policy',href:'#'}]
             - (@support_links || default_support_links).each do |l|
               %li= link_to l[:label], l[:href], class: 'text-gray-300 hover:text-white transition'
         .space-y-4

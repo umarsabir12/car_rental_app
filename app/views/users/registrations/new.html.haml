@@ -1,4 +1,4 @@
-.container.mx-auto.w-50.p-6
+.container.mx-auto.w-50.p-6.m-5
   .bg-white.rounded-xl.shadow-lg.overflow-hidden.p-8
     .text-center.mb-8
       %i{class: 'fas fa-car text-4xl mb-4', style: 'color: #3a6363'}
@@ -105,6 +105,39 @@
         = f.submit "Create Account",
           class: "w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white transition duration-200 hover:shadow-md",
           style: "background-color: #3a6363; hover:background-color: #2d4d4d"
+    
+    / Divider
+    .relative.my-6
+      .absolute.inset-0.flex.items-center
+        .w-full{style: 'border-top: 1px solid #e5e7eb'}
+      .relative.flex.justify-center.text-sm
+        %span.px-3.bg-white.text-gray-500 Or continue with
+
+    / Residency type selection for Google Sign-Up
+    .field.space-y-2.mt-6.mb-6
+      %label.block.text-sm.font-medium.text-gray-700 Are you a Resident or a Tourist?
+      .flex.gap-6.items-center.mt-2
+        %label.flex.items-center.gap-2.cursor-pointer.text-gray-700
+          = radio_button_tag 'user[nationality]', 'resident', false, required: true, class: "form-radio h-4 w-4 border-gray-300 transition", style: "accent-color: #3a6363;"
+          %span Resident (UAE Resident)
+        %label.flex.items-center.gap-2.cursor-pointer.text-gray-700
+          = radio_button_tag 'user[nationality]', 'tourist', false, required: true, class: "form-radio h-4 w-4 border-gray-300 transition", style: "accent-color: #3a6363;"
+          %span Tourist (Foreign Tourist)
+
+    / Google Sign Up Button (modified to capture nationality)
+    = button_to user_google_oauth2_omniauth_authorize_path, method: :post, data: { turbo: false },
+        id: "google-signup-btn",
+        disabled: true,
+        class: "w-full flex items-center justify-center px-4 py-3 border border-gray-300 shadow-sm text-sm font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50 transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed",
+        style: "hover:border-color: #3a6363",
+        onmouseover: "if(!this.disabled) { this.style.borderColor='#3a6363'; this.style.boxShadow='0 0 0 3px rgba(58, 99, 99, 0.05)' }",
+        onmouseout: "this.style.borderColor='#d1d5db'; this.style.boxShadow='none'" do
+      %svg.w-5.h-5.mr-3{viewBox: "0 0 24 24"}
+        %path{fill: "#4285F4", d: "M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"}
+        %path{fill: "#34A853", d: "M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"}
+        %path{fill: "#FBBC05", d: "M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"}
+        %path{fill: "#EA4335", d: "M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"}
+      Sign up with Google
 
     .mt-6.text-center
       Already have an account?
@@ -118,7 +151,6 @@
     - if notice
       .mt-4.p-3.text-green-700.rounded-lg.text-sm.border{style: 'background-color: #f0f9f0; border-color: #3a6363'}= notice
 
-  / Terms & Conditions Modal
   / Terms and Conditions Modal - Larger size with scrollable content
   #terms-modal.fixed.inset-0.z-50.flex.items-center.justify-center.bg-black.bg-opacity-50{style: "display:none"}
     .bg-white.rounded-xl.shadow-2xl{class: "w-11/12 max-w-4xl h-5/6 p-4 relative flex flex-col"}
@@ -234,5 +266,109 @@
     
     if (checkbox) {
       checkbox.style.accentColor = '#3a6363';
+    }
+  });
+
+:javascript
+  function togglePassword(button) {
+    const input = button.previousElementSibling
+    const icon = button.querySelector('i')
+    if (input.type === 'password') {
+      input.type = 'text'
+      icon.classList.replace('fa-eye', 'fa-eye-slash')
+    } else {
+      input.type = 'password'
+      icon.classList.replace('fa-eye-slash', 'fa-eye')
+    }
+  }
+
+  function openTermsModal() {
+    console.log('Opening terms modal...');
+    document.getElementById('terms-modal').style.display = 'flex';
+  }
+  
+  function closeTermsModal() {
+    document.getElementById('terms-modal').style.display = 'none';
+  }
+  
+  function acceptTerms() {
+    // Check the terms checkbox if it exists
+    const checkbox = document.getElementById('user_agree_terms')
+    if (checkbox) {
+      checkbox.checked = true
+    }
+    
+    // Close the modal
+    closeTermsModal()
+    
+    // Optional: Show a confirmation message
+    const termsLink = document.querySelector('[onclick="openTermsModal()"]')
+    if (termsLink) {
+      termsLink.style.color = '#3a6363'
+      termsLink.textContent = termsLink.textContent.replace('Read', '✓ Read')
+    }
+  }
+
+  // Enhanced styling for form elements and nationality handling
+  document.addEventListener('DOMContentLoaded', function() {
+    // Get all form elements
+    const radioButtons = document.querySelectorAll('input[name="user[nationality]"]');
+    const googleButton = document.getElementById('google-signup-btn');
+    const checkbox = document.querySelector('input[type="checkbox"]');
+    
+    // Style radio buttons with the theme color
+    radioButtons.forEach(radio => {
+      radio.style.accentColor = '#3a6363';
+      
+      // Enable Google button when nationality is selected
+      radio.addEventListener('change', function() {
+        if (this.checked && googleButton) {
+          googleButton.disabled = false;
+          googleButton.classList.remove('opacity-50', 'cursor-not-allowed');
+        }
+      });
+    });
+    
+    // Style checkbox with the theme color
+    if (checkbox) {
+      checkbox.style.accentColor = '#3a6363';
+    }
+    
+    // Handle Google OAuth button click - capture nationality
+    if (googleButton) {
+      googleButton.addEventListener('click', function(e) {
+        const selectedNationality = document.querySelector('input[name="user[nationality]"]:checked');
+        
+        if (!selectedNationality) {
+          e.preventDefault();
+          alert('Please select whether you are a Resident or Tourist before continuing with Google signup.');
+          return false;
+        }
+        
+        // Store in sessionStorage as backup
+        sessionStorage.setItem('oauth_nationality', selectedNationality.value);
+        
+        // Add hidden field to the form
+        const form = this.closest('form');
+        let nationalityInput = form.querySelector('input[name="nationality"]');
+        
+        if (!nationalityInput) {
+          nationalityInput = document.createElement('input');
+          nationalityInput.type = 'hidden';
+          nationalityInput.name = 'nationality';
+          form.appendChild(nationalityInput);
+        }
+        
+        nationalityInput.value = selectedNationality.value;
+        
+        console.log('Nationality captured:', selectedNationality.value);
+      });
+    }
+    
+    // Check if nationality is already selected on page load
+    const checkedNationality = document.querySelector('input[name="user[nationality]"]:checked');
+    if (checkedNationality && googleButton) {
+      googleButton.disabled = false;
+      googleButton.classList.remove('opacity-50', 'cursor-not-allowed');
     }
   });

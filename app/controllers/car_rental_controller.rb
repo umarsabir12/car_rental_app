@@ -89,5 +89,21 @@ class CarRentalController < ApplicationController
 
     # Use centralized brand mapping from Car model (slug, name, image under app/assets/images/brands)
     @brand_logos = Car.brand_logos
+
+    @categories_to_display = [
+      { name: 'SUVs', slug: 'SUV', description: 'From spacious 7-seaters to the latest 5-seater sports utility vehicles, rent an SUV for city drives or comfortable long hauls with ample seating and luggage space.' },
+      { name: 'Luxury', slug: 'Luxury', description: 'Experience the pinnacle of automotive excellence with our premium luxury vehicles, featuring top-tier comfort, advanced technology, and prestigious brands.' },
+      { name: 'Sports', slug: 'Sports', description: 'Feel the thrill of high-performance sports cars with powerful engines, sleek designs, and exceptional handling for an unforgettable driving experience in Dubai.' }
+    ]
+
+    @category_cars = ['SUV', 'Luxury', 'Sports'].flat_map do |category|
+      Car.with_approved_mulkiya
+         .where(category: category)
+         .left_joins(:bookings)
+         .select('cars.*, COUNT(bookings.id) as total_bookings')
+         .group('cars.id')
+         .order('total_bookings DESC, cars.created_at DESC')
+         .limit(4)
+    end 
   end
 end
