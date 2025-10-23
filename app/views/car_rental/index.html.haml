@@ -14,12 +14,12 @@
       
         / Text Content - Right Side  
         .order-2.lg:order-2.relative
-          %h1.text-4xl.md:text-5xl.lg:text-6xl.font-extrabold.leading-tight.mb-4
-            = (@headline || 'Rent Your Perfect Car')
-          %p.text-base.md:text-lg.mb-6.max-w-xl{style: 'color: rgba(255,255,255,0.9)'}
-            Book your car with 
-            %span.font-bold.text-white.text-3xl Zero Deposit
-            and hit the road today! No hidden charges!
+          %h1.text-4xl.md:text-5xl.font-extrabold.leading-tight.mb-4
+            = (@headline || 'Rent a Car in Dubai – Wheels on Rent')
+          %p.text-base.md:text-lg.mb-6.max-w-7xl{style: 'color: rgba(255,255,255,0.9)'}
+            Experience convenience, freedom, and comfort with
+            %span.font-bold.text-white.text-3xl Wheels on Rent
+            , Dubai’s trusted car rental service.
           .flex.flex-wrap.items-center.gap-3
             = link_to (@cars_path || '#'), class: 'inline-flex items-center rounded-full bg-white font-semibold px-6 py-3 shadow hover:shadow-md transition focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-white', style: 'color: #3a6363' do
               %i{class: 'fas fa-car-side mr-2'}
@@ -40,6 +40,13 @@
             = f.label :category, "Category", class: "text-xs font-semibold text-gray-700 mb-1"
             = f.select :category, options_for_select([["All Categories", ""]] + @car_categories, params[:category]), {}, class: "block w-full px-4 py-2 border border-gray-200 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:border-teal-600 focus:ring-teal-600 bg-white text-gray-700"
           = f.submit "Search", class: "text-white font-bold px-6 py-2 rounded-lg shadow transition w-full", style: "background-color: #3a6363"
+
+  .max-w-7xl.mx-auto.px-4.sm:px-6.lg:px-8
+    %hr.border-t.border-gray-200.my-8
+
+  %section.py-8.bg-white
+    .max-w-7xl.mx-auto.px-4.sm:px-6.lg:px-8.text-2xl.text-center.text-dark
+      We offer a comprehensive range of vehicles for all occasions across Dubai and the UAE. From daily commuters to luxury experiences, Wheels on Rent ensures safe, flexible, and hassle-free rentals. Whether you are visiting Dubai for tourism, business, or exploration, our platform allows you to rent a car in Dubai instantly, with options including zero deposit rentals, cars with or without a driver, and vehicles for all budgets. 
 
   / Promo Slider Banner (auto-rotates every 5s)
   %section.py-6.bg-white
@@ -151,7 +158,7 @@
 
   / Requirements Section
   .max-w-7xl.mx-auto.px-4.sm:px-6.lg:px-8.pb-8
-    .bg-white.rounded-xl.shadow-md.p-8
+    .bg-white.rounded-xl.shadow-lg.p-8
       %h2.text-2xl.font-bold.mb-6{style: 'color: #2d4f4f'} REQUIRED DOCUMENTS TO RENT A CAR
       .grid.grid-cols-1.lg:grid-cols-2.gap-8
         / Card: UAE Residents
@@ -222,24 +229,113 @@
   %section.py-14.bg-gray-50
     .max-w-7xl.mx-auto.px-4.sm:px-6.lg:px-8
       .text-center.mb-10
-        %h2.text-3xl.font-bold.text-gray-900.mb-2 Why You Should Use Wheels On Rent
-        %p.text-gray-600 Experience the best car rental service
+        %h2.text-3xl.font-bold.text-gray-900.mb-2 Why Choose Wheels on Rent for Car Rental in Dubai
+        %p.text-gray-600 Wheels on Rent is known for transparency, flexibility, and a wide fleet of vehicles. Customers choose us for reliable car rentals across Dubai and UAE, instant booking, flexible plans, and professional support. Every car is maintained to the highest safety standards, and our services cater to both residents and visitors.
       .grid.grid-cols-1.md:grid-cols-3.gap-8
         .text-center.bg-white.rounded-2xl.shadow-sm.border.border-gray-100.p-8
           %div{class: 'rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4', style: 'background-color: #3a6363'}
             %i{class: "fas fa-dollar-sign text-white text-2xl"}
-          %h3.text-xl.font-bold.text-gray-900.mb-3 Affordable Rates
-          %p.text-gray-600 We make car rentals simple and accessible for everyone. Enjoy transparent, competitive pricing with no hidden charges — the best value for your money.
+          %h3.text-xl.font-bold.text-gray-900.mb-3 Zero Deposit Car Rental in Dubai 
+          %p.text-gray-600 We provide zero deposit rental options for select vehicles, allowing you to rent without upfront payments. This makes our service ideal for tourists, business visitors, and locals who want affordable car rentals in Dubai without extra financial burden. 
         .text-center.bg-white.rounded-2xl.shadow-sm.border.border-gray-100.p-8
           %div{class: 'rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4', style: 'background-color: #3a6363'}
             %i{class: 'fas fa-car text-white text-2xl'}
-          %h3.text-xl.font-bold.text-gray-900.mb-3 Wide Range of Vehicles
-          %p.text-gray-600 From budget-friendly cars to premium luxury models, SUVs, and vans, our diverse fleet is well-maintained to meet every travel need and occasion. 
+          %h3.text-xl.font-bold.text-gray-900.mb-3 Wide Range of Cars for Every Need
+          %p.text-gray-600 Our fleet includes economy cars, luxury sedans, sports cars, SUVs, and electric vehicles. You can rent cars for daily travel, family trips, corporate events, or special occasions. Our collection covers brands like Toyota, BMW, Mercedes, Nissan, Tesla, and Porsche.  
         .text-center.bg-white.rounded-2xl.shadow-sm.border.border-gray-100.p-8
           %div{class: 'rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4', style: 'background-color: #3a6363'}
             %i{class: "fas fa-calendar-check text-white text-2xl"}
-          %h3.text-xl.font-bold.text-gray-900.mb-3 Easy Booking Process
-          %p.text-gray-600 With our user-friendly platform, you can book your car in just a few clicks online — quickly and conveniently.
+          %h3.text-xl.font-bold.text-gray-900.mb-3 Economy Cars for Budget Travelers 
+          %p.text-gray-600 For residents or tourists looking for cost-effective options, we provide economy car rentals in Dubai. Ideal for city commuting, airport transfers, and sightseeing, these cars combine comfort and affordability. 
+
+  %section.py-16{ class: "text-white", style: "background-color: #3A6363;" }
+    .max-w-7xl.mx-auto.px-4.sm:px-6.lg:px-8
+      %h2.text-2xl.md:text-3xl.font-bold.text-white.mb-8.text-center
+        Wheels on Rent – Get the Best Car Rental Deals in Dubai
+      %hr.border-gray-700.mb-10
+      .grid.grid-cols-1.md:grid-cols-2.gap-10
+        - @company_features.each do |feature|
+          .space-y-2
+            %h3.text-lg.font-semibold.text-white.flex.items-center
+              %i.fas.fa-circle.text-xs.text-teal-400.mr-2
+              = feature[:title]
+            %p.text-gray-300.text-sm.leading-relaxed
+              = feature[:description]
+  
+  / How to Book a Car Section - Enhanced Version
+  %section.py-16.bg-gradient-to-br.from-gray-50.to-gray-100
+    .max-w-7xl.mx-auto.px-4.sm:px-6.lg:px-8
+      .bg-white.shadow-2xl.rounded-3xl.overflow-hidden{ style: "border-top: 5px solid #3A6363" }
+        / Header Section
+        .bg-gradient-to-r.from-teal-50.to-cyan-50.p-8.md:p-12.text-center
+          %h2.text-3xl.md:text-4xl.font-bold.mb-4{ style: "color: #3A6363" }
+            How to Book a Car with Wheels on Rent
+          %p.text-gray-600.text-lg
+            Booking is simple. Visit our website or call us directly to:
+        
+        / Steps Section
+        .p-8.md:p-12
+          .grid.grid-cols-1.md:grid-cols-2.gap-6.mb-10
+            / Step 1
+            .group.bg-gradient-to-br.from-white.to-gray-50.p-6.rounded-xl.border-2.border-gray-100.hover:border-teal-300.transition-all.duration-300.hover:shadow-lg.cursor-pointer
+              .flex.items-start.space-x-4
+                .flex-shrink-0
+                  .w-12.h-12.rounded-full.flex.items-center.justify-center.text-white.font-bold.text-xl{ style: "background: linear-gradient(135deg, #3A6363 0%, #2d4d4d 100%)" }
+                    1
+                .flex-1
+                  %h3.font-semibold.text-lg.mb-2{ style: "color: #3A6363" }
+                    Select Your Vehicle
+                  %p.text-gray-600.text-sm
+                    Choose from economy, luxury, SUV, electric, or sports vehicles
+            
+            / Step 2
+            .group.bg-gradient-to-br.from-white.to-gray-50.p-6.rounded-xl.border-2.border-gray-100.hover:border-teal-300.transition-all.duration-300.hover:shadow-lg.cursor-pointer
+              .flex.items-start.space-x-4
+                .flex-shrink-0
+                  .w-12.h-12.rounded-full.flex.items-center.justify-center.text-white.font-bold.text-xl{ style: "background: linear-gradient(135deg, #3A6363 0%, #2d4d4d 100%)" }
+                    2
+                .flex-1
+                  %h3.font-semibold.text-lg.mb-2{ style: "color: #3A6363" }
+                    Driver Options
+                  %p.text-gray-600.text-sm
+                    Choose with or without a professional driver
+            
+            / Step 3
+            .group.bg-gradient-to-br.from-white.to-gray-50.p-6.rounded-xl.border-2.border-gray-100.hover:border-teal-300.transition-all.duration-300.hover:shadow-lg.cursor-pointer
+              .flex.items-start.space-x-4
+                .flex-shrink-0
+                  .w-12.h-12.rounded-full.flex.items-center.justify-center.text-white.font-bold.text-xl{ style: "background: linear-gradient(135deg, #3A6363 0%, #2d4d4d 100%)" }
+                    3
+                .flex-1
+                  %h3.font-semibold.text-lg.mb-2{ style: "color: #3A6363" }
+                    Rental Duration
+                  %p.text-gray-600.text-sm
+                    Specify hourly, daily, weekly, or monthly rental period
+            
+            / Step 4
+            .group.bg-gradient-to-br.from-white.to-gray-50.p-6.rounded-xl.border-2.border-gray-100.hover:border-teal-300.transition-all.duration-300.hover:shadow-lg.cursor-pointer
+              .flex.items-start.space-x-4
+                .flex-shrink-0
+                  .w-12.h-12.rounded-full.flex.items-center.justify-center.text-white.font-bold.text-xl{ style: "background: linear-gradient(135deg, #3A6363 0%, #2d4d4d 100%)" }
+                    4
+                .flex-1
+                  %h3.font-semibold.text-lg.mb-2{ style: "color: #3A6363" }
+                    Instant Confirmation
+                  %p.text-gray-600.text-sm
+                    Confirm your booking and receive instant approval
+          
+          / Special Feature Section
+          .bg-gradient-to-r.from-teal-50.to-cyan-50.rounded-2xl.p-8.text-center.border-2{ style: "border-color: #3A6363" }
+            .flex.items-center.justify-center.mb-3
+              %svg.w-8.h-8.mr-3{ fill: "#3A6363", viewBox: "0 0 24 24" }
+                %path{ d: "M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" }
+              %h3.text-xl.font-bold{ style: "color: #3A6363" }
+                Premium Service Included
+            %p.text-gray-700.text-lg
+              We also offer 
+              %span.font-bold.text-teal-700 contactless pickup and delivery
+              across Dubai and UAE.
+
 
   / Vendor CTA Banner under Stats
   %section.py-12.bg-gray-50
@@ -254,12 +350,86 @@
             %h3.text-3xl.font-bold.text-gray-900.mb-3 Are you a car rental company?
             %p.text-lg.text-gray-600.mb-6 Join Us – List Your Fleet, Get Confirmed Bookings, Double Your Profit!
             .flex.items-center.gap-3
-              = link_to ( new_vendor_request_path || '#'), class: 'inline-flex items-center rounded-xl border px-6 py-3 font-semibold transition hover:bg-gray-50', style: 'color: #3a6363; border-color: #3a6363' do
+              = link_to ( new_vendor_request_path || '#'), class: 'inline-flex items-center rounded-xl border px-6 py-3 font-semibold transition hover:bg-gray-50', style: 'background-color: #3A6363; color: white; border-color: white' do
                 %span List Your Cars
                 %i{class: 'fas fa-arrow-right ml-3'}
               -# = link_to companies_path, class: 'inline-flex items-center rounded-xl border px-6 py-3 font-semibold transition hover:bg-gray-50', style: 'color: #3a6363; border-color: #3a6363' do
               -#   %span Registered Companies
               -#   %i{class: 'fas fa-building ml-3'}
+  
+  / FAQ Section - 2 Column Layout
+  %section.py-16.bg-gray-50
+    .max-w-7xl.mx-auto.px-4.sm:px-6.lg:px-8
+      / Section Header
+      .text-center.mb-12
+        %h2.text-3xl.md:text-4xl.font-bold.mb-3{ style: "color: #3A6363" }
+          Frequently Asked Questions
+        %p.text-gray-600
+          Find answers to common questions about our car rental services
+      
+      / FAQ Grid - 2 Columns
+      .grid.grid-cols-1.md:grid-cols-2.gap-4
+        - @faqs.each_with_index do |faq, index|
+          .bg-white.rounded-lg.shadow-sm.border.border-gray-200.overflow-hidden.hover:shadow-md.transition-shadow.duration-200
+            %details.group
+              %summary.flex.items-center.justify-between.p-5.cursor-pointer.list-none
+                .flex.items-center.flex-1
+                  %span.flex.items-center.justify-center.w-8.h-8.rounded-full.text-white.text-sm.font-semibold.mr-4.flex-shrink-0{ style: "background-color: #3A6363" }
+                    = index + 1
+                  %h3.text-base.font-semibold.text-gray-800.pr-4
+                    = faq[:question]
+                %svg.w-5.h-5.text-gray-400.group-open:rotate-180.transition-transform.duration-200.flex-shrink-0{ fill: "none", stroke: "currentColor", viewBox: "0 0 24 24" }
+                  %path{ "stroke-linecap": "round", "stroke-linejoin": "round", "stroke-width": "2", d: "M19 9l-7 7-7-7" }
+              .px-5.pb-5.pt-0
+                .pl-12
+                  %p.text-gray-600.leading-relaxed.text-sm
+                    = faq[:answer]
+
+  / Contact Us Section - Minimal Version
+  %section.py-16.bg-gray-50
+    .max-w-7xl.mx-auto.px-4.sm:px-6.lg:px-8
+      / Header
+      .text-center.mb-12
+        %h2.text-3xl.md:text-4xl.font-bold.mb-4{ style: "color: #3A6363" }
+          Contact Wheels on Rent Today
+        %p.text-gray-700.text-base.md:text-lg.leading-relaxed.max-w-4xl.mx-auto
+          Book your car now with Wheels on Rent and experience the best car rental service in Dubai and UAE. Whether you want zero deposit rentals, luxury cars, sports cars, or vehicles for family trips, our professional service ensures comfort, safety, and convenience.
+      
+      / Contact Details
+      .grid.grid-cols-1.md:grid-cols-3.gap-6.mb-10
+        / Phone
+        .bg-white.p-8.rounded-xl.shadow-md.hover:shadow-lg.transition-shadow.duration-300.text-center
+          .w-16.h-16.rounded-full.flex.items-center.justify-center.mx-auto.mb-4{ style: "background-color: #3A6363" }
+            %svg.w-8.h-8.text-white{ fill: "currentColor", viewBox: "0 0 20 20" }
+              %path{ d: "M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" }
+          %h3.font-semibold.text-gray-800.mb-2.text-lg Phone
+          %a.font-semibold.hover:underline.text-lg{ href: "tel:+971506336408", style: "color: #3A6363" }
+            +971 50 633 6408
+        
+        / Email
+        .bg-white.p-8.rounded-xl.shadow-md.hover:shadow-lg.transition-shadow.duration-300.text-center
+          .w-16.h-16.rounded-full.flex.items-center.justify-center.mx-auto.mb-4{ style: "background-color: #3A6363" }
+            %svg.w-8.h-8.text-white{ fill: "currentColor", viewBox: "0 0 20 20" }
+              %path{ d: "M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" }
+              %path{ d: "M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" }
+          %h3.font-semibold.text-gray-800.mb-2.text-lg Email
+          %a.font-semibold.hover:underline.break-all.text-lg{ href: "mailto:booking@wheelsonrent.ae", style: "color: #3A6363" }
+            booking@wheelsonrent.ae
+        
+        / Website
+        .bg-white.p-8.rounded-xl.shadow-md.hover:shadow-lg.transition-shadow.duration-300.text-center
+          .w-16.h-16.rounded-full.flex.items-center.justify-center.mx-auto.mb-4{ style: "background-color: #3A6363" }
+            %svg.w-8.h-8.text-white{ fill: "currentColor", viewBox: "0 0 20 20" }
+              %path{ "fill-rule": "evenodd", d: "M4.083 9h1.946c.089-1.546.383-2.97.837-4.118A6.004 6.004 0 004.083 9zM10 2a8 8 0 100 16 8 8 0 000-16zm0 2c-.076 0-.232.032-.465.262-.238.234-.497.623-.737 1.182-.389.907-.673 2.142-.766 3.556h3.936c-.093-1.414-.377-2.649-.766-3.556-.24-.56-.5-.948-.737-1.182C10.232 4.032 10.076 4 10 4zm3.971 5c-.089-1.546-.383-2.97-.837-4.118A6.004 6.004 0 0115.917 9h-1.946zm-2.003 2H8.032c.093 1.414.377 2.649.766 3.556.24.56.5.948.737 1.182.233.23.389.262.465.262.076 0 .232-.032.465-.262.238-.234.498-.623.737-1.182.389-.907.673-2.142.766-3.556zm1.166 4.118c.454-1.147.748-2.572.837-4.118h1.946a6.004 6.004 0 01-2.783 4.118zm-6.268 0C6.412 13.97 6.118 12.546 6.03 11H4.083a6.004 6.004 0 002.783 4.118z", "clip-rule": "evenodd" }
+          %h3.font-semibold.text-gray-800.mb-2.text-lg Website
+          %a.font-semibold.hover:underline.text-lg{ href: "https://www.wheelsonrent.com", target: "_blank", rel: "noopener", style: "color: #3A6363" }
+            www.wheelsonrent.com
+      
+      / Footer Message - Minimal Banner
+      .py-10.px-8.text-center.mt-2.bg-gray-50{ style: "border-color: #3A6363" }
+        %p.text-2xl.md:text-3xl.font-bold.leading-relaxed.mb-2{ style: "color: #3A6363" } Discover Dubai the smart way
+        %p.text-xl.md:text-2xl.font-semibold.text-gray-600
+          with Wheels on Rent
 
 - content_for :footer do
   %footer.bg-gray-900.text-white

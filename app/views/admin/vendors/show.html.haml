@@ -72,44 +72,44 @@
             %p.text-xs.font-semibold.text-gray-500.uppercase.mb-2 Description
             %p.text-gray-700.leading-relaxed= @vendor.description
 
-        / Invoice Summary Card
-        .mt-6.p-4.bg-gradient-to-r.from-emerald-50.to-teal-50.rounded-lg.border.border-emerald-200
-          .flex.items-center.justify-between.mb-3
-            %h3.text-lg.font-bold.text-gray-800.flex.items-center.gap-2
-              %i.fas.fa-file-invoice-dollar.text-emerald-600
-              Invoice Summary
-            %span.text-xs.bg-emerald-100.text-emerald-700.px-2.py-1.rounded-full.font-semibold
-              = @vendor.invoices.count
-              = "Invoice".pluralize(@vendor.invoices.count)
+        -# / Invoice Summary Card
+        -# .mt-6.p-4.bg-gradient-to-r.from-emerald-50.to-teal-50.rounded-lg.border.border-emerald-200
+        -#   .flex.items-center.justify-between.mb-3
+        -#     %h3.text-lg.font-bold.text-gray-800.flex.items-center.gap-2
+        -#       %i.fas.fa-file-invoice-dollar.text-emerald-600
+        -#       Invoice Summary
+        -#     %span.text-xs.bg-emerald-100.text-emerald-700.px-2.py-1.rounded-full.font-semibold
+        -#       = @vendor.invoices.count
+        -#       = "Invoice".pluralize(@vendor.invoices.count)
           
-          .grid.grid-cols-2.gap-4
-            .bg-white.rounded-lg.p-3.shadow-sm
-              %p.text-xs.font-semibold.text-gray-500.uppercase Pending Amount
-              %p.text-xl.font-bold.text-amber-600= number_to_currency(@vendor.total_pending_amount)
-            .bg-white.rounded-lg.p-3.shadow-sm
-              %p.text-xs.font-semibold.text-gray-500.uppercase Paid Amount
-              %p.text-xl.font-bold.text-emerald-600= number_to_currency(@vendor.total_paid_amount)
+        -#   .grid.grid-cols-2.gap-4
+        -#     .bg-white.rounded-lg.p-3.shadow-sm
+        -#       %p.text-xs.font-semibold.text-gray-500.uppercase Pending Amount
+        -#       %p.text-xl.font-bold.text-amber-600= number_to_currency(@vendor.total_pending_amount)
+        -#     .bg-white.rounded-lg.p-3.shadow-sm
+        -#       %p.text-xs.font-semibold.text-gray-500.uppercase Paid Amount
+        -#       %p.text-xl.font-bold.text-emerald-600= number_to_currency(@vendor.total_paid_amount)
 
-        / Action Buttons
-        .flex.flex-wrap.gap-4.mt-8
-          / Generate Invoice Button (Opens Modal)
-          %button.inline-flex.items-center.px-6.py-3.bg-emerald-600.hover:bg-emerald-700.text-white.font-medium.rounded-lg.transition-colors.duration-200.shadow-md.hover:shadow-lg.gap-2{type: 'button', onclick: 'openInvoiceModal()'}
-            %i.fas.fa-file-invoice
-            %span Generate Invoice
+        -# / Action Buttons
+        -# .flex.flex-wrap.gap-4.mt-8
+        -#   / Generate Invoice Button (Opens Modal)
+        -#   %button.inline-flex.items-center.px-6.py-3.bg-emerald-600.hover:bg-emerald-700.text-white.font-medium.rounded-lg.transition-colors.duration-200.shadow-md.hover:shadow-lg.gap-2{type: 'button', onclick: 'openInvoiceModal()'}
+        -#     %i.fas.fa-file-invoice
+        -#     %span Generate Invoice
 
-          / Invoice History Button
-          = link_to admin_vendor_invoices_path(@vendor), class: 'inline-flex items-center px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-lg transition-colors duration-200 shadow-md hover:shadow-lg gap-2' do
-            %i.fas.fa-history
-            %span Invoice History
+        -#   / Invoice History Button
+        -#   = link_to admin_vendor_invoices_path(@vendor), class: 'inline-flex items-center px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-lg transition-colors duration-200 shadow-md hover:shadow-lg gap-2' do
+        -#     %i.fas.fa-history
+        -#     %span Invoice History
 
-          = button_tag type: 'button', class: 'inline-flex items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors duration-200 shadow-md hover:shadow-lg gap-2' do
-            %i.fas.fa-envelope
-            %span Send Email
+        -#   = button_tag type: 'button', class: 'inline-flex items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors duration-200 shadow-md hover:shadow-lg gap-2' do
+        -#     %i.fas.fa-envelope
+        -#     %span Send Email
           
-          = form_with url: admin_vendor_path(@vendor), method: :delete, class: 'inline-block' do |f|
-            = f.submit 'Delete Vendor', 
-                class: 'inline-flex items-center px-6 py-3 bg-red-600 hover:bg-red-700 text-white font-medium rounded-lg transition-colors duration-200 shadow-md hover:shadow-lg gap-2 cursor-pointer',
-                onclick: "return confirm('Are you sure you want to delete #{@vendor.company_name}? This action can be undone by restoring the vendor.');"
+        -#   = form_with url: admin_vendor_path(@vendor), method: :delete, class: 'inline-block' do |f|
+        -#     = f.submit 'Delete Vendor', 
+        -#         class: 'inline-flex items-center px-6 py-3 bg-red-600 hover:bg-red-700 text-white font-medium rounded-lg transition-colors duration-200 shadow-md hover:shadow-lg gap-2 cursor-pointer',
+        -#         onclick: "return confirm('Are you sure you want to delete #{@vendor.company_name}? This action can be undone by restoring the vendor.');"
 
       / Right Side - Trade License Card
       .flex-shrink-0.w-full.lg:w-96

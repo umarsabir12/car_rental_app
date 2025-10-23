@@ -1,7 +1,8 @@
 !!! 5
 %html
   %head
-    %title wheelsonrent | Rent A Car Dubai
+    %title= content_for?(:title) ? yield(:title) : "Rent a Car in Dubai | Zero Deposit, Luxury & Economy Cars UAE"
+    %meta{ name: "description", content: content_for?(:description) ? yield(:description) : "Rent a car in Dubai with Wheels on Rent. Choose from economy, luxury, sports, and electric cars across UAE. Zero deposit options, self-drive or with driver, ideal for tourists and locals exploring Dubai." }
     = favicon_link_tag 'new_logo.png'
     %meta{ name: "viewport", content: "width=device-width,initial-scale=1" }
     = csrf_meta_tags
@@ -71,4 +72,3 @@
     %footer{ role: "contentinfo" }
       - if content_for?(:footer)
         = yield :footer
-
