@@ -45,7 +45,7 @@
         = f.date_field :end_date, value: params[:end_date], class: 'w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500'
       
       .field.flex-shrink-0.flex.gap-2
-        = f.submit 'Apply Filters', class: 'bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-2 rounded-lg transition flex items-center gap-2'
+        = f.submit 'Apply Filters', class: 'text-white font-semibold px-6 py-2 rounded-lg transition flex items-center gap-2', style: 'background-color: #3A6363'
         = link_to 'Clear Filters', vendors_payments_path, class: 'bg-gray-500 hover:bg-gray-600 text-white font-semibold px-6 py-2 rounded-lg transition flex items-center gap-2'
 
   / Earnings Summary Cards

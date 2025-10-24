@@ -1,8 +1,9 @@
 .container-fluid.px-4.py-8
-  .bg-white.shadow-lg.rounded-xl.overflow-hidden.p-8
+  = render partial: "vendors/navbar"
+  .bg-white.shadow-lg.rounded-xl.overflow-hidden.p-8.mt-5
     / Header Section
     .mb-6
-      %h1.text-3xl.font-extrabold.text-blue-900 My Invoices
+      %h1.text-3xl.font-extrabold{style: 'color: #3A6363'} My Invoices
       %p.text-gray-600.mt-1 View and track all your invoices
 
     / Summary Cards
@@ -80,7 +81,7 @@
                         %i.fas.fa-ban.mr-1
                         Cancelled
                   %td.px-6.py-4.whitespace-nowrap.text-sm.font-medium
-                    = link_to vendors_invoice_path(invoice), class: 'inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors duration-200 gap-2' do
+                    = link_to vendors_invoice_path(invoice), class: 'inline-flex items-center px-4 py-2 text-white rounded-lg transition-colors duration-200 gap-2', style: 'background-color: #3A6363' do
                       %i.fas.fa-eye
                       %span View
 
@@ -92,6 +93,6 @@
 
     / Back Button
     .mt-6
-      = link_to vendors_dashboard_path, class: 'inline-flex items-center px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white font-medium rounded-lg transition-colors duration-200 gap-2' do
+      = link_to vendors_dashboard_path, class: 'inline-flex items-center px-4 py-2 text-white font-medium rounded-lg transition-colors duration-200 gap-2', style: 'background-color: #3A6363' do
         %i.fas.fa-arrow-left
         %span Back to Dashboard
