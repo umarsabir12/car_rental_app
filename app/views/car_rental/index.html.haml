@@ -125,7 +125,7 @@
                 / Carousel Container - Contains all cards
                 .carousel-track.flex.transition-transform.duration-500.ease-in-out.py-1{data: { category: category[:slug], current: '0', total: category_cars.length }}
                   - category_cars.each_with_index do |car, index|
-                    .carousel-item.flex-shrink-0.px-3{style: 'width: 20%;'}
+                    .carousel-item.flex-shrink-0.px-3
                       = link_to car_path(car), class: 'block bg-white rounded-2xl shadow-xl overflow-hidden relative transition transform hover:scale-105 hover:shadow-2xl' do
                         .bg-white.rounded-2xl.shadow-xl.overflow-hidden.flex.flex-col.justify-between.relative.transition.transform.hover:scale-105.hover:shadow-2xl
                           / Car Image with Uniform Size
@@ -532,60 +532,69 @@
 
     // --- Car Carousel Logic - Always show exactly 4 cards ---
     function initCarCarousels() {
-      const tracks = document.querySelectorAll('.carousel-track');
+    const tracks = document.querySelectorAll('.carousel-track');
 
-      tracks.forEach(track => {
-        const category = track.dataset.category;
-        const totalCars = parseInt(track.dataset.total);
-        let currentPosition = parseInt(track.dataset.current) || 0;
+    tracks.forEach(track => {
+      const category = track.dataset.category;
+      const totalCars = parseInt(track.dataset.total);
+      let currentPosition = parseInt(track.dataset.current) || 0;
 
-        const prevBtn = document.querySelector(`.carousel-prev[data-category="${category}"]`);
-        const nextBtn = document.querySelector(`.carousel-next[data-category="${category}"]`);
-        if (!prevBtn || !nextBtn) return;
+      const prevBtn = document.querySelector(`.carousel-prev[data-category="${category}"]`);
+      const nextBtn = document.querySelector(`.carousel-next[data-category="${category}"]`);
+      if (!prevBtn || !nextBtn) return;
 
-        // Always show exactly 4 cards
-        const CARDS_TO_SHOW = 4;
-        
-        // Set the track width to accommodate all cards
-        const trackWidthPercentage = (totalCars / CARDS_TO_SHOW) * 100;
-        track.style.width = `${trackWidthPercentage}%`;
-
-        function getMaxPosition() {
-          return Math.max(0, totalCars - CARDS_TO_SHOW);
-        }
-
-        function updateButtons() {
-          const maxPosition = getMaxPosition();
-          prevBtn.classList.toggle('hidden', currentPosition <= 0);
-          nextBtn.classList.toggle('hidden', currentPosition >= maxPosition || totalCars <= CARDS_TO_SHOW);
-        }
-
-        function slide(direction) {
-          const maxPosition = getMaxPosition();
-
-          if (direction === 'next' && currentPosition < maxPosition) {
-            currentPosition++;
-          } else if (direction === 'prev' && currentPosition > 0) {
-            currentPosition--;
-          }
-
-          // Calculate movement - each card is 25% of the viewport width
-          // Move by currentPosition * (100% / CARDS_TO_SHOW)
-          const movePercentage = currentPosition * (100 / CARDS_TO_SHOW);
-          track.style.transform = `translateX(-${movePercentage}%)`;
-
-          track.dataset.current = currentPosition;
-          updateButtons();
-        }
-
-        // Attach event listeners
-        prevBtn.addEventListener('click', () => slide('prev'));
-        nextBtn.addEventListener('click', () => slide('next'));
-
-        // Initialize buttons state
-        updateButtons();
+      const CARDS_TO_SHOW = 4;
+      
+      // Get the carousel container width
+      const container = track.closest('.carousel-viewport');
+      if (!container) return;
+      
+      const containerWidth = container.offsetWidth;
+      const cardWidth = containerWidth / CARDS_TO_SHOW;
+      
+      // Set each card's width explicitly in pixels
+      const cards = track.querySelectorAll('.carousel-item');
+      cards.forEach(card => {
+        card.style.width = `${cardWidth}px`;
+        card.style.minWidth = `${cardWidth}px`;
+        card.style.maxWidth = `${cardWidth}px`;
       });
-    }
+
+      function getMaxPosition() {
+        return Math.max(0, totalCars - CARDS_TO_SHOW);
+      }
+
+      function updateButtons() {
+        const maxPosition = getMaxPosition();
+        prevBtn.classList.toggle('hidden', currentPosition <= 0);
+        nextBtn.classList.toggle('hidden', currentPosition >= maxPosition || totalCars <= CARDS_TO_SHOW);
+      }
+
+      function slide(direction) {
+        const maxPosition = getMaxPosition();
+
+        if (direction === 'next' && currentPosition < maxPosition) {
+          currentPosition++;
+        } else if (direction === 'prev' && currentPosition > 0) {
+          currentPosition--;
+        }
+
+        // Move by the card width in pixels
+        const moveDistance = currentPosition * cardWidth;
+        track.style.transform = `translateX(-${moveDistance}px)`;
+
+        track.dataset.current = currentPosition;
+        updateButtons();
+      }
+
+      // Attach event listeners
+      prevBtn.addEventListener('click', () => slide('prev'));
+      nextBtn.addEventListener('click', () => slide('next'));
+
+      // Initialize buttons state
+      updateButtons();
+    });
+  }
 
     // --- Initialization Hooks (Turbo + Regular) ---
     function initAll() {

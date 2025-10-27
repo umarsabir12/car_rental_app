@@ -159,7 +159,31 @@
   transition: transform 0.3s ease;
 }
 
+.carousel-container {
+  overflow: hidden; /* Hide cards outside the viewport */
+  width: 100%;
+}
+
 .car-card {
-  min-width: 25%; /* Each card takes exactly 25% of the container */
+  flex: 0 0 25%; /* Each card is exactly 25% of the CONTAINER, not the track */
+  max-width: 25%;
+  box-sizing: border-box;
+}
+
+.carousel-container,
+.carousel-viewport {
+  overflow: hidden;
+  width: 100%;
+}
+
+.carousel-track {
+  display: flex;
+  transition: transform 0.3s ease;
+}
+
+.carousel-item,
+.car-card {
   flex-shrink: 0;
+  box-sizing: border-box;
+  /* Width will be set by JavaScript */
 }
