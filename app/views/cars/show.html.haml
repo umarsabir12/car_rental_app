@@ -103,22 +103,12 @@
 
       / Right Column - Pricing & Booking (1/3 width)
       .lg:col-span-1
-        / Vendor Info Card
+        / Contact Info Card
         .bg-white.rounded-xl.shadow-sm.p-6.mb-6
-          - if @car.vendor.whatsapp_number.present? || @car.vendor.phone.present?
-            .flex.space-x-3
-              - if @car.vendor.whatsapp_number.present?
-                = link_to @car.vendor.whatsapp_link("Hi, I'm interested in renting #{@car.brand} #{@car.model} #{@car.year}"), target: '_blank', class: 'flex-1 bg-green-500 hover:bg-green-600 text-white py-3 px-4 rounded-lg text-sm font-semibold transition-all duration-200 shadow-md hover:shadow-lg text-center flex items-center justify-center gap-2' do
-                  %i.fab.fa-whatsapp.text-lg
-                  %span WhatsApp
-              
-              - if @car.vendor.phone.present?
-                = link_to "tel:#{@car.vendor.phone}", class: 'flex-1 border-2 hover:bg-gray-50 py-3 px-4 rounded-lg text-sm font-semibold transition-all duration-200 text-center flex items-center justify-center gap-2', style: 'border-color: #3A6363; color: #3A6363' do
-                  %i.fas.fa-phone
-                  %span Call
-          - else
-            .text-center.text-gray-500.py-4
-              %p Contact information not available
+          .flex.space-x-3
+            = link_to admin_whatsapp_link("Hi, I'm interested in renting #{@car.brand} #{@car.model} #{@car.year}"), target: '_blank', class: 'flex-1 bg-green-500 hover:bg-green-600 text-white py-3 px-4 rounded-lg text-sm font-semibold transition-all duration-200 shadow-md hover:shadow-lg text-center flex items-center justify-center gap-2' do
+              %i.fab.fa-whatsapp.text-lg
+              %span WhatsApp
 
         / Pricing Card - Three-tier selector
         .bg-white.rounded-xl.shadow-sm.p-6.mb-6{ "data-controller" => "pricing-selector" }
@@ -178,9 +168,6 @@
 
           / Mileage and charge info
           .space-y-3.text-sm
-            .flex.justify-between
-              %span Included mileage limit
-              %span{ id: "includedMileageText", "data-pricing-selector-target" => "includedMileage" }= "#{daily_mileage} km"
             .flex.justify-between
               %span Additional mileage charge
               %span{ id: "additionalMileageText", "data-pricing-selector-target" => "additionalCharge" }= "AED #{extra_charge} /km"

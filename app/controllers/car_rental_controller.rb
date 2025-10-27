@@ -93,17 +93,17 @@ class CarRentalController < ApplicationController
     @categories_to_display = [
       { name: 'SUVs', slug: 'SUV', description: 'From spacious 7-seaters to the latest 5-seater sports utility vehicles, rent an SUV for city drives or comfortable long hauls with ample seating and luggage space.' },
       { name: 'Luxury', slug: 'Luxury', description: 'Experience the pinnacle of automotive excellence with our premium luxury vehicles, featuring top-tier comfort, advanced technology, and prestigious brands.' },
-      { name: 'Sports', slug: 'Sports', description: 'Feel the thrill of high-performance sports cars with powerful engines, sleek designs, and exceptional handling for an unforgettable driving experience in Dubai.' }
+      { name: 'Sports', slug: 'Sports', description: 'Feel the thrill of high-performance sports cars with powerful engines, sleek designs, and exceptional handling for an unforgettable driving experience in Dubai.' },
+      { name: 'Economy', slug: 'Economy', description: 'Enjoy budget-friendly car rentals with seasonal discounts from some of the best car rental Dubai companies.' }
     ]
 
-    @category_cars = ['SUV', 'Luxury', 'Sports'].flat_map do |category|
+    @category_cars = ['SUV', 'Luxury', 'Sports', 'Economy'].flat_map do |category|
       Car.with_approved_mulkiya
          .where(category: category)
          .left_joins(:bookings)
          .select('cars.*, COUNT(bookings.id) as total_bookings')
          .group('cars.id')
          .order('total_bookings DESC, cars.created_at DESC')
-         .limit(4)
     end
     
     @company_features = [
@@ -124,6 +124,7 @@ class CarRentalController < ApplicationController
     ]
 
     @faqs = [
+      {question: 'How can I book the car with Wheelsonrent?', answer: "<strong>Step 1:</strong> Browse and select your preferred car on our website.<br><strong>Step 2:</strong> Book online and make the payment securely.<br><strong>Step 3:</strong> Alternatively, contact us on WhatsApp or give us a call — our team will book the car for you.".html_safe},
       {question: 'Can I rent a car in Dubai without a deposit?', answer: 'Yes, Wheels on Rent provides zero deposit options for select vehicles.'},
       {question: 'Do you provide cars with drivers for tourists?', answer: 'Yes, professional drivers are available for sightseeing, business trips, and airport transfers.'},
       {question: 'Can I rent electric or luxury cars?', answer: 'Absolutely. Our fleet includes luxury, sports, and electric vehicles.'},
@@ -131,6 +132,16 @@ class CarRentalController < ApplicationController
       {question: 'Are your cars insured and maintained?', answer: 'All vehicles are fully insured, regularly serviced, and inspected before every rental.'},
       {question: 'Can I rent a car for a few hours or multiple days?', answer: 'Yes, we offer flexible rental plans for hourly, daily, weekly, or monthly rentals.'},
       {question: 'Do you provide airport car rentals in Dubai?', answer: 'Yes, we provide pickup and drop-off services at Dubai International Airport and other major airports.'},
+      {question: 'Can a tourist rent a car in Dubai?', answer: 'Yes, a tourist can easily rent a car in Dubai by providing us the required documents.'},
+      {question: 'Can tourists book a rental car online in the UAE before arriving?', answer: 'Yes, a tourist can easily rent a car in UAE by providing us the required documents.'},
+      {question: 'What is the fuel policy?', answer: 'The vehicle must be returned with the same amount of fuel as provided at pickup. A full tank at delivery means a full tank upon return.'},
+      {question: 'Is your car rental service available in Sharjah?', answer: 'Yes, we do offer rent a car in Sharjah like any other state of UAE.'},
+      {question: 'Do you have both car option with and without driver?', answer: 'Yes, we offer multiple options for both categories — cars with a driver and cars for self-drive (without a driver).'},
+      {question: 'Do you have free pick N drop while renting a car?', answer: 'Some car rental companies provide free pick-up and drop-off, while others may charge a fee. However, for monthly bookings, delivery is usually free.'},
+      {question: 'What is Salik and how much does it cost per crossing?', answer: 'Salik is Dubai’s Road toll system managed by the RTA. It can be linked directly to the car’s plate number or through a windshield tag. Each Salik crossing costs AED 4. Some car rental companies may charge AED 5 per crossing to cover processing fees.'},
+      {question: 'What is the requirement to rent a car in Dubai?', answer: "<strong>Tourists:</strong> Passport copy, Driving License, (IDP if required)<br><strong>GCC Nationals:</strong> GCC ID or Passport, GCC Driving License<br><strong>UAE Residents/Nationals:</strong> Emirates ID, UAE Driving License".html_safe},
+      {question: 'What is the car rental daily and monthly mileage policy?', answer: 'For daily rentals, most car rental companies provide 250 KM per day. However, certain vehicles, especially sports cars, may come with a 200 KM daily limit. For monthly rentals, mileage limits typically range between 5,000 KM and 6,000 KM. Exact mileage limits are displayed with every car.'},
+      {question: 'Which payment method car rental accept?', answer: 'Each car rental company may offer different payment methods, and these are defined individually with each car listing. However, most car rental companies commonly accept Cash, Credit/Debit Cards, and even Cryptocurrency.'}
     ]
   end
 end
