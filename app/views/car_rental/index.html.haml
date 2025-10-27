@@ -547,7 +547,7 @@
         const CARDS_TO_SHOW = 4;
         
         // Set the track width to accommodate all cards
-        const trackWidthPercentage = (totalCars / (CARDS_TO_SHOW + 1)) * 100;
+        const trackWidthPercentage = (totalCars / CARDS_TO_SHOW) * 100;
         track.style.width = `${trackWidthPercentage}%`;
 
         function getMaxPosition() {

@@ -154,13 +154,12 @@
   transition: none !important;
 }
 
-/* Ensure carousel track uses flexbox properly */
 .carousel-track {
-  display: flex !important;
-  flex-wrap: nowrap !important;
+  display: flex;
+  transition: transform 0.3s ease;
 }
 
-/* Optional: Add smooth scrolling for better UX */
-.carousel-track {
-  scroll-behavior: smooth;
+.car-card {
+  min-width: 25%; /* Each card takes exactly 25% of the container */
+  flex-shrink: 0;
 }
