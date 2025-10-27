@@ -142,3 +142,25 @@
   -webkit-mask-image: linear-gradient(to right, rgba(0,0,0,1) 65%, rgba(0,0,0,0) 100%);
   mask-image: linear-gradient(to right, rgba(0,0,0,1) 65%, rgba(0,0,0,0) 100%);
 }
+
+/* Override Bootstrap carousel-item to work with Tailwind carousel */
+.carousel-item {
+  position: relative !important;
+  display: block !important;
+  float: none !important;
+  width: 25% !important;
+  margin-right: 0 !important;
+  backface-visibility: visible !important;
+  transition: none !important;
+}
+
+/* Ensure carousel track uses flexbox properly */
+.carousel-track {
+  display: flex !important;
+  flex-wrap: nowrap !important;
+}
+
+/* Optional: Add smooth scrolling for better UX */
+.carousel-track {
+  scroll-behavior: smooth;
+}

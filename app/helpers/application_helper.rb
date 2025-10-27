@@ -81,11 +81,29 @@ module ApplicationHelper
     end
   end
 
+  # WhatsApp link generator
+  def admin_whatsapp_link(message = nil)
+    return nil unless whatsapp_e164
+    base_url = "https://wa.me/#{whatsapp_e164.delete('+')}"
+    message ? "#{base_url}?text=#{ERB::Util.url_encode(message)}" : base_url
+  end
+
   private
 
   def safe_car_placeholder
     content_tag :div, class: "w-full h-full bg-gradient-to-br from-gray-100 to-gray-200 rounded-lg flex items-center justify-center" do
       content_tag :i, "", class: "fas fa-car text-gray-400 text-3xl"
     end
+  end
+
+  # Get E164 format for API calls (WhatsApp Business API, Twilio, etc.)
+  def whatsapp_e164
+    parsed_whatsapp&.e164
+  end
+
+  # Memoized parsed phone object for performance
+  def parsed_whatsapp
+    return nil if AppConstants::ADMIN_WHATSAPP_NUMBER.blank?
+    @parsed_whatsapp ||= Phonelib.parse(AppConstants::ADMIN_WHATSAPP_NUMBER)
   end
 end
