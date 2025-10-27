@@ -1,5 +1,6 @@
 - content_for :title, "Rent #{@car.full_name} in Dubai | Wheels on Rent"
 - content_for :description, "Rent #{@car.full_name} in Dubai starting from AED #{@car.daily_price}/day. #{@car.description.truncate(120)}"
+- min_days = ['Luxury', 'Sports', 'Convertible'].include?(@car.category) ? 1 : 7
 
 - content_for :head do
   %meta{ name: "booked-dates", content: @booked_dates.to_json, "data-turbo-track" => "reload" }
@@ -93,7 +94,7 @@
               .flex.items-center.gap-3
                 %span.inline-flex.items-center.justify-center.w-6.h-6.rounded-full.bg-green-500.text-white
                   %i.fas.fa-check.text-xs
-                %span.text-gray-800 Minimum 5 days rental
+                %span.text-gray-800= "Minimum #{min_days} days rental"
               .flex.items-center.gap-3
                 %span.relative.group.inline-flex.items-center.justify-center.w-6.h-6.rounded-full.bg-green-500.text-white.cursor-pointer{ 'aria-describedby' => 'insurance-tooltip' }
                   %i.fas.fa-check.text-xs
