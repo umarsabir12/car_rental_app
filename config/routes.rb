@@ -169,4 +169,5 @@ Rails.application.routes.draw do
   get 'user/home', to: 'users#home', as: :user_home
 
   root "car_rental#index"
+  get '/terms_of_use', to: 'car_rental#terms'
 end
