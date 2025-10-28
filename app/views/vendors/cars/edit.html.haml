@@ -171,7 +171,7 @@
   // Function to remove existing images
   function removeImage(imageIndex) {
     if (confirm('Are you sure you want to remove this image?')) {
-      const carId = window.location.pathname.split('/').pop();
+      const carId = window.location.pathname.split('/')[3];
       const imageContainer = event.target.closest('.relative');
       
       fetch(`/vendors/cars/${carId}/remove_image`, {
