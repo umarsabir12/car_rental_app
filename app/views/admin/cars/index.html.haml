@@ -52,8 +52,19 @@
               %td.px-6.py-4.whitespace-nowrap.text-sm.text-gray-900= car.color
               %td.px-6.py-4.whitespace-nowrap.text-sm.font-medium.text-gray-900= car.daily_price ? number_to_currency(car.daily_price) : 'N/A'
               %td.px-6.py-4.whitespace-nowrap
-                %span.inline-flex.items-center.px-2.5.py-0.5.rounded-full.text-xs.font-medium{class: car.status == 'available' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}
-                  = car.status&.capitalize
+                - document_status = car.car_document&.document_status
+                - if document_status == 'approved'
+                  %span.inline-flex.items-center.px-2.5.py-0.5.rounded-full.text-xs.font-medium{class: car.status == 'available' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}
+                    = car.status&.capitalize
+                - elsif document_status == 'pending'
+                  %span.inline-flex.items-center.px-2.5.py-0.5.rounded-full.text-xs.font-medium.bg-yellow-100.text-yellow-800
+                    Mulkiya Approval Pending
+                - elsif document_status == 'rejected'
+                  %span.inline-flex.items-center.px-2.5.py-0.5.rounded-full.text-xs.font-medium.bg-rose-100.text-rose-800
+                    Mulkiya Rejected
+                - else
+                  %span.inline-flex.items-center.px-2.5.py-0.5.rounded-full.text-xs.font-medium.bg-gray-100.text-gray-800
+                    No Document
               %td.px-6.py-4.whitespace-nowrap.text-sm.text-gray-900= car.vendor&.company_name || 'N/A'
               %td.px-6.py-4.whitespace-nowrap.text-sm.font-medium
                 = link_to admin_car_path(car), class: 'text-blue-600 hover:text-blue-900' do
