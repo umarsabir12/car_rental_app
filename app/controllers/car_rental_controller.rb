@@ -144,4 +144,7 @@ class CarRentalController < ApplicationController
       {question: 'Which payment method car rental accept?', answer: 'Each car rental company may offer different payment methods, and these are defined individually with each car listing. However, most car rental companies commonly accept Cash, Credit/Debit Cards, and even Cryptocurrency.'}
     ]
   end
+
+  def terms
+  end
 end
