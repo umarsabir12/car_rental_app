@@ -3,8 +3,8 @@ class CarsController < ApplicationController
   before_action :normalize_filter_params, only: [:index]
 
   def index
-    @car_models = Car.distinct.pluck(:model).compact.map { |m| [m.titleize, m] }
-    @car_brands = Car.distinct.pluck(:brand).compact.map { |b| [b.titleize, b] }
+    @car_models = Car.distinct.pluck(:model).compact.map { |m| [m.capitalize, m] }
+    @car_brands = Car.distinct.pluck(:brand).compact.map { |b| [b.capitalize, b] }
 
     # Only show cars with approved mulkiya documents
     @cars = Car.with_approved_mulkiya
@@ -15,6 +15,7 @@ class CarsController < ApplicationController
     # Keep for backward compatibility with old views
     @selected_category = @category
     @selected_brand = @brand
+    @selected_model = @model
 
     @cars = @cars.order(created_at: :desc)
   end
@@ -44,9 +45,23 @@ class CarsController < ApplicationController
 
   def normalize_filter_params
     # Convert placeholder values to nil
-    @category = params[:category] == 'all-categories' ? nil : params[:category]
-    @brand = params[:brand] == 'all-brands' ? nil : params[:brand]
-    @model = params[:model]
+    @category = params[:category] == 'all-categories' ? nil : deparameterize(params[:category])
+    @brand = params[:brand] == 'all-brands' ? nil : deparameterize(params[:brand])
+    @model = find_actual_model(params[:model])
+  end
+
+  def find_actual_model(parameterized_value)
+    return nil if parameterized_value.blank?
+    
+    # Find the actual model from database that matches the parameterized version
+    Car.distinct.pluck(:model).compact.find do |model|
+      model.parameterize == parameterized_value
+    end || deparameterize(parameterized_value)
+  end
+  
+  def deparameterize(value)
+    return nil if value.blank?
+    value.split('-').map(&:capitalize).join(' ')
   end
 
   def apply_filters(cars)
@@ -81,22 +96,22 @@ class CarsController < ApplicationController
   end
 
   def build_clean_url(category, brand, model)
-    # Use placeholders for missing filters to maintain hierarchy
+    # Use parameterize to create URL-friendly slugs
     parts = []
     
     # Determine what we need based on what's selected
     if model.present?
       # If model is selected, we need all three parts
-      parts << (category.present? ? CGI.escape(category) : 'all-categories')
-      parts << (brand.present? ? CGI.escape(brand) : 'all-brands')
-      parts << CGI.escape(model)
+      parts << (category.present? ? category.parameterize : 'all-categories')
+      parts << (brand.present? ? brand.parameterize : 'all-brands')
+      parts << model.parameterize
     elsif brand.present?
       # If brand is selected (but not model), we need category and brand
-      parts << (category.present? ? CGI.escape(category) : 'all-categories')
-      parts << CGI.escape(brand)
+      parts << (category.present? ? category.parameterize : 'all-categories')
+      parts << brand.parameterize
     elsif category.present?
       # If only category is selected
-      parts << CGI.escape(category)
+      parts << category.parameterize
     end
     
     parts.empty? ? cars_path : "/cars/#{parts.join('/')}"
