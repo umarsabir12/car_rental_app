@@ -144,7 +144,7 @@ class Vendors::CarsController < ApplicationController
   private
 
   def set_car
-    @car = current_vendor.cars.includes(:features).find(params[:id])
+    @car = current_vendor.cars.includes(:features).friendly.find(params[:id])
   end
 
   def load_premium_features

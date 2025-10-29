@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_10_21_112109) do
+ActiveRecord::Schema[7.2].define(version: 2025_10_29_134522) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -150,6 +150,8 @@ ActiveRecord::Schema[7.2].define(version: 2025_10_21_112109) do
     t.string "insurance_policy", default: ""
     t.integer "additional_mileage_charge", default: 0
     t.integer "bookings_count", default: 0, null: false
+    t.string "slug"
+    t.index ["slug"], name: "index_cars_on_slug", unique: true
     t.index ["stripe_price_id"], name: "index_cars_on_stripe_price_id"
     t.index ["stripe_product_id"], name: "index_cars_on_stripe_product_id"
     t.index ["vendor_id"], name: "index_cars_on_vendor_id"
@@ -172,6 +174,17 @@ ActiveRecord::Schema[7.2].define(version: 2025_10_21_112109) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["name"], name: "index_features_on_name"
+  end
+
+  create_table "friendly_id_slugs", force: :cascade do |t|
+    t.string "slug", null: false
+    t.integer "sluggable_id", null: false
+    t.string "sluggable_type", limit: 50
+    t.string "scope"
+    t.datetime "created_at"
+    t.index ["slug", "sluggable_type", "scope"], name: "index_friendly_id_slugs_on_slug_and_sluggable_type_and_scope", unique: true
+    t.index ["slug", "sluggable_type"], name: "index_friendly_id_slugs_on_slug_and_sluggable_type"
+    t.index ["sluggable_type", "sluggable_id"], name: "index_friendly_id_slugs_on_sluggable_type_and_sluggable_id"
   end
 
   create_table "invited_vendors", force: :cascade do |t|
