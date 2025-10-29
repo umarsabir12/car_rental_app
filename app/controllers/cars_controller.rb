@@ -45,9 +45,31 @@ class CarsController < ApplicationController
 
   def normalize_filter_params
     # Convert placeholder values to nil
-    @category = params[:category] == 'all-categories' ? nil : deparameterize(params[:category])
-    @brand = params[:brand] == 'all-brands' ? nil : deparameterize(params[:brand])
+    @category = params[:category] == 'all-categories' ? nil : find_actual_category(params[:category])
+    @brand = params[:brand] == 'all-brands' ? nil : find_actual_brand(params[:brand])
     @model = find_actual_model(params[:model])
+  end
+
+  def find_actual_category(parameterized_value)
+    return nil if parameterized_value.blank?
+    
+    # AppConstants::CAR_CATEGORIES is [["Sedan", "Sedan"], ["SUV", "SUV"], ...]
+    # Extract just the category values (second element of each pair)
+    categories = AppConstants::CAR_CATEGORIES.map(&:last)
+    
+    # Try to find exact match
+    categories.find do |cat|
+      cat.parameterize == parameterized_value
+    end || deparameterize(parameterized_value)
+  end
+
+  def find_actual_brand(parameterized_value)
+    return nil if parameterized_value.blank?
+    
+    # Find the actual brand from database that matches the parameterized version
+    Car.distinct.pluck(:brand).compact.find do |brand|
+      brand.parameterize == parameterized_value
+    end || deparameterize(parameterized_value)
   end
 
   def find_actual_model(parameterized_value)
