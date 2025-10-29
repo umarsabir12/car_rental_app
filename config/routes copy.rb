@@ -138,18 +138,11 @@ Rails.application.routes.draw do
   namespace :vendors do
     get 'dashboard', to: 'dashboard#index'
     get 'companies', to: 'companies#index', as: :companies
-    
-    # Cars routes to use slug
-    get 'cars', to: 'cars#index', as: :cars_index
-    get 'cars/new', to: 'cars#new', as: :new_car
-    post 'cars', to: 'cars#create'
-    get 'car/:id', to: 'cars#show', as: :car  # Singular for show
-    get 'car/:id/edit', to: 'cars#edit', as: :edit_car  # Singular for edit
-    patch 'car/:id', to: 'cars#update'
-    put 'car/:id', to: 'cars#update'
-    delete 'car/:id', to: 'cars#destroy'
-    delete 'car/:id/remove_image', to: 'cars#remove_image', as: :remove_image_car
-
+    resources :cars do
+      member do
+        delete :remove_image
+      end
+    end
     resources :bookings
     resources :documents
     resources :payments, only: [:index, :show]
@@ -161,14 +154,7 @@ Rails.application.routes.draw do
   resource :vendor, only: [:show, :edit, :update]
 
   resources :documents, only: [:create]
-  
-  # UPDATED: Public cars routes with clean filter URLs
-  get 'cars', to: 'cars#index', as: :cars
-  get 'cars/:category', to: 'cars#index', as: :cars_by_category
-  get 'cars/:category/:brand', to: 'cars#index', as: :cars_by_category_brand
-  get 'cars/:category/:brand/:model', to: 'cars#index', as: :cars_by_all_filters
-  get 'car/:id', to: 'cars#show', as: :car
-  
+  resources :cars
   resources :bookings, only: [:new, :create]
 
   resources :vendor_requests, only: [:new, :create]

@@ -2,7 +2,7 @@
   = render partial: "vendors/navbar"
   .flex.items-center.gap-4.mb-10
     %h1.text-2xl.font-bold.pl-4.border-l-4.border-blue-600.bg-white.rounded{style: 'color: #3a6363'} My Cars
-    = link_to new_vendors_car_path, class: 'ml-auto flex items-center gap-2 border border-blue-600 font-semibold px-4 py-2 rounded-lg bg-transparent hover:bg-blue-50 transition', style: 'color: #3a6363' do
+    = link_to vendors_new_car_path, class: 'ml-auto flex items-center gap-2 border border-blue-600 font-semibold px-4 py-2 rounded-lg bg-transparent hover:bg-blue-50 transition', style: 'color: #3a6363' do
       %i.fas.fa-plus
       Add New Car
   - if @cars.any?

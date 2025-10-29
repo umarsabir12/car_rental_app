@@ -1,4 +1,7 @@
 class Car < ApplicationRecord
+  extend FriendlyId
+  friendly_id :slug_candidates, use: :slugged
+
   belongs_to :vendor, optional: true
   has_many_attached :images
   has_many :bookings
@@ -100,6 +103,20 @@ class Car < ApplicationRecord
     else
       scope.where('lower(brand) = ?', s)
     end
+  end
+
+  # Generate slug from multiple fields
+  def slug_candidates
+    [
+      [:brand, :model],
+      [:brand, :model, :year],
+      [:brand, :model, :year, :category]
+    ]
+  end
+  
+  # Regenerate slug when relevant fields change
+  def should_generate_new_friendly_id?
+    brand_changed? || model_changed? || year_changed? || super
   end
 
   private
