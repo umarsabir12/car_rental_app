@@ -58,7 +58,12 @@
               .p-4.bg-gray-50
                 .flex.space-x-2.overflow-x-auto
                   - @car.images.first(6).each_with_index do |image, index|
-                    %img.w-16.h-12.object-cover.rounded.cursor-pointer.border-2.border-transparent.hover:border-blue-500{ src: url_for(image), alt: "Thumbnail #{index + 1}" }
+                    %img.w-16.h-12.object-cover.rounded.cursor-pointer.border-2.transition-all.thumbnail-image{ 
+                      src: url_for(image), 
+                      alt: "Thumbnail #{index + 1}",
+                      "data-slide-index": index,
+                      class: index == 0 ? "border-blue-500" : "border-transparent"
+                    }
           - else
             .h-80.bg-gray-200.flex.items-center.justify-center
               .text-center
@@ -289,23 +294,6 @@
           %li Wheelsonrent platform only displays cars and manages reservations.
           %li Wheelsonrent bears no responsibility for rental payments made between the customer and the car rental company.
       
-      / Additional Note
-      .mt-6
-        %p.text-gray-600.italic.text-left.max-w-2xl.mx-10
-          * Customers must present the booking confirmation received during booking with Wheelsonrent at the time of car collection.
-
-  / FAQ Section
-  .max-w-7xl.mx-auto.px-4.sm:px-6.lg:px-8.pb-8
-    .bg-white.rounded-xl.shadow-sm.p-8
-      %h2.text-2xl.font-bold.mb-6{style: 'color: #2d4f4f'} FREQUENTLY ASKED QUESTIONS
-      .space-y-4
-        .border-b.pb-4
-          %h4.font-semibold.mb-2 What documents do I need to rent this car?
-          %p.text-gray-600 You'll need a valid UAE driving license, Emirates ID or passport, and a credit card for the security deposit.
-        .border-b.pb-4
-          %h4.font-semibold.mb-2 Is fuel included in the rental price?
-          %p.text-gray-600 No, fuel is not included. You'll need to return the car with the same fuel level.
-
   / Recommended Cars Section
   - if @recommended_cars&.any?
     .max-w-7xl.mx-auto.px-4.sm:px-6.lg:px-8.pb-8
@@ -568,7 +556,7 @@
   // Swiper initialization
   document.addEventListener('DOMContentLoaded', function() {
     if (window.Swiper) {
-      new Swiper('.swiper-container', {
+      const swiper = new Swiper('.swiper-container', {
         loop: true,
         navigation: {
           nextEl: '.swiper-button-next',
@@ -582,6 +570,45 @@
         spaceBetween: 20,
         centeredSlides: true,
         autoHeight: true,
+        on: {
+          slideChange: function() {
+            // Update slide counter
+            const currentSlide = document.querySelector('.current-slide');
+            if (currentSlide) {
+              currentSlide.textContent = this.realIndex + 1;
+            }
+            
+            // Update thumbnail active state
+            updateThumbnailActiveState(this.realIndex);
+          }
+        }
       });
+
+      // Function to update thumbnail borders
+      function updateThumbnailActiveState(activeIndex) {
+        const thumbnails = document.querySelectorAll('.thumbnail-image');
+        thumbnails.forEach((thumb, index) => {
+          if (index === activeIndex) {
+            thumb.classList.remove('border-transparent');
+            thumb.classList.add('border-blue-500');
+          } else {
+            thumb.classList.add('border-transparent');
+            thumb.classList.remove('border-blue-500');
+          }
+        });
+      }
+
+      // Add click handlers to thumbnails
+      const thumbnails = document.querySelectorAll('.thumbnail-image');
+      thumbnails.forEach((thumbnail) => {
+        thumbnail.addEventListener('click', function() {
+          const slideIndex = parseInt(this.getAttribute('data-slide-index'));
+          swiper.slideToLoop(slideIndex); // Use slideToLoop for looped swipers
+          updateThumbnailActiveState(slideIndex);
+        });
+      });
+
+      // Initialize the first thumbnail as active
+      updateThumbnailActiveState(0);
     }
   });
