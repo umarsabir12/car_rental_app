@@ -91,10 +91,10 @@ class CarRentalController < ApplicationController
     @brand_logos = Car.brand_logos
 
     @categories_to_display = [
-      { name: 'SUVs', slug: 'SUV', description: 'From spacious 7-seaters to the latest 5-seater sports utility vehicles, rent an SUV for city drives or comfortable long hauls with ample seating and luggage space.' },
+      { name: 'Economy', slug: 'Economy', description: 'Enjoy budget-friendly car rentals with seasonal discounts from some of the best car rental Dubai companies.' },
       { name: 'Luxury', slug: 'Luxury', description: 'Experience the pinnacle of automotive excellence with our premium luxury vehicles, featuring top-tier comfort, advanced technology, and prestigious brands.' },
-      { name: 'Sports', slug: 'Sports', description: 'Feel the thrill of high-performance sports cars with powerful engines, sleek designs, and exceptional handling for an unforgettable driving experience in Dubai.' },
-      { name: 'Economy', slug: 'Economy', description: 'Enjoy budget-friendly car rentals with seasonal discounts from some of the best car rental Dubai companies.' }
+      { name: 'SUV', slug: 'SUV', description: 'From spacious 7-seaters to the latest 5-seater sports utility vehicles, rent an SUV for city drives or comfortable long hauls with ample seating and luggage space.' },
+      { name: 'Sports', slug: 'Sports', description: 'Feel the thrill of high-performance sports cars with powerful engines, sleek designs, and exceptional handling for an unforgettable driving experience in Dubai.' }
     ]
 
     @category_cars = ['SUV', 'Luxury', 'Sports', 'Economy'].flat_map do |category|
