@@ -351,7 +351,8 @@
       / Content populated by JavaScript
 
 :javascript
-  document.addEventListener("DOMContentLoaded", function () {
+  // Main initialization function
+  function initializeCarShowPage() {
     // Booking Modal Logic
     const continueBtn = document.getElementById("continueToLoginLink");
     const createBookingBtn = document.getElementById("createBookingBtn");
@@ -359,7 +360,7 @@
     const endInput = document.getElementById("endDateInput");
 
     function updateButtonState() {
-      if (startInput.value && endInput.value) {
+      if (startInput && endInput && startInput.value && endInput.value) {
         if (continueBtn) {
           continueBtn.removeAttribute("disabled");
           continueBtn.style.pointerEvents = "auto";
@@ -499,11 +500,15 @@
       closeBtn.addEventListener('click', closePolicyDrawer);
     }
 
-    document.addEventListener('keydown', function(e) {
+    // Remove any existing escape key listener to prevent duplicates
+    document.removeEventListener('keydown', handleEscapeKey);
+    document.addEventListener('keydown', handleEscapeKey);
+
+    function handleEscapeKey(e) {
       if (e.key === 'Escape') {
         closePolicyDrawer();
       }
-    });
+    }
 
     document.querySelectorAll('[data-policy]').forEach(button => {
       button.addEventListener('click', function(e) {
@@ -526,7 +531,6 @@
         const allFeatures = document.querySelectorAll('.feature-item');
         
         if (!isExpanded) {
-          // Show all features
           allFeatures.forEach(function(feature) {
             feature.classList.remove('hidden');
           });
@@ -535,7 +539,6 @@
           btnIcon.classList.add('fa-chevron-up');
           isExpanded = true;
         } else {
-          // Hide features after index 11
           allFeatures.forEach(function(feature) {
             if (parseInt(feature.getAttribute('data-index')) >= 12) {
               feature.classList.add('hidden');
@@ -546,16 +549,19 @@
           btnIcon.classList.add('fa-chevron-down');
           isExpanded = false;
           
-          // Scroll back to features section
-          document.querySelector('#featuresGrid').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+          document.querySelector('#featuresGrid')?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         }
       });
     }
-  });
 
-  // Swiper initialization
-  document.addEventListener('DOMContentLoaded', function() {
+    // Swiper initialization
     if (window.Swiper) {
+      // Destroy existing swiper instance if it exists
+      const existingSwiperContainer = document.querySelector('.swiper-container');
+      if (existingSwiperContainer && existingSwiperContainer.swiper) {
+        existingSwiperContainer.swiper.destroy(true, true);
+      }
+
       const swiper = new Swiper('.swiper-container', {
         loop: true,
         navigation: {
@@ -572,19 +578,15 @@
         autoHeight: true,
         on: {
           slideChange: function() {
-            // Update slide counter
             const currentSlide = document.querySelector('.current-slide');
             if (currentSlide) {
               currentSlide.textContent = this.realIndex + 1;
             }
-            
-            // Update thumbnail active state
             updateThumbnailActiveState(this.realIndex);
           }
         }
       });
 
-      // Function to update thumbnail borders
       function updateThumbnailActiveState(activeIndex) {
         const thumbnails = document.querySelectorAll('.thumbnail-image');
         thumbnails.forEach((thumb, index) => {
@@ -598,17 +600,22 @@
         });
       }
 
-      // Add click handlers to thumbnails
       const thumbnails = document.querySelectorAll('.thumbnail-image');
       thumbnails.forEach((thumbnail) => {
         thumbnail.addEventListener('click', function() {
           const slideIndex = parseInt(this.getAttribute('data-slide-index'));
-          swiper.slideToLoop(slideIndex); // Use slideToLoop for looped swipers
+          swiper.slideToLoop(slideIndex);
           updateThumbnailActiveState(slideIndex);
         });
       });
 
-      // Initialize the first thumbnail as active
       updateThumbnailActiveState(0);
     }
-  });
+  }
+
+  // Listen for both DOMContentLoaded and turbo:load events
+  document.addEventListener('DOMContentLoaded', initializeCarShowPage);
+  document.addEventListener('turbo:load', initializeCarShowPage);
+  
+  // Also listen for turbo:render for additional reliability
+  document.addEventListener('turbo:render', initializeCarShowPage);
