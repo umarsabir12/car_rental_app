@@ -91,21 +91,20 @@
                 %span.text-gray-800 Rental Policy
                 %button.text-gray-400.hover:text-gray-600{ "data-policy" => "rental" }
                   %i.fas.fa-info-circle
+              .flex.items-center.justify-center.gap-3
+                %i.fas.fa-shield-alt.text-xl.text-gray-700
+                %span.text-gray-800 Insurance Policy
+                %button.text-gray-400.hover:text-gray-600{ "data-policy" => "insurance" }
+                  %i.fas.fa-info-circle
 
-        / Insurance Highlights
+        / Minimum Rental Duration Info
         .bg-white.rounded-xl.shadow-lg.mb-6
           .p-6
-            .flex.flex-col.sm:flex-row.items-center.justify-center.gap-10.text-center
+            .flex.flex-col.sm:flex-row.items-center.justify-center.gap-6.text-center
               .flex.items-center.gap-3
                 %span.inline-flex.items-center.justify-center.w-6.h-6.rounded-full.bg-green-500.text-white
                   %i.fas.fa-check.text-xs
                 %span.text-gray-800= "Minimum #{min_days} days rental"
-              .flex.items-center.gap-3
-                %span.relative.group.inline-flex.items-center.justify-center.w-6.h-6.rounded-full.bg-green-500.text-white.cursor-pointer{ 'aria-describedby' => 'insurance-tooltip' }
-                  %i.fas.fa-check.text-xs
-                  %span#insurance-tooltip{ class: 'absolute left-1/2 -translate-x-1/2 bottom-full mb-2 w-64 rounded-lg bg-[#3A6363] text-white text-sm p-2 shadow-lg hidden group-hover:block whitespace-normal break-words z-10', role: 'tooltip' }
-                    = @car.insurance_policy.present? ? @car.insurance_policy : 'No insurance policy provided'
-                %span.text-gray-800 Insurance included
 
       / Right Column - Pricing & Booking (1/3 width)
       .lg:col-span-1
@@ -461,6 +460,8 @@
     }
 
     // Policy Drawer Logic
+    const insurancePolicy = "#{@car.insurance_policy.present? ? @car.insurance_policy.gsub('"', '\\"').gsub("\n", ' ') : 'No Insurance Provided'}";
+    
     const policyContent = {
       mileage: {
         title: 'Mileage Policy',
@@ -473,6 +474,10 @@
       rental: {
         title: 'Rental Policy',
         content: "Renters must be at least 21 years old. UAE residents need a valid UAE driving license, and tourists must provide an International Driving Permit. Any traffic fines incurred during the rental period are the renter's responsibility. Vehicles should be returned to the original pickup location unless alternative arrangements have been approved in advance."
+      },
+      insurance: {
+        title: 'Insurance Policy',
+        content: insurancePolicy
       },
       min_days: {
         title: 'Minimum Rental Duration',
