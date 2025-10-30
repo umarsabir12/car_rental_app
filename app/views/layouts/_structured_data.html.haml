@@ -1,0 +1,256 @@
+%script{ type: "application/ld+json" }
+  :plain
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "Organization",
+          "@id": "https://wheelsonrent.ae/#organization",
+          "name": "Wheels On Rent",
+          "url": "https://wheelsonrent.ae",
+          "logo": "https://wheelsonrent.ae/assets/new_logo-f814f83f44e74cbd0e4cd1d572704707b3228900aaec23a4c2abf368c10e25be.png",
+          "founder": {
+            "@type": "Person",
+            "name": "Tabbussum Rizvi"
+          },
+          "contactPoint": {
+            "@type": "ContactPoint",
+            "telephone": "+971506336408",
+            "contactType": "Customer Service",
+            "email": "booking@wheelsonrent.ae",
+            "availableLanguage": ["English", "Arabic"],
+            "areaServed": "AE"
+          },
+          "sameAs": [
+            "https://www.facebook.com/wheelsonrent.ae",
+            "https://www.instagram.com/wheelsonrent.ae/",
+            "https://www.tiktok.com/@wheelsonrent",
+            "https://www.youtube.com/@WheelsonRentUAE",
+            "https://x.com/WheelsOnRentUAE"
+          ]
+        },
+        {
+          "@type": "AutomotiveBusiness",
+          "@id": "https://wheelsonrent.ae/#localbusiness",
+          "additionalType": "https://schema.org/LocalBusiness",
+          "name": "Wheels On Rent",
+          "description": "UAE's trusted car rental marketplace connecting customers with verified vendors for economy and luxury cars.",
+          "url": "https://wheelsonrent.ae",
+          "image": "https://wheelsonrent.ae/assets/new_logo-f814f83f44e74cbd0e4cd1d572704707b3228900aaec23a4c2abf368c10e25be.png",
+          "priceRange": "Daily: AED 85–3000, Monthly: AED 1600–45000",
+          "paymentAccepted": ["Cash", "Credit Card", "Online Payment"],
+          "currenciesAccepted": "AED",
+          "address": {
+            "@type": "PostalAddress",
+            "streetAddress": "Unit 19474, Digital Park, Silicon Oasis",
+            "addressLocality": "Dubai",
+            "addressRegion": "Dubai",
+            "addressCountry": "AE"
+          },
+          "geo": {
+            "@type": "GeoCoordinates",
+            "latitude": 25.120104,
+            "longitude": 55.376764
+          },
+          "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue": "5",
+            "reviewCount": "327"
+          },
+          "openingHoursSpecification": [
+            {
+              "@type": "OpeningHoursSpecification",
+              "dayOfWeek": [
+                "Monday",
+                "Tuesday",
+                "Wednesday",
+                "Thursday",
+                "Friday",
+                "Saturday",
+                "Sunday"
+              ],
+              "opens": "08:00",
+              "closes": "22:00"
+            }
+          ],
+          "areaServed": [
+            {
+              "@type": "Place",
+              "name": "Dubai"
+            },
+            {
+              "@type": "Place",
+              "name": "Sharjah"
+            },
+            {
+              "@type": "Place",
+              "name": "Abu Dhabi"
+            },
+            {
+              "@type": "Place",
+              "name": "Ajman"
+            },
+            {
+              "@type": "Place",
+              "name": "United Arab Emirates"
+            }
+          ],
+          "hasOfferCatalog": {
+            "@type": "OfferCatalog",
+            "name": "Car Rental Services",
+            "itemListElement": [
+              {
+                "@type": "Offer",
+                "itemOffered": {
+                  "@type": "Service",
+                  "name": "Economy Car Rental"
+                }
+              },
+              {
+                "@type": "Offer",
+                "itemOffered": {
+                  "@type": "Service",
+                  "name": "Luxury Car Rental"
+                }
+              },
+              {
+                "@type": "Offer",
+                "itemOffered": {
+                  "@type": "Service",
+                  "name": "SUV Rental"
+                }
+              },
+              {
+                "@type": "Offer",
+                "itemOffered": {
+                  "@type": "Service",
+                  "name": "Chauffeur Service"
+                }
+              },
+              {
+                "@type": "Offer",
+                "itemOffered": {
+                  "@type": "Service",
+                  "name": "Long-Term Car Rental"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "@type": "Product",
+          "@id": "https://wheelsonrent.ae/#vendorplans",
+          "name": "Vendor Subscription Plans",
+          "description": "Car rental vendors can list their fleet on Wheels On Rent via 3 subscription tiers.",
+          "offers": [
+            {
+              "@type": "Offer",
+              "name": "Basic Plan",
+              "priceCurrency": "AED",
+              "price": "299",
+              "description": "Basic AED 299/month – 5 listings"
+            },
+            {
+              "@type": "Offer",
+              "name": "Premium Plan",
+              "priceCurrency": "AED",
+              "price": "599",
+              "description": "Premium AED 599/month – 15 listings"
+            },
+            {
+              "@type": "Offer",
+              "name": "Elite Plan",
+              "priceCurrency": "AED",
+              "price": "999",
+              "description": "Elite AED 999/month – Unlimited listings"
+            }
+          ]
+        },
+        {
+          "@type": "FAQPage",
+          "@id": "https://wheelsonrent.ae/#faqs",
+          "mainEntity": [
+            {
+              "@type": "Question",
+              "name": "How do I rent a car on Wheels On Rent?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Simply browse available cars, choose your preferred one, select the rental period, and complete the booking online or via WhatsApp."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Do you offer delivery of the rental car?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Yes, we offer delivery and pickup services across Dubai, Abu Dhabi, and other Emirates."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Is insurance included in the rental?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Yes, basic insurance is included. You may opt for additional coverage at the time of booking."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Is a security deposit required?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Yes, most rentals require a refundable security deposit. The amount depends on the car type."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Do you offer hourly rentals?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Hourly rentals are currently not available. Our rentals start from 1-day minimum."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "How can I register as a vendor?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Vendors can register on our platform and choose a subscription plan. Once approved, they can start listing cars."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "What are the vendor subscription plans?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Basic AED 299/month for 5 listings, Premium AED 599/month for 15 listings, Elite AED 999/month for unlimited listings."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Do you offer chauffeur services?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Yes, chauffeur services are available with selected vehicles. You can choose this option during booking."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "What is your cancellation policy?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Cancellations made 24 hours in advance are eligible for full refunds. Last-minute cancellations may incur charges."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "What payment methods do you accept?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "We accept Cash, Credit Cards, and Online Payments."
+              }
+            }
+          ]
+        }
+      ]
+    }
