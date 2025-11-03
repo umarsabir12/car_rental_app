@@ -148,7 +148,7 @@ Rails.application.routes.draw do
     patch 'car/:id', to: 'cars#update'
     put 'car/:id', to: 'cars#update'
     delete 'car/:id', to: 'cars#destroy'
-    delete 'car/:id/remove_image', to: 'cars#remove_image', as: :remove_image_car
+    delete 'cars/:id/remove_image', to: 'cars#remove_image', as: :remove_image_car
 
     resources :bookings
     resources :documents
