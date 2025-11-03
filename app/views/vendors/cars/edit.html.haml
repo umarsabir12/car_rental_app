@@ -33,7 +33,7 @@
           = f.select :status, options_for_select([['Available', 'available'], ['Rented', 'rented'], ['Maintenance', 'maintenance']], @car.status), { prompt: 'Select status' }, { required: true, class: 'w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 transition', style: '--tw-ring-color:#3A6363' }
         .field.space-y-2.md:col-span-2
           = f.label :category, 'Category', class: 'block text-sm font-medium text-gray-700'
-          = f.select :category, options_for_select([['Sedan', 'Sedan'], ['SUV', 'SUV'], ['Sports', 'Sports'], ['Luxury', 'Luxury'], ['Electric', 'Electric'], ['Hybrid', 'Hybrid'], ['Van', 'Van'], ['Truck', 'Truck']], @car.category), { prompt: 'Select category' }, { class: 'w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 transition', style: '--tw-ring-color:#3A6363' }
+          = f.select :category, options_for_select(AppConstants::CAR_CATEGORIES, @car.category), { prompt: 'Select category' }, { class: 'w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 transition', style: '--tw-ring-color:#3A6363' }
         .field.space-y-2.md:col-span-2
           = f.label :description, 'Description', class: 'block text-sm font-medium text-gray-700'
           = f.text_area :description, rows: 4, class: 'w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 transition', style: '--tw-ring-color:#3A6363', placeholder: 'Describe the car features, condition, and any special notes...'
@@ -110,8 +110,8 @@
       / Insurance Section
       %h2.text-lg.font-bold.mb-4.mt-8{style: 'color:#2d4f4f'} Insurance
       .field.space-y-2
-        = f.label :insurance_policy, 'Insurance Policy', class: 'block text-sm font-medium text-gray-700'
-        = f.text_field :insurance_policy, class: 'w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 transition', style: '--tw-ring-color:#3A6363', placeholder: @car.insurance_policy.present? ? @car.insurance_policy : 'e.g., Insurance policy details'
+        = f.label :insurance_policy, 'Insurance Policy *', class: 'block text-sm font-medium text-gray-700'
+        = f.text_field :insurance_policy, required: true, class: 'w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 transition', style: '--tw-ring-color:#3A6363', placeholder: @car.insurance_policy.present? ? @car.insurance_policy : 'e.g., Insurance policy details'
 
       / Images Section
       %h2.text-lg.font-bold.mb-4.mt-8{style: 'color:#2d4f4f'} Car Images

@@ -165,8 +165,8 @@
       / Insurance Section
       %h2.text-lg.font-bold.mb-4.mt-8{style: 'color: #3a6363'} Insurance
       .field.space-y-2
-        = f.label :insurance_policy, 'Insurance Policy', class: 'block text-sm font-medium text-gray-700'
-        = f.text_field :insurance_policy, class: 'w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition', placeholder: 'e.g., Insurance policy details'
+        = f.label :insurance_policy, 'Insurance Policy *', class: 'block text-sm font-medium text-gray-700'
+        = f.text_field :insurance_policy, required: true, class: 'w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition', placeholder: 'e.g., Insurance policy details'
 
       / Images Section
       %h2.text-lg.font-bold.mb-4.mt-8{style: 'color: #3a6363'} Car Images *
