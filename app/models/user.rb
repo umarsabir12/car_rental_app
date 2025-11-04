@@ -7,7 +7,7 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :validatable
 
   has_many :bookings, dependent: :destroy
-  has_many :documents
+  has_many :documents, dependent: :destroy
   has_many :activities, dependent: :destroy
   
   before_validation :normalize_whatsapp_number, if: :whatsapp_number_changed?
@@ -39,16 +39,28 @@ class User < ApplicationRecord
     "#{self.first_name} #{self.last_name}"
   end
 
-  def self.from_omniauth(auth, nationality = nil)
+  def self.from_omniauth(auth, nationality = nil, terms_accepted = false, allow_creation)
     user = where(provider: auth.provider, uid: auth.uid).first
   
     # If user exists, update nationality if provided and not already set
     if user.present?
+      updates = {}
+  
       if nationality.present? && user.nationality.blank?
-        user.update_column(:nationality, nationality)
+        updates[:nationality] = nationality
       end
+  
+      if terms_accepted.present? && !user.terms_accepted?
+        updates[:terms_accepted] = true
+      end
+  
+      user.update_columns(updates) if updates.any?
+
       return user
     end
+
+    # If user doesn't exist and creation is not allowed, return nil
+    return unless allow_creation
   
     # Create new user without validation
     user = new do |u|
@@ -69,6 +81,7 @@ class User < ApplicationRecord
       
       # Set nationality if provided
       u.nationality = nationality if nationality.present?
+      u.terms_accepted = terms_accepted
       
       # Set default values for any required fields
       # Example: u.phone = '' # if phone is required but can be blank
