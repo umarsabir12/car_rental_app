@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_10_29_134522) do
+ActiveRecord::Schema[7.2].define(version: 2025_11_04_145316) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -194,7 +194,6 @@ ActiveRecord::Schema[7.2].define(version: 2025_10_29_134522) do
     t.string "invite_token"
     t.boolean "invite_sent", default: false
     t.string "status", default: "pending"
-    t.datetime "expires_at", default: "2025-10-22 19:25:50"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
