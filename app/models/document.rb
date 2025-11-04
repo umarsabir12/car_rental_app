@@ -1,6 +1,6 @@
 class Document < ApplicationRecord
   belongs_to :user
-  has_many_attached :images
+  has_many_attached :images, dependent: :purge_later
   has_many :activities, as: :subject, dependent: :destroy
   # before_create :set_pending_status
 

@@ -5,6 +5,11 @@
       %h2.text-3xl.font-bold.text-gray-800.mb-2 Welcome Back
       %p.text-gray-600 Sign in to manage your bookings
 
+    - if alert
+      .mt-4.p-3.bg-red-50.text-red-700.rounded-lg.text-sm.border.border-red-200= alert
+    - if notice
+      .mt-4.p-3.text-green-700.rounded-lg.text-sm.border{style: 'background-color: #f0f9f0; border-color: #3a6363'}= notice
+
     = form_for(resource, as: resource_name, url: session_path(resource_name), html: { class: "space-y-6" }) do |f|
       - if params[:car_id].present?
         = hidden_field_tag :car_id, params[:car_id]
@@ -57,7 +62,8 @@
         %span.px-3.bg-white.text-gray-500 Or continue with
 
     / Google Sign In Button
-    = button_to user_google_oauth2_omniauth_authorize_path, method: :post, data: { turbo: false }, 
+    = button_to user_google_oauth2_omniauth_authorize_path, method: :post, data: { turbo: false },
+        params: { action_type: 'signin' }, 
         class: "w-full flex items-center justify-center px-4 py-3 border border-gray-300 shadow-sm text-sm font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50 transition duration-200",
         style: "hover:border-color: #3a6363",
         onmouseover: "this.style.borderColor='#3a6363'; this.style.boxShadow='0 0 0 3px rgba(58, 99, 99, 0.05)'",
@@ -78,11 +84,6 @@
         = link_to 'Sign up here', new_registration_path(resource_name), 
             class: 'font-medium transition-colors hover:underline',
             style: 'color: #3a6363'
-
-    - if alert
-      .mt-4.p-3.bg-red-50.text-red-700.rounded-lg.text-sm.border.border-red-200= alert
-    - if notice
-      .mt-4.p-3.text-green-700.rounded-lg.text-sm.border{style: 'background-color: #f0f9f0; border-color: #3a6363'}= notice
 
 :javascript
   function togglePassword(button) {

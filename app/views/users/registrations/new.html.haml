@@ -5,6 +5,11 @@
       %h2.text-3xl.font-bold.text-gray-800.mb-2 Sign Up
       %p.text-gray-600 Create an account to rent your next ride
 
+    - if alert
+      .mt-4.p-3.bg-red-50.text-red-700.rounded-lg.text-sm.border.border-red-200= alert
+    - if notice
+      .mt-4.p-3.text-green-700.rounded-lg.text-sm.border{style: 'background-color: #f0f9f0; border-color: #3a6363'}= notice
+
     = form_for(resource, as: resource_name, url: registration_path(resource_name), html: { class: "space-y-6" }) do |f|
       - if params[:car_id].present?
         = hidden_field_tag :car_id, params[:car_id]
@@ -114,18 +119,26 @@
         %span.px-3.bg-white.text-gray-500 Or continue with
 
     / Residency type selection for Google Sign-Up
-    .field.space-y-2.mt-6.mb-6
+    .field.space-y-2.mt-6.mb-4
       %label.block.text-sm.font-medium.text-gray-700 Are you a Resident or a Tourist?
       .flex.gap-6.items-center.mt-2
         %label.flex.items-center.gap-2.cursor-pointer.text-gray-700
-          = radio_button_tag 'user[nationality]', 'resident', false, required: true, class: "form-radio h-4 w-4 border-gray-300 transition", style: "accent-color: #3a6363;"
+          = radio_button_tag 'user[nationality]', 'resident', false, required: true, class: "form-radio h-4 w-4 border-gray-300 transition google-nationality-radio", style: "accent-color: #3a6363;"
           %span Resident (UAE Resident)
         %label.flex.items-center.gap-2.cursor-pointer.text-gray-700
-          = radio_button_tag 'user[nationality]', 'tourist', false, required: true, class: "form-radio h-4 w-4 border-gray-300 transition", style: "accent-color: #3a6363;"
+          = radio_button_tag 'user[nationality]', 'tourist', false, required: true, class: "form-radio h-4 w-4 border-gray-300 transition google-nationality-radio", style: "accent-color: #3a6363;"
           %span Tourist (Foreign Tourist)
 
-    / Google Sign Up Button (modified to capture nationality)
+    / Terms acceptance for Google Sign-Up
+    .field.flex.items-center.mb-6
+      = check_box_tag 'google_terms_accepted', '1', false, id: "google_terms_accepted", class: "h-4 w-4 border-gray-300 rounded transition", style: "color: #3a6363; accent-color: #3a6363"
+      %label.ml-2.block.text-sm.text-gray-700{for: "google_terms_accepted"}
+        | I agree to the
+        %a.font-medium.transition-colors.hover:underline{href: "#", onclick: "openTermsModal(); return false;", tabindex: 0, role: "button", style: "color: #3a6363"} Terms & Conditions
+
+    / Google Sign Up Button
     = button_to user_google_oauth2_omniauth_authorize_path, method: :post, data: { turbo: false },
+        params: { action_type: 'signup' },
         id: "google-signup-btn",
         disabled: true,
         class: "w-full flex items-center justify-center px-4 py-3 border border-gray-300 shadow-sm text-sm font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50 transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed",
@@ -138,6 +151,10 @@
         %path{fill: "#FBBC05", d: "M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"}
         %path{fill: "#EA4335", d: "M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"}
       Sign up with Google
+    
+    / Helper text for Google button
+    %small.text-gray-500.text-xs.block.mt-2.text-center#google-button-helper
+      Please select your residency type and accept terms to continue with Google
 
     .mt-6.text-center
       Already have an account?
@@ -146,12 +163,7 @@
         - login_url += "?#{request.query_string}"
       = link_to "Log in", login_url, class: "font-medium hover:underline transition-colors", style: "color: #3a6363"
 
-    - if alert
-      .mt-4.p-3.bg-red-50.text-red-700.rounded-lg.text-sm.border.border-red-200= alert
-    - if notice
-      .mt-4.p-3.text-green-700.rounded-lg.text-sm.border{style: 'background-color: #f0f9f0; border-color: #3a6363'}= notice
-
-  / Terms and Conditions Modal - Larger size with scrollable content
+  / Terms and Conditions Modal
   #terms-modal.fixed.inset-0.z-50.flex.items-center.justify-center.bg-black.bg-opacity-50{style: "display:none"}
     .bg-white.rounded-xl.shadow-2xl{class: "w-11/12 max-w-4xl h-5/6 p-4 relative flex flex-col"}
       / Header
@@ -228,61 +240,6 @@
   }
 
   function openTermsModal() {
-    console.log('Opening terms modal...'); // Debug line
-    document.getElementById('terms-modal').style.display = 'flex';
-  }
-  
-  function closeTermsModal() {
-    document.getElementById('terms-modal').style.display = 'none';
-  }
-  
-  function acceptTerms() {
-    // Check the terms checkbox if it exists
-    const checkbox = document.getElementById('user_agree_terms')
-    if (checkbox) {
-      checkbox.checked = true
-    }
-    
-    // Close the modal
-    closeTermsModal()
-    
-    // Optional: Show a confirmation message
-    const termsLink = document.querySelector('[onclick="openTermsModal()"]')
-    if (termsLink) {
-      termsLink.style.color = '#3a6363'
-      termsLink.textContent = termsLink.textContent.replace('Read', '✓ Read')
-    }
-  }
-
-  // Enhanced styling for form elements
-  document.addEventListener('DOMContentLoaded', function() {
-    // Style radio buttons and checkbox with the theme color
-    const radioButtons = document.querySelectorAll('input[type="radio"]');
-    const checkbox = document.querySelector('input[type="checkbox"]');
-    
-    radioButtons.forEach(radio => {
-      radio.style.accentColor = '#3a6363';
-    });
-    
-    if (checkbox) {
-      checkbox.style.accentColor = '#3a6363';
-    }
-  });
-
-:javascript
-  function togglePassword(button) {
-    const input = button.previousElementSibling
-    const icon = button.querySelector('i')
-    if (input.type === 'password') {
-      input.type = 'text'
-      icon.classList.replace('fa-eye', 'fa-eye-slash')
-    } else {
-      input.type = 'password'
-      icon.classList.replace('fa-eye-slash', 'fa-eye')
-    }
-  }
-
-  function openTermsModal() {
     console.log('Opening terms modal...');
     document.getElementById('terms-modal').style.display = 'flex';
   }
@@ -292,83 +249,131 @@
   }
   
   function acceptTerms() {
-    // Check the terms checkbox if it exists
-    const checkbox = document.getElementById('user_agree_terms')
-    if (checkbox) {
-      checkbox.checked = true
+    // Check both terms checkboxes (regular form and Google)
+    const regularCheckbox = document.getElementById('user_agree_terms');
+    const googleCheckbox = document.getElementById('google_terms_accepted');
+    
+    if (regularCheckbox) {
+      regularCheckbox.checked = true;
+    }
+    
+    if (googleCheckbox) {
+      googleCheckbox.checked = true;
+      // Trigger change event to update Google button state
+      googleCheckbox.dispatchEvent(new Event('change'));
     }
     
     // Close the modal
-    closeTermsModal()
-    
-    // Optional: Show a confirmation message
-    const termsLink = document.querySelector('[onclick="openTermsModal()"]')
-    if (termsLink) {
-      termsLink.style.color = '#3a6363'
-      termsLink.textContent = termsLink.textContent.replace('Read', '✓ Read')
-    }
+    closeTermsModal();
   }
 
-  // Enhanced styling for form elements and nationality handling
+  // Enhanced functionality for Google OAuth with nationality and terms validation
   document.addEventListener('DOMContentLoaded', function() {
     // Get all form elements
-    const radioButtons = document.querySelectorAll('input[name="user[nationality]"]');
+    const nationalityRadios = document.querySelectorAll('.google-nationality-radio');
+    const termsCheckbox = document.getElementById('google_terms_accepted');
     const googleButton = document.getElementById('google-signup-btn');
-    const checkbox = document.querySelector('input[type="checkbox"]');
+    const helperText = document.getElementById('google-button-helper');
     
-    // Style radio buttons with the theme color
-    radioButtons.forEach(radio => {
-      radio.style.accentColor = '#3a6363';
+    // Function to check if Google button should be enabled
+    function updateGoogleButtonState() {
+      const nationalitySelected = document.querySelector('.google-nationality-radio:checked');
+      const termsAccepted = termsCheckbox && termsCheckbox.checked;
       
-      // Enable Google button when nationality is selected
-      radio.addEventListener('change', function() {
-        if (this.checked && googleButton) {
-          googleButton.disabled = false;
-          googleButton.classList.remove('opacity-50', 'cursor-not-allowed');
+      if (nationalitySelected && termsAccepted) {
+        googleButton.disabled = false;
+        googleButton.classList.remove('opacity-50', 'cursor-not-allowed');
+        helperText.textContent = 'Ready to sign up with Google';
+        helperText.style.color = '#3a6363';
+      } else {
+        googleButton.disabled = true;
+        googleButton.classList.add('opacity-50', 'cursor-not-allowed');
+        
+        // Update helper text based on what's missing
+        if (!nationalitySelected && !termsAccepted) {
+          helperText.textContent = 'Please select your residency type and accept terms to continue';
+        } else if (!nationalitySelected) {
+          helperText.textContent = 'Please select your residency type to continue';
+        } else if (!termsAccepted) {
+          helperText.textContent = 'Please accept terms & conditions to continue';
         }
-      });
-    });
-    
-    // Style checkbox with the theme color
-    if (checkbox) {
-      checkbox.style.accentColor = '#3a6363';
+        helperText.style.color = '#6b7280';
+      }
     }
     
-    // Handle Google OAuth button click - capture nationality
+    // Add event listeners to nationality radios
+    nationalityRadios.forEach(radio => {
+      radio.style.accentColor = '#3a6363';
+      radio.addEventListener('change', updateGoogleButtonState);
+    });
+    
+    // Add event listener to terms checkbox
+    if (termsCheckbox) {
+      termsCheckbox.style.accentColor = '#3a6363';
+      termsCheckbox.addEventListener('change', updateGoogleButtonState);
+    }
+    
+    // Handle Google OAuth button click
     if (googleButton) {
       googleButton.addEventListener('click', function(e) {
-        const selectedNationality = document.querySelector('input[name="user[nationality]"]:checked');
+        const selectedNationality = document.querySelector('.google-nationality-radio:checked');
+        const termsAccepted = termsCheckbox && termsCheckbox.checked;
         
-        if (!selectedNationality) {
+        // Double-check validation
+        if (!selectedNationality || !termsAccepted) {
           e.preventDefault();
-          alert('Please select whether you are a Resident or Tourist before continuing with Google signup.');
+          
+          let message = 'Please ';
+          if (!selectedNationality && !termsAccepted) {
+            message += 'select your residency type and accept the terms & conditions';
+          } else if (!selectedNationality) {
+            message += 'select whether you are a Resident or Tourist';
+          } else {
+            message += 'accept the terms & conditions';
+          }
+          message += ' before continuing with Google signup.';
+          
+          alert(message);
           return false;
         }
         
-        // Store in sessionStorage as backup
+        // Store data for OAuth callback
         sessionStorage.setItem('oauth_nationality', selectedNationality.value);
+        sessionStorage.setItem('oauth_terms_accepted', 'true');
         
-        // Add hidden field to the form
+        // Add hidden fields to the form
         const form = this.closest('form');
-        let nationalityInput = form.querySelector('input[name="nationality"]');
         
+        // Add nationality
+        let nationalityInput = form.querySelector('input[name="nationality"]');
         if (!nationalityInput) {
           nationalityInput = document.createElement('input');
           nationalityInput.type = 'hidden';
           nationalityInput.name = 'nationality';
           form.appendChild(nationalityInput);
         }
-        
         nationalityInput.value = selectedNationality.value;
         
-        console.log('Nationality captured:', selectedNationality.value);
+        // Add terms acceptance
+        let termsInput = form.querySelector('input[name="terms_accepted"]');
+        if (!termsInput) {
+          termsInput = document.createElement('input');
+          termsInput.type = 'hidden';
+          termsInput.name = 'terms_accepted';
+          form.appendChild(termsInput);
+        }
+        termsInput.value = '1';
+        
+        console.log('Google OAuth - Nationality:', selectedNationality.value, 'Terms:', termsAccepted);
       });
     }
     
-    // Check if nationality is already selected on page load
-    const checkedNationality = document.querySelector('input[name="user[nationality]"]:checked');
-    if (checkedNationality && googleButton) {
-      googleButton.disabled = false;
-      googleButton.classList.remove('opacity-50', 'cursor-not-allowed');
+    // Style regular form elements
+    const regularCheckbox = document.getElementById('user_agree_terms');
+    if (regularCheckbox) {
+      regularCheckbox.style.accentColor = '#3a6363';
     }
+    
+    // Initial state check
+    updateGoogleButtonState();
   });
