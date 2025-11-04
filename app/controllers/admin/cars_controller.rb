@@ -12,7 +12,7 @@ class Admin::CarsController < ApplicationController
   end
 
   def show
-    @car = Car.find(params[:id])
+    @car = Car.friendly.find(params[:id])
   end
 
   def download_report
