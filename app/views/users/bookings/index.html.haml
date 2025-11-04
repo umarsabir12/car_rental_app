@@ -39,6 +39,40 @@
                 .absolute.inset-y-0.right-0.flex.items-center.pr-2.pointer-events-none
                   %i.fas.fa-chevron-down.text-gray-400.text-xs
 
+      / Notifications Section
+      - if current_user.bookings_notification?
+        .grid.grid-cols-1.md:grid-cols-2.lg:grid-cols-2.gap-4.mb-8
+          / Unpaid Bookings Notification
+          - if current_user.unpaid_bookings.any?
+            .bg-orange-50.border-l-4.border-orange-500.rounded-lg.p-4.shadow-sm
+              .flex.items-start.gap-3
+                %i.fas.fa-credit-card.text-orange-500.text-xl.mt-1
+                .flex-1
+                  %h3.font-semibold.text-orange-800.mb-1 Payment Required
+                  %p.text-orange-700.text-sm.mb-2
+                    #{current_user.unpaid_bookings.count} booking#{current_user.unpaid_bookings.count == 1 ? '' : 's'} awaiting payment
+                  %ul.text-orange-600.text-xs.space-y-1.mb-3
+                    - current_user.unpaid_bookings.limit(3).each do |booking|
+                      %li.flex.items-center.gap-1
+                        %i.fas.fa-circle.text-xs
+                        #{booking.car.brand} #{booking.car.model} - #{booking.start_date.strftime('%b %d')}
+                    - if current_user.unpaid_bookings.count > 3
+                      %li.text-orange-500.font-semibold +#{current_user.unpaid_bookings.count - 2} more...
+
+          / Failed Payments Notification
+          - if current_user.failed_payments.any?
+            .bg-red-50.border-l-4.border-red-700.rounded-lg.p-4.shadow-sm
+              .flex.items-start.gap-3
+                %i.fas.fa-exclamation-circle.text-red-700.text-xl.mt-1
+                .flex-1
+                  %h3.font-semibold.text-red-800.mb-1 Payment Failed
+                  %p.text-red-700.text-sm.mb-2
+                    #{current_user.failed_payments.count} payment#{current_user.failed_payments.count == 1 ? '' : 's'} failed
+                  %p.text-red-600.text-xs.mb-3 Please retry payment or contact support
+                  = link_to users_bookings_path, class: 'inline-flex items-center text-red-700 hover:text-red-900 font-semibold text-sm' do
+                    Retry Payment
+                    %i.fas.fa-arrow-right.ml-1
+
       / Filter Summary
       - if @bookings.any? || params[:filter].present?
         .mb-6.p-4.bg-blue-50.rounded-lg.border.border-blue-200
@@ -165,7 +199,7 @@
                 %i.fas.fa-calendar-times.text-3xl.text-blue-400
               %h3.text-xl.font-semibold.text-gray-800.mb-3 No Bookings Yet
               %p.text-gray-600.mb-6 It looks like you haven't made any bookings yet. Browse our collection to find your perfect car.
-              = link_to root_path, class: 'bg-gradient-to-r from-blue-600 to-blue-700 text-white font-semibold py-3 px-8 rounded-lg shadow hover:from-blue-700 hover:to-blue-800 transition-all duration-200 inline-flex items-center space-x-2' do
+              = link_to cars_path, class: 'bg-gradient-to-r from-blue-600 to-blue-700 text-white font-semibold py-3 px-8 rounded-lg shadow hover:from-blue-700 hover:to-blue-800 transition-all duration-200 inline-flex items-center space-x-2' do
                 %i.fas.fa-car
                 %span Explore Cars
 :javascript

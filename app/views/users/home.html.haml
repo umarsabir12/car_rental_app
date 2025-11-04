@@ -12,83 +12,12 @@
         .mb-8
           %h2.text-2xl.font-bold.text-gray-800.mb-6.flex.items-center.gap-3
             %i.fas.fa-bell.text-orange-500
-            Action Required
-          
-          .grid.grid-cols-1.md:grid-cols-2.lg:grid-cols-3.gap-4.mb-8
-            / Missing Documents Notification
-            - if current_user.missing_documents.any?
-              .bg-red-50.border-l-4.border-red-500.rounded-lg.p-4.shadow-sm
-                .flex.items-start.gap-3
-                  %i.fas.fa-exclamation-triangle.text-red-500.text-xl.mt-1
-                  .flex-1
-                    %h3.font-semibold.text-red-800.mb-1 Missing Documents
-                    %p.text-red-700.text-sm.mb-2
-                      #{current_user.missing_documents.count} document#{current_user.missing_documents.count == 1 ? '' : 's'} not uploaded
-                    %ul.text-red-600.text-xs.space-y-1.mb-3
-                      - current_user.missing_documents.limit(3).each do |doc|
-                        %li.flex.items-center.gap-1
-                          %i.fas.fa-circle.text-xs
-                          = doc.doc_name == 'Home country driving license and IDP' ? 'International Driving license' : doc.doc_name == 'Copy of visa Entry Stamp' ? 'Copy of visa' : doc.doc_name == 'A Valid UAE driving license' ? 'A Valid UAE driving license or IDP' : doc.doc_name
-                      - if current_user.missing_documents.count > 3
-                        %li.text-red-500.font-semibold +#{current_user.missing_documents.count - 3} more...
-                    = link_to users_documents_path, class: 'inline-flex items-center text-red-700 hover:text-red-900 font-semibold text-sm' do
-                      Upload Now
-                      %i.fas.fa-arrow-right.ml-1
-
-            / Rejected Documents Notification
-            - if current_user.rejected_documents.any?
-              .bg-red-50.border-l-4.border-red-600.rounded-lg.p-4.shadow-sm
-                .flex.items-start.gap-3
-                  %i.fas.fa-times-circle.text-red-600.text-xl.mt-1
-                  .flex-1
-                    %h3.font-semibold.text-red-800.mb-1 Documents Rejected
-                    %p.text-red-700.text-sm.mb-2
-                      #{current_user.rejected_documents.count} document#{current_user.rejected_documents.count == 1 ? '' : 's'} need re-upload
-                    %ul.text-red-600.text-xs.space-y-1.mb-3
-                      - current_user.rejected_documents.limit(3).each do |doc|
-                        %li.flex.items-center.gap-1
-                          %i.fas.fa-circle.text-xs
-                          = doc.doc_name == 'Home country driving license and IDP' ? 'International Driving license' : doc.doc_name == 'Copy of visa Entry Stamp' ? 'Copy of visa' : doc.doc_name == 'A Valid UAE driving license' ? 'A Valid UAE driving license or IDP' : doc.doc_name
-                      - if current_user.rejected_documents.count > 3
-                        %li.text-red-500.font-semibold +#{current_user.rejected_documents.count - 3} more...
-                    = link_to users_documents_path, class: 'inline-flex items-center text-red-700 hover:text-red-900 font-semibold text-sm' do
-                      Fix & Re-upload
-                      %i.fas.fa-arrow-right.ml-1
-
-            / Unpaid Bookings Notification
-            - if current_user.unpaid_bookings.any?
-              .bg-orange-50.border-l-4.border-orange-500.rounded-lg.p-4.shadow-sm
-                .flex.items-start.gap-3
-                  %i.fas.fa-credit-card.text-orange-500.text-xl.mt-1
-                  .flex-1
-                    %h3.font-semibold.text-orange-800.mb-1 Payment Required
-                    %p.text-orange-700.text-sm.mb-2
-                      #{current_user.unpaid_bookings.count} booking#{current_user.unpaid_bookings.count == 1 ? '' : 's'} awaiting payment
-                    %ul.text-orange-600.text-xs.space-y-1.mb-3
-                      - current_user.unpaid_bookings.limit(2).each do |booking|
-                        %li.flex.items-center.gap-1
-                          %i.fas.fa-circle.text-xs
-                          #{booking.car.brand} #{booking.car.model} - #{booking.start_date.strftime('%b %d')}
-                      - if current_user.unpaid_bookings.count > 2
-                        %li.text-orange-500.font-semibold +#{current_user.unpaid_bookings.count - 2} more...
-                    = link_to users_bookings_path, class: 'inline-flex items-center text-orange-700 hover:text-orange-900 font-semibold text-sm' do
-                      Complete Payment
-                      %i.fas.fa-arrow-right.ml-1
-
-            / Failed Payments Notification
-            - if current_user.failed_payments.any?
-              .bg-red-50.border-l-4.border-red-700.rounded-lg.p-4.shadow-sm
-                .flex.items-start.gap-3
-                  %i.fas.fa-exclamation-circle.text-red-700.text-xl.mt-1
-                  .flex-1
-                    %h3.font-semibold.text-red-800.mb-1 Payment Failed
-                    %p.text-red-700.text-sm.mb-2
-                      #{current_user.failed_payments.count} payment#{current_user.failed_payments.count == 1 ? '' : 's'} failed
-                    %p.text-red-600.text-xs.mb-3 Please retry payment or contact support
-                    = link_to users_bookings_path, class: 'inline-flex items-center text-red-700 hover:text-red-900 font-semibold text-sm' do
-                      Retry Payment
-                      %i.fas.fa-arrow-right.ml-1
-
+            - if current_user.documents_notification? && !current_user.bookings_notification? 
+              Action Required In Documents
+            - elsif current_user.bookings_notification? && !current_user.documents_notification?
+              Action Required In Bookings
+            - elsif current_user.bookings_notification? && current_user.documents_notification?
+              Action Required In Documents & Bookings
 
       .grid.grid-cols-1.md:grid-cols-3.gap-8
         / Documents Card

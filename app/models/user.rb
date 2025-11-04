@@ -137,12 +137,20 @@ class User < ApplicationRecord
     documents.where(status: 'approved')
   end
 
+  def documents_notification?
+    missing_documents.any? || pending_documents.any? || rejected_documents.any?
+  end
+
   def unpaid_bookings
     bookings.where(payment_processed: [false, nil])
   end
 
   def failed_payments
     Transaction.joins(:booking).where(bookings: { user_id: id }, status: 'failed')
+  end
+
+  def bookings_notification?
+    unpaid_bookings.any? || failed_payments.any?
   end
 
   def document_completion_percentage
