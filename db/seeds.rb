@@ -776,8 +776,7 @@ InvitedVendor.create!([
     last_name: 'Partner', 
     invite_token: SecureRandom.hex(16), # Use longer token to avoid collisions
     invite_sent: true, 
-    status: 'pending', 
-    expires_at: 2.weeks.from_now 
+    status: 'pending' 
   },
   { 
     email: 'expired@vendor.com', 
@@ -785,8 +784,7 @@ InvitedVendor.create!([
     last_name: 'Invite', 
     invite_token: SecureRandom.hex(16), # Use longer token to avoid collisions
     invite_sent: true, 
-    status: 'expired', 
-    expires_at: 2.weeks.ago 
+    status: 'pending' 
   }
 ])
 

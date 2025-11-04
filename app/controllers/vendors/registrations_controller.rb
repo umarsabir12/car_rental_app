@@ -12,8 +12,8 @@ class Vendors::RegistrationsController <  Devise::RegistrationsController
 
   def create
     @invited_vendor = InvitedVendor.find_by(invite_token: params[:invite_token])
-    unless @invited_vendor.present? && @invited_vendor.expires_at > Time.current
-      redirect_to new_vendor_session_path, alert: "Invalid or expired invite token" and return
+    unless @invited_vendor.present?
+      redirect_to new_vendor_session_path, alert: "Invalid invite token" and return
     end
 
     @vendor = Vendor.new(vendor_params.merge(email: @invited_vendor.email, first_name: @invited_vendor.first_name, last_name: @invited_vendor.last_name))
@@ -38,15 +38,9 @@ class Vendors::RegistrationsController <  Devise::RegistrationsController
       @invited_vendor = InvitedVendor.find_by(invite_token: params[:token])
       Rails.logger.info "Found invited vendor: #{@invited_vendor.inspect}"
       
-      if @invited_vendor.present?
-        Rails.logger.info "Token expires at: #{@invited_vendor.expires_at}"
-        Rails.logger.info "Current time: #{Time.current}"
-        Rails.logger.info "Token valid: #{@invited_vendor.expires_at > Time.current}"
-      end
-      
-      unless @invited_vendor.present? && @invited_vendor.expires_at > Time.current
-        Rails.logger.error "Invalid or expired invite token: #{params[:token]}"
-        redirect_to new_vendor_session_path, alert: "Invalid or expired invite token"
+      unless @invited_vendor.present?
+        Rails.logger.error "Invalid invite token: #{params[:token]}"
+        redirect_to new_vendor_session_path, alert: "Invalid invite token"
       end
     else
       # No token provided - redirect to login
