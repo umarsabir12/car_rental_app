@@ -111,7 +111,7 @@
               
               / Thumbnail Strip - Enhanced with better spacing and hover effects
               .p-6.bg-gradient-to-r.from-gray-50.to-gray-100
-                .flex.gap-3.overflow-x-auto.pb-2{ style: 'scrollbar-width: thin; scrollbar-color: #3a6363 #e5e7eb' }
+                .flex.gap-3.overflow-x-auto.p-2{ style: 'scrollbar-width: thin; scrollbar-color: #3a6363 #e5e7eb' }
                   - @car.images.each_with_index do |image, index|
                     %img.thumbnail-image.rounded-lg.cursor-pointer.border-3.transition-all.duration-300.hover:scale-105.hover:shadow-xl{ 
                       src: url_for(image), 
