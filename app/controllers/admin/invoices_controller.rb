@@ -62,6 +62,10 @@ class Admin::InvoicesController < ApplicationController
   end
 
   def invoice_params
-    params.require(:invoice).permit(:due_date, :billing_type, :amount, :from_date, :to_date)
+    params.require(:invoice).permit(
+      :payment_status,
+      :amount,
+      invoice_items_attributes: [:id, :description, :amount, :_destroy]
+    )
   end
 end

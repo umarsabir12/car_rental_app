@@ -9,6 +9,7 @@ class Vendor < ApplicationRecord
   has_many :cars, dependent: :destroy
   has_many :activities, dependent: :destroy
   has_many :invoices, dependent: :destroy
+  has_many :invoice_items, through: :invoices
   has_one :vendor_document
   has_many_attached :avatar
 
@@ -152,12 +153,24 @@ class Vendor < ApplicationRecord
     message ? "#{base_url}?text=#{ERB::Util.url_encode(message)}" : base_url
   end
 
+  # Calculate total pending amount from all pending invoices
   def total_pending_amount
-    invoices.pending.sum(:amount)
+    invoices.where(payment_status: 'pending')
+            .joins(:invoice_items)
+            .sum('invoice_items.amount')
   end
-
+  
+  # Calculate total paid amount from all paid invoices
   def total_paid_amount
-    invoices.paid.sum(:amount)
+    invoices.where(payment_status: 'paid')
+            .joins(:invoice_items)
+            .sum('invoice_items.amount')
+  end
+  
+  # Calculate total amount across all invoices
+  def total_invoice_amount
+    invoices.joins(:invoice_items)
+            .sum('invoice_items.amount')
   end
 
   private

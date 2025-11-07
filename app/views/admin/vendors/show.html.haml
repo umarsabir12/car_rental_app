@@ -72,44 +72,44 @@
             %p.text-xs.font-semibold.text-gray-500.uppercase.mb-2 Description
             %p.text-gray-700.leading-relaxed= @vendor.description
 
-        -# / Invoice Summary Card
-        -# .mt-6.p-4.bg-gradient-to-r.from-emerald-50.to-teal-50.rounded-lg.border.border-emerald-200
-        -#   .flex.items-center.justify-between.mb-3
-        -#     %h3.text-lg.font-bold.text-gray-800.flex.items-center.gap-2
-        -#       %i.fas.fa-file-invoice-dollar.text-emerald-600
-        -#       Invoice Summary
-        -#     %span.text-xs.bg-emerald-100.text-emerald-700.px-2.py-1.rounded-full.font-semibold
-        -#       = @vendor.invoices.count
-        -#       = "Invoice".pluralize(@vendor.invoices.count)
+        / Invoice Summary Card
+        .mt-6.p-4.bg-gradient-to-r.from-emerald-50.to-teal-50.rounded-lg.border.border-emerald-200
+          .flex.items-center.justify-between.mb-3
+            %h3.text-lg.font-bold.text-gray-800.flex.items-center.gap-2
+              %i.fas.fa-file-invoice-dollar.text-emerald-600
+              Invoice Summary
+            %span.text-xs.bg-emerald-100.text-emerald-700.px-2.py-1.rounded-full.font-semibold
+              = @vendor.invoices.count
+              = "Invoice".pluralize(@vendor.invoices.count)
           
-        -#   .grid.grid-cols-2.gap-4
-        -#     .bg-white.rounded-lg.p-3.shadow-sm
-        -#       %p.text-xs.font-semibold.text-gray-500.uppercase Pending Amount
-        -#       %p.text-xl.font-bold.text-amber-600= number_to_currency(@vendor.total_pending_amount)
-        -#     .bg-white.rounded-lg.p-3.shadow-sm
-        -#       %p.text-xs.font-semibold.text-gray-500.uppercase Paid Amount
-        -#       %p.text-xl.font-bold.text-emerald-600= number_to_currency(@vendor.total_paid_amount)
+          .grid.grid-cols-2.gap-4
+            .bg-white.rounded-lg.p-3.shadow-sm
+              %p.text-xs.font-semibold.text-gray-500.uppercase Pending Amount
+              %p.text-xl.font-bold.text-amber-600= number_to_currency(@vendor.total_pending_amount)
+            .bg-white.rounded-lg.p-3.shadow-sm
+              %p.text-xs.font-semibold.text-gray-500.uppercase Paid Amount
+              %p.text-xl.font-bold.text-emerald-600= number_to_currency(@vendor.total_paid_amount)
 
-        -# / Action Buttons
-        -# .flex.flex-wrap.gap-4.mt-8
-        -#   / Generate Invoice Button (Opens Modal)
-        -#   %button.inline-flex.items-center.px-6.py-3.bg-emerald-600.hover:bg-emerald-700.text-white.font-medium.rounded-lg.transition-colors.duration-200.shadow-md.hover:shadow-lg.gap-2{type: 'button', onclick: 'openInvoiceModal()'}
-        -#     %i.fas.fa-file-invoice
-        -#     %span Generate Invoice
+        / Action Buttons
+        .flex.flex-wrap.gap-4.mt-8
+          / Generate Invoice Button (Opens Modal)
+          %button.inline-flex.items-center.px-6.py-3.bg-emerald-600.hover:bg-emerald-700.text-white.font-medium.rounded-lg.transition-colors.duration-200.shadow-md.hover:shadow-lg.gap-2{type: 'button', onclick: 'openInvoiceModal()'}
+            %i.fas.fa-file-invoice
+            %span Generate Invoice
 
-        -#   / Invoice History Button
-        -#   = link_to admin_vendor_invoices_path(@vendor), class: 'inline-flex items-center px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-lg transition-colors duration-200 shadow-md hover:shadow-lg gap-2' do
-        -#     %i.fas.fa-history
-        -#     %span Invoice History
+          / Invoice History Button
+          = link_to admin_vendor_invoices_path(@vendor), class: 'inline-flex items-center px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-lg transition-colors duration-200 shadow-md hover:shadow-lg gap-2' do
+            %i.fas.fa-history
+            %span Invoice History
 
-        -#   = button_tag type: 'button', class: 'inline-flex items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors duration-200 shadow-md hover:shadow-lg gap-2' do
-        -#     %i.fas.fa-envelope
-        -#     %span Send Email
+          = button_tag type: 'button', class: 'inline-flex items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors duration-200 shadow-md hover:shadow-lg gap-2' do
+            %i.fas.fa-envelope
+            %span Send Email
           
-        -#   = form_with url: admin_vendor_path(@vendor), method: :delete, class: 'inline-block' do |f|
-        -#     = f.submit 'Delete Vendor', 
-        -#         class: 'inline-flex items-center px-6 py-3 bg-red-600 hover:bg-red-700 text-white font-medium rounded-lg transition-colors duration-200 shadow-md hover:shadow-lg gap-2 cursor-pointer',
-        -#         onclick: "return confirm('Are you sure you want to delete #{@vendor.company_name}? This action can be undone by restoring the vendor.');"
+          = form_with url: admin_vendor_path(@vendor), method: :delete, class: 'inline-block' do |f|
+            = f.submit 'Delete Vendor', 
+                class: 'inline-flex items-center px-6 py-3 bg-red-600 hover:bg-red-700 text-white font-medium rounded-lg transition-colors duration-200 shadow-md hover:shadow-lg gap-2 cursor-pointer',
+                onclick: "return confirm('Are you sure you want to delete #{@vendor.company_name}? This action can be undone by restoring the vendor.');"
 
       / Right Side - Trade License Card
       .flex-shrink-0.w-full.lg:w-96
@@ -204,10 +204,11 @@
     - else
       %p.text-gray-500 No cars listed by this vendor yet.
 
+
 / Invoice Modal
 #invoiceModal.fixed.inset-0.bg-gray-900.bg-opacity-50.hidden.z-50.overflow-y-auto
   .flex.items-center.justify-center.min-h-screen.px-4.py-6
-    .bg-white.rounded-2xl.shadow-2xl.w-full.max-w-3xl.relative.transform.transition-all
+    .bg-white.rounded-2xl.shadow-2xl.w-full.max-w-4xl.relative.transform.transition-all
       / Modal Header
       .bg-gradient-to-r.from-emerald-600.to-teal-600.px-6.py-4.rounded-t-2xl
         .flex.justify-between.items-center
@@ -220,53 +221,168 @@
       / Modal Body
       .p-6
         = form_with(model: [:admin, @vendor, @vendor.invoices.build], local: true, html: { class: 'space-y-6' }) do |f|
-          / Date Range
-          .grid.grid-cols-1.md:grid-cols-2.gap-6
-            .space-y-1
-              = f.label :from_date, 'Period From', class: 'block text-sm font-medium text-gray-700'
-              = f.date_field :from_date, value: Date.today.beginning_of_month, class: 'mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500 sm:text-sm px-4 py-2 border', required: true
-
-            .space-y-1
-              = f.label :to_date, 'Period To', class: 'block text-sm font-medium text-gray-700'
-              = f.date_field :to_date, value: Date.today.end_of_month, class: 'mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500 sm:text-sm px-4 py-2 border', required: true
-
-          / Amount, Due Date, Billing Type
-          .grid.grid-cols-1.md:grid-cols-3.gap-6
-            .space-y-1
-              = f.label :amount, 'Amount', class: 'block text-sm font-medium text-gray-700'
-              .mt-1.relative.rounded-md.shadow-sm
-                .absolute.inset-y-0.left-0.pl-3.flex.items-center.pointer-events-none
-                = f.number_field :amount, step: '0.01', class: 'block w-full pl-7 pr-4 py-2 border border-gray-300 rounded-md focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm', placeholder: '0.00', required: true
-
-            .space-y-1
-              = f.label :due_date, 'Due Date', class: 'block text-sm font-medium text-gray-700'
-              = f.date_field :due_date, value: Date.today + 30.days, class: 'mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500 sm:text-sm px-4 py-2 border', required: true
-
-            .space-y-1
-              = f.label :billing_type, 'Billing Type', class: 'block text-sm font-medium text-gray-700'
-              = f.select :billing_type, Invoice::BILLING_TYPES.map { |type| [type.capitalize, type] }, { prompt: 'Select billing type' }, class: 'mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500 sm:text-sm px-4 py-2 border', required: true
+          / Hidden field for total amount
+          = f.hidden_field :amount, id: 'invoice_amount_field', value: '0'
 
           / Payment Status
-          .space-y-1
-            = f.label :payment_status, 'Payment Status', class: 'block text-sm font-medium text-gray-700'
-            = f.select :payment_status, Invoice::PAYMENT_STATUSES.map { |status| [status.capitalize, status] }, { selected: 'pending' }, class: 'mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500 sm:text-sm px-4 py-2 border'
+          .grid.grid-cols-1.md:grid-cols-2.gap-6
+            .space-y-1
+              = f.label :payment_status, 'Payment Status', class: 'block text-sm font-medium text-gray-700'
+              = f.select :payment_status, Invoice::PAYMENT_STATUSES.map { |status| [status.capitalize, status] }, { selected: 'pending' }, class: 'mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500 sm:text-sm px-4 py-2 border'
+
+          / Invoice Items Section
+          .space-y-4
+            .flex.items-center.justify-between
+              %label.block.text-sm.font-medium.text-gray-700 Invoice Items
+              %button.inline-flex.items-center.px-3.py-2.text-sm.font-medium.text-emerald-600.hover:text-emerald-700.hover:bg-emerald-50.rounded-md.transition-colors{type: 'button', onclick: 'addNewInvoiceItem()'}
+                %i.fas.fa-plus-circle.mr-1
+                Add Item
+
+            #new-invoice-items-container
+              / Initial item row
+              .invoice-item-row.bg-gray-50.rounded-lg.p-4.space-y-3.mb-3
+                .flex.items-start.gap-3
+                  .flex-grow.grid.grid-cols-1.md:grid-cols-2.gap-3
+                    .space-y-1
+                      %label.block.text-xs.font-medium.text-gray-700 Description
+                      %textarea.mt-1.block.w-full.rounded-md.border-gray-300.shadow-sm.focus:border-emerald-500.focus:ring-emerald-500.sm:text-sm.px-3.py-2.border{name: 'invoice[invoice_items_attributes][0][description]', rows: '2', placeholder: 'Item description', required: true}
+
+                    .space-y-1
+                      %label.block.text-xs.font-medium.text-gray-700 Amount
+                      .mt-1.relative.rounded-md.shadow-sm
+                        .absolute.inset-y-0.left-0.pl-3.flex.items-center.pointer-events-none
+                          %span.text-gray-500.sm:text-sm AED
+                        %input.block.w-full.pl-12.pr-3.py-4.border.border-gray-300.rounded-md.focus:ring-emerald-500.focus:border-emerald-500.sm:text-sm{type: 'number', step: '0.01', name: 'invoice[invoice_items_attributes][0][amount]', placeholder: '0.00', required: true}
+
+                  %button.inline-flex.items-center.justify-center.w-10.h-10.text-red-600.hover:text-red-700.hover:bg-red-50.rounded-md.transition-colors.mt-6{type: 'button', onclick: 'removeNewInvoiceItem(this)'}
+                    %i.fas.fa-trash-alt
+
+            / Total Display
+            .bg-emerald-50.rounded-lg.p-4.border.border-emerald-200
+              .flex.items-center.justify-between
+                %span.text-sm.font-semibold.text-gray-700 Total Amount:
+                %span#invoice-total.text-xl.font-bold.text-emerald-600 AED 0.00
 
           / Submit Button
-          .flex.items-center.justify-end.gap-4.pt-4
+          .flex.items-center.justify-end.gap-4.pt-4.border-t
             %button.inline-flex.items-center.px-4.py-2.border.border-gray-300.shadow-sm.text-sm.font-medium.rounded-md.text-gray-700.bg-white.hover:bg-gray-50.focus:outline-none.focus:ring-2.focus:ring-offset-2.focus:ring-emerald-500{type: 'button', onclick: 'closeInvoiceModal()'}
               Cancel
             = f.submit 'Create Invoice', class: 'inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-emerald-600 hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500'
 
 :javascript
+  let newItemIndex = 1;
+
   function openInvoiceModal() {
     document.getElementById('invoiceModal').classList.remove('hidden');
     document.body.style.overflow = 'hidden';
+    calculateInvoiceTotal();
   }
 
   function closeInvoiceModal() {
     document.getElementById('invoiceModal').classList.add('hidden');
     document.body.style.overflow = 'auto';
+    // Reset form
+    resetInvoiceForm();
   }
+
+  function resetInvoiceForm() {
+    const container = document.getElementById('new-invoice-items-container');
+    // Remove all items except the first one
+    const items = container.querySelectorAll('.invoice-item-row');
+    items.forEach((item, index) => {
+      if (index > 0) {
+        item.remove();
+      }
+    });
+    // Clear the first item
+    if (items[0]) {
+      items[0].querySelector('textarea').value = '';
+      items[0].querySelector('input[type="number"]').value = '';
+    }
+    newItemIndex = 1;
+    calculateInvoiceTotal();
+  }
+
+  function addNewInvoiceItem() {
+    const container = document.getElementById('new-invoice-items-container');
+    const newItem = `
+      <div class="invoice-item-row bg-gray-50 rounded-lg p-4 space-y-3 mb-3">
+        <div class="flex items-start gap-3">
+          <div class="flex-grow grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div class="space-y-1">
+              <label class="block text-xs font-medium text-gray-700">Description</label>
+              <textarea name="invoice[invoice_items_attributes][${newItemIndex}][description]" rows="2" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500 sm:text-sm px-3 py-2 border" placeholder="Item description" required oninput="calculateInvoiceTotal()"></textarea>
+            </div>
+            <div class="space-y-1">
+              <label class="block text-xs font-medium text-gray-700">Amount</label>
+              <div class="mt-1 relative rounded-md shadow-sm">
+                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <span class="text-gray-500 sm:text-sm">AED</span>
+                </div>
+                <input type="number" step="0.01" name="invoice[invoice_items_attributes][${newItemIndex}][amount]" class="block w-full pl-12 pr-3 py-4 border border-gray-300 rounded-md focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm" placeholder="0.00" required oninput="calculateInvoiceTotal()" />
+              </div>
+            </div>
+          </div>
+          <button type="button" class="inline-flex items-center justify-center w-10 h-10 text-red-600 hover:text-red-700 hover:bg-red-50 rounded-md transition-colors mt-6" onclick="removeNewInvoiceItem(this)">
+            <i class="fas fa-trash-alt"></i>
+          </button>
+        </div>
+      </div>
+    `;
+    container.insertAdjacentHTML('beforeend', newItem);
+    newItemIndex++;
+    calculateInvoiceTotal();
+  }
+
+  function removeNewInvoiceItem(button) {
+    const container = document.getElementById('new-invoice-items-container');
+    const items = container.querySelectorAll('.invoice-item-row');
+    
+    // Don't allow removing if it's the only item
+    if (items.length <= 1) {
+      alert('At least one item is required');
+      return;
+    }
+    
+    const itemRow = button.closest('.invoice-item-row');
+    itemRow.remove();
+    calculateInvoiceTotal();
+  }
+
+  function calculateInvoiceTotal() {
+    const container = document.getElementById('new-invoice-items-container');
+    const amountInputs = container.querySelectorAll('input[type="number"]');
+    let total = 0;
+    
+    amountInputs.forEach(input => {
+      const value = parseFloat(input.value) || 0;
+      total += value;
+    });
+    
+    const totalDisplay = document.getElementById('invoice-total');
+    if (totalDisplay) {
+      totalDisplay.textContent = 'AED' + total.toFixed(2);
+    }
+
+    // Update the hidden amount field
+    const amountField = document.getElementById('invoice_amount_field');
+    if (amountField) {
+      amountField.value = total.toFixed(2);
+    }
+  }
+
+  // Add event listeners to initial item for total calculation
+  document.addEventListener('DOMContentLoaded', function() {
+    const initialTextarea = document.querySelector('#new-invoice-items-container textarea');
+    const initialInput = document.querySelector('#new-invoice-items-container input[type="number"]');
+    
+    if (initialTextarea) {
+      initialTextarea.addEventListener('input', calculateInvoiceTotal);
+    }
+    if (initialInput) {
+      initialInput.addEventListener('input', calculateInvoiceTotal);
+    }
+  });
 
   // Close modal when clicking outside
   document.getElementById('invoiceModal')?.addEventListener('click', function(e) {

@@ -37,31 +37,34 @@
             %thead.bg-gray-50
               %tr
                 %th.px-6.py-3.text-left.text-xs.font-medium.text-gray-500.uppercase.tracking-wider Invoice #
-                %th.px-6.py-3.text-left.text-xs.font-medium.text-gray-500.uppercase.tracking-wider Description
+                %th.px-6.py-3.text-left.text-xs.font-medium.text-gray-500.uppercase.tracking-wider Date
+                %th.px-6.py-3.text-left.text-xs.font-medium.text-gray-500.uppercase.tracking-wider Items
                 %th.px-6.py-3.text-left.text-xs.font-medium.text-gray-500.uppercase.tracking-wider Amount
-                %th.px-6.py-3.text-left.text-xs.font-medium.text-gray-500.uppercase.tracking-wider Billing Type
-                %th.px-6.py-3.text-left.text-xs.font-medium.text-gray-500.uppercase.tracking-wider Due Date
                 %th.px-6.py-3.text-left.text-xs.font-medium.text-gray-500.uppercase.tracking-wider Status
                 %th.px-6.py-3.text-left.text-xs.font-medium.text-gray-500.uppercase.tracking-wider Action
             %tbody.bg-white.divide-y.divide-gray-200
               - @invoices.each do |invoice|
-                %tr{class: invoice.overdue? ? 'bg-red-50' : ''}
+                %tr
                   %td.px-6.py-4.whitespace-nowrap
-                    %code.text-sm.font-mono.bg-gray-100.px-2.py-1.rounded= invoice.id
-                  %td.px-6.py-4
+                    %code.text-sm.font-mono.bg-gray-100.px-2.py-1.rounded= "##{invoice.id}"
+                  %td.px-6.py-4.whitespace-nowrap
                     .text-sm.font-medium.text-gray-900
-                      = invoice.from_date.strftime('%b %d')
-                      -
-                      = invoice.to_date.strftime('%b %d, %Y')
+                      = invoice.created_at.strftime('%b %d, %Y')
+                    .text-xs.text-gray-500
+                      = invoice.created_at.strftime('%I:%M %p')
+                  %td.px-6.py-4
+                    - if invoice.invoice_items.any?
+                      .text-sm.text-gray-900
+                        %span.font-semibold= invoice.invoice_items.count
+                        = invoice.invoice_items.count == 1 ? 'item' : 'items'
+                      .text-xs.text-gray-500.mt-1
+                        = truncate(invoice.invoice_items.first.description, length: 40)
+                        - if invoice.invoice_items.count > 1
+                          %span.text-gray-400 + #{invoice.invoice_items.count - 1} more
+                    - else
+                      .text-sm.text-gray-400.italic No items
                   %td.px-6.py-4.whitespace-nowrap
-                    .text-sm.font-bold.text-gray-900= number_to_currency(invoice.amount)
-                  %td.px-6.py-4.whitespace-nowrap
-                    %span.inline-flex.items-center.px-2.5.py-0.5.rounded-full.text-xs.font-medium.bg-blue-100.text-blue-800
-                      = invoice.billing_type.capitalize
-                  %td.px-6.py-4.whitespace-nowrap
-                    .text-sm.text-gray-900= invoice.due_date.strftime('%b %d, %Y')
-                    - if invoice.overdue?
-                      %span.text-xs.text-red-600.font-semibold.block (Overdue)
+                    .text-sm.font-bold.text-gray-900= number_to_currency(invoice.invoice_items.sum(:amount))
                   %td.px-6.py-4.whitespace-nowrap
                     - case invoice.payment_status
                     - when 'paid'
@@ -81,7 +84,7 @@
                         %i.fas.fa-ban.mr-1
                         Cancelled
                   %td.px-6.py-4.whitespace-nowrap.text-sm.font-medium
-                    = link_to vendors_invoice_path(invoice), class: 'inline-flex items-center px-4 py-2 text-white rounded-lg transition-colors duration-200 gap-2', style: 'background-color: #3A6363' do
+                    = link_to vendors_invoice_path(invoice), class: 'inline-flex items-center px-4 py-2 text-white rounded-lg transition-colors duration-200 gap-2 hover:opacity-90', style: 'background-color: #3A6363' do
                       %i.fas.fa-eye
                       %span View
 
@@ -93,6 +96,6 @@
 
     / Back Button
     .mt-6
-      = link_to vendors_dashboard_path, class: 'inline-flex items-center px-4 py-2 text-white font-medium rounded-lg transition-colors duration-200 gap-2', style: 'background-color: #3A6363' do
+      = link_to vendors_dashboard_path, class: 'inline-flex items-center px-4 py-2 text-white font-medium rounded-lg transition-colors duration-200 gap-2 hover:opacity-90', style: 'background-color: #3A6363' do
         %i.fas.fa-arrow-left
         %span Back to Dashboard

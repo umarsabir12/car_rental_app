@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_11_04_145316) do
+ActiveRecord::Schema[7.2].define(version: 2025_11_05_113056) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -198,17 +198,21 @@ ActiveRecord::Schema[7.2].define(version: 2025_11_04_145316) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "invoices", force: :cascade do |t|
-    t.bigint "vendor_id", null: false
-    t.date "due_date"
-    t.string "payment_status", default: "pending"
-    t.string "billing_type"
+  create_table "invoice_items", force: :cascade do |t|
+    t.bigint "invoice_id", null: false
+    t.string "description", null: false
     t.decimal "amount", precision: 10, scale: 2
-    t.date "from_date"
-    t.date "to_date"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["billing_type"], name: "index_invoices_on_billing_type"
+    t.index ["invoice_id"], name: "index_invoice_items_on_invoice_id"
+  end
+
+  create_table "invoices", force: :cascade do |t|
+    t.bigint "vendor_id", null: false
+    t.string "payment_status", default: "pending"
+    t.decimal "amount", precision: 10, scale: 2
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["payment_status"], name: "index_invoices_on_payment_status"
     t.index ["vendor_id"], name: "index_invoices_on_vendor_id"
   end
@@ -320,6 +324,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_11_04_145316) do
   add_foreign_key "car_features", "features"
   add_foreign_key "cars", "vendors"
   add_foreign_key "documents", "users"
+  add_foreign_key "invoice_items", "invoices"
   add_foreign_key "invoices", "vendors"
   add_foreign_key "transactions", "bookings"
   add_foreign_key "vendor_documents", "vendors"
