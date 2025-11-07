@@ -71,11 +71,15 @@
           %h3.text-xl.font-semibold.mb-2
           %p.mb-6
             Your payment will be processed securely by Stripe
-          .div.flex.justify-center.p-3.bg-dark.rounded-2xl
+          .flex.justify-center.gap-4.p-3.rounded-2xl
             = button_to create_checkout_users_payment_path(@booking.id), method: :post, data: { turbo: false },
-              class: 'text-white' do
+              class: 'inline-flex items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors duration-200 shadow-md hover:shadow-lg gap-2' do
               %i.fas.fa-lock
               %span Pay #{number_to_currency(@total_amount)}
+            
+            %button.inline-flex.items-center.px-6.py-3.bg-purple-600.hover:bg-purple-700.text-white.font-medium.rounded-lg.transition-colors.duration-200.shadow-md.hover:shadow-lg.gap-2{type: 'button', onclick: 'window.print()'}
+              %i.fas.fa-print
+              %span Print Invoice
 
     / Footer
     .bg-gray-50.p-6.border-t.border-gray-200
@@ -86,3 +90,396 @@
           = link_to 'Terms of Service', '#', class: 'text-blue-600 hover:underline'
           and 
           = link_to 'Privacy Policy', '#', class: 'text-blue-600 hover:underline' 
+
+/ Print-Only Invoice Layout
+#printable-invoice.print-only
+  .invoice-container
+    / Logo and Header
+    .invoice-header
+      .header-left
+        .logo-section
+          = image_tag 'new_logo.png', alt: 'Wheels on Rent Logo', class: 'company-logo'
+        .company-details
+          %h1.company-name WHEELSONRENT-FZCO
+      .invoice-number
+        %h1.invoice-code
+          %span.invoice-label Invoice #
+          %span.invoice-id= format('%06d', @booking.id)
+
+    / Bill To Section
+    .bill-to-section
+      %h3 BILL TO
+      %p.customer-name= current_user.full_name || 'Customer Name'
+      %p= current_user.email
+      %p= current_user.phone || 'Customer Phone Number'
+      %p= current_user.nationality || 'Customer Residency Type'
+
+    / Invoice Details
+    .invoice-details-section
+      .details-left
+        %h3 INVOICE DETAILS
+        %p
+          %strong Invoice Date:
+        %p
+          %strong Due Date:
+      .details-right
+        %p= @booking.created_at.strftime('%d/%m/%Y')
+        %p= @booking.end_date.strftime('%d/%m/%Y')
+
+    / Vehicle Information
+    .vehicle-info-section
+      .vehicle-left
+        %h3 VEHICLE INFORMATION
+        %p.car-name
+          #{@car.year} #{@car.brand} #{@car.model}
+        .pickup-return
+          %p
+            %strong Pickup Date
+          %p= @booking.start_date.strftime('%d/%m/%Y')
+      .vehicle-right
+        %p
+          %strong License Plate
+        %p.license-plate= 'ABC-1234' # @car.registration_number
+        %p
+          %strong Return Date
+        %p= @booking.end_date.strftime('%d/%m/%Y')
+
+    / Invoice Items Table
+    .invoice-table
+      .table-header
+        .col-description DESCRIPTION
+        .col-days Days/Week/Month
+        .col-rate RATE
+        .col-amount AMOUNT
+
+      .table-row
+        .col-description Daily Rental Rate
+        - period_unit = { 'weekly' => 'week', 'monthly' => 'month' }.fetch(@booking.selected_period, 'day')
+        - period_base = { 'weekly' => 7.0, 'monthly' => 30.0 }.fetch(@booking.selected_period, 1.0)
+        - period_count = @days.to_f / period_base
+        - display_count = (period_count % 1).zero? ? period_count.to_i : period_count.round(1)
+        .col-days= pluralize(display_count, period_unit)
+        .col-rate= "AED #{number_with_precision(@car.daily_price, precision: 2)}"
+        .col-amount= "AED #{number_with_precision(@total_amount, precision: 2)}"
+
+      .table-total
+        .total-label Total:
+        .total-amount= "AED #{number_with_precision(@total_amount, precision: 2)}"
+
+    / Terms and Conditions
+    .terms-section
+      %h4 Terms & Conditions
+      %ul
+        %li Payment accepted via cash or card.
+        %li This invoice must be presented at the time of picking up the vehicle from our car rental partners.
+        %li Full payment is required before vehicle release.
+      %p.thank-you Thank you for choosing Wheelsonrent for your car rental needs!
+
+:css
+  /* Hide print layout on screen */
+  .print-only {
+    display: none;
+  }
+
+  @media print {
+    /* Hide everything except print layout */
+    body * {
+      visibility: hidden;
+    }
+
+    #printable-invoice, #printable-invoice * {
+      visibility: visible;
+    }
+
+    .no-print {
+      display: none !important;
+    }
+
+    .print-only {
+      display: block !important;
+    }
+
+    body {
+      background: white !important;
+      margin: 0;
+      padding: 0;
+    }
+
+    #printable-invoice {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      padding: 10px 10px;
+      font-family: Arial, sans-serif;
+      color: #2c5353;
+      font-size: 8pt;
+      line-height: 1.6;
+      page-break-inside: avoid;
+    }
+
+    .invoice-container {
+      max-width: 900px;
+      margin: 0 auto;
+      border: 3px solid #000;
+      padding: 15px;
+      position: relative;
+      min-height: 95vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Logo and Header */
+    .invoice-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .logo-section {
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .company-logo {
+      width: 100%;
+      height: auto;
+    }
+
+    .company-details {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .company-name {
+      font-size: 18pt;
+      font-weight: bold;
+      color: #2c5353;
+      margin: 0;
+      letter-spacing: 2px;
+    }
+
+    .invoice-number {
+      text-align: right;
+    }
+
+    .invoice-code {
+      font-size: 18pt;
+      font-weight: bold;
+      color: #2c5353;
+      margin: 0;
+      display: inline-flex;
+      align-items: baseline;
+      gap: 10px;
+      letter-spacing: 1px;
+    }
+
+    .invoice-label {
+      font-size: 12pt;
+      text-transform: uppercase;
+    }
+
+    .invoice-id {
+      font-size: 16pt;
+      font-weight: bold;
+      letter-spacing: 2px;
+    }
+
+    /* Bill To Section */
+    .bill-to-section {
+      margin-bottom: 25px;
+    }
+
+    .bill-to-section h3 {
+      font-size: 12pt;
+      font-weight: bold;
+      color: #666;
+      margin: 0 0 8px 0;
+    }
+
+    .customer-name {
+      font-weight: bold;
+      font-size: 11pt;
+    }
+
+    .bill-to-section p {
+      margin: 3px 0;
+      line-height: 1.6;
+    }
+
+    /* Invoice Details */
+    .invoice-details-section {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 25px;
+    }
+
+    .invoice-details-section h3 {
+      font-size: 12pt;
+      font-weight: bold;
+      color: #666;
+      margin: 0 0 8px 0;
+    }
+
+    .details-left p {
+      margin: 5px 0;
+    }
+
+    .details-right {
+      text-align: right;
+    }
+
+    .details-right p {
+      margin: 5px 0;
+      font-weight: normal;
+    }
+
+    /* Vehicle Information */
+    .vehicle-info-section {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 25px;
+      padding: 15px 0;
+      border-top: 2px solid #ddd;
+      border-bottom: 2px solid #ddd;
+    }
+
+    .vehicle-left h3,
+    .vehicle-right h3 {
+      font-size: 12pt;
+      font-weight: bold;
+      color: #666;
+      margin: 0 0 8px 0;
+    }
+
+    .vehicle-left p,
+    .vehicle-right p {
+      margin: 5px 0;
+    }
+
+    .license-plate {
+      font-weight: bold;
+      font-size: 12pt;
+    }
+
+    .car-name {
+      font-weight: bold;
+      font-size: 12pt;
+    }
+
+    .pickup-return {
+      margin-top: 10px;
+    }
+
+    .vehicle-right {
+      text-align: right;
+    }
+
+    /* Invoice Table */
+    .invoice-table {
+      margin: 25px 0;
+    }
+
+    .table-header {
+      display: flex;
+      background-color: #f5f5f5;
+      padding: 12px 10px;
+      font-weight: bold;
+      font-size: 10pt;
+      border: 1px solid #ddd;
+    }
+
+    .table-row {
+      display: flex;
+      padding: 15px 10px;
+      border: 1px solid #ddd;
+      border-top: none;
+    }
+
+    .col-description {
+      flex: 2;
+    }
+
+    .col-days {
+      flex: 1;
+      text-align: center;
+    }
+
+    .col-rate {
+      flex: 1;
+      text-align: right;
+    }
+
+    .col-amount {
+      flex: 1;
+      text-align: right;
+      font-weight: bold;
+    }
+
+    .table-total {
+      display: flex;
+      justify-content: flex-end;
+      padding: 15px 10px;
+      background-color: #f5f5f5;
+      border: 1px solid #ddd;
+      border-top: 2px solid #2c5353;
+      font-weight: bold;
+      font-size: 14pt;
+    }
+
+    .total-label {
+      margin-right: 20px;
+    }
+
+    .total-amount {
+      min-width: 150px;
+      text-align: right;
+    }
+
+    /* Terms Section */
+    .terms-section {
+      margin-top: auto;
+      font-size: 10pt;
+      line-height: 1.6;
+      align-self: flex-start;
+      width: 100%;
+      padding-top: 20px;
+    }
+
+    .terms-section h4 {
+      font-size: 11pt;
+      font-weight: bold;
+      margin: 0 0 10px 0;
+    }
+
+    .terms-section ul {
+      margin: 0;
+      padding-left: 18px;
+    }
+
+    .terms-section li {
+      margin: 6px 0;
+    }
+
+    .terms-section p {
+      margin: 8px 0;
+    }
+
+    .thank-you {
+      font-weight: bold;
+      margin-top: 15px !important;
+    }
+  }
