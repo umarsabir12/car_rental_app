@@ -154,7 +154,11 @@ Rails.application.routes.draw do
     resources :documents
     resources :payments, only: [:index, :show]
     # Vendors can only VIEW their invoices (read-only)
-    resources :invoices, only: [:index, :show]
+    resources :invoices, only: [:index, :show] do
+      member do
+        post :pay
+      end
+    end
   end
 
   # Vendor profile routes (outside namespace for simpler URLs)

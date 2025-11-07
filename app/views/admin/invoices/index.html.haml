@@ -37,31 +37,26 @@
             %thead.bg-gray-50
               %tr
                 %th.px-6.py-3.text-left.text-xs.font-medium.text-gray-500.uppercase.tracking-wider Invoice #
-                %th.px-6.py-3.text-left.text-xs.font-medium.text-gray-500.uppercase.tracking-wider Amount
-                %th.px-6.py-3.text-left.text-xs.font-medium.text-gray-500.uppercase.tracking-wider Billing Type
-                %th.px-6.py-3.text-left.text-xs.font-medium.text-gray-500.uppercase.tracking-wider Period
-                %th.px-6.py-3.text-left.text-xs.font-medium.text-gray-500.uppercase.tracking-wider Due Date
+                %th.px-6.py-3.text-left.text-xs.font-medium.text-gray-500.uppercase.tracking-wider Items
+                %th.px-6.py-3.text-left.text-xs.font-medium.text-gray-500.uppercase.tracking-wider Total Amount
+                %th.px-6.py-3.text-left.text-xs.font-medium.text-gray-500.uppercase.tracking-wider Created Date
                 %th.px-6.py-3.text-left.text-xs.font-medium.text-gray-500.uppercase.tracking-wider Status
                 %th.px-6.py-3.text-left.text-xs.font-medium.text-gray-500.uppercase.tracking-wider Actions
             %tbody.bg-white.divide-y.divide-gray-200
               - @invoices.each do |invoice|
-                %tr{class: invoice.overdue? ? 'bg-red-50' : ''}
+                %tr.hover:bg-gray-50
                   %td.px-6.py-4.whitespace-nowrap
                     %code.text-sm.font-mono.bg-gray-100.px-2.py-1.rounded= invoice.id
                   %td.px-6.py-4.whitespace-nowrap
-                    .text-sm.font-bold.text-gray-900= number_to_currency(invoice.amount)
+                    %span.inline-flex.items-center.px-2.5.py-0.5.rounded-full.text-xs.font-medium.bg-indigo-100.text-indigo-800
+                      %i.fas.fa-list.mr-1
+                      = invoice.invoice_items.count
+                      = "item".pluralize(invoice.invoice_items.count)
                   %td.px-6.py-4.whitespace-nowrap
-                    %span.inline-flex.items-center.px-2.5.py-0.5.rounded-full.text-xs.font-medium.bg-blue-100.text-blue-800
-                      = invoice.billing_type.capitalize
+                    .text-sm.font-bold.text-gray-900= number_to_currency(invoice.invoice_items.sum(:amount))
                   %td.px-6.py-4.whitespace-nowrap
-                    .text-sm.text-gray-900
-                      = invoice.from_date.strftime('%b %d')
-                      →
-                      = invoice.to_date.strftime('%b %d, %Y')
-                  %td.px-6.py-4.whitespace-nowrap
-                    .text-sm.text-gray-900= invoice.due_date.strftime('%b %d, %Y')
-                    - if invoice.overdue?
-                      %span.text-xs.text-red-600.font-semibold.block (Overdue)
+                    .text-sm.text-gray-900= invoice.created_at.strftime('%b %d, %Y')
+                    .text-xs.text-gray-500= invoice.created_at.strftime('%I:%M %p')
                   %td.px-6.py-4.whitespace-nowrap
                     - case invoice.payment_status
                     - when 'paid'
@@ -82,8 +77,9 @@
                         Cancelled
                   %td.px-6.py-4.whitespace-nowrap.text-sm.font-medium
                     .flex.gap-2
-                      = link_to admin_invoice_path(invoice), class: 'text-blue-600 hover:text-blue-900' do
-                        %i.fas.fa-eye
+                      = link_to admin_invoice_path(invoice), class: 'inline-flex items-center px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium rounded transition-colors', title: 'View Invoice' do
+                        %i.fas.fa-eye.mr-1
+                        View
 
     - else
       .bg-gray-50.rounded-lg.p-8.text-center
