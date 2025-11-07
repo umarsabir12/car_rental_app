@@ -407,11 +407,11 @@
             - (@footer_links || default_footer_links).each do |l|
               %li= link_to l[:label], l[:href], class: 'text-gray-300 hover:text-white transition'
         .space-y-4
-          -# %h4.text-white.font-semibold Support
+          %h4.text-white.font-semibold Support
           %ul.space-y-2
-            - default_support_links = [{label:'Privacy Policy (TBD)',href: '#'}]
+            - default_support_links = [{label:'Terms & Conditions',href: terms_of_use_path}]
             - (@support_links || default_support_links).each do |l|
-              -# %li= link_to l[:label], l[:href], class: 'text-gray-300 hover:text-white transition'
+              %li= link_to l[:label], l[:href], class: 'text-gray-300 hover:text-white transition'
         .space-y-4
           %h4.text-white.font-semibold Contact Info
           - default_contact = {phone: '+971506336408', email: 'booking@wheelsonrent.ae', address: 'Building A1, Dubai Digital Park, Dubai Silicon Oasis, Dubai'}
