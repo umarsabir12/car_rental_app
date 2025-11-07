@@ -40,7 +40,7 @@
               %div
                 %p.text-sm.font-medium.text-emerald-900.mb-1
                   Invoice Amount
-                %p.text-4xl.font-bold.text-gray-900= number_to_currency(@invoice.amount)
+                %p.text-4xl.font-bold.text-gray-900= number_to_currency(@invoice.invoice_items.sum(:amount))
               %div
                 %p.text-sm.text-gray-600.mb-2 Payment Status
                 - case @invoice.payment_status
