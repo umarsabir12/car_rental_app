@@ -76,7 +76,7 @@
                         %td.px-4.py-3.text-sm.text-gray-900.text-right.font-medium= number_to_currency(item.amount)
                     %tr.bg-gray-50.font-semibold
                       %td.px-4.py-3.text-sm.text-gray-900.text-right Total:
-                      %td.px-4.py-3.text-sm.text-gray-900.text-right.text-lg= number_to_currency(@invoice.amount)
+                      %td.px-4.py-3.text-sm.text-gray-900.text-right.text-lg= number_to_currency(@invoice.invoice_items.sum(:amount))
 
           / Payment Status Messages
           - if @invoice.payment_status == 'paid'
@@ -128,7 +128,7 @@
                 %div
                   %button.inline-flex.items-center.px-8.py-4.bg-gradient-to-r.from-purple-600.to-blue-600.hover:from-purple-700.hover:to-blue-700.text-white.font-bold.rounded-lg.transition-all.duration-200.shadow-lg.hover:shadow-xl.transform.hover:scale-105{type: 'button', data: {action: 'click->payment#openModal'}}
                     %i.fas.fa-lock.mr-2
-                    %span.text-lg Pay #{number_to_currency(@invoice.amount)}
+                    %span.text-lg Pay #{number_to_currency(@invoice.invoice_items.sum(:amount))}
                     %i.fas.fa-arrow-right.ml-2
 
               / Accepted Payment Methods
