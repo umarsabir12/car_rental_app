@@ -110,8 +110,28 @@
       / Insurance Section
       %h2.text-lg.font-bold.mb-4.mt-8{style: 'color:#2d4f4f'} Insurance
       .field.space-y-2
-        = f.label :insurance_policy, 'Insurance Policy *', class: 'block text-sm font-medium text-gray-700'
-        = f.text_field :insurance_policy, required: true, class: 'w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 transition', style: '--tw-ring-color:#3A6363', placeholder: @car.insurance_policy.present? ? @car.insurance_policy : 'e.g., Insurance policy details'
+        %div.flex.items-center.justify-between.mb-2
+          = f.label :insurance_policy, 'Insurance Policy *', class: 'block text-sm font-medium text-gray-700'
+          %span#wordCount.text-sm.text-gray-500 0/80 words
+
+        = f.text_area :insurance_policy, 
+          required: true, 
+          rows: 4,
+          class: 'w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition',
+          placeholder: 'Enter insurance policy details (max 80 words)',
+          id: 'insurance_policy',
+          data: { max_words: 80 },
+          maxlength: 500
+
+        %p.text-xs.text-gray-500.mt-1
+          %i.fas.fa-info-circle.mr-1
+          Maximum 80 words allowed
+
+        - if @car.errors[:insurance_policy].any?
+          %div.mt-2.p-3.bg-red-50.border.border-red-200.rounded-lg
+            %p.text-red-600.text-sm.font-medium
+              %i.fas.fa-exclamation-circle.mr-1
+              = @car.errors[:insurance_policy].first
 
       / Images Section
       %h2.text-lg.font-bold.mb-4.mt-8{style: 'color:#2d4f4f'} Car Images
@@ -168,6 +188,99 @@
         = f.submit 'Update Car', class: 'text-white font-bold py-3 px-8 rounded-lg shadow-lg hover:shadow-xl transition-all duration-200', style: 'background-color:#3A6363'
 
 :javascript
+  // Insurance Policy Word Counter and Limiter
+  function initializeInsurancePolicyCounter() {
+    const insuranceField = document.getElementById('insurance_policy');
+    const wordCountEl = document.getElementById('wordCount');
+    
+    if (!insuranceField || !wordCountEl) return;
+    
+    const maxWords = parseInt(insuranceField.dataset.maxWords) || 80;
+    
+    // Helper function to count words accurately
+    function countWords(text) {
+      if (!text || text.trim().length === 0) return 0;
+      return text.trim().split(/\s+/).length;
+    }
+    
+    // Helper function to get first N words
+    function getFirstNWords(text, n) {
+      if (n <= 0) return '';
+      const words = text.trim().split(/\s+/);
+      return words.slice(0, n).join(' ');
+    }
+    
+    // Update word count display
+    function updateWordCount() {
+      const currentWords = countWords(insuranceField.value);
+      
+      wordCountEl.textContent = `${currentWords}/${maxWords} words`;
+      
+      // Change color based on word count
+      if (currentWords > maxWords) {
+        wordCountEl.classList.remove('text-gray-500', 'text-yellow-600', 'font-medium');
+        wordCountEl.classList.add('text-red-500', 'font-bold');
+        insuranceField.classList.add('border-red-500', 'border-2');
+      } else if (currentWords > maxWords - 10) {
+        wordCountEl.classList.remove('text-gray-500', 'text-red-500', 'font-bold');
+        wordCountEl.classList.add('text-yellow-600', 'font-medium');
+        insuranceField.classList.remove('border-red-500', 'border-2');
+      } else {
+        wordCountEl.classList.remove('text-red-500', 'text-yellow-600', 'font-bold', 'font-medium');
+        wordCountEl.classList.add('text-gray-500');
+        insuranceField.classList.remove('border-red-500', 'border-2');
+      }
+    }
+    
+    // Prevent exceeding word limit on regular input
+    insuranceField.addEventListener('input', function() {
+      const currentWords = countWords(this.value);
+      
+      if (currentWords > maxWords) {
+        this.value = getFirstNWords(this.value, maxWords);
+      }
+      
+      updateWordCount();
+    });
+    
+    // Prevent paste exceeding limit - IMPROVED VERSION
+    insuranceField.addEventListener('paste', function(e) {
+      e.preventDefault();
+      
+      try {
+        const pastedText = (e.clipboardData || window.clipboardData).getData('text');
+        const currentText = this.value;
+        
+        const currentWords = countWords(currentText);
+        const remainingSlots = maxWords - currentWords;
+        
+        if (remainingSlots <= 0) {
+          // Field is already at max capacity
+          updateWordCount();
+          return;
+        }
+        
+        // Get only as many words as we have room for
+        const allowedPastedText = getFirstNWords(pastedText, remainingSlots);
+        
+        // Combine with proper spacing
+        if (currentText && !currentText.endsWith(' ') && allowedPastedText) {
+          this.value = currentText + ' ' + allowedPastedText;
+        } else {
+          this.value = currentText + allowedPastedText;
+        }
+        
+        updateWordCount();
+      } catch (error) {
+        console.error('Error handling paste:', error);
+        updateWordCount();
+      }
+    });
+    
+    // Initial count
+    updateWordCount();
+  }
+
   // Function to remove existing images
   function removeImage(imageIndex) {
     if (confirm('Are you sure you want to remove this image?')) {
@@ -382,6 +495,7 @@
     initializeImageUploads();
     initializeMulkiyaUploadEdit();
     initializePremiumFeaturesToggle();
+    initializeInsurancePolicyCounter();
   }
 
   // Initialize on multiple events to ensure it works

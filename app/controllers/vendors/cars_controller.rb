@@ -53,6 +53,7 @@ class Vendors::CarsController < ApplicationController
       redirect_to vendors_car_path(@car), notice: 'Car was successfully created.'
     else
       load_premium_features
+      flash.now[:alert] = "Please fix the following errors:\n#{@car.errors.full_messages.join(', ')}"
       render :new
     end
   end
