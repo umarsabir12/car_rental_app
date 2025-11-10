@@ -6,12 +6,11 @@
       %p.text-lg.text-gray-600
         Everything you need to know about partnering with WheelsOnRent
 
-    .space-y-4
+    .space-y-4#faq-container
       - @faqs.each_with_index do |faq, index|
-        .faq-item.border.border-gray-200.rounded-lg.overflow-hidden.transition-all.duration-300.hover:border-blue-400
-          %button.faq-toggle.w-full.px-6.py-4.flex.items-center.justify-between.bg-gray-50.hover:bg-gray-100.transition-colors{
-            type: 'button',
-            data: { target: "faq-answer-#{index}" }
+        .faq-item.border.border-gray-200.rounded-lg.overflow-hidden.transition-all.duration-300.hover:border-blue-400{data: {index: index}}
+          .faq-toggle.w-full.px-6.py-4.flex.items-center.justify-between.bg-gray-50.hover:bg-gray-100.transition-colors.cursor-pointer{
+            onclick: "toggleFAQ(this); return false;"
           }
             %h3.text-left.font-semibold.text-gray-900.text-base.md:text-lg
               = faq[:question]
@@ -19,45 +18,58 @@
               %svg.faq-icon.w-4.h-4.text-white.transition-transform.duration-300{
                 fill: 'none',
                 stroke: 'currentColor',
-                viewBox: '0 0 24 24'
+                viewBox: '0 0 24 24',
+                style: 'transform: rotate(0deg);'
               }
                 %line{x1: '12', y1: '5', x2: '12', y2: '19', 'stroke-width': '2', 'stroke-linecap': 'round'}
                 %line{x1: '5', y1: '12', x2: '19', y2: '12', 'stroke-width': '2', 'stroke-linecap': 'round'}
 
-          .faq-answer.hidden.bg-white.border-t.border-gray-200{
-            id: "faq-answer-#{index}"
-          }
+          .faq-answer.hidden.bg-white.border-t.border-gray-200
             .px-6.py-4.text-gray-600.text-base.leading-relaxed
               = faq[:answer]
 
 %script
   :plain
-    document.addEventListener('DOMContentLoaded', function() {
-      const faqToggles = document.querySelectorAll('.faq-toggle');
 
-      faqToggles.forEach(toggle => {
-        toggle.addEventListener('click', function() {
-          const targetId = this.dataset.target;
-          const answer = document.getElementById(targetId);
-          const icon = this.querySelector('.faq-icon');
+    function toggleFAQ(toggleElement) {
+      
+      // Prevent any default behavior
+      event.preventDefault();
+      event.stopPropagation();
+      event.stopImmediatePropagation();
 
-          // Close other FAQs (accordion behavior)
-          document.querySelectorAll('.faq-answer').forEach(item => {
-            if (item.id !== targetId) {
-              item.classList.add('hidden');
-            }
-          });
+      const faqItem = toggleElement.closest('.faq-item');
+      const answer = faqItem.querySelector('.faq-answer');
+      const icon = faqItem.querySelector('.faq-icon');
 
-          // Reset other icons
-          document.querySelectorAll('.faq-icon').forEach(i => {
-            if (i !== icon) {
-              i.style.transform = 'rotate(0deg)';
-            }
-          });
+      if (!answer || !icon) {
+        return false;
+      }
 
-          // Toggle current FAQ
-          answer.classList.toggle('hidden');
-          icon.style.transform = answer.classList.contains('hidden') ? 'rotate(0deg)' : 'rotate(45deg)';
-        });
+      // Close all other FAQs
+      document.querySelectorAll('.faq-answer').forEach((otherAnswer) => {
+        if (otherAnswer !== answer) {
+          otherAnswer.classList.add('hidden');
+        }
       });
-    });
+
+      // Reset all other icons
+      document.querySelectorAll('.faq-icon').forEach((otherIcon) => {
+        if (otherIcon !== icon) {
+          otherIcon.style.transform = 'rotate(0deg)';
+        }
+      });
+
+      // Toggle current answer
+      const isHidden = answer.classList.contains('hidden');
+      
+      if (isHidden) {
+        answer.classList.remove('hidden');
+        icon.style.transform = 'rotate(45deg)';
+      } else {
+        answer.classList.add('hidden');
+        icon.style.transform = 'rotate(0deg)';
+      }
+
+      return false;
+    }
