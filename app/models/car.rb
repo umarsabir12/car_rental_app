@@ -11,8 +11,8 @@ class Car < ApplicationRecord
   has_many :features, through: :car_features
 
   validates :images, presence: { message: 'at least one image is required' }
-  validates :insurance_policy, presence: true
   validate :images_presence_on_create, on: :create
+  validates :insurance_policy, presence: true
 
   FEATURE_COLUMNS = %w[air_conditioning gps sunroof bluetooth].freeze
   
@@ -133,7 +133,6 @@ class Car < ApplicationRecord
     
     product = Stripe::Product.create(
       name: full_name,
-      description: description,
       metadata: {
         car_id: id,
         category: category

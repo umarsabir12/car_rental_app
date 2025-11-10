@@ -1,5 +1,5 @@
 - content_for :title, "Rent #{@car.full_name} in Dubai | Wheels on Rent"
-- content_for :description, "Rent #{@car.full_name} in Dubai starting from AED #{@car.daily_price}/day. #{@car.description.truncate(120)}"
+- content_for :description, "Rent #{@car.full_name} in Dubai starting from AED #{@car.daily_price}/day.}"
 - min_days = ['Luxury', 'Sports', 'Convertible'].include?(@car.category) ? 1 : 7
 
 .container.mx-auto.max-w-7xl.p-6
@@ -162,14 +162,6 @@
           .text-center.py-8.text-gray-500
             %i.fas.fa-info-circle.text-3xl.mb-3
             %p No features available for this vehicle
-
-      / Description Card
-      - if @car.description.present?
-        .bg-white.rounded-xl.shadow-lg.p-6
-          %h2.text-xl.font-bold.mb-4.flex.items-center.gap-2{style: 'color:#2d4f4f'}
-            %i.fas.fa-align-left{style: 'color: #3a6363'}
-            Description & Highlights
-          %p.text-gray-700.leading-relaxed= @car.description
 
     / Right Column - Sidebar
     .space-y-6
@@ -457,8 +449,6 @@
   // Show More Features functionality
   function initializeFeaturesToggle() {
     const showMoreBtn = document.getElementById('showMoreFeaturesBtn');
-    const btnText = document.getElementById('btnText');
-    const btnIcon = document.getElementById('btnIcon');
     
     if (!showMoreBtn) return; // Exit if button doesn't exist
     
@@ -508,113 +498,99 @@
     });
   }
 
-  // Policy Drawer content (Turbo-friendly, delegated listeners)
-  (function() {
-    if (window._policyDrawerInit) return; // avoid duplicate bindings
-    window._policyDrawerInit = true;
+  // Policy Drawer Setup
+  function setupPolicyDrawer() {
+    const drawer = document.getElementById('policyDrawer');
+    const closeBtn = document.getElementById('closePolicyDrawer');
+    const contentEl = document.getElementById('policyDrawerContent');
+    const titleEl = document.getElementById('policyDrawerTitle');
+    
+    if (!drawer || !closeBtn) return;
 
-    function getPolicyContent() {
-      const insurancePolicy = "#{@car.insurance_policy.present? ? @car.insurance_policy.gsub('"', '\\"').gsub("\n", ' ') : 'No Insurance Provided'}";
+    // Insurance policy content
+    const insurancePolicy = #{ @car.insurance_policy.present? ? @car.insurance_policy.to_json : "'No Insurance Provided'" };
 
-      return {
-        mileage: {
-          title: 'Mileage Policy',
-          content: 'Most rentals come with a daily mileage limit (200-250 km per day). Exceeding this limit will result in additional charges of AED 0.50 per extra kilometer. Some rental companies also offer unlimited mileage or extra mileage packages.'
-        },
-        fuel: {
-          title: 'Fuel Policy',
-          content: 'The vehicle will be provided with a full tank of fuel. You are required to return the vehicle with the same fuel level. If returned with less fuel, you will be charged for refueling at current market rates plus a service fee.'
-        },
-        rental: {
-          title: 'Rental Policy',
-          content: "Renters must be at least 21 years old. UAE residents need a valid UAE driving license, and tourists must provide an International Driving Permit. Any traffic fines incurred during the rental period are the renter's responsibility. Vehicles should be returned to the original pickup location unless alternative arrangements have been approved in advance."
-        },
-        insurance: {
-          title: 'Insurance Policy',
-          content: insurancePolicy
-        },
-        min_days: {
-          title: 'Minimum Rental Duration',
-          content: 'The minimum rental period for this vehicle is 5 days. Shorter durations are not eligible for booking and pricing is calculated on a per-day basis.'
-        }
-      };
-    }
+    const policies = {
+      mileage: {
+        title: 'Mileage Policy',
+        content: 'Most rentals come with a daily mileage limit (200-250 km per day). Exceeding this limit will result in additional charges of AED 0.50 per extra kilometer. Some rental companies also offer unlimited mileage or extra mileage packages.'
+      },
+      fuel: {
+        title: 'Fuel Policy',
+        content: 'The vehicle will be provided with a full tank of fuel. You are required to return the vehicle with the same fuel level. If returned with less fuel, you will be charged for refueling at current market rates plus a service fee.'
+      },
+      rental: {
+        title: 'Rental Policy',
+        content: 'Renters must be at least 21 years old. UAE residents need a valid UAE driving license, and tourists must provide an International Driving Permit. Any traffic fines incurred during the rental period are the renter\'s responsibility. Vehicles should be returned to the original pickup location unless alternative arrangements have been approved in advance.'
+      },
+      insurance: {
+        title: 'Insurance Policy',
+        content: insurancePolicy
+      }
+    };
 
-    function openPolicyDrawer(title, content) {
-      const drawer = document.getElementById('policyDrawer');
-      const titleEl = document.getElementById('policyDrawerTitle');
-      const contentEl = document.getElementById('policyDrawerContent');
-      if (!drawer || !titleEl || !contentEl) return;
-      titleEl.textContent = title;
-      contentEl.innerHTML = '<p>' + content + '</p>';
-      drawer.setAttribute('aria-hidden', 'false');
-      drawer.classList.remove('translate-x-full');
-    }
-
-    function closePolicyDrawer() {
-      const drawer = document.getElementById('policyDrawer');
-      if (!drawer) return;
+    // Close drawer function
+    const closePolicyDrawer = function() {
       drawer.setAttribute('aria-hidden', 'true');
       drawer.classList.add('translate-x-full');
-    }
+    };
 
-    function bindPolicyDrawer() {
-      const closeBtn = document.getElementById('closePolicyDrawer');
-      if (closeBtn && !closeBtn._bound) {
-        closeBtn.addEventListener('click', closePolicyDrawer);
-        closeBtn._bound = true;
+    // Open drawer function
+    const openPolicyDrawer = function(policyKey) {
+      const policy = policies[policyKey];
+      if (!policy) return;
+      
+      if (titleEl) titleEl.textContent = policy.title;
+      if (contentEl) contentEl.innerHTML = '<p class="text-gray-700 leading-relaxed">' + policy.content + '</p>';
+      
+      drawer.setAttribute('aria-hidden', 'false');
+      drawer.classList.remove('translate-x-full');
+    };
+
+    // Close button listener
+    closeBtn.addEventListener('click', closePolicyDrawer);
+
+    // ESC key to close
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        closePolicyDrawer();
       }
+    });
 
-      document.addEventListener('click', function(e) {
-        const trigger = e.target.closest && e.target.closest('[data-policy]');
-        if (!trigger) return;
-        const type = trigger.getAttribute('data-policy');
-        const policy = getPolicyContent()[type];
-        if (!policy) return;
+    // Policy buttons listener
+    const policyButtons = document.querySelectorAll('[data-policy]');
+    policyButtons.forEach(function(btn) {
+      btn.addEventListener('click', function(e) {
         e.preventDefault();
-        openPolicyDrawer(policy.title, policy.content);
+        const policyType = this.getAttribute('data-policy');
+        openPolicyDrawer(policyType);
       });
+    });
+  }
 
-      document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape') {
-          closePolicyDrawer();
-        }
-      });
-    }
-
-    function init() {
-      bindPolicyDrawer();
-      initializeFeaturesToggle(); // Initialize features toggle
-    }
-
-    document.addEventListener('DOMContentLoaded', init);
-    document.addEventListener('turbo:load', init);
-    document.addEventListener('turbo:render', init);
-    if (document.readyState !== 'loading') {
-      setTimeout(init, 0);
-    }
-  })();
+  // Initialize all functionality
+  function initializeAll() {
+    initializeSwiper();
+    initializeFeaturesToggle();
+    setupPolicyDrawer();
+  }
 
   // Multiple initialization triggers for different scenarios
   document.addEventListener('DOMContentLoaded', function() {
-    initializeSwiper();
-    initializeFeaturesToggle();
+    initializeAll();
   });
   
   document.addEventListener('turbo:load', function() {
-    initializeSwiper();
-    initializeFeaturesToggle();
+    initializeAll();
   });
   
   document.addEventListener('turbo:render', function() {
-    initializeSwiper();
-    initializeFeaturesToggle();
+    initializeAll();
   });
   
   // Immediate initialization if DOM is already ready
   if (document.readyState !== 'loading') {
     setTimeout(function() {
-      initializeSwiper();
-      initializeFeaturesToggle();
+      initializeAll();
     }, 100);
   }
