@@ -1,0 +1,70 @@
+%section.py-20.px-4.sm:px-6.lg:px-8.bg-gray-50
+  .max-w-7xl.mx-auto
+    .text-center.mb-16
+      %h2.text-4xl.md:text-5xl.font-bold.text-gray-900.mb-4
+        Choose Your Growth Engine: Strategic Advertising Packages
+      %p.text-xl.text-gray-600
+        Select the package that aligns with your current size and future ambitions. All packages are structured to deliver maximum visibility and lead flow.
+      %p.text-lg.text-gray-600.font-bold
+        Wheels on Rent Partner Plans (Price on Request)
+
+    - cache ['vendor_requests', 'advertising_packages'] do
+      .grid.grid-cols-1.md:grid-cols-3.gap-8
+        / Starter Pro Package
+        .bg-white.border-2.border-gray-200.rounded-xl.shadow-md.hover:shadow-lg.transition-all
+          .p-8
+            %h3.text-2xl.font-bold.text-gray-900.mb-1
+              Starter Pro
+            %p.text-gray-600.mb-6
+              New Agencies / Fleets up to 15 Cars
+
+            %ul.space-y-4.mb-10.text-gray-700
+              - ['15 Listings', 'Standard Web/App Visibility', 'Priority Email Support', 'Excellent ROI introduction'].each do |benefit|
+                %li.flex.items-start
+                  %svg.w-5.h-5.mr-3.mt-0.5.flex-shrink-0{fill: 'currentColor', viewBox: '0 0 24 24', style: 'color: #00B4D8'}
+                    %path{d: 'M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z'}
+                  %span.text-gray-600= benefit
+
+            %button.w-full.px-6.py-3.text-white.rounded-lg.font-bold.transition-colors{style: "background-color: #3A6363; hover:background-color: #2A4D4D", onclick: "window.location.href='#'"}
+              Request Pricing
+
+        / Pro Max Package (Featured)
+        .bg-white.border-4.rounded-xl.shadow-2xl.hover:shadow-2xl.transition-all.transform.md:scale-105.relative{style: "border-color: #00B4D8; background-color: rgba(0, 180, 216, 0.02)"}
+          .absolute.top-0.left-0.right-0.flex.justify-center.pt-3
+            %span.text-white.px-4.py-2.rounded-full.font-bold.text-sm.inline-block{style: "background-color: #00B4D8"}
+              Most Popular
+
+          .p-8.pt-16
+            %h3.text-2xl.font-bold.text-gray-900.mb-2
+              Pro Max
+            %p.text-gray-600.mb-6.font-medium
+              Established Mid-Sized Fleets
+
+            %ul.space-y-4.mb-10.text-gray-700
+              - ['30 Listings', 'Featured Listing Status', 'Multi-City Coverage (e.g., Dubai & Abu Dhabi)', 'Dedicated Account Manager'].each do |benefit|
+                %li.flex.items-start
+                  %svg.w-5.h-5.mr-3.mt-0.5.flex-shrink-0{fill: 'currentColor', viewBox: '0 0 24 24', style: 'color: #00B4D8'}
+                    %path{d: 'M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z'}
+                  %span.text-gray-600= benefit
+
+            %button.w-full.px-6.py-3.text-white.rounded-lg.font-bold.transition-colors{style: "background-color: #00B4D8; hover:background-color: #0099B8", onclick: "window.location.href='#'"}
+              Request Pricing
+
+        / Enterprise Luxury Package
+        .bg-white.border-2.border-gray-200.rounded-xl.shadow-md.hover:shadow-lg.transition-all
+          .p-8
+            %h3.text-2xl.font-bold.text-gray-900.mb-1
+              Enterprise Luxury
+            %p.text-gray-600.mb-6
+              Large Fleets / Premium Car Specialists
+
+            %ul.space-y-4.mb-10.text-gray-700
+              - ['75+ Listings', 'Spotlight Listing (Homepage Feature)', 'Unlimited Refreshes', 'Premium Support', 'Corporate Lead Integration'].each do |benefit|
+                %li.flex.items-start
+                  %svg.w-5.h-5.mr-3.mt-0.5.flex-shrink-0{fill: 'currentColor', viewBox: '0 0 24 24', style: 'color: #00B4D8'}
+                    %path{d: 'M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z'}
+                  %span.text-gray-600= benefit
+
+            %button.w-full.px-6.py-3.text-white.rounded-lg.font-bold.transition-colors{style: "background-color: #3A6363; hover:background-color: #2A4D4D", onclick: "window.location.href='#'"}
+              Request Pricing
+

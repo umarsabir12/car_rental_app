@@ -1,0 +1,92 @@
+%section.py-16.px-4.sm:px-6.lg:px-8.bg-gray-50
+  .max-w-6xl.mx-auto
+    .text-center.mb-12
+      %h2.text-3xl.md:text-4xl.font-bold.text-gray-900.mb-4
+        Zero Commission, 100% Retained Revenue: The Wheels on Rent Pledge
+      %p.text-lg.text-gray-600.mx-auto.max-w-3xl
+        This is our key differentiator and your biggest commercial advantage. We believe you deserve to keep every Dirham earned from your hard work. Our platform operates on a simple, transparent subscription model, completely eliminating the need for brokerage fees or hidden commissions.
+
+    %h3.text-3xl.md:text-2xl.font-bold.text-gray-900.mt-4.mb-4
+      The Commission-Free Value Chain
+    %p.text-lg.text-gray-600.mb-4
+      Unlike aggregators that dilute your profits, our process ensures that the transaction remains entirely between you and the customer:
+
+    - cache ['vendor_requests', 'commission_flow'] do
+      .grid.grid-cols-1.md:grid-cols-3.gap-8.mb-16
+        / Card 1
+        .bg-white.p-8.rounded-xl.shadow-md
+          .w-12.h-12.rounded-full.flex.items-center.justify-center.mb-4{style: "background-color: #3A6363"}
+            %span.text-lg.font-bold.text-white 1
+          %h3.text-xl.font-bold.text-gray-900.mb-3
+            Customer Inquiry
+          %p.text-gray-600
+            Renters contact you directly via phone, WhatsApp, or email.
+
+        / Card 2
+        .bg-white.p-8.rounded-xl.shadow-md
+          .w-12.h-12.rounded-full.flex.items-center.justify-center.mb-4{style: "background-color: #00B4D8"}
+            %span.text-lg.font-bold.text-white 2
+          %h3.text-xl.font-bold.text-gray-900.mb-3
+            Booking & Payment
+          %p.text-gray-600
+            You handle all invoicing and payment processing.
+
+        / Card 3
+        .bg-white.p-8.rounded-xl.shadow-md
+          .w-12.h-12.rounded-full.flex.items-center.justify-center.mb-4{style: "background-color: #3A6363"}
+            %span.text-lg.font-bold.text-white 3
+          %h3.text-xl.font-bold.text-gray-900.mb-3
+            Revenue Retention
+          %p.text-gray-600
+            You keep 100% of the rental earnings.
+
+      / ========== COMPARISON TABLE SECTION ==========
+      .overflow-x-auto.mb-16
+        %table.w-full.rounded-xl.border-2{style: "border-color: #3A6363"}
+          %thead
+            %tr.text-white{style: "background-color: #3A6363"}
+              %th.px-6.py-4.text-left.font-bold Feature
+              %th.px-6.py-4.text-left.font-bold Wheels on Rent Model (Subscription)
+              %th.px-6.py-4.text-left.font-bold Traditional Broker Model (Commission)
+
+          %tbody
+            / Row 1
+            %tr.border-b.border-gray-200.hover:bg-gray-50
+              %td.px-6.py-4.font-semibold.text-gray-900 Revenue Share
+              %td.px-6.py-4.text-gray-700
+                .flex.items-start
+                  %svg.w-5.h-5.mr-2.flex-shrink-0.mt-0.5{fill: 'currentColor', viewBox: '0 0 24 24', style: 'color: #00B4D8'}
+                    %path{d: 'M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z'}
+                  %span.text-gray-600 You keep 100% of the rent
+              %td.px-6.py-4.text-gray-700 Brokers typically take 15% - 30%
+
+            / Row 2
+            %tr.border-b.border-gray-200.hover:bg-gray-50
+              %td.px-6.py-4.font-semibold.text-gray-900 Pricing Control
+              %td.px-6.py-4.text-gray-700
+                .flex.items-start
+                  %svg.w-5.h-5.mr-2.flex-shrink-0.mt-0.5{fill: 'currentColor', viewBox: '0 0 24 24', style: 'color: #00B4D8'}
+                    %path{d: 'M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z'}
+                  %span.text-gray-600 Complete control; set and update rates instantly
+              %td.px-6.py-4.text-gray-700 Often pressured to lower rates to compete with broker offers
+
+            / Row 3
+            %tr.border-b.border-gray-200.hover:bg-gray-50
+              %td.px-6.py-4.font-semibold.text-gray-900 Customer Data
+              %td.px-6.py-4.text-gray-700
+                .flex.items-start
+                  %svg.w-5.h-5.mr-2.flex-shrink-0.mt-0.5{fill: 'currentColor', viewBox: '0 0 24 24', style: 'color: #00B4D8'}
+                    %path{d: 'M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z'}
+                  %span.text-gray-600 You own the client relationship and contact data
+              %td.px-6.py-4.text-gray-700 Client data is controlled and owned by the third-party broker
+
+            / Row 4
+            %tr.hover:bg-gray-50
+              %td.px-6.py-4.font-semibold.text-gray-900 Cost Structure
+              %td.px-6.py-4.text-gray-700
+                .flex.items-start
+                  %svg.w-5.h-5.mr-2.flex-shrink-0.mt-0.5{fill: 'currentColor', viewBox: '0 0 24 24', style: 'color: #00B4D8'}
+                    %path{d: 'M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z'}
+                  %span.text-gray-600 Predictable, fixed monthly cost
+              %td.px-6.py-4.text-gray-700 Unpredictable, variable cost that scales with revenue
+

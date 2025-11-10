@@ -1,31 +1,15 @@
-.max-w-7xl.mx-auto.px-4.sm:px-6.lg:px-8.pt-24.pb-10
-  .max-w-2xl.mx-auto
-    %h1.text-3xl.font-bold.mb-8.text-center{style: 'color: #2d4f4f'} Request To List Your Cars
-    
-    .bg-white.rounded-xl.shadow-lg.p-8
-      = form_with model: @vendor_request, url: vendor_requests_path, method: :post, local: true, class: 'space-y-6' do |f|
-        
-        .grid.grid-cols-1.md:grid-cols-2.gap-6
-          / First Name
-          .form-group
-            = f.label :first_name, 'First Name', class: 'block text-sm font-medium text-gray-700 mb-2'
-            = f.text_field :first_name, class: 'w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-opacity-50 focus:border-transparent', placeholder: 'Enter first name', required: true, style: 'focus:ring-color: #2d4f4f'
-          
-          / Last Name
-          .form-group
-            = f.label :last_name, 'Last Name', class: 'block text-sm font-medium text-gray-700 mb-2'
-            = f.text_field :last_name, class: 'w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-opacity-50 focus:border-transparent', placeholder: 'Enter last name', required: true, style: 'focus:ring-color: #2d4f4f'
-        
-        / Email
-        .form-group
-          = f.label :email, 'Email Address', class: 'block text-sm font-medium text-gray-700 mb-2'
-          = f.email_field :email, class: 'w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-opacity-50 focus:border-transparent', placeholder: 'your.email@example.com', required: true, style: 'focus:ring-color: #2d4f4f'
-        
-        / Description
-        .form-group
-          = f.label :description, 'Compnay Description', class: 'block text-sm font-medium text-gray-700 mb-2'
-          = f.text_area :description, class: 'w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-opacity-50 focus:border-transparent', placeholder: 'tell us about your company', required: true, style: 'focus:ring-color: #2d4f4f'
+%div.min-h-screen.bg-white
+  = render 'vendor_requests/hero'
+  = render 'vendor_requests/why_partner'
+  = render 'vendor_requests/benefits'
+  = render 'vendor_requests/zero_commission'
+  = render 'vendor_requests/market_visibility'
+  = render 'vendor_requests/control_center'
+  = render 'vendor_requests/why_join'
+  = render 'vendor_requests/pricing'
+  = render 'vendor_requests/advertising'
+  = render 'vendor_requests/onboarding'
+  = render 'vendor_requests/business_types'
+  = render 'vendor_requests/faqs'
 
-        / Submit Button
-        .flex.justify-center.mt-8
-          = f.submit 'Submit Request', class: 'px-8 py-3 text-white font-semibold rounded-lg shadow-md hover:shadow-lg transition-all duration-200 cursor-pointer', style: 'background-color: #2d4f4f; hover:background-color: #1f3535'
+= render 'vendor_requests/footer'
