@@ -163,14 +163,6 @@
             %i.fas.fa-info-circle.text-3xl.mb-3
             %p No features available for this vehicle
 
-      / Description Card
-      - if @car.description.present?
-        .bg-white.rounded-xl.shadow-lg.p-6
-          %h2.text-xl.font-bold.mb-4.flex.items-center.gap-2{style: 'color:#2d4f4f'}
-            %i.fas.fa-align-left{style: 'color: #3a6363'}
-            Description & Highlights
-          %p.text-gray-700.leading-relaxed= @car.description
-
     / Right Column - Sidebar
     .space-y-6
       / Car Stats Card

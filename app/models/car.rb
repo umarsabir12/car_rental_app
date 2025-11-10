@@ -133,7 +133,6 @@ class Car < ApplicationRecord
     
     product = Stripe::Product.create(
       name: full_name,
-      description: description,
       metadata: {
         car_id: id,
         category: category
