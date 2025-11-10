@@ -22,7 +22,8 @@
             %tr
               %th.px-6.py-3.text-left.text-xs.font-medium.text-gray-500.uppercase.tracking-wider Name
               %th.px-6.py-3.text-left.text-xs.font-medium.text-gray-500.uppercase.tracking-wider Email
-              %th.px-6.py-3.text-left.text-xs.font-medium.text-gray-500.uppercase.tracking-wider Description
+              %th.px-6.py-3.text-left.text-xs.font-medium.text-gray-500.uppercase.tracking-wider Vehicle Count
+              %th.px-6.py-3.text-left.text-xs.font-medium.text-gray-500.uppercase.tracking-wider Contact
               %th.px-6.py-3.text-left.text-xs.font-medium.text-gray-500.uppercase.tracking-wider Status
               %th.px-6.py-3.text-left.text-xs.font-medium.text-gray-500.uppercase.tracking-wider Submitted
               %th.px-6.py-3.text-left.text-xs.font-medium.text-gray-500.uppercase.tracking-wider Actions
@@ -35,8 +36,10 @@
                 %td.px-6.py-4.whitespace-nowrap
                   .text-sm.text-gray-900= request.email
                 %td.px-6.py-4.whitespace-nowrap
-                  - if request.description.present?
-                    %button.px-3.py-1.text-white.text-xs.rounded-lg.transition{ onclick: "openDescriptionModal(#{request.id})", style: "background-color: #3A6363;" } View
+                  .text-sm.text-gray-900= request.vehicle_count
+                %td.px-6.py-4.whitespace-nowrap
+                  - if request.phone.present?
+                    .text-sm.text-gray-900= request.phone
                   - else
                     %span.text-sm.text-gray-400 N/A
                 %td.px-6.py-4.whitespace-nowrap
@@ -74,63 +77,3 @@
       .bg-white.rounded-lg.shadow.p-4.text-center
         .text-2xl.font-bold.text-red-600= VendorRequest.rejected.count
         .text-sm.text-gray-600 Rejected Requests
-
-
-/ -------------------- Description Modal --------------------
-#descriptionModal.hidden.fixed.inset-0.bg-gray-800.bg-opacity-50.flex.items-center.justify-center.transition-opacity.duration-300{ style: 'z-index: 9999;' }
-  .bg-white.rounded-2xl.shadow-xl.p-6.relative.transform.transition-transform.duration-300.scale-95{ class: "w-11/12 md:w-3/4 lg:w-1/2" }
-    .flex.justify-between.items-center.mb-4
-      %h3.text-xl.font-semibold.text-gray-900 Vendor Company Description
-      %button.text-gray-400.hover:text-gray-600.transition{ onclick: 'closeDescriptionModal()', aria_label: 'Close modal' }
-        :plain
-          <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
-            <path fill-rule="evenodd" clip-rule="evenodd"
-              d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"></path>
-          </svg>
-
-    .border-t.border-gray-200.pt-4
-      #descriptionContent.text-gray-700.text-sm.leading-relaxed.whitespace-pre-wrap.max-h-96.overflow-y-auto
-        / Description will be loaded here dynamically
-
-
-:javascript
-  const descriptions = #{ @vendor_requests.map { |r| [r.id, r.description] }.to_h.to_json };
-
-  function openDescriptionModal(requestId) {
-    const modal = document.getElementById('descriptionModal');
-    const content = document.getElementById('descriptionContent');
-    content.textContent = descriptions[requestId] || 'No description available.';
-    modal.classList.remove('hidden');
-    document.body.classList.add('overflow-hidden');
-
-    // fade in animation
-    setTimeout(() => {
-      modal.classList.add('opacity-100');
-      modal.querySelector('.transform').classList.remove('scale-95');
-      modal.querySelector('.transform').classList.add('scale-100');
-    }, 10);
-  }
-
-  function closeDescriptionModal() {
-    const modal = document.getElementById('descriptionModal');
-    const contentBox = modal.querySelector('.transform');
-
-    modal.classList.remove('opacity-100');
-    contentBox.classList.remove('scale-100');
-    contentBox.classList.add('scale-95');
-
-    setTimeout(() => {
-      modal.classList.add('hidden');
-      document.body.classList.remove('overflow-hidden');
-    }, 200);
-  }
-
-  // Close modal when clicking outside
-  document.getElementById('descriptionModal')?.addEventListener('click', function(e) {
-    if (e.target === this) closeDescriptionModal();
-  });
-
-  // Close modal with Escape key
-  document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape') closeDescriptionModal();
-  });

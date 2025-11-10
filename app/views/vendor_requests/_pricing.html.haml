@@ -1,0 +1,67 @@
+%section.py-20.px-4.sm:px-6.lg:px-8.bg-gray-50
+  .max-w-7xl.mx-auto
+    .text-center.mb-16
+      %h2.text-4xl.md:text-5xl.font-bold.text-gray-900.mb-4
+        Select the Perfect Package for Your Growth
+      %p.text-xl.text-gray-600
+        Choose the plan that fits your fleet size and business goals
+
+    - cache ['vendor_requests', 'pricing_packages'] do
+      .grid.grid-cols-1.md:grid-cols-3.gap-8
+        / Economy Cars Package
+        .bg-white.border-2.border-gray-200.rounded-xl.overflow-hidden.shadow-md.hover:shadow-lg.transition-all
+          .w-full.h-48.bg-gray-100.flex.items-center.justify-center.overflow-hidden
+            %img{src: asset_path('economy-car.png'), alt: 'Economy Car', class: 'w-full h-full object-cover'}
+
+          .p-8
+            %h3.text-2xl.font-bold.text-gray-900.mb-6
+              Economy Cars Package
+
+            %ul.space-y-4.mb-8.text-gray-700
+              - ['10 Cars listing', '10 Confirmed bookings', 'Including 3 days weekly, monthly or more', 'Featured on the website'].each do |benefit|
+                %li.flex.items-start
+                  %svg.w-5.h-5.mr-3.mt-0.5.flex-shrink-0{fill: 'currentColor', viewBox: '0 0 24 24', style: 'color: #00B4D8'}
+                    %path{d: 'M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z'}
+                  %span.text-gray-600= benefit
+
+            %button.w-full.px-6.py-3.text-white.rounded-lg.font-bold.transition-colors{style: "background-color: #3A6363; hover:background-color: #2A4D4D", onclick: "window.location.href='#'"}
+              Get Started
+
+        / Luxury Cars Package (Featured)
+        .bg-white.border-4.rounded-xl.overflow-hidden.shadow-2xl.hover:shadow-2xl.transition-all.transform.md:scale-105{style: "border-color: #00B4D8"}
+          .w-full.h-48.bg-gray-100.flex.items-center.justify-center.overflow-hidden
+            %img{src: asset_path('luxury-car.png'), alt: 'Luxury Car', class: 'w-full h-full object-cover'}
+
+          .p-8.bg-white
+            %h3.text-2xl.font-bold.text-gray-900.mb-6
+              Luxury Cars Package
+
+            %ul.space-y-4.mb-8.text-gray-700
+              - ['10 Cars listing', '10 Confirmed bookings', 'Including daily, weekly', 'Featured on the website'].each do |benefit|
+                %li.flex.items-start
+                  %svg.w-5.h-5.mr-3.mt-0.5.flex-shrink-0{fill: 'currentColor', viewBox: '0 0 24 24', style: 'color: #00B4D8'}
+                    %path{d: 'M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z'}
+                  %span.text-gray-600= benefit
+
+            %button.w-full.px-6.py-3.text-white.rounded-lg.font-bold.transition-colors{style: "background-color: #00B4D8; hover:background-color: #0099B8", onclick: "window.location.href='#'"}
+              Get Started
+
+        / Customised Package
+        .bg-white.border-2.border-gray-200.rounded-xl.overflow-hidden.shadow-md.hover:shadow-lg.transition-all
+          .w-full.h-48.bg-gray-100.flex.items-center.justify-center.overflow-hidden
+            %img{src: asset_path('custom.png'), alt: 'Customised Package', class: 'w-full h-full object-cover'}
+
+          .p-8
+            %h3.text-2xl.font-bold.text-gray-900.mb-6
+              Customised Package
+
+            %ul.space-y-4.mb-8.text-gray-700
+              - ['Please contact us for', 'customized your package', 'Tailored to your needs', 'Flexible options available'].each do |benefit|
+                %li.flex.items-start
+                  %svg.w-5.h-5.mr-3.mt-0.5.flex-shrink-0{fill: 'currentColor', viewBox: '0 0 24 24', style: 'color: #00B4D8'}
+                    %path{d: 'M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z'}
+                  %span.text-gray-600= benefit
+
+            %button.w-full.px-6.py-3.text-white.rounded-lg.font-bold.transition-colors{style: "background-color: #3A6363; hover:background-color: #2A4D4D", onclick: "window.location.href='#'"}
+              Get Started
+
