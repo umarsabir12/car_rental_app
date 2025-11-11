@@ -34,7 +34,7 @@
                 .w-96.h-72.rounded-2xl.shadow-lg.bg-gray-100.flex.flex-col.items-center.justify-center
                   %i.fas.fa-file-pdf.text-6xl.text-red-600
                   %p Click to Preview
-            - elsif file_type_1 == 'word'
+            - elsif document_type == 'word'
               %a.cursor-pointer.transition-transform.hover:scale-105{href: url_for(@document.mulkiya), download: '', title: 'Download Word Document'}
                 .w-96.h-72.rounded-2xl.shadow-lg.bg-gray-100.flex.flex-col.items-center.justify-center
                   %i.fas.fa-file-word.text-6xl.text-blue-600
@@ -54,7 +54,7 @@
                 .w-96.h-72.rounded-2xl.shadow-lg.bg-gray-100.flex.flex-col.items-center.justify-center
                   %i.fas.fa-file-pdf.text-6xl.text-red-600
                   %p Click to Preview
-            - elsif file_type_1 == 'word'
+            - elsif document_type == 'word'
               %a.cursor-pointer.transition-transform.hover:scale-105{href: url_for(@document.trade_license), download: '', title: 'Download Word Document'}
                 .w-96.h-72.rounded-2xl.shadow-lg.bg-gray-100.flex.flex-col.items-center.justify-center
                   %i.fas.fa-file-word.text-6xl.text-blue-600
