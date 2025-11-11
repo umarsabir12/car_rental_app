@@ -28,7 +28,19 @@
         %h1.text-3xl.font-extrabold.mb-2{style: 'color:#3A6363'} Mulkiya Document
         - if @document.mulkiya.attached?
           .mb-6
-            %img.w-96.h-72.object-cover.rounded-2xl.shadow-lg.cursor-pointer.transition-transform.hover:scale-105{ src: url_for(@document.mulkiya), alt: 'Mulkiya Document', onclick: "openImagePreview('#{url_for(@document.mulkiya)}')" }
+            - document_type = get_file_type(@document.mulkiya)
+            - if document_type == 'pdf'
+              %a.cursor-pointer.transition-transform.hover:scale-105{href: url_for(@document.mulkiya), target: '_blank', rel: 'noopener noreferrer', title: 'View PDF', onclick: "openPdfPreview('#{url_for(@document.mulkiya)}'); return false;"}
+                .w-96.h-72.rounded-2xl.shadow-lg.bg-gray-100.flex.flex-col.items-center.justify-center
+                  %i.fas.fa-file-pdf.text-6xl.text-red-600
+                  %p Click to Preview
+            - elsif file_type_1 == 'word'
+              %a.cursor-pointer.transition-transform.hover:scale-105{href: url_for(@document.mulkiya), download: '', title: 'Download Word Document'}
+                .w-96.h-72.rounded-2xl.shadow-lg.bg-gray-100.flex.flex-col.items-center.justify-center
+                  %i.fas.fa-file-word.text-6xl.text-blue-600
+                  %p Click to Preview
+            - else
+              %img.w-96.h-72.object-cover.rounded-2xl.shadow-lg.cursor-pointer.transition-transform.hover:scale-105{ src: url_for(@document.mulkiya), alt: 'Mulkiya Document', onclick: "openImagePreview('#{url_for(@document.mulkiya)}')" }
         - status = @document.document_status
         .mt-2
           %span.inline-flex.items-center.px-2.py-1.rounded-full.text-xs.font-semibold{style: 'background-color:#E6F0F0; color:#3A6363; border:1px solid #3A6363'}= status.to_s.titleize
@@ -36,7 +48,19 @@
         %h1.text-3xl.font-extrabold.mb-2{style: 'color:#3A6363'} Vendor Trade License
         - if @document.trade_license.attached?
           .mb-6
-            %img.w-96.h-72.object-cover.rounded-2xl.shadow-lg.cursor-pointer.transition-transform.hover:scale-105{ src: url_for(@document.trade_license), alt: 'Trade License', onclick: "openImagePreview('#{url_for(@document.trade_license)}')" }
+            - document_type = get_file_type(@document.trade_license)
+            - if document_type == 'pdf'
+              %a.cursor-pointer.transition-transform.hover:scale-105{href: url_for(@document.trade_license), target: '_blank', rel: 'noopener noreferrer', title: 'View PDF', onclick: "openPdfPreview('#{url_for(@document.trade_license)}'); return false;"}
+                .w-96.h-72.rounded-2xl.shadow-lg.bg-gray-100.flex.flex-col.items-center.justify-center
+                  %i.fas.fa-file-pdf.text-6xl.text-red-600
+                  %p Click to Preview
+            - elsif file_type_1 == 'word'
+              %a.cursor-pointer.transition-transform.hover:scale-105{href: url_for(@document.trade_license), download: '', title: 'Download Word Document'}
+                .w-96.h-72.rounded-2xl.shadow-lg.bg-gray-100.flex.flex-col.items-center.justify-center
+                  %i.fas.fa-file-word.text-6xl.text-blue-600
+                  %p Click to Preview
+            - else
+              %img.w-96.h-72.object-cover.rounded-2xl.shadow-lg.cursor-pointer.transition-transform.hover:scale-105{ src: url_for(@document.trade_license), alt: 'Trade License', onclick: "openImagePreview('#{url_for(@document.trade_license)}')" }
         - status = @document.document_status
         .mt-2
           %span.inline-flex.items-center.px-2.py-1.rounded-full.text-xs.font-semibold{style: 'background-color:#E6F0F0; color:#3A6363; border:1px solid #3A6363'}= status.to_s.titleize
@@ -49,14 +73,44 @@
           .flex.flex-row.gap-8.mb-8.justify-start
             .flex.flex-col.items-center
               %span.font-semibold.text-gray-700.mb-2 Front Side
-              %img.w-96.h-72.object-cover.rounded-2xl.shadow-lg.cursor-pointer.transition-transform.hover:scale-105{ src: url_for(@document.images[0]), alt: 'Front Side', onclick: "openImagePreview('#{url_for(@document.images[0])}', '#{url_for(@document.images[1])}')" }
+              - file_type_1 = get_file_type(@document.images[0])
+              - if file_type_1 == 'pdf'
+                %a.cursor-pointer.transition-transform.hover:scale-105{href: url_for(@document.images[0]), target: '_blank', rel: 'noopener noreferrer', title: 'View PDF', onclick: "openPdfPreview('#{url_for(@document.images[0])}'); return false;"}
+                  .w-96.h-72.rounded-2xl.shadow-lg.bg-gray-100.flex.items-center.justify-center
+                    %i.fas.fa-file-pdf.text-6xl.text-red-600
+              - elsif file_type_1 == 'word'
+                %a.cursor-pointer.transition-transform.hover:scale-105{href: url_for(@document.images[0]), download: '', title: 'Download Word Document'}
+                  .w-96.h-72.rounded-2xl.shadow-lg.bg-gray-100.flex.items-center.justify-center
+                    %i.fas.fa-file-word.text-6xl.text-blue-600
+              - else
+                %img.w-96.h-72.object-cover.rounded-2xl.shadow-lg.cursor-pointer.transition-transform.hover:scale-105{src: url_for(@document.images[0]), alt: 'Front Side', onclick: "openImagePreview('#{url_for(@document.images[0])}', '#{url_for(@document.images[1])}')", title: 'Click to preview'}
             .flex.flex-col.items-center
               %span.font-semibold.text-gray-700.mb-2 Back Side
-              %img.w-96.h-72.object-cover.rounded-2xl.shadow-lg.cursor-pointer.transition-transform.hover:scale-105{ src: url_for(@document.images[1]), alt: 'Back Side', onclick: "openImagePreview('#{url_for(@document.images[1])}')" }
+              - file_type_2 = get_file_type(@document.images[1])
+              - if file_type_2 == 'pdf'
+                %a.cursor-pointer.transition-transform.hover:scale-105{href: url_for(@document.images[1]), target: '_blank', rel: 'noopener noreferrer', title: 'View PDF', onclick: "openPdfPreview('#{url_for(@document.images[1])}'); return false;"}
+                  .w-96.h-72.rounded-2xl.shadow-lg.bg-gray-100.flex.items-center.justify-center
+                    %i.fas.fa-file-pdf.text-6xl.text-red-600
+              - elsif file_type_2 == 'word'
+                %a.cursor-pointer.transition-transform.hover:scale-105{href: url_for(@document.images[1]), download: '', title: 'Download Word Document'}
+                  .w-96.h-72.rounded-2xl.shadow-lg.bg-gray-100.flex.items-center.justify-center
+                    %i.fas.fa-file-word.text-6xl.text-blue-600
+              - else
+                %img.w-96.h-72.object-cover.rounded-2xl.shadow-lg.cursor-pointer.transition-transform.hover:scale-105{src: url_for(@document.images[1]), alt: 'Back Side', onclick: "openImagePreview('#{url_for(@document.images[1])}')", title: 'Click to preview'}
         - else
           .flex.flex-wrap.gap-8.mb-8.justify-start
             - @document.images.each do |img|
-              %img.w-96.h-72.object-cover.rounded-2xl.shadow-lg.cursor-pointer.transition-transform.hover:scale-105{ src: url_for(img), alt: @document.doc_name, onclick: "openImagePreview('#{url_for(img)}')" }
+              - file_type_img = get_file_type(img)
+              - if file_type_img == 'pdf'
+                %a.cursor-pointer.transition-transform.hover:scale-105{href: url_for(img), target: '_blank', rel: 'noopener noreferrer', title: 'View PDF', onclick: "openPdfPreview('#{url_for(img)}'); return false;"}
+                  .w-96.h-72.rounded-2xl.shadow-lg.bg-gray-100.flex.items-center.justify-center
+                    %i.fas.fa-file-pdf.text-6xl.text-red-600
+              - elsif file_type_img == 'word'
+                %a.cursor-pointer.transition-transform.hover:scale-105{href: url_for(img), download: '', title: 'Download Word Document'}
+                  .w-96.h-72.rounded-2xl.shadow-lg.bg-gray-100.flex.items-center.justify-center
+                    %i.fas.fa-file-word.text-6xl.text-blue-600
+              - else
+                %img.w-96.h-72.object-cover.rounded-2xl.shadow-lg.cursor-pointer.transition-transform.hover:scale-105{src: url_for(img), alt: @document.doc_name, onclick: "openImagePreview('#{url_for(img)}')", title: 'Click to preview'}
       - if !@is_car_document && !@is_vendor_document && @document.status == 'rejected' && @document.reason.present?
         .bg-red-100.text-red-800.font-semibold.p-4.rounded-xl.mb-4.shadow-md.flex.items-center.gap-3
           %i.fas.fa-exclamation-triangle.text-2xl
@@ -89,9 +143,19 @@
 / Image Preview Modal
 %div#image-preview-modal.fixed.inset-0.z-50.flex.items-center.justify-center.bg-black.bg-opacity-70.hidden{onclick: "closeImagePreviewOnOutside(event)"}
   .bg-white.rounded-2xl.shadow-2xl.p-10.flex.flex-col.items-center.max-w-6xl.w-full.mx-4.relative{onclick: "event.stopPropagation();"}
+    %button.absolute.top-4.right-4.text-gray-500.hover:text-gray-700{type: 'button', onclick: 'closeImagePreview()'}
+      %i.fas.fa-times.text-2xl
     .flex.gap-8.items-center.justify-center
       %img#preview-img-1.max-h-90.w-auto.object-contain.rounded-2xl.shadow-lg{ src: '', alt: 'Preview 1', style: 'display:none;' }
       %img#preview-img-2.max-h-90.w-auto.object-contain.rounded-2xl.shadow-lg{ src: '', alt: 'Preview 2', style: 'display:none;' }
+
+/ PDF Preview Modal
+#pdf-preview-modal.fixed.inset-0.z-50.flex.items-center.justify-center.bg-black.bg-opacity-70.hidden{onclick: "closePdfPreview()"}
+  %div.bg-white.rounded-2xl.shadow-2xl.p-4.flex.flex-col.items-center.max-w-4xl.w-full.h-full.mx-4.relative{onclick: "event.stopPropagation();"}
+    %button.absolute.top-4.right-4.text-gray-500.hover:text-gray-700.z-10{type: 'button', onclick: 'closePdfPreview()'}
+      %i.fas.fa-times.text-2xl
+    %div.w-full.h-full
+      %iframe#preview-pdf.w-full.h-full.rounded-lg{frameborder: '0', src: ''}
 
 :javascript
   function openImagePreview(src1, src2) {
@@ -111,6 +175,7 @@
     }
     modal.classList.remove('hidden');
   }
+
   function closeImagePreview() {
     var modal = document.getElementById('image-preview-modal');
     var img1 = document.getElementById('preview-img-1');
@@ -121,14 +186,31 @@
     img2.style.display = 'none';
     modal.classList.add('hidden');
   }
+
   function closeImagePreviewOnOutside(event) {
     if (event.target.id === 'image-preview-modal') {
       closeImagePreview();
     }
   }
+
+  function openPdfPreview(src) {
+    var modal = document.getElementById('pdf-preview-modal');
+    var iframe = document.getElementById('preview-pdf');
+    iframe.src = src;
+    modal.classList.remove('hidden');
+  }
+
+  function closePdfPreview() {
+    var modal = document.getElementById('pdf-preview-modal');
+    var iframe = document.getElementById('preview-pdf');
+    iframe.src = '';
+    modal.classList.add('hidden');
+  }
+
   function showRejectForm() {
     document.getElementById('reject-form-modal').classList.remove('hidden');
   }
+
   function closeRejectForm() {
     document.getElementById('reject-form-modal').classList.add('hidden');
   }
