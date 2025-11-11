@@ -56,6 +56,14 @@
                 required: true
 
           %div
+            = f.label :company_name, 'Company Name', class: 'block text-sm font-semibold text-gray-700 mb-2'
+            = f.text_field :company_name,
+              placeholder: 'Your Company',
+              class: field_class,
+              autocomplete: 'company_name',
+              required: true
+
+          %div
             = f.label :email, 'Email Address', class: 'block text-sm font-semibold text-gray-700 mb-2'
             = f.email_field :email,
               placeholder: 'john@example.com',
@@ -63,21 +71,22 @@
               autocomplete: 'email',
               required: true
 
-          %div
-            = f.label :phone, 'Phone Number', class: 'block text-sm font-semibold text-gray-700 mb-2'
-            = f.telephone_field :phone,
-              placeholder: '+971 50 123 4567',
-              class: field_class,
-              autocomplete: 'tel',
-              required: true
+          .grid.grid-cols-2.gap-4
+            %div
+              = f.label :phone, 'Phone Number', class: 'block text-sm font-semibold text-gray-700 mb-2'
+              = f.telephone_field :phone,
+                placeholder: '+971 50 123 4567',
+                class: field_class,
+                autocomplete: 'tel',
+                required: true
 
-          %div
-            = f.label :vehicle_count, 'Number of Vehicles', class: 'block text-sm font-semibold text-gray-700 mb-2'
-            = f.number_field :vehicle_count,
-              placeholder: 'Enter number of vehicles',
-              class: field_class,
-              min: 1,
-              required: true
+            %div
+              = f.label :vehicle_count, 'Number of Vehicles', class: 'block text-sm font-semibold text-gray-700 mb-2'
+              = f.number_field :vehicle_count,
+                placeholder: 'Enter number of vehicles',
+                class: field_class,
+                min: 1,
+                required: true
 
           = f.submit 'Submit Request', class: 'w-full px-6 py-3 text-white rounded-lg font-bold text-lg shadow-lg', style: 'background-color: #00B4D8'
 

@@ -22,11 +22,12 @@
             %tr
               %th.px-6.py-3.text-left.text-xs.font-medium.text-gray-500.uppercase.tracking-wider Name
               %th.px-6.py-3.text-left.text-xs.font-medium.text-gray-500.uppercase.tracking-wider Email
+              %th.px-6.py-3.text-left.text-xs.font-medium.text-gray-500.uppercase.tracking-wider Company
               %th.px-6.py-3.text-left.text-xs.font-medium.text-gray-500.uppercase.tracking-wider Vehicle Count
               %th.px-6.py-3.text-left.text-xs.font-medium.text-gray-500.uppercase.tracking-wider Contact
               %th.px-6.py-3.text-left.text-xs.font-medium.text-gray-500.uppercase.tracking-wider Status
               %th.px-6.py-3.text-left.text-xs.font-medium.text-gray-500.uppercase.tracking-wider Submitted
-              %th.px-6.py-3.text-left.text-xs.font-medium.text-gray-500.uppercase.tracking-wider Actions
+              %th.px-6.py-3.text-center.text-xs.font-medium.text-gray-500.uppercase.tracking-wider Actions
 
           %tbody.bg-white.divide-y.divide-gray-200
             - @vendor_requests.each do |request|
@@ -36,6 +37,8 @@
                 %td.px-6.py-4.whitespace-nowrap
                   .text-sm.text-gray-900= request.email
                 %td.px-6.py-4.whitespace-nowrap
+                  .text-sm.text-gray-900= request.company_name
+                %td.px-6.py-4.whitespace-nowrap.text-center
                   .text-sm.text-gray-900= request.vehicle_count
                 %td.px-6.py-4.whitespace-nowrap
                   - if request.phone.present?

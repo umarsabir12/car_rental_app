@@ -95,6 +95,6 @@ class VendorRequestsController < ApplicationController
   end
   
   def vendor_request_params
-    params.require(:vendor_request).permit(:first_name, :last_name, :email, :phone, :vehicle_count)
+    params.require(:vendor_request).permit(:first_name, :last_name, :email, :phone, :company_name, :vehicle_count)
   end
 end
