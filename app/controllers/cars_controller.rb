@@ -20,6 +20,46 @@ class CarsController < ApplicationController
     @cars = @cars.order(created_at: :desc)
   end
 
+  def filter_options
+    cars = Car.with_approved_mulkiya
+  
+    # Apply all selected filters
+    cars = cars.where(category: params[:category]) if params[:category].present?
+    cars = Car.filter_by_brand(cars, params[:brand]) if params[:brand].present?
+    cars = cars.where('LOWER(model) = ?', params[:model].downcase) if params[:model].present?
+  
+    # Calculate available options for EACH filter independently
+    # (keeping the OTHER filters applied)
+    
+    category_filter = params[:category].presence
+    brand_filter = params[:brand].presence
+    model_filter = params[:model].presence
+  
+    # Available categories (apply brand & model filters)
+    cats_query = Car.with_approved_mulkiya
+    cats_query = cats_query.where(brand: brand_filter) if brand_filter.present?
+    cats_query = cats_query.where('LOWER(model) = ?', model_filter.downcase) if model_filter.present?
+    filtered_categories = cats_query.distinct.pluck(:category).compact.sort
+  
+    # Available brands (apply category & model filters)
+    brands_query = Car.with_approved_mulkiya
+    brands_query = brands_query.where(category: category_filter) if category_filter.present?
+    brands_query = brands_query.where('LOWER(model) = ?', model_filter.downcase) if model_filter.present?
+    filtered_brands = brands_query.distinct.pluck(:brand).compact.sort
+  
+    # Available models (apply category & brand filters)
+    models_query = Car.with_approved_mulkiya
+    models_query = models_query.where(category: category_filter) if category_filter.present?
+    models_query = models_query.where(brand: brand_filter) if brand_filter.present?
+    filtered_models = models_query.distinct.pluck(:model).compact.sort
+  
+    render json: {
+      filtered_brands: filtered_brands,
+      filtered_models: filtered_models,
+      filtered_categories: filtered_categories
+    }
+  end
+
   def show
     @car = Car.friendly.find(params[:id])  # Changed this line
     @booking_success = flash[:notice] if flash[:notice].present?

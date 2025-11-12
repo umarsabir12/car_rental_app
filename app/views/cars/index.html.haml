@@ -18,23 +18,7 @@
       = f.submit "Search", class: "text-white font-bold px-6 py-2 rounded-lg shadow transition w-full", style: "background-color: #3a6363" 
 
   / Filter Summary
-  - if params[:category].present? || params[:model].present? || params[:brand].present? || params[:year].present?
-    .mb-6.p-4.rounded-lg.border{style: 'background-color: #f0f6f6; border-color: #cfe5e5'}
-      .flex.items-center.justify-between
-        .flex.items-center
-          %i.fas.fa-filter.mr-2{style: 'color: #3a6363'}
-          %span.text-sm.font-medium{style: 'color: #2d4f4f'}
-            - if params[:category].present?
-              Showing #{@cars.count} #{params[:category].capitalize} car#{@cars.count == 1 ? '' : 's'}
-            - elsif params[:model].present?
-              Showing #{@cars.count} #{params[:model].capitalize} car#{@cars.count == 1 ? '' : 's'}
-            - elsif params[:brand].present?
-              Showing #{@cars.count} #{params[:brand].capitalize} car#{@cars.count == 1 ? '' : 's'}
-            - elsif params[:year].present?
-              Showing #{@cars.count} #{params[:year]} car#{@cars.count == 1 ? '' : 's'}
-            - else
-              Showing #{@cars.count} filtered car#{@cars.count == 1 ? '' : 's'}
-        = link_to 'Clear Filters', cars_path, class: 'text-sm underline', style: 'color: #3a6363'
+  = render 'cars/filters'
 
   / Car Cards Grid
   %div.grid.grid-cols-1.sm:grid-cols-2.lg:grid-cols-3.gap-8.mb-16
