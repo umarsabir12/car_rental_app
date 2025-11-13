@@ -18,96 +18,161 @@
         = f.submit "Search", class: "text-white font-bold px-6 py-2 rounded-lg shadow transition w-full", style: "background-color: #3a6363"
 
 :javascript
-  document.addEventListener('DOMContentLoaded', function() {
-    const filterForm = document.getElementById('car_filters');
-    const filterSelects = document.querySelectorAll('.filter-select');
-    const filterEndpoint = '#{filter_options_path}';
-
-    // Store original options with normalized keys (lowercase for comparison)
-    const originalOptions = {
-      category: Array.from(document.querySelector('[data-filter="category"]').options).map(opt => ({ 
-        value: opt.value, 
-        text: opt.text,
-        normalizedValue: opt.value.toLowerCase()
-      })),
-      brand: Array.from(document.querySelector('[data-filter="brand"]').options).map(opt => ({ 
-        value: opt.value, 
-        text: opt.text,
-        normalizedValue: opt.value.toLowerCase()
-      })),
-      model: Array.from(document.querySelector('[data-filter="model"]').options).map(opt => ({ 
-        value: opt.value, 
-        text: opt.text,
-        normalizedValue: opt.value.toLowerCase()
-      }))
-    };
-
-    function updateFilters() {
-      const category = document.querySelector('[data-filter="category"]').value;
-      const brand = document.querySelector('[data-filter="brand"]').value;
-      const model = document.querySelector('[data-filter="model"]').value;
-
-      // Build query params
-      const params = new URLSearchParams();
-      if (category) params.append('category', category);
-      if (brand) params.append('brand', brand);
-      if (model) params.append('model', model);
-
-      // Fetch filtered options
-      fetch(`${filterEndpoint}?${params.toString()}`)
-        .then(response => response.json())
-        .then(data => {
-          // Normalize backend response to lowercase for comparison
-          const normalizedBrands = (data.filtered_brands || []).map(b => b.toLowerCase());
-          const normalizedModels = (data.filtered_models || []).map(m => m.toLowerCase());
-          const normalizedCategories = (data.filtered_categories || []).map(c => c.toLowerCase());
-          
-          updateSelectOptions('brand', normalizedBrands);
-          updateSelectOptions('model', normalizedModels);
-          updateSelectOptions('category', normalizedCategories);
-        })
-        .catch(error => console.error('Error updating filters:', error));
+  // Improved initialization with better error handling and retry logic
+  (function initializeFilters() {
+    // Try to initialize filters
+    if (!initFiltersNow()) {
+      // If it fails, retry after a short delay
+      console.warn('Filters not ready, retrying...');
+      setTimeout(initFiltersNow, 500);
     }
 
-    function updateSelectOptions(filterName, availableNormalizedValues) {
-      const select = document.querySelector(`[data-filter="${filterName}"]`);
-      const currentValue = select.value;
-      const allOptions = originalOptions[filterName];
+    function initFiltersNow() {
+      try {
+        // Get all required elements
+        const filterForm = document.getElementById('car_filters');
+        const categorySelect = document.querySelector('[data-filter="category"]');
+        const brandSelect = document.querySelector('[data-filter="brand"]');
+        const modelSelect = document.querySelector('[data-filter="model"]');
 
-      // Clear the select
-      select.innerHTML = '';
-      
-      // Always add the "All" option
-      const allOption = allOptions[0];
-      select.appendChild(createOption(allOption.value, allOption.text));
-
-      // Add only options that are in availableValues
-      allOptions.slice(1).forEach(opt => {
-        if (availableNormalizedValues.includes(opt.normalizedValue)) {
-          select.appendChild(createOption(opt.value, opt.text));
+        // Check if all elements exist
+        if (!filterForm || !categorySelect || !brandSelect || !modelSelect) {
+          console.warn('Filter elements not found');
+          return false;
         }
-      });
 
-      // Restore the current value if it still exists
-      if (Array.from(select.options).some(opt => opt.value === currentValue)) {
-        select.value = currentValue;
-      } else {
-        select.value = '';
+        const filterSelects = document.querySelectorAll('.filter-select');
+        if (filterSelects.length === 0) {
+          console.warn('No filter selects found');
+          return false;
+        }
+
+        const filterEndpoint = '#{filter_options_path}';
+        
+        // Store original options with normalized keys
+        const originalOptions = {
+          category: Array.from(categorySelect.options).map(opt => ({ 
+            value: opt.value, 
+            text: opt.text,
+            normalizedValue: opt.value.toLowerCase()
+          })),
+          brand: Array.from(brandSelect.options).map(opt => ({ 
+            value: opt.value, 
+            text: opt.text,
+            normalizedValue: opt.value.toLowerCase()
+          })),
+          model: Array.from(modelSelect.options).map(opt => ({ 
+            value: opt.value, 
+            text: opt.text,
+            normalizedValue: opt.value.toLowerCase()
+          }))
+        };
+
+        // Check if originalOptions were populated
+        if (!originalOptions.category.length || !originalOptions.brand.length || !originalOptions.model.length) {
+          console.warn('Original options not populated');
+          return false;
+        }
+
+        function updateFilters() {
+          const category = categorySelect.value || '';
+          const brand = brandSelect.value || '';
+          const model = modelSelect.value || '';
+
+          // Build query params
+          const params = new URLSearchParams();
+          if (category) params.append('category', category);
+          if (brand) params.append('brand', brand);
+          if (model) params.append('model', model);
+
+          console.log('Fetching filters with params:', params.toString());
+
+          // Fetch filtered options
+          fetch(`${filterEndpoint}?${params.toString()}`)
+            .then(response => {
+              if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+              }
+              return response.json();
+            })
+            .then(data => {
+              console.log('Filter response received:', data);
+
+              // Normalize backend response to lowercase for comparison
+              const normalizedBrands = (data.filtered_brands || []).map(b => b.toLowerCase());
+              const normalizedModels = (data.filtered_models || []).map(m => m.toLowerCase());
+              const normalizedCategories = (data.filtered_categories || []).map(c => c.toLowerCase());
+              
+              updateSelectOptions('brand', normalizedBrands);
+              updateSelectOptions('model', normalizedModels);
+              updateSelectOptions('category', normalizedCategories);
+            })
+            .catch(error => console.error('Error updating filters:', error));
+        }
+
+        function updateSelectOptions(filterName, availableNormalizedValues) {
+          try {
+            const select = document.querySelector(`[data-filter="${filterName}"]`);
+            if (!select) {
+              console.error(`Select for ${filterName} not found`);
+              return;
+            }
+
+            const currentValue = select.value;
+            const allOptions = originalOptions[filterName];
+
+            if (!allOptions) {
+              console.error(`Original options for ${filterName} not found`);
+              return;
+            }
+
+            // Clear the select
+            select.innerHTML = '';
+            
+            // Always add the "All" option
+            const allOption = allOptions[0];
+            if (allOption) {
+              select.appendChild(createOption(allOption.value, allOption.text));
+            }
+
+            // Add only options that are in availableValues
+            allOptions.slice(1).forEach(opt => {
+              if (availableNormalizedValues.includes(opt.normalizedValue)) {
+                select.appendChild(createOption(opt.value, opt.text));
+              }
+            });
+
+            // Restore the current value if it still exists
+            if (Array.from(select.options).some(opt => opt.value === currentValue)) {
+              select.value = currentValue;
+            } else {
+              select.value = '';
+            }
+          } catch (error) {
+            console.error(`Error updating ${filterName} options:`, error);
+          }
+        }
+
+        function createOption(value, text) {
+          const option = document.createElement('option');
+          option.value = value;
+          option.textContent = text;
+          return option;
+        }
+
+        // Add change listeners to all filter selects
+        filterSelects.forEach(select => {
+          select.addEventListener('change', updateFilters);
+        });
+
+        // Initial update on page load
+        updateFilters();
+
+        console.log('Filters initialized successfully');
+        return true;
+      } catch (error) {
+        console.error('Error initializing filters:', error);
+        return false;
       }
     }
-
-    function createOption(value, text) {
-      const option = document.createElement('option');
-      option.value = value;
-      option.textContent = text;
-      return option;
-    }
-
-    // Add change listeners to all filter selects
-    filterSelects.forEach(select => {
-      select.addEventListener('change', updateFilters);
-    });
-
-    // Initial update on page load
-    updateFilters();
-  });
+  })();
