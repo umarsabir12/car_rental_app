@@ -3,8 +3,10 @@ class CarsController < ApplicationController
   before_action :normalize_filter_params, only: [:index]
 
   def index
-    @car_models = Car.distinct.pluck(:model).compact.map { |m| [m.capitalize, m] }
-    @car_brands = Car.distinct.pluck(:brand).compact.map { |b| [b.capitalize, b] }
+    # ✨ ADD THIS SECTION - Prepare filter options for initial page load
+    @car_categories = Car.distinct.pluck(:category).compact.sort
+    @car_brands = Car.distinct.pluck(:brand).compact.sort
+    @car_models = Car.distinct.pluck(:model).compact.sort
 
     # Only show cars with approved mulkiya documents
     @cars = Car.with_approved_mulkiya
@@ -21,37 +23,14 @@ class CarsController < ApplicationController
   end
 
   def filter_options
-    cars = Car.with_approved_mulkiya
+    category = params[:category].presence
+    brand = params[:brand].presence
+    model = params[:model].presence
   
-    # Apply all selected filters
-    cars = cars.where(category: params[:category]) if params[:category].present?
-    cars = Car.filter_by_brand(cars, params[:brand]) if params[:brand].present?
-    cars = cars.where('LOWER(model) = ?', params[:model].downcase) if params[:model].present?
-  
-    # Calculate available options for EACH filter independently
-    # (keeping the OTHER filters applied)
-    
-    category_filter = params[:category].presence
-    brand_filter = params[:brand].presence
-    model_filter = params[:model].presence
-  
-    # Available categories (apply brand & model filters)
-    cats_query = Car.with_approved_mulkiya
-    cats_query = cats_query.where(brand: brand_filter) if brand_filter.present?
-    cats_query = cats_query.where('LOWER(model) = ?', model_filter.downcase) if model_filter.present?
-    filtered_categories = cats_query.distinct.pluck(:category).compact.sort
-  
-    # Available brands (apply category & model filters)
-    brands_query = Car.with_approved_mulkiya
-    brands_query = brands_query.where(category: category_filter) if category_filter.present?
-    brands_query = brands_query.where('LOWER(model) = ?', model_filter.downcase) if model_filter.present?
-    filtered_brands = brands_query.distinct.pluck(:brand).compact.sort
-  
-    # Available models (apply category & brand filters)
-    models_query = Car.with_approved_mulkiya
-    models_query = models_query.where(category: category_filter) if category_filter.present?
-    models_query = models_query.where(brand: brand_filter) if brand_filter.present?
-    filtered_models = models_query.distinct.pluck(:model).compact.sort
+    # Get available options for each filter independently
+    filtered_categories = get_filtered_categories(brand, model)
+    filtered_brands = get_filtered_brands(category, model)
+    filtered_models = get_filtered_models(category, brand)
   
     render json: {
       filtered_brands: filtered_brands,
@@ -61,7 +40,7 @@ class CarsController < ApplicationController
   end
 
   def show
-    @car = Car.friendly.find(params[:id])  # Changed this line
+    @car = Car.friendly.find(params[:id])
     @booking_success = flash[:notice] if flash[:notice].present?
     
     @booked_dates = @car.bookings.where.not(status: 'cancelled')
@@ -83,8 +62,28 @@ class CarsController < ApplicationController
 
   private
 
+  def get_filtered_categories(brand, model)
+    query = Car.with_approved_mulkiya
+    query = query.where(brand: brand) if brand.present?
+    query = query.where('LOWER(model) = ?', model.downcase) if model.present?
+    query.distinct.pluck(:category).compact.sort
+  end
+  
+  def get_filtered_brands(category, model)
+    query = Car.with_approved_mulkiya
+    query = query.where(category: category) if category.present?
+    query = query.where('LOWER(model) = ?', model.downcase) if model.present?
+    query.distinct.pluck(:brand).compact.sort
+  end
+  
+  def get_filtered_models(category, brand)
+    query = Car.with_approved_mulkiya
+    query = query.where(category: category) if category.present?
+    query = query.where(brand: brand) if brand.present?
+    query.distinct.pluck(:model).compact.sort
+  end
+
   def normalize_filter_params
-    # Convert placeholder values to nil
     @category = params[:category] == 'all-categories' ? nil : find_actual_category(params[:category])
     @brand = params[:brand] == 'all-brands' ? nil : find_actual_brand(params[:brand])
     @model = find_actual_model(params[:model])
@@ -92,12 +91,7 @@ class CarsController < ApplicationController
 
   def find_actual_category(parameterized_value)
     return nil if parameterized_value.blank?
-    
-    # AppConstants::CAR_CATEGORIES is [["Sedan", "Sedan"], ["SUV", "SUV"], ...]
-    # Extract just the category values (second element of each pair)
     categories = AppConstants::CAR_CATEGORIES.map(&:last)
-    
-    # Try to find exact match
     categories.find do |cat|
       cat.parameterize == parameterized_value
     end || deparameterize(parameterized_value)
@@ -105,8 +99,6 @@ class CarsController < ApplicationController
 
   def find_actual_brand(parameterized_value)
     return nil if parameterized_value.blank?
-    
-    # Find the actual brand from database that matches the parameterized version
     Car.distinct.pluck(:brand).compact.find do |brand|
       brand.parameterize == parameterized_value
     end || deparameterize(parameterized_value)
@@ -114,8 +106,6 @@ class CarsController < ApplicationController
 
   def find_actual_model(parameterized_value)
     return nil if parameterized_value.blank?
-    
-    # Find the actual model from database that matches the parameterized version
     Car.distinct.pluck(:model).compact.find do |model|
       model.parameterize == parameterized_value
     end || deparameterize(parameterized_value)
@@ -127,26 +117,13 @@ class CarsController < ApplicationController
   end
 
   def apply_filters(cars)
-    # Filter by category
-    if @category.present?
-      cars = cars.where(category: @category)
-    end
-    
-    # Filter by brand
-    if @brand.present?
-      cars = Car.filter_by_brand(cars, @brand)
-    end
-    
-    # Filter by model
-    if @model.present?
-      cars = cars.where('LOWER(model) = ?', @model.downcase)
-    end
-    
+    cars = cars.where(category: @category) if @category.present?
+    cars = Car.filter_by_brand(cars, @brand) if @brand.present?
+    cars = cars.where('LOWER(model) = ?', @model.downcase) if @model.present?
     cars
   end
 
   def redirect_query_params
-    # Redirect old query param URLs to clean URLs
     category = request.query_parameters[:category]
     brand = request.query_parameters[:brand]
     model = request.query_parameters[:model]
@@ -158,21 +135,16 @@ class CarsController < ApplicationController
   end
 
   def build_clean_url(category, brand, model)
-    # Use parameterize to create URL-friendly slugs
     parts = []
     
-    # Determine what we need based on what's selected
     if model.present?
-      # If model is selected, we need all three parts
       parts << (category.present? ? category.parameterize : 'all-categories')
       parts << (brand.present? ? brand.parameterize : 'all-brands')
       parts << model.parameterize
     elsif brand.present?
-      # If brand is selected (but not model), we need category and brand
       parts << (category.present? ? category.parameterize : 'all-categories')
       parts << brand.parameterize
     elsif category.present?
-      # If only category is selected
       parts << category.parameterize
     end
     
