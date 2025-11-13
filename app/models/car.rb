@@ -64,22 +64,22 @@ class Car < ApplicationRecord
   end
 
   BRAND_LOGOS = [
-    { slug: 'mitsubishi',   name: 'Mitsubishi',   image: 'car_logo/logo_0000_pngwing.com-(32).png' },
-    { slug: 'rolls-royce',  name: 'Rolls-Royce',  image: 'car_logo/logo_0001_pngwing.com-(31).png' },
-    { slug: 'aston-martin', name: 'Aston Martin', image: 'car_logo/logo_0002_pngwing.com-(30).png' },
-    { slug: 'bentley',      name: 'Bentley',      image: 'car_logo/logo_0003_pngwing.com-(29).png' },
-    { slug: 'lamborghini',  name: 'Lamborghini',  image: 'car_logo/logo_0004_pngwing.com-(28).png' },
-    { slug: 'mini',         name: 'Mini',         image: 'car_logo/logo_0005_pngwing.com-(27).png' },
-    { slug: 'chevrolet',    name: 'Chevrolet',    image: 'car_logo/logo_0006_pngwing.com-(26).png' },
-    { slug: 'lexus',        name: 'Lexus',        image: 'car_logo/logo_0007_pngwing.com-(25).png' },
-    { slug: 'kia',          name: 'Kia',          image: 'car_logo/logo_0008_pngwing.com-(24).png' },
-    { slug: 'cadillac',     name: 'Cadillac',     image: 'car_logo/logo_0009_pngwing.com-(23).png' },
-    { slug: 'gmc',          name: 'GMC',          image: 'car_logo/logo_0010_pngwing.com-(22).png' },
-    { slug: 'audi',         name: 'Audi',         image: 'car_logo/logo_0011_Layer-4.png' },
-    { slug: 'mazda',        name: 'Mazda',        image: 'car_logo/logo_0012_Layer-3.png' },
-    { slug: 'land-rover',   name: 'Land Rover',   image: 'car_logo/logo_0013_Layer-2.png' },
-    { slug: 'nissan',       name: 'Nissan',       image: 'car_logo/logo_0014_hd-nissan-emblem-logo-transparent-png-701751694774302g4gilafdjp.png' },
-    { slug: 'bmw',          name: 'BMW',          image: 'car_logo/logo_0015_Layer-1.png' }
+    { slug: 'Mitsubishi',   name: 'Mitsubishi',   image: 'car_logo/logo_0000_pngwing.com-(32).png' },
+    { slug: 'Rolls Royce',  name: 'Rolls-Royce',  image: 'car_logo/logo_0001_pngwing.com-(31).png' },
+    { slug: 'Aston-Martin', name: 'Aston Martin', image: 'car_logo/logo_0002_pngwing.com-(30).png' },
+    { slug: 'Bentley',      name: 'Bentley',      image: 'car_logo/logo_0003_pngwing.com-(29).png' },
+    { slug: 'Lamborghini',  name: 'Lamborghini',  image: 'car_logo/logo_0004_pngwing.com-(28).png' },
+    { slug: 'Mini',         name: 'Mini',         image: 'car_logo/logo_0005_pngwing.com-(27).png' },
+    { slug: 'Chevrolet',    name: 'Chevrolet',    image: 'car_logo/logo_0006_pngwing.com-(26).png' },
+    { slug: 'Lexus',        name: 'Lexus',        image: 'car_logo/logo_0007_pngwing.com-(25).png' },
+    { slug: 'Kia',          name: 'Kia',          image: 'car_logo/logo_0008_pngwing.com-(24).png' },
+    { slug: 'Cadillac',     name: 'Cadillac',     image: 'car_logo/logo_0009_pngwing.com-(23).png' },
+    { slug: 'GMC',          name: 'GMC',          image: 'car_logo/logo_0010_pngwing.com-(22).png' },
+    { slug: 'Audi',         name: 'Audi',         image: 'car_logo/logo_0011_Layer-4.png' },
+    { slug: 'Mazda',        name: 'Mazda',        image: 'car_logo/logo_0012_Layer-3.png' },
+    { slug: 'Land Rover',   name: 'Land Rover',   image: 'car_logo/logo_0013_Layer-2.png' },
+    { slug: 'Nissan',       name: 'Nissan',       image: 'car_logo/logo_0014_hd-nissan-emblem-logo-transparent-png-701751694774302g4gilafdjp.png' },
+    { slug: 'BMW',          name: 'BMW',          image: 'car_logo/logo_0015_Layer-1.png' }
   ].freeze
 
   # Return array for views (use Car.brand_logos)
