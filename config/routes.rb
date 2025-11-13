@@ -189,4 +189,6 @@ Rails.application.routes.draw do
 
   root "car_rental#index"
   get '/terms_of_use', to: 'car_rental#terms'
+
+  resources :blogs, only: [:index, :show], param: :slug
 end
