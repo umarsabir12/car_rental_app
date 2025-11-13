@@ -385,7 +385,7 @@
         .space-y-4
           %h4.text-white.font-semibold Quick Links
           %ul.space-y-2
-            - default_footer_links = [{label:'Browse Cars',href: cars_path}, {label:'List Your Car',href: new_vendor_request_path}]
+            - default_footer_links = [{label:'Browse Cars',href: cars_path}, {label:'List Your Car',href: new_vendor_request_path}, {label:'Blog',href: blogs_path}]
             - (@footer_links || default_footer_links).each do |l|
               %li= link_to l[:label], l[:href], class: 'text-gray-300 hover:text-white transition'
         .space-y-4
