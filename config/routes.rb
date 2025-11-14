@@ -169,6 +169,7 @@ Rails.application.routes.draw do
   # UPDATED: Public cars routes with clean filter URLs
   get 'cars', to: 'cars#index', as: :cars
   get 'filter_options', to: 'cars#filter_options', as: :filter_options
+  get 'search_cars', to: 'cars#search_cars', as: :search_cars 
   get 'cars/:category', to: 'cars#index', as: :cars_by_category
   get 'cars/:category/:brand', to: 'cars#index', as: :cars_by_category_brand
   get 'cars/:category/:brand/:model', to: 'cars#index', as: :cars_by_all_filters
