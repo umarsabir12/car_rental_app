@@ -3,7 +3,7 @@ class CarsController < ApplicationController
   before_action :normalize_filter_params, only: [:index]
 
   def index
-    # ✨ ADD THIS SECTION - Prepare filter options for initial page load
+    # Prepare filter options for initial page load
     @car_categories = Car.distinct.pluck(:category).compact.sort
     @car_brands = Car.distinct.pluck(:brand).compact.sort
     @car_models = Car.distinct.pluck(:model).compact.sort
@@ -37,6 +37,37 @@ class CarsController < ApplicationController
       filtered_models: filtered_models,
       filtered_categories: filtered_categories
     }
+  end
+
+  def search_cars
+    query = params[:query].to_s.strip
+    
+    if query.length < 2
+      render json: { results: [] }
+      return
+    end
+
+    # Search in brand, model, and year columns
+    results = Car.with_approved_mulkiya
+      .where(
+        "LOWER(brand) LIKE :query OR LOWER(model) LIKE :query OR CAST(year AS TEXT) LIKE :query",
+        query: "%#{query.downcase}%"
+      )
+      .select(:brand, :model, :year, :category)
+      .distinct
+      .order(:year, :brand, :model)
+      .limit(20)
+      .map do |car|
+        {
+          brand: car.brand,
+          model: car.model,
+          year: car.year,
+          category: car.category,
+          display_text: "#{car.brand} #{car.model} #{car.year}"
+        }
+      end
+
+    render json: { results: results }
   end
 
   def show
