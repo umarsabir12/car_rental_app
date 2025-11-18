@@ -65,7 +65,7 @@ class CarRentalController < ApplicationController
     # Company info
     @company = {
       name: 'WheelsOnRent',
-      blurb: 'Your trusted partner for car rentals.'
+      blurb: 'Enjoy great offers on budget and luxury rentals, chauffeur services, and limousines with WheelsOnRent. Headquartered in Dubai, serving all of the UAE'
     }
       
     # Contact info
