@@ -5,4 +5,5 @@ module AppConstants
   YOUTUBE = "https://www.youtube.com/@WheelsonRentUAE"
   INSTAGRAM = "https://www.instagram.com/wheelsonrent.ae/"
   TWITTER = "https://x.com/WheelsOnRentUAE"
+  TIKTOK = "https://www.tiktok.com/@wheelsonrent"
 end
