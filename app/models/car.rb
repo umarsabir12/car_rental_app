@@ -100,9 +100,9 @@ class Car < ApplicationRecord
     s = slug_or_name.to_s.downcase
     # If model has brand_slug column, prefer it; otherwise fallback to brand name
     if column_names.include?('brand_slug')
-      scope.where('lower(brand_slug) = ? OR lower(brand) = ?', s, s)
+      scope.where('lower(brand_slug) LIKE ? OR lower(brand) LIKE ?', "%#{s}%", "%#{s}%")
     else
-      scope.where('lower(brand) = ?', s)
+      scope.where('lower(brand) LIKE ?', "%#{s}%")
     end
   end
 
