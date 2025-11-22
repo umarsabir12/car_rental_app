@@ -189,8 +189,10 @@ Rails.application.routes.draw do
   get 'user/home', to: 'users#home', as: :user_home
 
   get 'blogs', to: 'blogs#index', as: :blogs
+  
+  get '/terms_of_use', to: 'car_rental#terms'
+  
   get ':slug', to: 'blogs#show', as: :blog
 
   root "car_rental#index"
-  get '/terms_of_use', to: 'car_rental#terms'
 end
