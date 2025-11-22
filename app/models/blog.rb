@@ -1,5 +1,6 @@
 class Blog < ApplicationRecord
   has_one_attached :featured_image, dependent: :purge_later
+  has_many_attached :reference_images, dependent: :purge_later
 
   validates :title, :content, :category, :author_name, presence: true
   
