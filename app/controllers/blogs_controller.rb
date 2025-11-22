@@ -7,8 +7,11 @@ class BlogsController < ApplicationController
 
   def show
     if @blog.reference_images.attached?
-      table_image_url = url_for(@blog.reference_images[0])
-      @blog.content = @blog.content.gsub('{{PRICE_TABLE_IMAGE}}', table_image_url)
+      table1_image_url = url_for(@blog.reference_images[0])
+      @blog.content = @blog.content.gsub('{{PRICE_TABLE_IMAGE}}', table1_image_url)
+
+      graph_image_url = url_for(@blog.reference_images[1])
+      @blog.content = @blog.content.gsub('{{GRAPH_IMAGE}}', graph_image_url)
     end
   end
 
