@@ -12,6 +12,11 @@ class BlogsController < ApplicationController
 
       graph_image_url = url_for(@blog.reference_images[1])
       @blog.content = @blog.content.gsub('{{GRAPH_IMAGE}}', graph_image_url)
+
+      @blog.reference_images.each_with_index do |image, index|
+        resource_url = url_for(image)
+        @blog.content = @blog.content.gsub("{{resource_#{index + 1}}}", resource_url)
+      end
     end
   end
 
