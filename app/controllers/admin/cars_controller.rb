@@ -13,6 +13,7 @@ class Admin::CarsController < ApplicationController
 
   def show
     @car = Car.friendly.find(params[:id])
+    @vendor_avatar_url = url_for(@car.vendor.avatar.first)
   end
 
   def download_report

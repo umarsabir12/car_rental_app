@@ -1,10 +1,14 @@
 .container.mx-auto.px-4.py-8
   / ==== Static Vendor Info ====
   .flex.items-center.bg-white.shadow.mb-6.p-4.rounded-lg.gap-4
-    %img.w-14.h-14.rounded-full.object-cover{ src: 'https://randomuser.me/api/portraits/men/32.jpg', alt: 'Vendor Avatar' }
+    - if @car.vendor.avatar.attached?
+      %img.w-14.h-14.rounded-full.object-cover{ src: @vendor_avatar_url, alt: 'Vendor Avatar' }
+    - else
+      %div.w-14.h-14.rounded-full.flex.items-center.justify-center.font-bold.text-white.text-2xl{ style: 'background-color: #3a6363' }
+        = @car.vendor.display_name.first.upcase
     .flex-1
-      %div.text-lg.font-bold.text-gray-800 Vendor: Speedy Rentals
-      %div.text-sm.text-gray-500 Contact: speedy@rentals.com | +1-555-123-4567
+      %div.text-lg.font-bold.text-gray-800= "Vendor: #{@car.vendor.display_name}"
+      %div.text-sm.text-gray-500= "Contact: #{@car.vendor.email} | #{@car.vendor.phone}"
 
   .bg-white.shadow-lg.rounded-xl.overflow-hidden
     %div{ class: "md:flex" }
