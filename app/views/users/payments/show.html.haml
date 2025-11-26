@@ -1,4 +1,4 @@
-.container.mx-auto.max-w-7xl.p-4.md:p-8
+.container.mx-auto.max-w-7xl.p-4.md:p-8.pt-5
   .bg-white.rounded-3xl.shadow-2xl.overflow-hidden
     / Header
     .p-4.text-center
@@ -137,9 +137,6 @@
             %strong Pickup Date
           %p= @booking.start_date.strftime('%d/%m/%Y')
       .vehicle-right
-        %p
-          %strong License Plate
-        %p.license-plate= 'ABC-1234' # @car.registration_number
         %p
           %strong Return Date
         %p= @booking.end_date.strftime('%d/%m/%Y')
