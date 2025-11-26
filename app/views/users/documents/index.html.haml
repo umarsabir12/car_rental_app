@@ -18,22 +18,22 @@
           %p.text-gray-600.mb-8 Please upload all required documents to complete your profile and proceed with bookings.
 
           .grid.grid-cols-1.md:grid-cols-2.lg:grid-cols-3.gap-4.mb-8
-            / Missing Documents Notification
-            - if current_user.missing_documents.any?
-              .bg-red-50.border-l-4.border-red-500.rounded-lg.p-4.shadow-sm.mb-5
-                .flex.items-start.gap-3
-                  %i.fas.fa-exclamation-triangle.text-red-500.text-xl.mt-1
-                  .flex-1
-                    %h3.font-semibold.text-red-800.mb-1 Missing Documents
-                    %p.text-red-700.text-sm.mb-2
-                      #{current_user.missing_documents.count} document#{current_user.missing_documents.count == 1 ? '' : 's'} not uploaded
-                    %ul.text-red-600.text-xs.space-y-1.mb-3
-                      - current_user.missing_documents.limit(3).each do |doc|
-                        %li.flex.items-center.gap-1
-                          %i.fas.fa-circle.text-xs
-                          = doc.doc_name == 'Home country driving license and IDP' ? 'International Driving license' : doc.doc_name == 'Copy of visa Entry Stamp' ? 'Copy of visa' : doc.doc_name == 'A Valid UAE driving license' ? 'A Valid UAE driving license or IDP' : doc.doc_name
-                      - if current_user.missing_documents.count > 3
-                        %li.text-red-500.font-semibold +#{current_user.missing_documents.count - 3} more...
+            -# / Missing Documents Notification
+            -# - if current_user.missing_documents.any?
+            -#   .bg-red-50.border-l-4.border-red-500.rounded-lg.p-4.shadow-sm.mb-5
+            -#     .flex.items-start.gap-3
+            -#       %i.fas.fa-exclamation-triangle.text-red-500.text-xl.mt-1
+            -#       .flex-1
+            -#         %h3.font-semibold.text-red-800.mb-1 Missing Documents
+            -#         %p.text-red-700.text-sm.mb-2
+            -#           #{current_user.missing_documents.count} document#{current_user.missing_documents.count == 1 ? '' : 's'} not uploaded
+            -#         %ul.text-red-600.text-xs.space-y-1.mb-3
+            -#           - current_user.missing_documents.limit(3).each do |doc|
+            -#             %li.flex.items-center.gap-1
+            -#               %i.fas.fa-circle.text-xs
+            -#               = doc.doc_name == 'Home country driving license and IDP' ? 'International Driving license' : doc.doc_name == 'Copy of visa Entry Stamp' ? 'Copy of visa' : doc.doc_name == 'A Valid UAE driving license' ? 'A Valid UAE driving license or IDP' : doc.doc_name
+            -#           - if current_user.missing_documents.count > 3
+            -#             %li.text-red-500.font-semibold +#{current_user.missing_documents.count - 3} more...
 
             / Rejected Documents Notification
             - if current_user.rejected_documents.any?
@@ -59,22 +59,6 @@
                   %i.fas.fa-clock.text-yellow-500.text-2xl.mt-1
                   .flex-1
                     %h3.font-semibold.text-yellow-800.text-lg.mb-2 Pending Review
-                    %p.text-yellow-700.text-sm.mb-3
-                      #{current_user.pending_documents.count} document#{current_user.pending_documents.count == 1 ? '' : 's'} under review, you will be updated shortly
-                    %ul.text-yellow-600.text-sm.space-y-2.mb-3
-                      - current_user.pending_documents.each do |doc|
-                        %li.flex.items-center.gap-2
-                          %i.fas.fa-circle.text-xs
-                          - display_name = case doc.doc_name
-                          - when 'Home country driving license and IDP'
-                            - 'International Driving license'
-                          - when 'Copy of visa Entry Stamp'
-                            - 'Copy of visa'
-                          - when 'A Valid UAE driving license'
-                            - 'A Valid UAE driving license or IDP'
-                          - else
-                            - doc.doc_name
-                          = display_name
                     %p.text-yellow-600.text-sm.font-medium.flex.items-center.gap-2
                       %i.fas.fa-info-circle
                       Thank you for uploading the documents, we will be reaching out to you shortly.
