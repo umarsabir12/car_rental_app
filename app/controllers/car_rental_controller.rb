@@ -1,5 +1,6 @@
 class CarRentalController < ApplicationController
   def index
+    @max_cards = request.user_agent.downcase.include?('mobile') ? 1 : 4 
     # Set default dates
     @pick_date = Date.current.strftime('%Y-%m-%d')
     @drop_date = (Date.current + 3.days).strftime('%Y-%m-%d')
