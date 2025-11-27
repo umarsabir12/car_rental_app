@@ -185,21 +185,19 @@ class CarsController < ApplicationController
   end
 
   def set_meta_tags
-    if !params[:category].present? && !params[:brand].present? && !params[:model].present?
-      @meta_title = "Car Rental Dubai | Affordable Car Hire - Wheels on Rent"
-      @meta_description = "Rent cars in Dubai with best prices, daily & monthly plans, and a wide range of vehicles at Wheels on Rent."
-    else
-
-      if params[:category].present?
-        meta_tags = AppConstants::CAR_CATEGORIES_META[params[:category].downcase]
-        
-        if meta_tags
-          @meta_title = meta_tags[:title]
-          @meta_description = meta_tags[:description]
-          return
-        end
-      end
-    end
-
+    @meta_title = "Car Rental Dubai | Affordable Car Hire - Wheels on Rent"
+    @meta_description = "Rent cars in Dubai with best prices, daily & monthly plans, and a wide range of vehicles at Wheels on Rent."
+    
+    return if params[:category].blank? && params[:brand].blank? && params[:model].blank?
+    
+    meta_tags = find_meta_tags_for_filters
+    return unless meta_tags
+    
+    @meta_title, @meta_description = meta_tags.values_at(:title, :description)
+  end
+  
+  def find_meta_tags_for_filters
+    AppConstants::CAR_CATEGORIES_META[params[:category]&.downcase] ||
+    AppConstants::CAR_BRANDS_META[params[:brand]&.downcase]
   end
 end

@@ -46,4 +46,71 @@ module AppConstants
       description: 'Rent trucks in Dubai for transport, moving or heavy-duty needs | reliable service and flexible rental packages from Wheels on Rent.'
     }
   }.freeze
+
+  CAR_BRANDS_META = {
+    'mitsubishi' => {
+      title: 'Mitsubishi Car Rental Dubai | Affordable Hire - Wheels on Rent',
+      description: 'Rent Mitsubishi cars in Dubai at great rates with reliable service and flexible rental options.'
+    },
+    'rolls-royce' => {
+      title: 'Rolls-Royce Rental Dubai | Luxury Chauffeur & Self-Drive - Wheels on Rent',
+      description: 'Experience premium Rolls-Royce rentals in Dubai | luxury, comfort, and top-tier service.'
+    },
+    'aston-martin' => {
+      title: 'Aston Martin Rental Dubai | Luxury Sports Car Hire - Wheels on Rent',
+      description: 'Rent Aston Martin in Dubai for a luxury sports driving experience with flexible rental plans.'
+    },
+    'bentley' => {
+      title: 'Bentley Rental Dubai | Premium Luxury Car Hire - Wheels on Rent',
+      description: 'Rent Bentley cars in Dubai | elegant luxury vehicles with top-quality service and flexible packages.'
+    },
+    'lamborghini' => {
+      title: 'Lamborghini Rental Dubai | Supercar Hire - Wheels on Rent',
+      description: 'Drive a Lamborghini in Dubai with flexible rental options and premium service.'
+    },
+    'mini' => {
+      title: 'Mini Cooper Rental Dubai | Stylish Compact Hire - Wheels on Rent',
+      description: 'Rent Mini Cooper cars in Dubai | stylish, compact, and perfect for city driving.'
+    },
+    'chevrolet' => {
+      title: 'Chevrolet Car Rental Dubai | Affordable Hire - Wheels on Rent',
+      description: 'Rent Chevrolet cars in Dubai with great rates and reliable rental service.'
+    },
+    'lexus' => {
+      title: 'Lexus Car Rental Dubai | Premium SUV & Sedan Hire - Wheels on Rent',
+      description: 'Rent Lexus luxury cars in Dubai | smooth performance and premium comfort.'
+    },
+    'kia' => {
+      title: 'Kia Car Rental Dubai | Budget-Friendly Hire - Wheels on Rent',
+      description: 'Rent Kia cars in Dubai at affordable rates with flexible rental plans.'
+    },
+    'cadillac' => {
+      title: 'Cadillac Rental Dubai | Luxury SUV Hire - Wheels on Rent',
+      description: 'Rent Cadillac SUVs in Dubai | luxury, comfort, and premium rental service.'
+    },
+    'gmc' => {
+      title: 'GMC Car Rental Dubai | Powerful SUV Hire - Wheels on Rent',
+      description: 'Rent GMC SUVs in Dubai with spacious interiors and strong performance.'
+    },
+    'audi' => {
+      title: 'Audi Car Rental Dubai | Luxury Car Hire - Wheels on Rent',
+      description: 'Rent Audi luxury cars in Dubai | premium performance and modern features.'
+    },
+    'mazda' => {
+      title: 'Mazda Car Rental Dubai | Reliable & Affordable Hire - Wheels on Rent',
+      description: 'Rent Mazda cars in Dubai with great pricing and flexible rental options.'
+    },
+    'land-rover' => {
+      title: 'Land Rover Rental Dubai | Luxury SUV Hire - Wheels on Rent',
+      description: 'Rent Land Rover SUVs in Dubai | premium off-road capability with superior comfort.'
+    },
+    'nissan' => {
+      title: 'Nissan Car Rental Dubai | Affordable Daily & Monthly Hire - Wheels on Rent',
+      description: 'Rent Nissan cars in Dubai at competitive rates with flexible plans.'
+    },
+    'bmw' => {
+      title: 'BMW Rental Dubai | Luxury Performance Car Hire - Wheels on Rent',
+      description: 'Rent BMW cars in Dubai | luxury performance vehicles with top-quality rental service.'
+    }
+  }.freeze
 end
