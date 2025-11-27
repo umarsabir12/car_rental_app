@@ -36,10 +36,10 @@
       We offer a comprehensive range of vehicles for all occasions across Dubai and the UAE. From daily commuters to luxury experiences, Wheels on Rent ensures safe, flexible, and hassle-free rentals. Whether you are visiting Dubai for tourism, business, or exploration, our platform allows you to rent a car in Dubai instantly, with options including zero deposit rentals, cars with or without a driver, and vehicles for all budgets. 
 
   / Promo Slider Banner (auto-rotates every 5s)
-  %section.py-6.bg-white
-    .max-w-7xl.mx-auto.px-4.sm:px-6.lg:px-8
-      .relative.rounded-2xl.overflow-hidden.border.border-gray-100.shadow-sm
-        #promoSlider.relative.h-32.sm:h-40.md:h-48.lg:h-56{style: 'height: 20rem;'}
+  %section.py-4.sm:py-6.md:py-8.bg-white
+    .max-w-7xl.mx-auto.px-3.sm:px-4.lg:px-8
+      .relative.rounded-lg.sm:rounded-xl.md:rounded-2xl.overflow-hidden.border.border-gray-100.shadow-sm.hover:shadow-md.transition-shadow
+        #promoSlider.relative.w-full{class: 'h-24 sm:h-32 md:h-40 lg:h-56', style: 'min-height: 6rem;'}
           %img.absolute.inset-0.w-full.h-full.object-cover.transition-opacity.duration-700.opacity-100{ src: image_path('tabby_banner.jpg'), alt: 'Tabby banner', 'data-index' => '0' }
           %img.absolute.inset-0.w-full.h-full.object-cover.transition-opacity.duration-700.opacity-0{ src: image_path('no_deposit_banner.jpg'), alt: 'No deposit banner', 'data-index' => '1' }
 
@@ -89,7 +89,7 @@
                 %i.fas.fa-chevron-left.text-white.text-xl
               
               / Right Arrow (shown if more than 4 cars)
-              - if category_cars.length > 4
+              - if category_cars.length > @max_cards
                 %button.absolute.right-0.transform.z-10.w-12.h-12.rounded-full.shadow-lg.transition-all.duration-300.carousel-nav-btn.carousel-next{class: 'top-1/2 -translate-y-1/2 translate-x-4 hover:scale-110', style: 'background-color: #3a6363', data: { category: category[:slug] }}
                   %i.fas.fa-chevron-right.text-white.text-xl
               
@@ -468,7 +468,16 @@
       const nextBtn = document.querySelector(`.carousel-next[data-category="${category}"]`);
       if (!prevBtn || !nextBtn) return;
 
-      const CARDS_TO_SHOW = 4;
+      function getCardsToShow() {
+        const width = window.innerWidth;
+        if (width < 640) {
+          return 1; // Mobile: 2 cards
+        } else {
+          return 4; // Desktop: 4 cards
+        }
+      }
+
+      let CARDS_TO_SHOW = getCardsToShow();
       
       // Get the carousel container width
       const container = track.closest('.carousel-viewport');
