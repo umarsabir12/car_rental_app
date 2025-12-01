@@ -1,5 +1,6 @@
 class Vendors::BookingsController < ApplicationController
   before_action :authenticate_vendor!
+  before_action :set_booking, only: [:show, :update, :update_payment_status, :update_booking_status]
 
   def index
     # Get all bookings for cars belonging to the current vendor
@@ -43,20 +44,86 @@ class Vendors::BookingsController < ApplicationController
   end
 
   def update
-    @booking = Booking.includes(:user, :car)
-                      .where(car_id: current_vendor.cars.pluck(:id))
-                      .find(params[:id])
+    @booking = set_booking
     
     if @booking.update(booking_params)
-      redirect_to vendors_booking_path(@booking), notice: 'Booking status updated successfully.'
+      redirect_to vendors_booking_path(@booking), notice: 'Booking updated successfully.'
     else
       render :show
     end
   end
 
+  # Update booking status via AJAX
+  def update_booking_status
+    new_status = params[:status]
+
+    # Validate status
+    valid_statuses = ['pending', 'confirmed', 'cancelled']
+    unless valid_statuses.include?(new_status)
+      return respond_to do |format|
+        format.json { render json: { success: false, message: 'Invalid status' }, status: :unprocessable_entity }
+        format.html { redirect_to vendors_booking_path(@booking), alert: 'Invalid status' }
+      end
+    end
+
+    if @booking.update!(status: new_status)
+      respond_to do |format|
+        format.json { render json: { success: true, message: 'Booking status updated', status: new_status }, status: :ok }
+        format.html { redirect_to vendors_booking_path(@booking), notice: "Booking status updated to #{new_status}" }
+      end
+    else
+      respond_to do |format|
+        format.json { render json: { success: false, message: 'Failed to update status' }, status: :unprocessable_entity }
+        format.html { render :show }
+      end
+    end
+  end
+
+  # Update payment status via AJAX
+  def update_payment_status
+    payment_status = params[:payment_status]
+    
+    # Validate payment status
+    unless ['true', 'false', true, false].include?(payment_status)
+      return respond_to do |format|
+        format.json { render json: { success: false, message: 'Invalid payment status' }, status: :unprocessable_entity }
+        format.html { redirect_to vendors_booking_path(@booking), alert: 'Invalid payment status' }
+      end
+    end
+
+    # Convert to boolean
+    is_paid = payment_status.to_s == 'true'
+
+    if @booking.update(payment_processed: is_paid)
+      status_text = is_paid ? 'Paid' : 'Pending'
+      respond_to do |format|
+        format.json { 
+          render json: { 
+            success: true, 
+            message: "Payment status updated to #{status_text}", 
+            payment_processed: is_paid,
+            payment_status_text: status_text
+          }, status: :ok 
+        }
+        format.html { redirect_to vendors_booking_path(@booking), notice: "Payment status updated to #{status_text}" }
+      end
+    else
+      respond_to do |format|
+        format.json { render json: { success: false, message: 'Failed to update payment status' }, status: :unprocessable_entity }
+        format.html { render :show }
+      end
+    end
+  end
+
   private
+
+  def set_booking
+    @booking = Booking.includes(:user, :car)
+                      .where(car_id: current_vendor.cars.pluck(:id))
+                      .find(params[:id])
+  end
 
   def booking_params
     params.require(:booking).permit(:status)
   end
-end 
+end

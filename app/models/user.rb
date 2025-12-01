@@ -154,6 +154,10 @@ class User < ApplicationRecord
     missing_documents.any? || pending_documents.any? || rejected_documents.any?
   end
 
+  def documents_approved?
+    !documents_notification?
+  end
+
   def unpaid_bookings
     bookings.where(payment_processed: [false, nil])
   end

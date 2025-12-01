@@ -143,8 +143,15 @@
                           %i.fas.fa-tag.mr-2.text-green-500
                           = booking.car&.category
                       .text-xl.font-semibold.text-blue-600.mb-4
-                        = number_to_currency(booking.car&.daily_price)
-                        %span.text-sm.font-normal.text-gray-500.ml-1 per day
+                        = number_to_currency(booking.selected_price)
+                        - if booking.selected_period == 'daily'
+                          %span.text-sm.font-normal.text-gray-500.ml-1 per day
+                        - elsif booking.selected_period == 'weekly'
+                          %span.text-sm.font-normal.text-gray-500.ml-1 per week
+                        - elsif booking.selected_period == 'monthly'
+                          %span.text-sm.font-normal.text-gray-500.ml-1 per month
+
+                          
 
                     / Rental Period
                     .bg-gray-50.rounded-xl.mb-6.flex.items-center.justify-between
@@ -166,29 +173,72 @@
                     .mt-auto.pt-4.border-t.border-gray-200
                       .flex.flex-col.sm:flex-row.items-start.sm:items-center.justify-between.gap-4
                         .flex-1
-                          %p.text-sm.text-gray-500 Total Amount
-                          %p.text-2xl.font-bold.text-green-600
-                            = number_to_currency(booking.car&.daily_price * (booking.end_date - booking.start_date).to_i)
-
-
-
-                        - if booking.payment_processed?
-                          .bg-green-50.text-green-700.px-5.py-2.rounded-lg.font-medium.border.border-green-200.flex.items-center
-                            %i.fas.fa-check-circle.mr-2
-                            Payment Confirmed
-                        - else
-                          - has_flash_alert = flash[:alert].present?
-                          - if has_flash_alert
-                            .payment-disabled.bg-gray-300.text-gray-500.px-6.py-3.rounded-lg.font-semibold.cursor-not-allowed.flex.items-center.justify-center.min-w-40.opacity-60{ title: 'Payment is disabled until your documents are approved' }
-                              %i.fas.fa-lock.mr-2
-                              Payment
+                          - duration_days = (booking.end_date - booking.start_date).to_i
+                          - daily_price = booking.car&.daily_price.to_f || 0
+                          
+                          / Pricing breakdown based on selected period
+                          - if booking.selected_period == 'weekly'
+                            - weekly_price = booking.car&.weekly_price.to_f || 0
+                            - full_weeks = duration_days / 7
+                            - remaining_days = duration_days % 7
+                            - total_amount = (full_weeks * weekly_price) + (remaining_days * daily_price)
+                            
+                            %p.text-sm.text-gray-600.mb-2
+                              %span.font-medium Pricing:
+                              %span.ml-1
+                                = "#{full_weeks} week#{full_weeks == 1 ? '' : 's'} × AED #{weekly_price.to_i}"
+                                - if remaining_days > 0
+                                  %span.ml-1 + #{remaining_days} day#{remaining_days == 1 ? '' : 's'} × AED #{daily_price.to_i}
+                            
+                          - elsif booking.selected_period == 'monthly'
+                            - monthly_price = booking.car&.monthly_price.to_f || 0
+                            - full_months = duration_days / 30
+                            - remaining_days = duration_days % 30
+                            - total_amount = (full_months * monthly_price) + (remaining_days * daily_price)
+                            
+                            %p.text-sm.text-gray-600.mb-2
+                              %span.font-medium Pricing:
+                              %span.ml-1
+                                = "#{full_months} month#{full_months == 1 ? '' : 's'} × AED #{monthly_price.to_i}"
+                                - if remaining_days > 0
+                                  %span.ml-1 + #{remaining_days} day#{remaining_days == 1 ? '' : 's'} × AED #{daily_price.to_i}
+                          
                           - else
-                            - unless booking.status == 'cancelled'
-                              = link_to users_payment_path(booking.id), 
-                                  class: 'bg-gradient-to-r from-blue-600 to-blue-700 text-white px-6 py-3 rounded-lg font-semibold hover:from-blue-700 hover:to-blue-800 transition-all duration-200 shadow-md hover:shadow-lg flex items-center justify-center min-w-40',
-                                  data: { turbo: false } do
-                                %i.fas.fa-credit-card.mr-2
-                                Pay Now
+                            - total_amount = duration_days * daily_price
+                            %p.text-sm.text-gray-600.mb-2
+                              %span.font-medium Pricing:
+                              %span.ml-1= "#{duration_days} days × AED #{daily_price.to_i}"
+                          
+                          %p.text-2xl.font-bold.text-green-600
+                            = number_to_currency(total_amount)
+
+                        / Status Pill + Button Container
+                        .flex.items-center.gap-3
+                          / Status Pill - Always Visible
+                          - badge_class = case booking.status
+                          - when 'confirmed' then 'bg-green-100 text-green-800'
+                          - when 'pending' then 'bg-yellow-100 text-yellow-800'
+                          - when 'cancelled' then 'bg-red-100 text-red-800'
+                          - else 'bg-gray-100 text-gray-800'
+                          %span.inline-flex.items-center.px-3.py-1.rounded-full.text-xs.font-medium.shadow-sm.whitespace-nowrap{class: badge_class}
+                            - if booking.status == 'confirmed'
+                              %i.fas.fa-check-circle.mr-1.text-xs
+                            - elsif booking.status == 'pending'
+                              %i.fas.fa-clock.mr-1.text-xs
+                            - elsif booking.status == 'cancelled'
+                              %i.fas.fa-times-circle.mr-1.text-xs
+                            = booking.status.titleize
+
+
+                          / View/Pay Button - Check Document Approval
+                          - if !current_user.documents_approved?
+                            .payment-disabled.bg-gray-300.text-gray-500.px-6.py-3.rounded-lg.font-semibold.cursor-not-allowed.flex.items-center.justify-center.min-w-36.opacity-60{ title: 'Payment is disabled until your documents are approved' }
+                              %i.fas.fa-lock.mr-2
+                              Payment Disabled
+                          - else
+                            = link_to users_payment_path(booking.id), class: 'bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold transition-all duration-200 shadow-md hover:shadow-lg flex items-center justify-center min-w-36' do
+                              %i.fas.fa-eye.mr-2
+                              View/Pay Booking
                         
 
       - else
@@ -227,38 +277,6 @@
           form.appendChild(submitButton);
           submitButton.click();
         }
-      });
-    }
-    
-    // Check if there's a flash alert (indicating pending documents)
-    const hasFlashAlert = document.querySelector('.bg-red-50') !== null;
-    
-    if (hasFlashAlert) {
-      // Disable all payment buttons when documents are pending
-      document.querySelectorAll('a[href*="/payments"]').forEach(function(link) {
-        // Replace the link with a disabled button
-        const disabledButton = document.createElement('div');
-        disabledButton.className = 'payment-disabled bg-gray-300 text-gray-500 px-6 py-3 rounded-lg font-semibold cursor-not-allowed flex items-center justify-center min-w-40 opacity-60';
-        disabledButton.innerHTML = '<i class="fas fa-lock mr-2"></i>Payment Disabled';
-        disabledButton.title = 'Payment is disabled until your documents are approved';
-        
-        // Add click handler to show message
-        disabledButton.addEventListener('click', function(e) {
-          e.preventDefault();
-          e.stopPropagation();
-          alert("Payment is currently disabled. Please wait for your documents to be approved before proceeding with payment.");
-        });
-        
-        link.parentNode.replaceChild(disabledButton, link);
-      });
-      
-      // Also handle any payment-disabled elements that might already exist
-      document.querySelectorAll('.payment-disabled').forEach(function(disabledBtn) {
-        disabledBtn.addEventListener('click', function(e) {
-          e.preventDefault();
-          e.stopPropagation();
-          alert("Payment is currently disabled. Please wait for your documents to be approved before proceeding with payment.");
-        });
       });
     }
     

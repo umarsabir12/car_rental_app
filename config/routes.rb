@@ -47,6 +47,12 @@ Rails.application.routes.draw do
         post :create_checkout
       end
     end
+
+    resources :bookings do
+      member do
+        patch :update_payment_mode
+      end
+    end
   end
   resources :users, only: [:show, :edit, :update]
 
@@ -150,7 +156,12 @@ Rails.application.routes.draw do
     delete 'car/:id', to: 'cars#destroy'
     delete 'cars/:id/remove_image', to: 'cars#remove_image', as: :remove_image_car
 
-    resources :bookings
+    resources :bookings do
+      member do
+        patch :update_booking_status
+        patch :update_payment_status
+      end
+    end
     resources :documents
     resources :payments, only: [:index, :show]
     # Vendors can only VIEW their invoices (read-only)
