@@ -76,7 +76,7 @@ class CarsController < ApplicationController
     @car = Car.friendly.find(params[:id])
     @booking_success = flash[:notice] if flash[:notice].present?
     
-    @booked_dates = @car.bookings.where.not(status: 'cancelled')
+    @booked_dates = @car.bookings
       .flat_map { |b| (b.start_date..b.end_date).to_a }
       .uniq
       .map(&:to_s)

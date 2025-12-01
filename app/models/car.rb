@@ -56,7 +56,7 @@ class Car < ApplicationRecord
     period_start = start_date.to_date
     period_end = period_start + (days_to_check - 1).days
 
-    overlapping = bookings.where.not(status: 'cancelled').where(
+    overlapping = bookings.where(
       '(start_date, end_date) OVERLAPS (?, ?)', period_start, period_end
     )
 

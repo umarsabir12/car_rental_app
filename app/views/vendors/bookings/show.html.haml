@@ -143,6 +143,53 @@
               %span.font-bold.text-gray-900 Total
               %span.font-bold.text-lg.text-blue-600= number_to_currency(total_amount)
 
+      / Status Update Card
+      .bg-white.rounded-xl.shadow-lg.p-6
+        %h2.text-xl.font-bold.mb-4.flex.items-center.gap-2{style: 'color:#3A6363'}
+          %i.fas.fa-sliders-h{style: 'color:#3A6363'}
+          Update Status
+        
+        .space-y-4
+          / Booking Status Update
+          .pb-4.border-b.border-gray-200
+            %label.block.text-sm.font-semibold.text-gray-700.mb-2 Booking Status
+            .flex.gap-2
+              %select#bookingStatusSelect.flex-1.px-4.py-2.border.border-gray-300.rounded-lg.focus:outline-none.focus:ring-2.focus:ring-blue-500{data: { booking_id: @booking.id }}
+                %option{value: 'pending', selected: @booking.status == 'pending'} Pending
+                %option{value: 'confirmed', selected: @booking.status == 'confirmed'} Confirmed
+                %option{value: 'cancelled', selected: @booking.status == 'cancelled'} Cancelled
+              %button#updateBookingStatusBtn.px-4.py-2.bg-blue-600.hover:bg-blue-700.text-white.font-medium.rounded-lg.transition.disabled:opacity-50{disabled: true}
+                %i.fas.fa-check
+                %span Update
+
+          / Payment Status Update
+          .pb-4.border-b.border-gray-200
+            %label.block.text-sm.font-semibold.text-gray-700.mb-2 Payment Status
+            .flex.items-center.gap-3
+              .flex-1
+                - if @booking.payment_processed?
+                  %span.inline-block.bg-green-100.text-green-700.px-4.py-2.rounded-full.text-sm.font-semibold#paymentStatusBadge Paid
+                - else
+                  %span.inline-block.bg-yellow-100.text-yellow-700.px-4.py-2.rounded-full.text-sm.font-semibold#paymentStatusBadge Payment Pending
+              
+              %button#togglePaymentStatusBtn.px-4.py-2.rounded-lg.font-medium.transition{
+                data: { booking_id: @booking.id, current_status: @booking.payment_processed? },
+                class: @booking.payment_processed? ? 'bg-red-600 hover:bg-red-700 text-white' : 'bg-green-600 hover:bg-green-700 text-white'
+              }
+                - if @booking.payment_processed?
+                  %i.fas.fa-times
+                  %span Mark as Unpaid
+                - else
+                  %i.fas.fa-check
+                  %span Mark as Paid
+
+          / Payment Mode Display
+          .pt-2
+            %label.block.text-sm.font-semibold.text-gray-700.mb-2 Payment Method
+            - payment_mode_colors = {'Cash' => 'bg-yellow-100 text-yellow-700', 'Online' => 'bg-green-100 text-green-700'}
+            %span.inline-block.rounded-full.text-xs.font-semibold.px-4.py-2{class: payment_mode_colors[@booking.payment_mode] || 'bg-gray-100 text-gray-700'}
+              = @booking.payment_mode
+
       / Quick Actions Card
       .bg-white.rounded-xl.shadow-lg.p-6
         %h2.text-xl.font-bold.mb-4.flex.items-center.gap-2{style: 'color:#3A6363'}
@@ -155,4 +202,132 @@
           = link_to vendors_bookings_path, class: 'w-full bg-gray-50 hover:bg-gray-100 text-gray-700 font-medium px-4 py-3 rounded-lg transition flex items-center justify-center gap-2' do
             %i.fas.fa-arrow-left
             Back to Bookings
+
+:javascript
+  document.addEventListener('DOMContentLoaded', function() {
+    const bookingStatusSelect = document.getElementById('bookingStatusSelect');
+    const updateBookingStatusBtn = document.getElementById('updateBookingStatusBtn');
+    const togglePaymentStatusBtn = document.getElementById('togglePaymentStatusBtn');
+    const paymentStatusBadge = document.getElementById('paymentStatusBadge');
+    
+    // Store original status for comparison
+    let originalBookingStatus = bookingStatusSelect.value;
+
+    // Enable/disable update button based on status change
+    bookingStatusSelect.addEventListener('change', function() {
+      updateBookingStatusBtn.disabled = this.value === originalBookingStatus;
+    });
+
+    // Update Booking Status
+    updateBookingStatusBtn.addEventListener('click', function(e) {
+      e.preventDefault();
+      const newStatus = bookingStatusSelect.value;
+      const bookingId = bookingStatusSelect.getAttribute('data-booking-id');
+
+      fetch(`/vendors/bookings/${bookingId}/update_booking_status`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        },
+        body: JSON.stringify({
+          status: newStatus
+        })
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          originalBookingStatus = newStatus;
+          updateBookingStatusBtn.disabled = true;
+          
+          // Show success notification
+          showNotification('success', data.message);
+          
+          // Update the status badge in the header
+          const statusBadge = document.querySelector('[data-status-badge]');
+          if (statusBadge) {
+            statusBadge.textContent = newStatus;
+            statusBadge.className = `inline-block rounded-full text-sm font-semibold px-4 py-2 ${getStatusClass(newStatus)}`;
+          }
+        } else {
+          showNotification('error', data.message);
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        showNotification('error', 'Failed to update booking status');
+      });
+    });
+
+    // Toggle Payment Status
+    togglePaymentStatusBtn.addEventListener('click', function(e) {
+      e.preventDefault();
+      const bookingId = this.getAttribute('data-booking-id');
+      const currentStatus = this.getAttribute('data-current-status') === 'true';
+      const newStatus = !currentStatus;
+
+      fetch(`/vendors/bookings/${bookingId}/update_payment_status`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        },
+        body: JSON.stringify({
+          payment_status: newStatus
+        })
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          // Update button state
+          togglePaymentStatusBtn.setAttribute('data-current-status', newStatus);
+          
+          // Update button appearance
+          if (newStatus) {
+            togglePaymentStatusBtn.className = 'px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-medium rounded-lg transition';
+            togglePaymentStatusBtn.innerHTML = '<i class="fas fa-times"></i><span class="ml-2">Mark as Unpaid</span>';
+            paymentStatusBadge.className = 'inline-block bg-green-100 text-green-700 px-4 py-2 rounded-full text-sm font-semibold';
+            paymentStatusBadge.textContent = 'Paid';
+          } else {
+            togglePaymentStatusBtn.className = 'px-4 py-2 bg-green-600 hover:bg-green-700 text-white font-medium rounded-lg transition';
+            togglePaymentStatusBtn.innerHTML = '<i class="fas fa-check"></i><span class="ml-2">Mark as Paid</span>';
+            paymentStatusBadge.className = 'inline-block bg-yellow-100 text-yellow-700 px-4 py-2 rounded-full text-sm font-semibold';
+            paymentStatusBadge.textContent = 'Payment Pending';
+          }
+          
+          showNotification('success', data.message);
+        } else {
+          showNotification('error', data.message);
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        showNotification('error', 'Failed to update payment status');
+      });
+    });
+
+    // Helper function to show notifications
+    function showNotification(type, message) {
+      const notification = document.createElement('div');
+      notification.className = `fixed top-4 right-4 px-6 py-3 rounded-lg text-white font-medium shadow-lg z-50 ${
+        type === 'success' ? 'bg-green-600' : 'bg-red-600'
+      }`;
+      notification.textContent = message;
+      document.body.appendChild(notification);
+      
+      setTimeout(() => {
+        notification.remove();
+      }, 3000);
+    }
+
+    // Helper function to get status class
+    function getStatusClass(status) {
+      const classes = {
+        'Pending': 'bg-yellow-100 text-yellow-700',
+        'Confirmed': 'bg-green-100 text-green-700',
+        'Cancelled': 'bg-red-100 text-red-700'
+      };
+      return classes[status] || 'bg-gray-100 text-gray-700';
+    }
+  });
 

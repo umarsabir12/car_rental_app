@@ -460,7 +460,7 @@
       .modal-footer.flex.justify-end.gap-4.px-6.py-4
         %button.bg-gray-200.text-gray-700.font-semibold.px-5.py-2.rounded-lg.hover:bg-gray-300.transition{ "data-bs-dismiss" => "modal", type: "button" } Close
         - if user_signed_in?
-          %button.text-white.font-semibold.px-6.py-2.rounded-lg.shadow-md.transition{ type: "button", id: "createBookingBtn", disabled: true, style: "pointer-events: none; opacity: 0.5; background-color: #3a6363" } Create Booking
+          %button.text-white.font-semibold.px-6.py-2.rounded-lg.shadow-md.transition.hover:shadow-lg{ type: "button", id: "createBookingBtn", style: "background-color: #3a6363; cursor: pointer;" } Create Booking
         - else
           %a.text-white.font-semibold.px-6.py-2.rounded-lg.shadow-md.transition{ href: "#", id: "continueToLoginLink", disabled: true, style: "pointer-events: none; opacity: 0.5; background-color: #3a6363" } Continue to Sign In
 
@@ -495,49 +495,72 @@
     %span#lightboxCounter 1 / 1
 
 :javascript
+  // Flag to prevent multiple initializations
+  window.carShowPageInitialized = window.carShowPageInitialized || false;
+
   // Main initialization function
   function initializeCarShowPage() {
+    // Only initialize once per page load
+    if (window.carShowPageInitialized) {
+      return;
+    }
+    window.carShowPageInitialized = true;
+
     // Booking Modal Logic
     const continueBtn = document.getElementById("continueToLoginLink");
-    const createBookingBtn = document.getElementById("createBookingBtn");
+    let createBookingBtn = document.getElementById("createBookingBtn");
     const startInput = document.getElementById("startDateInput");
     const endInput = document.getElementById("endDateInput");
 
-    function updateButtonState() {
-      if (startInput && endInput && startInput.value && endInput.value) {
-        if (continueBtn) {
-          continueBtn.removeAttribute("disabled");
-          continueBtn.style.pointerEvents = "auto";
-          continueBtn.style.opacity = "1";
-        }
-        if (createBookingBtn) {
-          createBookingBtn.removeAttribute("disabled");
-          createBookingBtn.style.pointerEvents = "auto";
-          createBookingBtn.style.opacity = "1";
-        }
-      } else {
-        if (continueBtn) {
-          continueBtn.setAttribute("disabled", "true");
-          continueBtn.style.pointerEvents = "none";
-          continueBtn.style.opacity = "0.5";
-        }
-        if (createBookingBtn) {
-          createBookingBtn.setAttribute("disabled", "true");
-          createBookingBtn.style.pointerEvents = "none";
-          createBookingBtn.style.opacity = "0.5";
+    // Function to check if both dates are selected and update button state
+    function updateCreateButtonState() {
+      // Get the button fresh each time (in case it was replaced)
+      const btn = document.getElementById("createBookingBtn");
+      
+      if (startInput && endInput && btn) {
+        const startValue = startInput.value.trim();
+        const endValue = endInput.value.trim();
+        
+        console.log('Checking dates - Start:', startValue, 'End:', endValue);
+        
+        if (startValue && endValue) {
+          // Both dates selected - ENABLE button
+          btn.removeAttribute('disabled');
+          btn.style.pointerEvents = 'auto !important';
+          btn.style.opacity = '1 !important';
+          btn.style.cursor = 'pointer';
+          console.log('✅ Create button ENABLED');
+        } else {
+          // Missing a date - DISABLE button
+          btn.setAttribute('disabled', 'disabled');
+          btn.style.pointerEvents = 'none !important';
+          btn.style.opacity = '0.5 !important';
+          btn.style.cursor = 'not-allowed';
+          console.log('❌ Create button DISABLED');
         }
       }
     }
 
-    if (startInput && endInput) {
-      startInput.addEventListener("change", updateButtonState);
-      endInput.addEventListener("change", updateButtonState);
-      updateButtonState();
+    // Attach listeners to both date inputs
+    if (startInput) {
+      startInput.addEventListener('change', updateCreateButtonState);
+      startInput.addEventListener('input', updateCreateButtonState);
+      startInput.addEventListener('blur', updateCreateButtonState);
     }
 
+    if (endInput) {
+      endInput.addEventListener('change', updateCreateButtonState);
+      endInput.addEventListener('input', updateCreateButtonState);
+      endInput.addEventListener('blur', updateCreateButtonState);
+    }
+
+    // Initial state - button should be disabled
+    updateCreateButtonState();
+
+    // Continue to Login button
     if (continueBtn) {
       continueBtn.addEventListener("click", function (e) {
-        if (!startInput.value || !endInput.value) {
+        if (!startInput?.value || !endInput?.value) {
           e.preventDefault();
           alert("Please select both start and end dates.");
           return;
@@ -561,14 +584,33 @@
       });
     }
 
+    // Create Booking
     if (createBookingBtn) {
-      createBookingBtn.addEventListener("click", function (e) {
-        if (!startInput.value || !endInput.value) {
-          e.preventDefault();
+      // Clone the button to remove old listeners
+      const newCreateBookingBtn = createBookingBtn.cloneNode(true);
+      createBookingBtn.parentNode.replaceChild(newCreateBookingBtn, createBookingBtn);
+      
+      // Update the reference to point to the new button
+      createBookingBtn = newCreateBookingBtn;
+
+      console.log('Button cloned and ready');
+
+      newCreateBookingBtn.addEventListener("click", function (e) {
+        e.preventDefault();
+
+        if (!startInput?.value || !endInput?.value) {
           alert("Please select both start and end dates.");
           return;
         }
-        e.preventDefault();
+
+        // Disable button to prevent multiple clicks
+        newCreateBookingBtn.disabled = true;
+        newCreateBookingBtn.style.pointerEvents = "none !important";
+        newCreateBookingBtn.style.opacity = "0.5 !important";
+        newCreateBookingBtn.style.cursor = "not-allowed";
+        const originalText = newCreateBookingBtn.textContent;
+        newCreateBookingBtn.textContent = "Creating...";
+
         const formData = new FormData();
         formData.append('booking[car_id]', "#{@car.id}");
         formData.append('booking[start_date]', startInput.value);
@@ -576,6 +618,7 @@
         formData.append('booking[selected_period]', document.getElementById("selectedPeriodInput")?.value || 'daily');
         formData.append('booking[selected_price]', document.getElementById("selectedPriceInput")?.value || '0');
         formData.append('booking[selected_mileage_limit]', document.getElementById("selectedMileageInput")?.value || '0');
+
         fetch('/bookings', {
           method: 'POST',
           body: formData,
@@ -586,17 +629,21 @@
         .then(response => {
           if (response.redirected) {
             window.location.href = response.url;
+          } else if (response.ok) {
+            return response.text();
           } else {
-            if (response.ok) {
-              return response.text();
-            } else {
-              throw new Error('Booking creation failed');
-            }
+            throw new Error('Booking creation failed');
           }
         })
         .catch(error => {
           console.error('Error:', error);
           alert('There was an error creating your booking. Please check your dates and try again.');
+          // Re-enable button on error
+          newCreateBookingBtn.disabled = false;
+          newCreateBookingBtn.style.pointerEvents = "auto !important";
+          newCreateBookingBtn.style.opacity = "1 !important";
+          newCreateBookingBtn.style.cursor = "pointer";
+          newCreateBookingBtn.textContent = originalText;
         });
       });
     }
@@ -620,10 +667,6 @@
       insurance: {
         title: 'Insurance Policy',
         content: insurancePolicy
-      },
-      min_days: {
-        title: 'Minimum Rental Duration',
-        content: 'The minimum rental period for this vehicle is 5 days. Shorter durations are not eligible for booking and pricing is calculated on a per-day basis.'
       }
     };
 
@@ -696,7 +739,6 @@
 
     // Enhanced Swiper initialization with Lightbox
     if (window.Swiper) {
-      // Destroy existing swiper instance if it exists
       const existingSwiperContainer = document.querySelector('.swiper-container');
       if (existingSwiperContainer && existingSwiperContainer.swiper) {
         existingSwiperContainer.swiper.destroy(true, true);
@@ -746,7 +788,6 @@
       let currentLightboxIndex = 0;
       const totalImages = document.querySelectorAll('.swiper-slide').length;
 
-      // Open lightbox when clicking on main image
       document.querySelectorAll('.swiper-slide').forEach((slide, index) => {
         slide.addEventListener('click', function() {
           currentLightboxIndex = index;
@@ -783,46 +824,28 @@
       if (closeLightbox) {
         closeLightbox.addEventListener('click', closeLightboxModal);
       }
-
       if (lightboxPrev) {
         lightboxPrev.addEventListener('click', () => navigateLightbox('prev'));
       }
-
       if (lightboxNext) {
         lightboxNext.addEventListener('click', () => navigateLightbox('next'));
       }
 
-      // Keyboard navigation for lightbox and policy drawer
       document.addEventListener('keydown', function(e) {
-        // Lightbox controls
         if (lightboxModal && !lightboxModal.classList.contains('hidden')) {
-          if (e.key === 'Escape') {
-            closeLightboxModal();
-          }
-          if (e.key === 'ArrowLeft') {
-            navigateLightbox('prev');
-          }
-          if (e.key === 'ArrowRight') {
-            navigateLightbox('next');
-          }
+          if (e.key === 'Escape') closeLightboxModal();
+          if (e.key === 'ArrowLeft') navigateLightbox('prev');
+          if (e.key === 'ArrowRight') navigateLightbox('next');
         }
-        
-        // Policy drawer controls
-        if (e.key === 'Escape') {
-          closePolicyDrawer();
-        }
+        if (e.key === 'Escape') closePolicyDrawer();
       });
 
-      // Close lightbox when clicking outside image
       if (lightboxModal) {
         lightboxModal.addEventListener('click', function(e) {
-          if (e.target === lightboxModal) {
-            closeLightboxModal();
-          }
+          if (e.target === lightboxModal) closeLightboxModal();
         });
       }
 
-      // Thumbnail functionality
       function updateThumbnailActiveState(activeIndex) {
         const thumbnails = document.querySelectorAll('.thumbnail-image');
         thumbnails.forEach((thumb, index) => {
@@ -835,7 +858,6 @@
           }
         });
 
-        // Scroll thumbnail into view
         const activeThumbnail = thumbnails[activeIndex];
         if (activeThumbnail) {
           activeThumbnail.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
@@ -855,7 +877,9 @@
     }
   }
 
-  // Listen for both DOMContentLoaded and turbo:load events
+  document.addEventListener('turbo:before-cache', function() {
+    window.carShowPageInitialized = false;
+  });
+
   document.addEventListener('DOMContentLoaded', initializeCarShowPage);
   document.addEventListener('turbo:load', initializeCarShowPage);
-  document.addEventListener('turbo:render', initializeCarShowPage);

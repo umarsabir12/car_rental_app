@@ -17,13 +17,37 @@ class Booking < ApplicationRecord
   
   after_create :set_car_vendor, :log_booking_created
   after_update :log_booking_status_change, if: :saved_change_to_status?
+
+  def calculate_total_amount
+    return 0 unless car && start_date && end_date
+    
+    duration_days = (end_date - start_date).to_i
+    daily_price = car.daily_price.to_f
+    
+    case selected_period
+    when 'weekly'
+      weekly_price = selected_price.to_f
+      full_weeks = duration_days / 7
+      remaining_days = duration_days % 7
+      (full_weeks * weekly_price) + (remaining_days * daily_price)
+      
+    when 'monthly'
+      monthly_price = selected_price.to_f
+      full_months = duration_days / 30
+      remaining_days = duration_days % 30
+      (full_months * monthly_price) + (remaining_days * daily_price)
+      
+    else # daily
+      duration_days * selected_price.to_f
+    end
+  end
   
   private
 
   def end_date_after_start_date
     return if end_date.blank? || start_date.blank?
 
-    if end_date <= start_date
+    if end_date < start_date
       errors.add(:end_date, "must be after start date")
     end
   end
@@ -31,8 +55,7 @@ class Booking < ApplicationRecord
   def no_overlapping_bookings
     return if car_id.blank? || start_date.blank? || end_date.blank?
 
-    overlapping = Booking.where(car_id: car_id)
-                        .where(payment_processed: true)  # Only confirmed bookings
+    overlapping = Booking.where(car_id: car_id, payment_processed: true)  # Only confirmed bookings
                         .where.not(id: id) # Exclude current booking when updating
                         .where("(start_date <= ? AND end_date >= ?) OR (start_date <= ? AND end_date >= ?) OR (start_date >= ? AND end_date <= ?)",
                                end_date, start_date, start_date, start_date, start_date, end_date)
@@ -69,12 +92,6 @@ class Booking < ApplicationRecord
         car: "#{car.brand} #{car.model}"
       }
     )
-  end
-
-  def calculate_total_amount
-    return 0 unless car.daily_price
-    days = (end_date - start_date).to_i
-    car.daily_price * days
   end
 
   def set_car_vendor

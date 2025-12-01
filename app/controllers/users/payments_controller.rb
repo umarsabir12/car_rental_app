@@ -5,14 +5,15 @@ class Users::PaymentsController < ApplicationController
     @booking = current_user.bookings.find(params[:id])
     @car = @booking.car
     @days = [(@booking.end_date - @booking.start_date).to_i, 1].max
-    @total_amount = @days * @car.daily_price
+    @total_amount = @booking.calculate_total_amount
+    @selected_period = @booking.selected_period || 'daily'
   end
 
   def create_checkout
     @booking = current_user.bookings.find(params[:id])
     @car = @booking.car
     days = [(@booking.end_date - @booking.start_date).to_i, 1].max
-    total_amount = days * @car.daily_price
+    total_amount = @booking.calculate_total_amount
 
     begin
       session = Stripe::Checkout::Session.create(
@@ -20,7 +21,7 @@ class Users::PaymentsController < ApplicationController
         customer_email: current_user.email,
         line_items: [{
           price_data: {
-            currency: 'usd',
+            currency: 'aed',
             product_data: {
               name: "#{@car.brand} #{@car.model} - Car Rental",
               description: "#{days} day rental from #{@booking.start_date.strftime('%B %d')} to #{@booking.end_date.strftime('%B %d, %Y')}"
