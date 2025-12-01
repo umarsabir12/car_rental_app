@@ -12,7 +12,7 @@ class Activity < ApplicationRecord
     document_pending
     document_approved
     document_rejected
-    payment_completed
+    payment_received
     payment_failed
     profile_updated
     car_viewed

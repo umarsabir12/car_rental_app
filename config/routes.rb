@@ -157,6 +157,9 @@ Rails.application.routes.draw do
     resources :invoices, only: [:index, :show] do
       member do
         post :pay
+        post :create_payment_intent
+        post :confirm_payment
+        get :payment_status
       end
     end
   end

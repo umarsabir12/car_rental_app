@@ -2,6 +2,7 @@
 import "@hotwired/turbo-rails"
 import "controllers"
 import flatpickr from "flatpickr"
+import "./stripe-payment"
 
 console.log('Application.js loaded, flatpickr:', flatpickr);
 
