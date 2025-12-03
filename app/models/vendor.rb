@@ -64,6 +64,16 @@ class Vendor < ApplicationRecord
     deleted_at.nil?
   end
 
+  # Devise method to check if account is active for authentication
+  def active_for_authentication?
+    super && is_active?
+  end
+
+  # Custom message for inactive accounts
+  def inactive_message
+    is_active? ? super : :account_deactivated
+  end
+
   scope :with_expired_emirates_id, -> {
     where.not(emirates_id: [nil, ""]).where("emirates_id_expires_on < ?", Date.current)
   }

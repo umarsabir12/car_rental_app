@@ -82,6 +82,8 @@ Rails.application.routes.draw do
         delete :destroy
         patch :restore
         post :invoice
+        patch :activate
+        patch :deactivate
       end
       # Nested invoices routes - admin can create invoices for vendors
       resources :invoices, only: [:index, :new, :create]
