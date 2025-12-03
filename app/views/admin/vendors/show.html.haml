@@ -8,8 +8,17 @@
     .flex.flex-col.lg:flex-row.gap-8
       / Left Side - Vendor Information
       .flex-1
-        / Company Name
-        %h1.text-3xl.font-bold.text-gray-800.mb-4= @vendor.company_name
+        / Company Name with Status Badge
+        .flex.items-center.gap-4.mb-4
+          %h1.text-3xl.font-bold.text-gray-800= @vendor.company_name
+          - if @vendor.is_active?
+            %span.inline-flex.items-center.px-3.py-1.rounded-full.text-sm.font-semibold.bg-green-100.text-green-800.border.border-green-300
+              %i.fas.fa-check-circle.mr-1
+              Active
+          - else
+            %span.inline-flex.items-center.px-3.py-1.rounded-full.text-sm.font-semibold.bg-red-100.text-red-800.border.border-red-300
+              %i.fas.fa-ban.mr-1
+              Deactivated
         
         / Vendor Details with Icons
         .space-y-3
@@ -105,11 +114,16 @@
           = button_tag type: 'button', class: 'inline-flex items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors duration-200 shadow-md hover:shadow-lg gap-2' do
             %i.fas.fa-envelope
             %span Send Email
-          
-          = form_with url: admin_vendor_path(@vendor), method: :delete, class: 'inline-block' do |f|
-            = f.submit 'Delete Vendor', 
-                class: 'inline-flex items-center px-6 py-3 bg-red-600 hover:bg-red-700 text-white font-medium rounded-lg transition-colors duration-200 shadow-md hover:shadow-lg gap-2 cursor-pointer',
-                onclick: "return confirm('Are you sure you want to delete #{@vendor.company_name}? This action can be undone by restoring the vendor.');"
+
+          / Activation/Deactivation Button
+          - if @vendor.is_active?
+            = button_to deactivate_admin_vendor_path(@vendor), method: :patch, class: 'inline-flex items-center px-6 py-3 bg-orange-600 hover:bg-orange-700 text-white font-medium rounded-lg transition-colors duration-200 shadow-md hover:shadow-lg gap-2', data: { confirm: "Are you sure you want to deactivate #{@vendor.company_name}? They will not be able to login until reactivated." } do
+              %i.fas.fa-ban
+              %span Deactivate Vendor
+          - else
+            = button_to activate_admin_vendor_path(@vendor), method: :patch, class: 'inline-flex items-center px-6 py-3 bg-green-600 hover:bg-green-700 text-white font-medium rounded-lg transition-colors duration-200 shadow-md hover:shadow-lg gap-2' do
+              %i.fas.fa-check-circle
+              %span Activate Vendor
 
       / Right Side - Trade License Card
       .flex-shrink-0.w-full.lg:w-96

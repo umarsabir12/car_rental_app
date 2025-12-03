@@ -18,6 +18,8 @@ class Activity < ApplicationRecord
     car_viewed
     registration_completed
     vendor_registration
+    vendor_activated
+    vendor_deactivated
     car_added
     car_updated
     car_deleted

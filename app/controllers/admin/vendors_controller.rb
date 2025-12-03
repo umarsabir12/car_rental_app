@@ -74,4 +74,48 @@ class Admin::VendorsController < ApplicationController
     send_data csv_data, filename: "vendors_report_#{Date.today}.csv"
   end
 
+  def activate
+    @vendor = Vendor.find(params[:id])
+
+    if @vendor.update(is_active: true)
+      Activity.log_activity(
+        vendor: @vendor,
+        subject: @vendor,
+        action: 'vendor_activated',
+        description: "Vendor #{@vendor.company_name} was activated by admin",
+        metadata: {
+          vendor_id: @vendor.id,
+          vendor_name: @vendor.company_name,
+          activated_by: current_admin.email
+        }
+      )
+
+      redirect_to admin_vendor_path(@vendor), notice: 'Vendor has been activated successfully.'
+    else
+      redirect_to admin_vendor_path(@vendor), alert: 'Failed to activate vendor.'
+    end
+  end
+
+  def deactivate
+    @vendor = Vendor.find(params[:id])
+
+    if @vendor.update(is_active: false)
+      Activity.log_activity(
+        vendor: @vendor,
+        subject: @vendor,
+        action: 'vendor_deactivated',
+        description: "Vendor #{@vendor.company_name} was deactivated by admin",
+        metadata: {
+          vendor_id: @vendor.id,
+          vendor_name: @vendor.company_name,
+          deactivated_by: current_admin.email
+        }
+      )
+
+      redirect_to admin_vendor_path(@vendor), notice: 'Vendor has been deactivated successfully.'
+    else
+      redirect_to admin_vendor_path(@vendor), alert: 'Failed to deactivate vendor.'
+    end
+  end
+
 end 
