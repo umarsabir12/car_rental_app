@@ -13,14 +13,19 @@ export default class extends Controller {
   ]
 
   connect() {
+    console.log('💳 Pricing selector controller connected');
+    console.log('📋 Found', this.cardTargets.length, 'pricing cards');
     // Default select the first card (daily)
     if (this.cardTargets.length > 0) {
       this.selectCard(this.cardTargets[0])
+    } else {
+      console.warn('⚠️ No pricing cards found');
     }
   }
 
   select(event) {
     const card = event.currentTarget
+    console.log('🖱️ Pricing card clicked:', card.getAttribute('data-period'));
     this.selectCard(card)
   }
 
@@ -28,6 +33,8 @@ export default class extends Controller {
     const price = card.getAttribute('data-price') || '0'
     const period = card.getAttribute('data-period') || 'daily'
     const mileage = card.getAttribute('data-mileage') || '0'
+
+    console.log('✅ Selecting card:', { price, period, mileage });
 
     // Visual state
     this.cardTargets.forEach(c => {
@@ -52,10 +59,19 @@ export default class extends Controller {
     if (this.hasSelectedPriceTarget) this.selectedPriceTarget.value = price
     if (this.hasSelectedMileageTarget) this.selectedMileageTarget.value = mileage
 
+    console.log('📝 Updated hidden inputs:', {
+      period: this.selectedPeriodTarget?.value,
+      price: this.selectedPriceTarget?.value,
+      mileage: this.selectedMileageTarget?.value
+    });
+
     // Notify calendar to re-evaluate available dates
     try {
+      console.log('📢 Dispatching pricing:period_changed event');
       window.dispatchEvent(new CustomEvent('pricing:period_changed', { detail: { period } }))
-    } catch (_) {}
+    } catch (error) {
+      console.error('❌ Error dispatching event:', error);
+    }
   }
 
   requirementText(period) {

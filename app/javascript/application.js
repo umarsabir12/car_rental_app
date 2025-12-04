@@ -1,13 +1,28 @@
 // Configure your import map in config/importmap.rb. Read more: https://github.com/rails/importmap-rails
 import "@hotwired/turbo-rails"
 import "controllers"
-import flatpickr from "flatpickr"
-import "./stripe-payment"
+// import "./stripe-payment"
 
-console.log('Application.js loaded, flatpickr:', flatpickr);
+// Try to import flatpickr from importmap, but use global CDN version as fallback
+let flatpickr;
+try {
+  const module = await import("flatpickr");
+  flatpickr = module.default || module;
+  console.log('✅ Flatpickr loaded from importmap');
+} catch (error) {
+  console.log('⚠️ Flatpickr importmap failed, using CDN version:', error);
+  flatpickr = window.flatpickr;
+}
+
+if (!flatpickr && typeof window.flatpickr !== 'undefined') {
+  flatpickr = window.flatpickr;
+  console.log('✅ Using global flatpickr from CDN');
+}
+
+console.log('Application.js loaded, flatpickr:', flatpickr, 'window.flatpickr:', window.flatpickr);
 
 // Make flatpickr available globally
-window.flatpickr = flatpickr;
+window.flatpickr = flatpickr || window.flatpickr;
 
 // Initialize flatpickr for any existing elements on page load
 document.addEventListener('turbo:load', () => {
@@ -31,9 +46,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Function to initialize flatpickr for elements outside modals
 function initializeFlatpickr(selectedPeriod = (document.getElementById('selectedPeriodInput')?.value || 'daily')) {
+  // Check if flatpickr is available
+  const fp = window.flatpickr || flatpickr;
+  if (!fp) {
+    console.error('❌ Flatpickr is not available. Cannot initialize date pickers.');
+    return;
+  }
+
+  console.log('🔧 Initializing flatpickr with period:', selectedPeriod);
+
   const startInput = document.getElementById('startDateInput');
   const endInput = document.getElementById('endDateInput');
   const bookedDates = JSON.parse(document.querySelector('meta[name="booked-dates"]')?.content || "[]");
+
+  if (!startInput || !endInput) {
+    console.log('⚠️ Date inputs not found on page');
+    return;
+  }
 
   const dateKey = (d) => {
     const y = d.getFullYear();
@@ -44,7 +73,9 @@ function initializeFlatpickr(selectedPeriod = (document.getElementById('selected
 
   // Destroy existing instances
   [startInput, endInput].forEach((input) => {
-    if (input && input._flatpickr) input._flatpickr.destroy();
+    if (input && input._flatpickr) {
+      input._flatpickr.destroy();
+    }
   });
 
   const disableStartByPeriod = (date) => {
@@ -60,31 +91,22 @@ function initializeFlatpickr(selectedPeriod = (document.getElementById('selected
     return false;
   };
 
-  const rangeHasBooking = (startDate, endDate) => {
-    // inclusive check across range
-    const start = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate());
-    const end = new Date(endDate.getFullYear(), endDate.getMonth(), endDate.getDate());
-    for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
-      const key = dateKey(d);
-      if (bookedDates.includes(key)) return true;
-    }
-    return false;
-  };
-
   // Start picker
   if (startInput) {
     try {
-      flatpickr(startInput, {
+      fp(startInput, {
         dateFormat: "Y-m-d",
         minDate: "today",
         disable: [disableStartByPeriod],
         onChange: function() {
+          console.log('📅 Start date changed');
           // when start changes, rebuild end picker
           initializeEndPicker(selectedPeriod);
         }
       });
+      console.log('✅ Start date picker initialized');
     } catch (error) {
-      console.error('Error creating start flatpickr instance:', error);
+      console.error('❌ Error creating start flatpickr instance:', error);
     }
   }
 
@@ -118,11 +140,21 @@ function initializeFlatpickr(selectedPeriod = (document.getElementById('selected
 window.initializeBookingCalendars = initializeFlatpickr;
 
 function initializeEndPicker(selectedPeriod = (document.getElementById('selectedPeriodInput')?.value || 'daily')) {
+  // Check if flatpickr is available
+  const fp = window.flatpickr || flatpickr;
+  if (!fp) {
+    console.error('❌ Flatpickr is not available. Cannot initialize end date picker.');
+    return;
+  }
+
   const startInput = document.getElementById('startDateInput');
   const endInput = document.getElementById('endDateInput');
   const bookedDates = JSON.parse(document.querySelector('meta[name="booked-dates"]')?.content || "[]");
 
-  if (!endInput) return;
+  if (!endInput) {
+    console.log('⚠️ End date input not found');
+    return;
+  }
 
   if (endInput._flatpickr) endInput._flatpickr.destroy();
 
@@ -147,7 +179,7 @@ function initializeEndPicker(selectedPeriod = (document.getElementById('selected
   };
 
   try {
-    flatpickr(endInput, {
+    fp(endInput, {
       dateFormat: "Y-m-d",
       minDate: start ? startStr : "today",
       disable: [function(date) {
@@ -171,7 +203,8 @@ function initializeEndPicker(selectedPeriod = (document.getElementById('selected
         }
       }]
     });
+    console.log('✅ End date picker initialized');
   } catch (error) {
-    console.error('Error creating end flatpickr instance:', error);
+    console.error('❌ Error creating end flatpickr instance:', error);
   }
 }

@@ -1,174 +1,174 @@
-.container.mx-auto.max-w-7xl.p-8
-  .bg-white.rounded-2xl.shadow-xl.p-12
-    %h1.text-4xl.font-extrabold.mb-6{style: 'color: #3a6363'} Add New Car
-    %p.text-lg.text-gray-700.mb-8 Fill in the details below to add a new car to your fleet.
+.container.mx-auto.max-w-7xl.p-3.sm:p-4.md:p-6.lg:p-8.pt-5
+  .bg-white.rounded-xl.sm:rounded-2xl.shadow-xl.p-4.sm:p-6.md:p-8.lg:p-12
+    %h1.text-2xl.sm:text-3xl.md:text-4xl.font-extrabold.mb-4.sm:mb-6{style: 'color: #3a6363'} Add New Car
+    %p.text-sm.sm:text-base.md:text-lg.text-gray-700.mb-4.sm:mb-6.md:mb-8 Fill in the details below to add a new car to your fleet.
 
     / Car Information Notice Section
-    .mb-10
-      .bg-gradient-to-r.from-blue-50.to-indigo-50.border-l-4.border-blue-400.rounded-lg.p-6.shadow-sm
+    .mb-6.sm:mb-8.md:mb-10
+      .bg-gradient-to-r.from-blue-50.to-indigo-50.border-l-4.border-blue-400.rounded-lg.p-4.sm:p-5.md:p-6.shadow-sm
         .flex.items-start
           .flex-shrink-0
-            %i.fas.fa-info-circle.text-blue-500.text-2xl.mt-1
-          .ml-3
-            %h3.text-lg.font-semibold.mb-2{style: 'color: #3a6363'} Car Information Required
-            %p.mb-4{style: 'color: #3a6363'} Please provide comprehensive details about your vehicle to help customers make informed decisions. Fields marked with * are required.
-            
-            .grid.grid-cols-1.md:grid-cols-2.gap-4.mt-4
-              .bg-white.rounded-lg.p-4.shadow-sm
-                %h4.text-sm.font-semibold.text-blue-800.mb-2 Basic Information
-                %ul.text-sm.text-blue-700.space-y-1
+            %i.fas.fa-info-circle.text-blue-500.text-lg.sm:text-xl.md:text-2xl.mt-1
+          .ml-2.sm:ml-3
+            %h3.text-base.sm:text-lg.font-semibold.mb-2{style: 'color: #3a6363'} Car Information Required
+            %p.text-xs.sm:text-sm.md:text-base.mb-3.sm:mb-4{style: 'color: #3a6363'} Please provide comprehensive details about your vehicle to help customers make informed decisions. Fields marked with * are required.
+
+            .grid.grid-cols-1.md:grid-cols-2.gap-3.sm:gap-4.mt-3.sm:mt-4
+              .bg-white.rounded-lg.p-3.sm:p-4.shadow-sm
+                %h4.text-xs.sm:text-sm.font-semibold.text-blue-800.mb-1.sm:mb-2 Basic Information
+                %ul.text-xs.sm:text-sm.text-blue-700.space-y-1
                   %li • Model, Brand, Year, Color
                   %li • Daily Price and Status
                   %li • Category
-              .bg-white.rounded-lg.p-4.shadow-sm
-                %h4.text-sm.font-semibold.text-blue-800.mb-2 Specifications
-                %ul.text-sm.text-blue-700.space-y-1
+              .bg-white.rounded-lg.p-3.sm:p-4.shadow-sm
+                %h4.text-xs.sm:text-sm.font-semibold.text-blue-800.mb-1.sm:mb-2 Specifications
+                %ul.text-xs.sm:text-sm.text-blue-700.space-y-1
                   %li • Transmission and Fuel Type
                   %li • Seats, Mileage, Engine Size
                   %li • USB Ports and Features
-              .bg-white.rounded-lg.p-4.shadow-sm
-                %h4.text-sm.font-semibold.text-blue-800.mb-2 Premium Features
-                %ul.text-sm.text-blue-700.space-y-1
+              .bg-white.rounded-lg.p-3.sm:p-4.shadow-sm
+                %h4.text-xs.sm:text-sm.font-semibold.text-blue-800.mb-1.sm:mb-2 Premium Features
+                %ul.text-xs.sm:text-sm.text-blue-700.space-y-1
                   %li • Select premium features
                   %li • Common features auto-included
                   %li • Featured Car Option
-              .bg-white.rounded-lg.p-4.shadow-sm
-                %h4.text-sm.font-semibold.text-blue-800.mb-2 Images & Documents
-                %ul.text-sm.text-blue-700.space-y-1
+              .bg-white.rounded-lg.p-3.sm:p-4.shadow-sm
+                %h4.text-xs.sm:text-sm.font-semibold.text-blue-800.mb-1.sm:mb-2 Images & Documents
+                %ul.text-xs.sm:text-sm.text-blue-700.space-y-1
                   %li • Up to 5 high-quality photos
                   %li • Mulkiya document required
                   %li • First image becomes primary
 
-    = form_with model: @car, url: vendors_cars_path, local: true, html: { multipart: true, class: 'space-y-8', id: 'car-creation-form' } do |f|
+    = form_with model: @car, url: vendors_cars_path, local: true, html: { multipart: true, class: 'space-y-6 sm:space-y-8', id: 'car-creation-form' } do |f|
       / Basic Information Section (Required Fields)
-      %h2.text-lg.font-bold.mb-4{style: 'color: #3a6363'} Basic Information
-      .grid.grid-cols-1.md:grid-cols-2.gap-6
-        .field.space-y-2
-          = f.label :model, 'Model *', class: 'block text-sm font-medium text-gray-700'
-          = f.text_field :model, required: true, class: 'w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition', placeholder: 'e.g., Camry'
-        
-        .field.space-y-2
-          = f.label :brand, 'Brand *', class: 'block text-sm font-medium text-gray-700'
-          = f.text_field :brand, required: true, class: 'w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition', placeholder: 'e.g., Toyota'
-        
-        .field.space-y-2
-          = f.label :year, 'Year *', class: 'block text-sm font-medium text-gray-700'
-          = f.number_field :year, required: true, min: 1900, max: Date.current.year + 1, class: 'w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition', placeholder: 'e.g., 2023'
-        
-        .field.space-y-2
-          = f.label :color, 'Color *', class: 'block text-sm font-medium text-gray-700'
-          = f.text_field :color, required: true, class: 'w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition', placeholder: 'e.g., White'
-        
-        .field.space-y-2
-          = f.label :daily_price, 'Daily Price (AED) *', class: 'block text-sm font-medium text-gray-700'
-          = f.number_field :daily_price, required: true, step: 1, min: 0, class: 'w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition', placeholder: 'e.g., 50.00'
+      %h2.text-base.sm:text-lg.font-bold.mb-3.sm:mb-4{style: 'color: #3a6363'} Basic Information
+      .grid.grid-cols-1.md:grid-cols-2.gap-4.sm:gap-6
+        .field.space-y-1.sm:space-y-2
+          = f.label :model, 'Model *', class: 'block text-xs sm:text-sm font-medium text-gray-700'
+          = f.text_field :model, required: true, class: 'w-full px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition', placeholder: 'e.g., Camry'
 
-        .field.space-y-2
-          = f.label :weekly_price, 'Weekly Price (AED)', class: 'block text-sm font-medium text-gray-700'
-          = f.number_field :weekly_price, step: 1, min: 0, class: 'w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition', placeholder: 'e.g., 300.00'
+        .field.space-y-1.sm:space-y-2
+          = f.label :brand, 'Brand *', class: 'block text-xs sm:text-sm font-medium text-gray-700'
+          = f.text_field :brand, required: true, class: 'w-full px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition', placeholder: 'e.g., Toyota'
 
-        .field.space-y-2
-          = f.label :monthly_price, 'Monthly Price (AED)', class: 'block text-sm font-medium text-gray-700'
-          = f.number_field :monthly_price, step: 1, min: 0, class: 'w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition', placeholder: 'e.g., 1200.00'
-        
-        .field.space-y-2
-          = f.label :additional_mileage_charge, 'Additional Mileage Charge (AED)', class: 'block text-sm font-medium text-gray-700'
-          = f.number_field :additional_mileage_charge, step: 0.01, min: 0, class: 'w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition', placeholder: 'e.g., 1.00'
+        .field.space-y-1.sm:space-y-2
+          = f.label :year, 'Year *', class: 'block text-xs sm:text-sm font-medium text-gray-700'
+          = f.number_field :year, required: true, min: 1900, max: Date.current.year + 1, class: 'w-full px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition', placeholder: 'e.g., 2023'
 
-        .field.space-y-2
-          = f.label :status, 'Status *', class: 'block text-sm font-medium text-gray-700'
-          = f.select :status, options_for_select([['Available', 'available'], ['Rented', 'rented'], ['Maintenance', 'maintenance']], @car.status), { prompt: 'Select status' }, { required: true, class: 'w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition' }
-        
-        .field.space-y-2.md:col-span-2
-          = f.label :category, 'Category', class: 'block text-sm font-medium text-gray-700'
-          = f.select :category, options_for_select(AppConstants::CAR_CATEGORIES, @car.category), { prompt: 'Select category' }, { class: 'w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition' }
+        .field.space-y-1.sm:space-y-2
+          = f.label :color, 'Color *', class: 'block text-xs sm:text-sm font-medium text-gray-700'
+          = f.text_field :color, required: true, class: 'w-full px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition', placeholder: 'e.g., White'
+
+        .field.space-y-1.sm:space-y-2
+          = f.label :daily_price, 'Daily Price (AED) *', class: 'block text-xs sm:text-sm font-medium text-gray-700'
+          = f.number_field :daily_price, required: true, step: 1, min: 0, class: 'w-full px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition', placeholder: 'e.g., 50.00'
+
+        .field.space-y-1.sm:space-y-2
+          = f.label :weekly_price, 'Weekly Price (AED)', class: 'block text-xs sm:text-sm font-medium text-gray-700'
+          = f.number_field :weekly_price, step: 1, min: 0, class: 'w-full px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition', placeholder: 'e.g., 300.00'
+
+        .field.space-y-1.sm:space-y-2
+          = f.label :monthly_price, 'Monthly Price (AED)', class: 'block text-xs sm:text-sm font-medium text-gray-700'
+          = f.number_field :monthly_price, step: 1, min: 0, class: 'w-full px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition', placeholder: 'e.g., 1200.00'
+
+        .field.space-y-1.sm:space-y-2
+          = f.label :additional_mileage_charge, 'Additional Mileage Charge (AED)', class: 'block text-xs sm:text-sm font-medium text-gray-700'
+          = f.number_field :additional_mileage_charge, step: 0.01, min: 0, class: 'w-full px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition', placeholder: 'e.g., 1.00'
+
+        .field.space-y-1.sm:space-y-2
+          = f.label :status, 'Status *', class: 'block text-xs sm:text-sm font-medium text-gray-700'
+          = f.select :status, options_for_select([['Available', 'available'], ['Rented', 'rented'], ['Maintenance', 'maintenance']], @car.status), { prompt: 'Select status' }, { required: true, class: 'w-full px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition' }
+
+        .field.space-y-1.sm:space-y-2.md:col-span-2
+          = f.label :category, 'Category', class: 'block text-xs sm:text-sm font-medium text-gray-700'
+          = f.select :category, options_for_select(AppConstants::CAR_CATEGORIES, @car.category), { prompt: 'Select category' }, { class: 'w-full px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition' }
 
       / Specifications Section
-      %h2.text-lg.font-bold.mb-4.mt-8{style: 'color: #3a6363'} Specifications
-      .grid.grid-cols-1.md:grid-cols-2.gap-6
-        .field.space-y-2
-          = f.label :transmission, 'Transmission', class: 'block text-sm font-medium text-gray-700'
-          = f.select :transmission, options_for_select([['Automatic', 'Automatic'], ['Manual', 'Manual'], ['CVT', 'CVT']], @car.transmission), { prompt: 'Select transmission' }, { class: 'w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition' }
-        
-        .field.space-y-2
-          = f.label :fuel_type, 'Fuel Type', class: 'block text-sm font-medium text-gray-700'
-          = f.select :fuel_type, options_for_select([['Petrol', 'Petrol'], ['Diesel', 'Diesel'], ['Electric', 'Electric'], ['Hybrid', 'Hybrid'], ['Plug-in Hybrid', 'Plug-in Hybrid']], @car.fuel_type), { prompt: 'Select fuel type' }, { class: 'w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition' }
-        
-        .field.space-y-2
-          = f.label :seats, 'Number of Seats', class: 'block text-sm font-medium text-gray-700'
-          = f.number_field :seats, min: 1, max: 15, class: 'w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition', placeholder: 'e.g., 5'
-        
-        .field.space-y-2
-          = f.label :daily_milleage, 'Daily Mileage (km)', class: 'block text-sm font-medium text-gray-700'
-          = f.number_field :daily_milleage, min: 0, class: 'w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition', placeholder: 'e.g., 100'
-        
-        .field.space-y-2
-          = f.label :weekly_milleage, 'Weekly Mileage (km)', class: 'block text-sm font-medium text-gray-700'
-          = f.number_field :weekly_milleage, min: 0, class: 'w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition', placeholder: 'e.g., 500'
-        
-        .field.space-y-2
-          = f.label :monthly_milleage, 'Monthly Mileage (km)', class: 'block text-sm font-medium text-gray-700'
-          = f.number_field :monthly_milleage, min: 0, class: 'w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition', placeholder: 'e.g., 1500'
+      %h2.text-base.sm:text-lg.font-bold.mb-3.sm:mb-4.mt-6.sm:mt-8{style: 'color: #3a6363'} Specifications
+      .grid.grid-cols-1.md:grid-cols-2.gap-4.sm:gap-6
+        .field.space-y-1.sm:space-y-2
+          = f.label :transmission, 'Transmission', class: 'block text-xs sm:text-sm font-medium text-gray-700'
+          = f.select :transmission, options_for_select([['Automatic', 'Automatic'], ['Manual', 'Manual'], ['CVT', 'CVT']], @car.transmission), { prompt: 'Select transmission' }, { class: 'w-full px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition' }
 
-        .field.space-y-2
-          = f.label :engine_size, 'Engine Size', class: 'block text-sm font-medium text-gray-700'
-          = f.text_field :engine_size, class: 'w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition', placeholder: 'e.g., 2.0L'
+        .field.space-y-1.sm:space-y-2
+          = f.label :fuel_type, 'Fuel Type', class: 'block text-xs sm:text-sm font-medium text-gray-700'
+          = f.select :fuel_type, options_for_select([['Petrol', 'Petrol'], ['Diesel', 'Diesel'], ['Electric', 'Electric'], ['Hybrid', 'Hybrid'], ['Plug-in Hybrid', 'Plug-in Hybrid']], @car.fuel_type), { prompt: 'Select fuel type' }, { class: 'w-full px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition' }
+
+        .field.space-y-1.sm:space-y-2
+          = f.label :seats, 'Number of Seats', class: 'block text-xs sm:text-sm font-medium text-gray-700'
+          = f.number_field :seats, min: 1, max: 15, class: 'w-full px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition', placeholder: 'e.g., 5'
+
+        .field.space-y-1.sm:space-y-2
+          = f.label :daily_milleage, 'Daily Mileage (km)', class: 'block text-xs sm:text-sm font-medium text-gray-700'
+          = f.number_field :daily_milleage, min: 0, class: 'w-full px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition', placeholder: 'e.g., 100'
+
+        .field.space-y-1.sm:space-y-2
+          = f.label :weekly_milleage, 'Weekly Mileage (km)', class: 'block text-xs sm:text-sm font-medium text-gray-700'
+          = f.number_field :weekly_milleage, min: 0, class: 'w-full px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition', placeholder: 'e.g., 500'
+
+        .field.space-y-1.sm:space-y-2
+          = f.label :monthly_milleage, 'Monthly Mileage (km)', class: 'block text-xs sm:text-sm font-medium text-gray-700'
+          = f.number_field :monthly_milleage, min: 0, class: 'w-full px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition', placeholder: 'e.g., 1500'
+
+        .field.space-y-1.sm:space-y-2
+          = f.label :engine_size, 'Engine Size', class: 'block text-xs sm:text-sm font-medium text-gray-700'
+          = f.text_field :engine_size, class: 'w-full px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition', placeholder: 'e.g., 2.0L'
 
       / Premium Features Section
-      %h2.text-lg.font-bold.mb-4.mt-8.flex.items-center.gap-2{style: 'color:#2d4f4f'}
-        %i.fas.fa-gem.text-purple-500
+      %h2.text-base.sm:text-lg.font-bold.mb-3.sm:mb-4.mt-6.sm:mt-8.flex.items-center.gap-2{style: 'color:#2d4f4f'}
+        %i.fas.fa-gem.text-purple-500.text-sm.sm:text-base
         Premium Features (Optional)
-      .mb-4
-        .flex.items-start.gap-2.bg-blue-50.rounded-lg.p-3
-          %i.fas.fa-info-circle.text-blue-500.mt-0.5
-          %p.text-sm.text-blue-700 Common features (like Air Conditioning, Bluetooth, etc.) are automatically included with all cars. Select any additional premium features available in this vehicle.
-      
+      .mb-3.sm:mb-4
+        .flex.items-start.gap-2.bg-blue-50.rounded-lg.p-2.sm:p-3
+          %i.fas.fa-info-circle.text-blue-500.mt-0.5.text-sm.sm:text-base
+          %p.text-xs.sm:text-sm.text-blue-700 Common features (like Air Conditioning, Bluetooth, etc.) are automatically included with all cars. Select any additional premium features available in this vehicle.
+
       - if @premium_features.any?
-        .bg-gray-50.rounded-xl.p-6.border-2.border-gray-200
-          #premiumFeaturesGrid.grid.grid-cols-1.md:grid-cols-2.lg:grid-cols-3.gap-4.relative
+        .bg-gray-50.rounded-xl.p-4.sm:p-6.border-2.border-gray-200
+          #premiumFeaturesGrid.grid.grid-cols-1.md:grid-cols-2.lg:grid-cols-3.gap-3.sm:gap-4.relative
             - @premium_features.each_with_index do |feature, index|
-              .field.space-y-2.premium-feature-item{class: index >= 9 ? 'hidden' : '', 'data-feature-index': index}
-                .flex.items-center.p-3.rounded-lg.hover:bg-white.transition-colors.duration-200
-                  = check_box_tag 'car[feature_ids][]', feature.id, false, class: 'h-5 w-5 border-gray-300 rounded focus:ring-2', style: 'accent-color:#3A6363', id: "car_feature_#{feature.id}"
-                  = label_tag "car_feature_#{feature.id}", class: 'ml-3 block text-sm font-medium text-gray-700 cursor-pointer flex-1' do
-                    .flex.items-center.gap-2
+              .field.space-y-1.sm:space-y-2.premium-feature-item{class: index >= 9 ? 'hidden' : '', 'data-feature-index': index}
+                .flex.items-center.p-2.sm:p-3.rounded-lg.hover:bg-white.transition-colors.duration-200
+                  = check_box_tag 'car[feature_ids][]', feature.id, false, class: 'h-4 w-4 sm:h-5 sm:w-5 border-gray-300 rounded focus:ring-2', style: 'accent-color:#3A6363', id: "car_feature_#{feature.id}"
+                  = label_tag "car_feature_#{feature.id}", class: 'ml-2 sm:ml-3 block text-xs sm:text-sm font-medium text-gray-700 cursor-pointer flex-1' do
+                    .flex.items-center.gap-1.sm:gap-2
                       %span.text-purple-600 ⭐
                       %span= feature.name
-          
+
           - if @premium_features.count > 9
-            .mt-4.text-center
-              %button#showMorePremiumFeaturesBtn.px-6.py-2.text-white.rounded-lg.font-medium.transition-all.duration-200.shadow-md.hover:shadow-lg.flex.items-center.justify-center.mx-auto.gap-2{type: 'button', style: 'background-color: #3a6363'}
+            .mt-3.sm:mt-4.text-center
+              %button#showMorePremiumFeaturesBtn.px-4.sm:px-6.py-2.text-sm.sm:text-base.text-white.rounded-lg.font-medium.transition-all.duration-200.shadow-md.hover:shadow-lg.flex.items-center.justify-center.mx-auto.gap-2{type: 'button', style: 'background-color: #3a6363'}
                 %span#premiumBtnText Show More Features
                 %i.fas.fa-chevron-down#premiumBtnIcon
-          
+
           / Hidden field to ensure empty array is sent when no features are selected
           = hidden_field_tag 'car[feature_ids][]', '', id: 'hidden_feature_field'
       - else
-        .text-center.py-8.text-gray-500.bg-gray-50.rounded-xl
-          %i.fas.fa-info-circle.text-3xl.mb-3
-          %p No premium features available. Contact admin to add features.
+        .text-center.py-6.sm:py-8.text-gray-500.bg-gray-50.rounded-xl
+          %i.fas.fa-info-circle.text-2xl.sm:text-3xl.mb-2.sm:mb-3
+          %p.text-sm.sm:text-base No premium features available. Contact admin to add features.
 
       / Featured Car Checkbox
-      .field.space-y-2.mt-4
-        .flex.items-center.p-4.bg-yellow-50.rounded-lg.border-2.border-yellow-200
-          = f.check_box :featured, class: 'h-5 w-5 border-gray-300 rounded focus:ring-2', style: 'accent-color:#3A6363'
-          = f.label :featured, class: 'ml-3 block text-sm font-medium text-gray-700 cursor-pointer' do
-            .flex.items-center.gap-2
-              %i.fas.fa-star.text-yellow-500
+      .field.space-y-1.sm:space-y-2.mt-3.sm:mt-4
+        .flex.items-center.p-3.sm:p-4.bg-yellow-50.rounded-lg.border-2.border-yellow-200
+          = f.check_box :featured, class: 'h-4 w-4 sm:h-5 sm:w-5 border-gray-300 rounded focus:ring-2', style: 'accent-color:#3A6363'
+          = f.label :featured, class: 'ml-2 sm:ml-3 block text-xs sm:text-sm font-medium text-gray-700 cursor-pointer' do
+            .flex.items-center.gap-1.sm:gap-2
+              %i.fas.fa-star.text-yellow-500.text-sm.sm:text-base
               %span Featured Car
               %span.text-xs.text-gray-500 (Highlighted on homepage)
 
       / Insurance Section
-      %h2.text-lg.font-bold.mb-4.mt-8{style: 'color: #3a6363'} Insurance
-      .field.space-y-2
-        %div.flex.items-center.justify-between.mb-2
-          = f.label :insurance_policy, 'Insurance Policy *', class: 'block text-sm font-medium text-gray-700'
-          %span#wordCount.text-sm.text-gray-500 0/80 words
+      %h2.text-base.sm:text-lg.font-bold.mb-3.sm:mb-4.mt-6.sm:mt-8{style: 'color: #3a6363'} Insurance
+      .field.space-y-1.sm:space-y-2
+        %div.flex.items-center.justify-between.mb-1.sm:mb-2
+          = f.label :insurance_policy, 'Insurance Policy *', class: 'block text-xs sm:text-sm font-medium text-gray-700'
+          %span#wordCount.text-xs.sm:text-sm.text-gray-500 0/80 words
 
-        = f.text_area :insurance_policy, 
-          required: true, 
+        = f.text_area :insurance_policy,
+          required: true,
           rows: 4,
-          class: 'w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition',
+          class: 'w-full px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition',
           placeholder: 'Enter insurance policy details (max 80 words)',
           id: 'insurance_policy',
           data: { max_words: 80 },
@@ -179,55 +179,55 @@
           Maximum 80 words allowed
 
         - if @car.errors[:insurance_policy].any?
-          %div.mt-2.p-3.bg-red-50.border.border-red-200.rounded-lg
-            %p.text-red-600.text-sm.font-medium
+          %div.mt-2.p-2.sm:p-3.bg-red-50.border.border-red-200.rounded-lg
+            %p.text-red-600.text-xs.sm:text-sm.font-medium
               %i.fas.fa-exclamation-circle.mr-1
               = @car.errors[:insurance_policy].first
 
       / Images Section
-      %h2.text-lg.font-bold.mb-4.mt-8{style: 'color: #3a6363'} Car Images *
+      %h2.text-base.sm:text-lg.font-bold.mb-3.sm:mb-4.mt-6.sm:mt-8{style: 'color: #3a6363'} Car Images *
       - if @car.errors[:images].any?
-        .mb-4.p-4.bg-red-50.border.border-red-200.rounded-lg
-          %p.text-red-600.font-medium= @car.errors[:images].join(', ')
-      
-      .flex.gap-6.mb-4
+        .mb-3.sm:mb-4.p-3.sm:p-4.bg-red-50.border.border-red-200.rounded-lg
+          %p.text-red-600.text-xs.sm:text-sm.font-medium= @car.errors[:images].join(', ')
+
+      .flex.flex-wrap.gap-3.sm:gap-4.md:gap-6.mb-3.sm:mb-4
         - 5.times do |i|
           .relative.group
-            %div.flex.items-center.justify-center.w-32.h-24.bg-blue-50.rounded-xl.shadow.border-2.border-dashed.border-blue-300.group-hover:border-blue-500.transition-all.duration-200{ id: "plus-card-#{i}", class: i == 0 ? 'border-red-400 bg-red-50' : '' }
-              %i.fas.fa-plus.text-3xl.text-blue-400{ id: "plus-icon-#{i}" }
-              %img.hidden.absolute.inset-0.w-full.h-full.object-cover.rounded-xl{ id: "preview-img-#{i}" }
+            %div.flex.items-center.justify-center.w-24.h-20.sm:w-28.sm:h-22.md:w-32.md:h-24.bg-blue-50.rounded-lg.sm:rounded-xl.shadow.border-2.border-dashed.border-blue-300.group-hover:border-blue-500.transition-all.duration-200{ id: "plus-card-#{i}", class: i == 0 ? 'border-red-400 bg-red-50' : '' }
+              %i.fas.fa-plus.text-xl.sm:text-2xl.md:text-3xl.text-blue-400{ id: "plus-icon-#{i}" }
+              %img.hidden.absolute.inset-0.w-full.h-full.object-cover.rounded-lg.sm:rounded-xl{ id: "preview-img-#{i}" }
               - if i == 0
-                .absolute.-top-2.-right-2.bg-red-500.text-white.text-xs.px-2.py-1.rounded-full.font-bold Required
+                .absolute.-top-1.sm:-top-2.-right-1.sm:-right-2.bg-red-500.text-white.text-xs.px-1.sm:px-2.py-0.5.sm:py-1.rounded-full.font-bold Required
             = f.file_field :images, name: "car[images][]", id: "car_image_#{i}", accept: 'image/*', class: 'hidden', data: { image_index: i, required: i == 0 }
 
-      .text-sm.text-gray-600.mb-8
+      .text-xs.sm:text-sm.text-gray-600.mb-6.sm:mb-8
         %p.text-red-600.font-medium At least one image is required. Upload up to 5 high-quality images of your car. First image will be used as the main display image.
 
       / Mulkiya Section
-      %h2.text-lg.font-bold.text-blue-800.mb-4.mt-8 Mulkiya (PDF or Image) *
+      %h2.text-base.sm:text-lg.font-bold.text-blue-800.mb-3.sm:mb-4.mt-6.sm:mt-8 Mulkiya (PDF or Image) *
       - if @car.errors[:mulkiya].any?
-        .mb-4.p-4.bg-red-50.border.border-red-200.rounded-lg
-          %p.text-red-600.font-medium= @car.errors[:mulkiya].join(', ')
+        .mb-3.sm:mb-4.p-3.sm:p-4.bg-red-50.border.border-red-200.rounded-lg
+          %p.text-red-600.text-xs.sm:text-sm.font-medium= @car.errors[:mulkiya].join(', ')
 
-      .mb-2.text-sm.text-gray-600
+      .mb-2.text-xs.sm:text-sm.text-gray-600
         %p Upload the vehicle ownership card or PDF. Only one file is required.
 
-      .flex.gap-6.mb-6
+      .flex.flex-wrap.gap-3.sm:gap-4.md:gap-6.mb-4.sm:mb-6
         .relative.group
-          %div.flex.items-center.justify-center.w-32.h-24.bg-red-50.rounded-xl.shadow.border-2.border-dashed.border-red-400.group-hover:border-blue-500.transition-all.duration-200{id: 'plus-card-mulkiya'}
-            %i.fas.fa-plus.text-3xl.text-blue-400{id: 'plus-icon-mulkiya'}
-            %img.hidden.absolute.inset-0.w-full.h-full.object-cover.rounded-xl{id: 'preview-img-mulkiya'}
-            %div.hidden.absolute.inset-0.w-full.h-full.flex.items-center.justify-center.rounded-xl{id: 'preview-file-mulkiya'}
-              %i.fas.fa-file-pdf.text-3xl.text-red-500
-            .absolute.-top-2.-right-2.bg-red-500.text-white.text-xs.px-2.py-1.rounded-full.font-bold Required
+          %div.flex.items-center.justify-center.w-24.h-20.sm:w-28.sm:h-22.md:w-32.md:h-24.bg-red-50.rounded-lg.sm:rounded-xl.shadow.border-2.border-dashed.border-red-400.group-hover:border-blue-500.transition-all.duration-200{id: 'plus-card-mulkiya'}
+            %i.fas.fa-plus.text-xl.sm:text-2xl.md:text-3xl.text-blue-400{id: 'plus-icon-mulkiya'}
+            %img.hidden.absolute.inset-0.w-full.h-full.object-cover.rounded-lg.sm:rounded-xl{id: 'preview-img-mulkiya'}
+            %div.hidden.absolute.inset-0.w-full.h-full.flex.items-center.justify-center.rounded-lg.sm:rounded-xl{id: 'preview-file-mulkiya'}
+              %i.fas.fa-file-pdf.text-2xl.sm:text-3xl.text-red-500
+            .absolute.-top-1.sm:-top-2.-right-1.sm:-right-2.bg-red-500.text-white.text-xs.px-1.sm:px-2.py-0.5.sm:py-1.rounded-full.font-bold Required
           = f.file_field :mulkiya, id: 'car_mulkiya', accept: 'application/pdf,image/*,.heic,.heif', required: true, class: 'hidden'
         .flex.flex-col.justify-center
-          %span.text-sm.text-gray-700.font-medium Selected:
-          %span#mulkiya-filename.text-sm.text-gray-500 None
+          %span.text-xs.sm:text-sm.text-gray-700.font-medium Selected:
+          %span#mulkiya-filename.text-xs.sm:text-sm.text-gray-500 None
 
       / Submit Button
-      .flex.justify-end.pt-6
-        = f.submit 'Add Car', class: 'text-white font-bold py-3 px-8 rounded-lg shadow-lg hover:shadow-xl transition-all duration-200', style: 'background-color: #3a6363; hover:background-color: #2d4f4f'
+      .flex.justify-center.sm:justify-end.pt-4.sm:pt-6
+        = f.submit 'Add Car', class: 'w-full sm:w-auto text-white font-bold py-2.5 sm:py-3 px-6 sm:px-8 text-sm sm:text-base rounded-lg shadow-lg hover:shadow-xl transition-all duration-200', style: 'background-color: #3a6363; hover:background-color: #2d4f4f'
 
 :javascript
   // Insurance Policy Word Counter and Limiter

@@ -1,111 +1,112 @@
-.container.mx-auto.max-w-7xl.p-6
+.container.mx-auto.max-w-7xl.p-3.sm:p-4.md:p-6
   = render partial: "vendors/navbar"
-  
+
   / Welcome Header
-  .bg-white.rounded-2xl.shadow-xl.p-8.mb-8
-    .flex.flex-col.md:flex-row.md:items-center.md:justify-between.gap-4
+  .bg-white.rounded-xl.sm:rounded-2xl.shadow-xl.p-4.sm:p-6.md:p-8.mb-4.sm:mb-6.md:mb-8
+    .flex.flex-col.md:flex-row.md:items-center.md:justify-between.gap-3.sm:gap-4
       .flex-1
-        %h1.text-4xl.font-extrabold.mb-2{style: 'color: #3a6363'} Welcome, #{current_vendor.company_name}!
-        %p.text-lg.text-gray-600 Manage your car rental business from this dashboard
-      .flex.gap-3
-        = link_to edit_vendor_path, class: 'text-white font-semibold px-6 py-3 rounded-lg transition flex items-center gap-2 hover:opacity-90', style: 'background-color: #3a6363' do
-          %i.fas.fa-edit
-          Edit Profile
+        %h1.text-2xl.sm:text-3xl.md:text-4xl.font-extrabold.mb-2{style: 'color: #3a6363'} Welcome, #{current_vendor.company_name}!
+        %p.text-sm.sm:text-base.md:text-lg.text-gray-600 Manage your car rental business from this dashboard
+      .flex.gap-2.sm:gap-3
+        = link_to edit_vendor_path, class: 'text-white font-semibold px-4 sm:px-6 py-2 sm:py-3 rounded-lg transition flex items-center gap-2 hover:opacity-90 text-sm sm:text-base', style: 'background-color: #3a6363' do
+          %i.fas.fa-edit.text-sm.sm:text-base
+          %span.hidden.sm:inline Edit Profile
+          %span.sm:hidden Edit
 
   / Stats Cards
-  .grid.grid-cols-1.md:grid-cols-2.lg:grid-cols-4.gap-6.mb-8
-    .bg-white.rounded-xl.shadow-lg.p-6.flex.flex-col.items-center
-      .bg-blue-100.rounded-full.p-4.mb-4
-        %i.fas.fa-car.text-2xl.text-blue-600
-      %span.text-2xl.font-bold.text-gray-900= current_vendor.cars.count
-      %span.text-sm.text-gray-600.mt-1 Cars Listed
-    .bg-white.rounded-xl.shadow-lg.p-6.flex.flex-col.items-center
-      .bg-green-100.rounded-full.p-4.mb-4
-        %i.fas.fa-calendar-check.text-2xl.text-green-600
-      %span.text-2xl.font-bold.text-gray-900= Booking.where(car_id: current_vendor.cars.pluck(:id)).count
-      %span.text-sm.text-gray-600.mt-1 Total Bookings
-    .bg-white.rounded-xl.shadow-lg.p-6.flex.flex-col.items-center
-      .bg-yellow-100.rounded-full.p-4.mb-4
-        %i.fas.fa-clock.text-2xl.text-yellow-600
-      %span.text-2xl.font-bold.text-gray-900= Booking.where(car_id: current_vendor.cars.pluck(:id), status: 'pending').count
-      %span.text-sm.text-gray-600.mt-1 Pending Bookings
-    .bg-white.rounded-xl.shadow-lg.p-6.flex.flex-col.items-center
-      .bg-purple-100.rounded-full.p-4.mb-4
-        %i.fas.fa-wallet.text-2xl.text-purple-600
-      %span.text-2xl.font-bold.text-gray-900 $0
-      %span.text-sm.text-gray-600.mt-1 Earnings (Coming Soon)
+  .grid.grid-cols-2.md:grid-cols-2.lg:grid-cols-4.gap-3.sm:gap-4.md:gap-6.mb-4.sm:mb-6.md:mb-8
+    .bg-white.rounded-lg.sm:rounded-xl.shadow-lg.p-3.sm:p-4.md:p-6.flex.flex-col.items-center
+      .bg-blue-100.rounded-full.p-2.sm:p-3.md:p-4.mb-2.sm:mb-3.md:mb-4
+        %i.fas.fa-car.text-base.sm:text-lg.md:text-2xl.text-blue-600
+      %span.text-lg.sm:text-xl.md:text-2xl.font-bold.text-gray-900= current_vendor.cars.count
+      %span.text-xs.sm:text-sm.text-gray-600.mt-1.text-center Cars Listed
+    .bg-white.rounded-lg.sm:rounded-xl.shadow-lg.p-3.sm:p-4.md:p-6.flex.flex-col.items-center
+      .bg-green-100.rounded-full.p-2.sm:p-3.md:p-4.mb-2.sm:mb-3.md:mb-4
+        %i.fas.fa-calendar-check.text-base.sm:text-lg.md:text-2xl.text-green-600
+      %span.text-lg.sm:text-xl.md:text-2xl.font-bold.text-gray-900= Booking.where(car_id: current_vendor.cars.pluck(:id)).count
+      %span.text-xs.sm:text-sm.text-gray-600.mt-1.text-center Total Bookings
+    .bg-white.rounded-lg.sm:rounded-xl.shadow-lg.p-3.sm:p-4.md:p-6.flex.flex-col.items-center
+      .bg-yellow-100.rounded-full.p-2.sm:p-3.md:p-4.mb-2.sm:mb-3.md:mb-4
+        %i.fas.fa-clock.text-base.sm:text-lg.md:text-2xl.text-yellow-600
+      %span.text-lg.sm:text-xl.md:text-2xl.font-bold.text-gray-900= Booking.where(car_id: current_vendor.cars.pluck(:id), status: 'pending').count
+      %span.text-xs.sm:text-sm.text-gray-600.mt-1.text-center Pending Bookings
+    .bg-white.rounded-lg.sm:rounded-xl.shadow-lg.p-3.sm:p-4.md:p-6.flex.flex-col.items-center
+      .bg-purple-100.rounded-full.p-2.sm:p-3.md:p-4.mb-2.sm:mb-3.md:mb-4
+        %i.fas.fa-wallet.text-base.sm:text-lg.md:text-2xl.text-purple-600
+      %span.text-lg.sm:text-xl.md:text-2xl.font-bold.text-gray-900 $0
+      %span.text-xs.sm:text-sm.text-gray-600.mt-1.text-center Earnings (Coming Soon)
 
   / Vendor Information Section
-  .grid.grid-cols-1.lg:grid-cols-2.gap-8
+  .grid.grid-cols-1.lg:grid-cols-2.gap-4.sm:gap-6.md:gap-8
     / Vendor Details Card
-    .bg-white.rounded-xl.shadow-lg.p-6
-      %h2.text-xl.font-bold.mb-4.flex.items-center.gap-2{style: 'color: #3a6363'}
-        %i.fas.fa-user.text-blue-500
+    .bg-white.rounded-lg.sm:rounded-xl.shadow-lg.p-4.sm:p-6
+      %h2.text-base.sm:text-lg.md:text-xl.font-bold.mb-3.sm:mb-4.flex.items-center.gap-2{style: 'color: #3a6363'}
+        %i.fas.fa-user.text-blue-500.text-sm.sm:text-base
         Company Information
-      .space-y-4
-        .flex.justify-between.items-center.py-3.border-b.border-gray-100
-          %span.font-medium.text-gray-600 Company Name
-          %span.text-gray-900= current_vendor.company_name
-        .flex.justify-between.items-center.py-3.border-b.border-gray-100
-          %span.font-medium.text-gray-600 Contact Person
-          %span.text-gray-900= current_vendor.name
-        .flex.justify-between.items-center.py-3.border-b.border-gray-100
-          %span.font-medium.text-gray-600 Email
-          %span.text-gray-900= current_vendor.email
-        .flex.justify-between.items-center.py-3.border-b.border-gray-100
-          %span.font-medium.text-gray-600 Phone
-          %span.text-gray-900= current_vendor.phone.presence || 'Not provided'
-        .flex.justify-between.items-center.py-3.border-b.border-gray-100
-          %span.font-medium.text-gray-600 Address
-          %span.text-gray-900= current_vendor.address.presence || 'Not provided'
-      
-      .mt-6.pt-4
-        = link_to edit_vendor_path, class: 'w-full text-white font-semibold px-4 py-2 rounded-lg transition flex items-center justify-center gap-2 hover:opacity-90', style: 'background-color: #3a6363' do
-          %i.fas.fa-edit
+      .space-y-3.sm:space-y-4
+        .flex.flex-col.sm:flex-row.sm:justify-between.sm:items-center.py-2.sm:py-3.border-b.border-gray-100.gap-1.sm:gap-2
+          %span.font-medium.text-gray-600.text-xs.sm:text-sm Company Name
+          %span.text-gray-900.text-sm.sm:text-base.break-words= current_vendor.company_name
+        .flex.flex-col.sm:flex-row.sm:justify-between.sm:items-center.py-2.sm:py-3.border-b.border-gray-100.gap-1.sm:gap-2
+          %span.font-medium.text-gray-600.text-xs.sm:text-sm Contact Person
+          %span.text-gray-900.text-sm.sm:text-base.break-words= current_vendor.name
+        .flex.flex-col.sm:flex-row.sm:justify-between.sm:items-center.py-2.sm:py-3.border-b.border-gray-100.gap-1.sm:gap-2
+          %span.font-medium.text-gray-600.text-xs.sm:text-sm Email
+          %span.text-gray-900.text-sm.sm:text-base.break-all= current_vendor.email
+        .flex.flex-col.sm:flex-row.sm:justify-between.sm:items-center.py-2.sm:py-3.border-b.border-gray-100.gap-1.sm:gap-2
+          %span.font-medium.text-gray-600.text-xs.sm:text-sm Phone
+          %span.text-gray-900.text-sm.sm:text-base= current_vendor.phone.presence || 'Not provided'
+        .flex.flex-col.sm:flex-row.sm:justify-between.sm:items-center.py-2.sm:py-3.border-b.border-gray-100.gap-1.sm:gap-2
+          %span.font-medium.text-gray-600.text-xs.sm:text-sm Address
+          %span.text-gray-900.text-sm.sm:text-base.break-words= current_vendor.address.presence || 'Not provided'
+
+      .mt-4.sm:mt-6.pt-3.sm:pt-4
+        = link_to edit_vendor_path, class: 'w-full text-white font-semibold px-4 py-2 rounded-lg transition flex items-center justify-center gap-2 hover:opacity-90 text-sm sm:text-base', style: 'background-color: #3a6363' do
+          %i.fas.fa-edit.text-sm.sm:text-base
           Edit Company Information
 
     / Quick Actions Card
-    .bg-white.rounded-xl.shadow-lg.p-6
-      %h2.text-xl.font-bold.mb-4.flex.items-center.gap-2{style: 'color: #3a6363'}
-        %i.fas.fa-bolt.text-blue-500
+    .bg-white.rounded-lg.sm:rounded-xl.shadow-lg.p-4.sm:p-6
+      %h2.text-base.sm:text-lg.md:text-xl.font-bold.mb-3.sm:mb-4.flex.items-center.gap-2{style: 'color: #3a6363'}
+        %i.fas.fa-bolt.text-blue-500.text-sm.sm:text-base
         Quick Actions
-      .space-y-3
-        = link_to vendors_cars_path, class: 'w-full text-white font-medium px-4 py-3 rounded-lg transition flex items-center justify-center gap-2 hover:opacity-90', style: 'background-color: #3a6363' do
-          %i.fas.fa-car
+      .space-y-2.sm:space-y-3
+        = link_to vendors_cars_path, class: 'w-full text-white font-medium px-3 sm:px-4 py-2 sm:py-3 rounded-lg transition flex items-center justify-center gap-2 hover:opacity-90 text-sm sm:text-base', style: 'background-color: #3a6363' do
+          %i.fas.fa-car.text-sm.sm:text-base
           Manage Cars
-        = link_to vendors_bookings_path, class: 'w-full text-white font-medium px-4 py-3 rounded-lg transition flex items-center justify-center gap-2 hover:opacity-90', style: 'background-color: #3a6363' do
-          %i.fas.fa-calendar-alt
+        = link_to vendors_bookings_path, class: 'w-full text-white font-medium px-3 sm:px-4 py-2 sm:py-3 rounded-lg transition flex items-center justify-center gap-2 hover:opacity-90 text-sm sm:text-base', style: 'background-color: #3a6363' do
+          %i.fas.fa-calendar-alt.text-sm.sm:text-base
           View Bookings
-        = link_to vendors_new_car_path, class: 'w-full text-white font-medium px-4 py-3 rounded-lg transition flex items-center justify-center gap-2 hover:opacity-90', style: 'background-color: #3a6363' do
-          %i.fas.fa-plus
+        = link_to vendors_new_car_path, class: 'w-full text-white font-medium px-3 sm:px-4 py-2 sm:py-3 rounded-lg transition flex items-center justify-center gap-2 hover:opacity-90 text-sm sm:text-base', style: 'background-color: #3a6363' do
+          %i.fas.fa-plus.text-sm.sm:text-base
           Add New Car
-        = link_to vendors_payments_path, class: 'w-full text-white font-medium px-4 py-3 rounded-lg transition flex items-center justify-center gap-2 hover:opacity-90', style: 'background-color: #3a6363' do
-          %i.fas.fa-credit-card
+        = link_to vendors_payments_path, class: 'w-full text-white font-medium px-3 sm:px-4 py-2 sm:py-3 rounded-lg transition flex items-center justify-center gap-2 hover:opacity-90 text-sm sm:text-base', style: 'background-color: #3a6363' do
+          %i.fas.fa-credit-card.text-sm.sm:text-base
           Payment History
 
   / Recent Activity Section
-  .mt-8
-    .bg-white.rounded-xl.shadow-lg.p-6
-      %h2.text-xl.font-bold.mb-4.flex.items-center.gap-2{style: 'color: #3a6363'}
-        %i.fas.fa-history{style: 'color:#3A6363'}
+  .mt-4.sm:mt-6.md:mt-8
+    .bg-white.rounded-lg.sm:rounded-xl.shadow-lg.p-4.sm:p-6
+      %h2.text-base.sm:text-lg.md:text-xl.font-bold.mb-3.sm:mb-4.flex.items-center.gap-2{style: 'color: #3a6363'}
+        %i.fas.fa-history.text-sm.sm:text-base{style: 'color:#3A6363'}
         Recent Activity
       - recent_bookings = Booking.where(car_id: current_vendor.cars.pluck(:id)).includes(:user, :car).order(created_at: :desc).limit(5)
       - if recent_bookings.any?
-        .space-y-3
+        .space-y-2.sm:space-y-3
           - recent_bookings.each do |booking|
-            .flex.items-center.justify-between.py-3.border-b.border-gray-100.last:border-b-0
-              .flex.items-center.gap-3
-                .bg-blue-100.rounded-full.p-2
-                  %i.fas.fa-calendar{style: 'color:#3A6363'}
-                .flex.flex-col
-                  %span.font-medium.text-gray-900= "Booking ##{booking.id}"
-                  %span.text-sm.text-gray-500= "#{booking.user&.full_name} - #{booking.car.brand} #{booking.car.model}"
-              .flex.flex-col.items-end
-                %span.text-sm.text-gray-500= booking.created_at.strftime('%b %d, %Y')
+            .flex.flex-col.sm:flex-row.sm:items-center.sm:justify-between.py-2.sm:py-3.border-b.border-gray-100.last:border-b-0.gap-2.sm:gap-3
+              .flex.items-center.gap-2.sm:gap-3.flex-1
+                .bg-blue-100.rounded-full.p-1.sm:p-2.flex-shrink-0
+                  %i.fas.fa-calendar.text-xs.sm:text-sm{style: 'color:#3A6363'}
+                .flex.flex-col.min-w-0
+                  %span.font-medium.text-gray-900.text-sm.sm:text-base= "Booking ##{booking.id}"
+                  %span.text-xs.sm:text-sm.text-gray-500.truncate= "#{booking.user&.full_name} - #{booking.car.brand} #{booking.car.model}"
+              .flex.flex-row.sm:flex-col.items-center.sm:items-end.gap-2.justify-between.sm:justify-start
+                %span.text-xs.sm:text-sm.text-gray-500= booking.created_at.strftime('%b %d, %Y')
                 - status_classes = {'Pending' => 'bg-yellow-100 text-yellow-700', 'Confirmed' => 'bg-green-100 text-green-700', 'Cancelled' => 'bg-red-100 text-red-700'}
-                %span.inline-block.rounded-full.text-xs.font-semibold.px-2.py-1{class: status_classes[booking.status] || 'bg-gray-100 text-gray-700'}= booking.status
+                %span.inline-block.rounded-full.text-xs.font-semibold.px-2.py-1.whitespace-nowrap{class: status_classes[booking.status] || 'bg-gray-100 text-gray-700'}= booking.status
       - else
-        .text-center.py-8
-          %i.fas.fa-calendar-times.text-4xl.text-gray-300.mb-4
-          %p.text-gray-500 No recent activity
-          %p.text-gray-400.text-sm When customers book your cars, they will appear here 
+        .text-center.py-6.sm:py-8
+          %i.fas.fa-calendar-times.text-3xl.sm:text-4xl.text-gray-300.mb-3.sm:mb-4
+          %p.text-sm.sm:text-base.text-gray-500 No recent activity
+          %p.text-xs.sm:text-sm.text-gray-400 When customers book your cars, they will appear here 

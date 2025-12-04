@@ -187,3 +187,10 @@
   box-sizing: border-box;
   /* Width will be set by JavaScript */
 }
+
+/* Custom responsive width class to avoid using fractions in HAML */
+@media (min-width: 1024px) {
+  .lg_w-33 {
+    width: 33.333333%;
+  }
+}

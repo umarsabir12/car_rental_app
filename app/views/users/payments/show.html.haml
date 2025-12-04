@@ -1,54 +1,54 @@
-.container.mx-auto.max-w-7xl.p-4.md:p-8.pt-5
-  .bg-white.rounded-3xl.shadow-2xl.overflow-hidden
+.container.mx-auto.max-w-7xl.p-2.sm:p-4.md:p-8.pt-5
+  .bg-white.rounded-xl.sm:rounded-3xl.shadow-2xl.overflow-hidden
     / Header
-    .p-4.text-center
-      %h1.text-3xl.font-bold Payment Details
-      %p Complete your booking securely
+    .p-3.sm:p-4.text-center
+      %h1.text-xl.sm:text-2xl.md:text-3xl.font-bold Payment Details
+      %p.text-sm.sm:text-base Complete your booking securely
 
-    .p-8
-      .grid.grid-cols-1.lg:grid-cols-2.gap-8
+    .p-4.sm:p-6.md:p-8
+      .grid.grid-cols-1.lg:grid-cols-2.gap-4.sm:gap-6.md:gap-8
         / Left Half - Car Details
-        .space-y-6
+        .space-y-4.sm:space-y-6
           / Car Information
-          .bg-gray-50.rounded-2xl.p-6
-            %h2.text-2xl.font-bold.text-gray-800.mb-4
-              %i.fas.fa-car.mr-3.text-blue-600
+          .bg-gray-50.rounded-xl.sm:rounded-2xl.p-4.sm:p-6
+            %h2.text-lg.sm:text-xl.md:text-2xl.font-bold.text-gray-800.mb-3.sm:mb-4
+              %i.fas.fa-car.mr-2.sm:mr-3.text-blue-600.text-base.sm:text-lg
               Car Information
-            
-            .mb-4.p-2
+
+            .mb-3.sm:mb-4.p-1.sm:p-2
               = car_main_image(@car, size: [400, 400])
-              
-              .flex-1
-                %h3.text-xl.font-bold.text-gray-800= "#{@car.brand} #{@car.model}"
-                %p.text-gray-600= "#{@car.year} • #{@car.color}"
-                %p.text-2xl.font-bold.text-blue-600= number_to_currency(@car.daily_price)
-                %span.text-sm.text-gray-500 per day
+
+              .flex-1.mt-3.sm:mt-4
+                %h3.text-base.sm:text-lg.md:text-xl.font-bold.text-gray-800= "#{@car.brand} #{@car.model}"
+                %p.text-sm.sm:text-base.text-gray-600= "#{@car.year} • #{@car.color}"
+                %p.text-lg.sm:text-xl.md:text-2xl.font-bold.text-blue-600= number_to_currency(@car.daily_price)
+                %span.text-xs.sm:text-sm.text-gray-500 per day
 
           / Rental Period
-          .bg-green-50.rounded-2xl.p-6
-            %h3.text-lg.font-semibold.text-gray-800.mb-4
-              %i.fas.fa-calendar.mr-2.text-green-600
+          .bg-green-50.rounded-xl.sm:rounded-2xl.p-4.sm:p-6
+            %h3.text-base.sm:text-lg.font-semibold.text-gray-800.mb-3.sm:mb-4
+              %i.fas.fa-calendar.mr-2.text-green-600.text-sm.sm:text-base
               Rental Period
-            .space-y-3
+            .space-y-2.sm:space-y-3
               .flex.justify-between.items-center.py-2.border-b.border-green-200
-                %span.text-gray-600 Start Date
-                %span.font-semibold= @booking.start_date.strftime('%B %d, %Y')
+                %span.text-sm.sm:text-base.text-gray-600 Start Date
+                %span.text-sm.sm:text-base.font-semibold= @booking.start_date.strftime('%B %d, %Y')
               .flex.justify-between.items-center.py-2.border-b.border-green-200
-                %span.text-gray-600 End Date
-                %span.font-semibold= @booking.end_date.strftime('%B %d, %Y')
+                %span.text-sm.sm:text-base.text-gray-600 End Date
+                %span.text-sm.sm:text-base.font-semibold= @booking.end_date.strftime('%B %d, %Y')
               .flex.justify-between.items-center.py-2
-                %span.text-gray-600 Duration
-                %span.font-semibold.text-green-600= pluralize(@days, 'day')
+                %span.text-sm.sm:text-base.text-gray-600 Duration
+                %span.text-sm.sm:text-base.font-semibold.text-green-600= pluralize(@days, 'day')
 
         / Right Half - Payment Summary
-        .space-y-6
+        .space-y-4.sm:space-y-6
           / Payment Summary
-          .bg-blue-50.rounded-2xl.p-6
-            %h2.text-2xl.font-bold.text-gray-800.mb-6
-              %i.fas.fa-receipt.mr-3.text-blue-600
+          .bg-blue-50.rounded-xl.sm:rounded-2xl.p-4.sm:p-6
+            %h2.text-lg.sm:text-xl.md:text-2xl.font-bold.text-gray-800.mb-4.sm:mb-6
+              %i.fas.fa-receipt.mr-2.sm:mr-3.text-blue-600.text-base.sm:text-lg
               Payment Summary
-            
-            .space-y-4
+
+            .space-y-3.sm:space-y-4
               / Calculate pricing based on selected period
               - duration_days = @days
               - daily_price = @car.daily_price.to_f
@@ -59,112 +59,111 @@
                 - full_weeks = duration_days / 7
                 - remaining_days = duration_days % 7
                 - subtotal = (full_weeks * weekly_price) + (remaining_days * daily_price)
-                
-                .flex.justify-between.items-center.py-3.border-b.border-blue-200
-                  %span.text-gray-700 Weekly Rate
-                  %span.font-semibold= number_to_currency(weekly_price)
-                .flex.justify-between.items-center.py-3.border-b.border-blue-200
-                  %span.text-gray-700 Daily Rate
-                  %span.font-semibold= number_to_currency(daily_price)
-                .flex.justify-between.items-center.py-3.border-b.border-blue-200
-                  %span.text-gray-700 Rental Duration
-                  %span.font-semibold
+
+                .flex.justify-between.items-center.py-2.sm:py-3.border-b.border-blue-200
+                  %span.text-sm.sm:text-base.text-gray-700 Weekly Rate
+                  %span.text-sm.sm:text-base.font-semibold= number_to_currency(weekly_price)
+                .flex.justify-between.items-center.py-2.sm:py-3.border-b.border-blue-200
+                  %span.text-sm.sm:text-base.text-gray-700 Daily Rate
+                  %span.text-sm.sm:text-base.font-semibold= number_to_currency(daily_price)
+                .flex.justify-between.items-center.py-2.sm:py-3.border-b.border-blue-200
+                  %span.text-sm.sm:text-base.text-gray-700 Rental Duration
+                  %span.text-sm.sm:text-base.font-semibold
                     = "#{full_weeks} week#{full_weeks == 1 ? '' : 's'}"
                     - if remaining_days > 0
                       %span.ml-1
                         = "+ #{remaining_days} day#{remaining_days == 1 ? '' : 's'}"
-                .flex.justify-between.items-center.py-3.border-b.border-blue-200
-                  %span.text-gray-700
+                .flex.justify-between.items-center.py-2.sm:py-3.border-b.border-blue-200
+                  %span.text-xs.sm:text-sm.text-gray-700
                     = "#{full_weeks} week#{full_weeks == 1 ? '' : 's'} × "
                     %span.font-semibold= number_to_currency(weekly_price)
-                  %span.font-semibold.text-blue-600= number_to_currency(full_weeks * weekly_price)
-                
+                  %span.text-sm.sm:text-base.font-semibold.text-blue-600= number_to_currency(full_weeks * weekly_price)
+
                 - if remaining_days > 0
-                  .flex.justify-between.items-center.py-3.border-b.border-blue-200
-                    %span.text-gray-700
+                  .flex.justify-between.items-center.py-2.sm:py-3.border-b.border-blue-200
+                    %span.text-xs.sm:text-sm.text-gray-700
                       = "#{remaining_days} day#{remaining_days == 1 ? '' : 's'} × "
                       %span.font-semibold= number_to_currency(daily_price)
-                    %span.font-semibold.text-blue-600= number_to_currency(remaining_days * daily_price)
-                
-                .flex.justify-between.items-center.py-3.border-b.border-blue-200
-                  %span.text-gray-700 Tax
-                  %span.text-green-600 Free
-                .flex.justify-between.items-center.py-4
-                  %span.text-xl.font-bold.text-gray-800 Total Amount
-                  %span.text-2xl.font-bold.text-blue-600= number_to_currency(subtotal)
+                    %span.text-sm.sm:text-base.font-semibold.text-blue-600= number_to_currency(remaining_days * daily_price)
+
+                .flex.justify-between.items-center.py-2.sm:py-3.border-b.border-blue-200
+                  %span.text-sm.sm:text-base.text-gray-700 Tax
+                  %span.text-sm.sm:text-base.text-green-600 Free
+                .flex.justify-between.items-center.py-3.sm:py-4
+                  %span.text-base.sm:text-lg.md:text-xl.font-bold.text-gray-800 Total Amount
+                  %span.text-lg.sm:text-xl.md:text-2xl.font-bold.text-blue-600= number_to_currency(subtotal)
               
               - elsif @selected_period == 'monthly'
                 - full_months = duration_days / 30
                 - remaining_days = duration_days % 30
                 - subtotal = (full_months * monthly_price) + (remaining_days * daily_price)
-                
-                .flex.justify-between.items-center.py-3.border-b.border-blue-200
-                  %span.text-gray-700 Monthly Rate
-                  %span.font-semibold= number_to_currency(monthly_price)
-                .flex.justify-between.items-center.py-3.border-b.border-blue-200
-                  %span.text-gray-700 Daily Rate
-                  %span.font-semibold= number_to_currency(daily_price)
-                .flex.justify-between.items-center.py-3.border-b.border-blue-200
-                  %span.text-gray-700 Rental Duration
-                  %span.font-semibold
+
+                .flex.justify-between.items-center.py-2.sm:py-3.border-b.border-blue-200
+                  %span.text-sm.sm:text-base.text-gray-700 Monthly Rate
+                  %span.text-sm.sm:text-base.font-semibold= number_to_currency(monthly_price)
+                .flex.justify-between.items-center.py-2.sm:py-3.border-b.border-blue-200
+                  %span.text-sm.sm:text-base.text-gray-700 Daily Rate
+                  %span.text-sm.sm:text-base.font-semibold= number_to_currency(daily_price)
+                .flex.justify-between.items-center.py-2.sm:py-3.border-b.border-blue-200
+                  %span.text-sm.sm:text-base.text-gray-700 Rental Duration
+                  %span.text-sm.sm:text-base.font-semibold
                     = "#{full_months} month#{full_months == 1 ? '' : 's'}"
                     - if remaining_days > 0
                       %span.ml-1
                         = "+ #{remaining_days} day#{remaining_days == 1 ? '' : 's'}"
-                .flex.justify-between.items-center.py-3.border-b.border-blue-200
-                  %span.text-gray-700
+                .flex.justify-between.items-center.py-2.sm:py-3.border-b.border-blue-200
+                  %span.text-xs.sm:text-sm.text-gray-700
                     = "#{full_months} month#{full_months == 1 ? '' : 's'} × "
                     %span.font-semibold= number_to_currency(monthly_price)
-                  %span.font-semibold.text-blue-600= number_to_currency(full_months * monthly_price)
-                
+                  %span.text-sm.sm:text-base.font-semibold.text-blue-600= number_to_currency(full_months * monthly_price)
+
                 - if remaining_days > 0
-                  .flex.justify-between.items-center.py-3.border-b.border-blue-200
-                    %span.text-gray-700
+                  .flex.justify-between.items-center.py-2.sm:py-3.border-b.border-blue-200
+                    %span.text-xs.sm:text-sm.text-gray-700
                       = "#{remaining_days} day#{remaining_days == 1 ? '' : 's'} × "
                       %span.font-semibold= number_to_currency(daily_price)
-                    %span.font-semibold.text-blue-600= number_to_currency(remaining_days * daily_price)
-                
-                .flex.justify-between.items-center.py-3.border-b.border-blue-200
-                  %span.text-gray-700 Tax
-                  %span.text-green-600 Free
-                .flex.justify-between.items-center.py-4
-                  %span.text-xl.font-bold.text-gray-800 Total Amount
-                  %span.text-2xl.font-bold.text-blue-600= number_to_currency(subtotal)
+                    %span.text-sm.sm:text-base.font-semibold.text-blue-600= number_to_currency(remaining_days * daily_price)
+
+                .flex.justify-between.items-center.py-2.sm:py-3.border-b.border-blue-200
+                  %span.text-sm.sm:text-base.text-gray-700 Tax
+                  %span.text-sm.sm:text-base.text-green-600 Free
+                .flex.justify-between.items-center.py-3.sm:py-4
+                  %span.text-base.sm:text-lg.md:text-xl.font-bold.text-gray-800 Total Amount
+                  %span.text-lg.sm:text-xl.md:text-2xl.font-bold.text-blue-600= number_to_currency(subtotal)
               
               - else
                 / Daily pricing (default)
                 - subtotal = duration_days * daily_price
-                
-                .flex.justify-between.items-center.py-3.border-b.border-blue-200
-                  %span.text-gray-700 Daily Rate
-                  %span.font-semibold= number_to_currency(daily_price)
-                .flex.justify-between.items-center.py-3.border-b.border-blue-200
-                  %span.text-gray-700 Number of Days
-                  %span.font-semibold= duration_days
-                .flex.justify-between.items-center.py-3.border-b.border-blue-200
-                  %span.text-gray-700 Subtotal
-                  %span.font-semibold= number_to_currency(subtotal)
-                .flex.justify-between.items-center.py-3.border-b.border-blue-200
-                  %span.text-gray-700 Tax
-                  %span.text-green-600 Free
-                .flex.justify-between.items-center.py-4
-                  %span.text-xl.font-bold.text-gray-800 Total Amount
-                  %span.text-2xl.font-bold.text-blue-600= number_to_currency(subtotal)
 
-      / Payment Mode Selection
+                .flex.justify-between.items-center.py-2.sm:py-3.border-b.border-blue-200
+                  %span.text-sm.sm:text-base.text-gray-700 Daily Rate
+                  %span.text-sm.sm:text-base.font-semibold= number_to_currency(daily_price)
+                .flex.justify-between.items-center.py-2.sm:py-3.border-b.border-blue-200
+                  %span.text-sm.sm:text-base.text-gray-700 Number of Days
+                  %span.text-sm.sm:text-base.font-semibold= duration_days
+                .flex.justify-between.items-center.py-2.sm:py-3.border-b.border-blue-200
+                  %span.text-sm.sm:text-base.text-gray-700 Subtotal
+                  %span.text-sm.sm:text-base.font-semibold= number_to_currency(subtotal)
+                .flex.justify-between.items-center.py-2.sm:py-3.border-b.border-blue-200
+                  %span.text-sm.sm:text-base.text-gray-700 Tax
+                  %span.text-sm.sm:text-base.text-green-600 Free
+                .flex.justify-between.items-center.py-3.sm:py-4
+                  %span.text-base.sm:text-lg.md:text-xl.font-bold.text-gray-800 Total Amount
+                  %span.text-lg.sm:text-xl.md:text-2xl.font-bold.text-blue-600= number_to_currency(subtotal)
+
       / Payment Mode Selection - Only show if booking is not confirmed
       - unless @booking.status == 'confirmed'
-        .mt-8.p-6.bg-purple-50.rounded-2xl
-          %h3.text-xl.font-semibold.text-gray-800.mb-6
-            %i.fas.fa-credit-card.mr-3.text-purple-600
+        .mt-4.sm:mt-6.md:mt-8.p-4.sm:p-6.bg-purple-50.rounded-xl.sm:rounded-2xl
+          %h3.text-base.sm:text-lg.md:text-xl.font-semibold.text-gray-800.mb-4.sm:mb-6
+            %i.fas.fa-credit-card.mr-2.sm:mr-3.text-purple-600.text-sm.sm:text-base
             Payment Method
-          
-          .space-y-4
+
+          .space-y-3.sm:space-y-4
             / Payment Mode Radio Buttons
-            .flex.gap-4
+            .flex.flex-col.sm:flex-row.gap-3.sm:gap-4
               / Online Payment Option
-              %label.flex.items-center.cursor-pointer.flex-1.p-4.border-2.rounded-xl.transition-all.duration-200{class: (@booking.payment_mode == 'Online' ? 'border-blue-500 bg-blue-50' : 'border-gray-300 bg-white hover:border-blue-300')}
-                %input.mr-4.w-5.h-5.cursor-pointer{
+              %label.flex.items-center.cursor-pointer.flex-1.p-3.sm:p-4.border-2.rounded-lg.sm:rounded-xl.transition-all.duration-200{class: (@booking.payment_mode == 'Online' ? 'border-blue-500 bg-blue-50' : 'border-gray-300 bg-white hover:border-blue-300')}
+                %input.mr-3.sm:mr-4.w-4.h-4.sm:w-5.sm:h-5.cursor-pointer{
                   type: 'radio',
                   name: 'payment_mode',
                   value: 'Online',
@@ -173,12 +172,12 @@
                   class: 'payment-mode-radio'
                 }
                 .flex-1
-                  %span.font-semibold.text-gray-800 Online Payment
-                  %p.text-sm.text-gray-600 Pay securely via Stripe (Card)
-              
+                  %span.text-sm.sm:text-base.font-semibold.text-gray-800 Online Payment
+                  %p.text-xs.sm:text-sm.text-gray-600 Pay securely via Stripe (Card)
+
               / Cash Payment Option
-              %label.flex.items-center.cursor-pointer.flex-1.p-4.border-2.rounded-xl.transition-all.duration-200{class: (@booking.payment_mode == 'Cash' ? 'border-green-500 bg-green-50' : 'border-gray-300 bg-white hover:border-green-300')}
-                %input.mr-4.w-5.h-5.cursor-pointer{
+              %label.flex.items-center.cursor-pointer.flex-1.p-3.sm:p-4.border-2.rounded-lg.sm:rounded-xl.transition-all.duration-200{class: (@booking.payment_mode == 'Cash' ? 'border-green-500 bg-green-50' : 'border-gray-300 bg-white hover:border-green-300')}
+                %input.mr-3.sm:mr-4.w-4.h-4.sm:w-5.sm:h-5.cursor-pointer{
                   type: 'radio',
                   name: 'payment_mode',
                   value: 'Cash',
@@ -187,69 +186,69 @@
                   class: 'payment-mode-radio'
                 }
                 .flex-1
-                  %span.font-semibold.text-gray-800 Pay at Pickup
-                  %p.text-sm.text-gray-600 Pay cash when collecting the vehicle
+                  %span.text-sm.sm:text-base.font-semibold.text-gray-800 Pay at Pickup
+                  %p.text-xs.sm:text-sm.text-gray-600 Pay cash when collecting the vehicle
 
       / Payment Method Confirmed Badge - Only show if booking is confirmed
       - if @booking.status == 'confirmed'
-        .mt-8.p-6.bg-blue-50.rounded-2xl
-          .flex.items-center.justify-between
-            .flex.items-center.gap-3
-              %i.fas.fa-check-circle.text-2xl.text-blue-600
+        .mt-4.sm:mt-6.md:mt-8.p-4.sm:p-6.bg-blue-50.rounded-xl.sm:rounded-2xl
+          .flex.items-center.justify-between.gap-2.sm:gap-3
+            .flex.items-center.gap-2.sm:gap-3.flex-1
+              %i.fas.fa-check-circle.text-lg.sm:text-xl.md:text-2xl.text-blue-600
               .flex-1
-                %h3.text-xl.font-semibold.text-gray-800
-                  Payment Method: 
+                %h3.text-sm.sm:text-base.md:text-lg.lg:text-xl.font-semibold.text-gray-800
+                  Payment Method:
                   %span.text-blue-600
                     - if @booking.payment_mode == 'Online'
                       Online Payment
                     - else
                       Pay at Pickup
-                %p.text-sm.text-gray-600
+                %p.text-xs.sm:text-sm.text-gray-600
                   - if @booking.payment_mode == 'Online'
                     Payment has been processed securely
                   - else
                     Payment will be collected at vehicle pickup
-            %i.fas.fa-lock.text-2xl.text-green-600
+            %i.fas.fa-lock.text-lg.sm:text-xl.md:text-2xl.text-green-600
 
 
       / Pay Button - Full Width Below
       / Payment/Status Section - Full Width Below
-      .mt-8
-        .rounded-2xl.p-6.text-center
-          %h3.text-xl.font-semibold.mb-2
+      .mt-4.sm:mt-6.md:mt-8
+        .rounded-xl.sm:rounded-2xl.p-4.sm:p-6.text-center
+          %h3.text-base.sm:text-lg.md:text-xl.font-semibold.mb-2
           - if @booking.status == 'confirmed'
-            %p.mb-6.text-green-600.font-semibold
+            %p.mb-4.sm:mb-6.text-sm.sm:text-base.text-green-600.font-semibold
               Payment Confirmed ✓
-            .flex.justify-center.gap-4.p-3.rounded-2xl
-              .inline-flex.items-center.px-8.py-3.bg-green-100.text-green-700.font-bold.rounded-lg.border.border-green-300.gap-2
-                %i.fas.fa-check-circle.text-xl
+            .flex.flex-col.sm:flex-row.justify-center.gap-3.sm:gap-4.p-2.sm:p-3.rounded-xl.sm:rounded-2xl
+              .inline-flex.items-center.px-6.sm:px-8.py-2.sm:py-3.bg-green-100.text-green-700.font-bold.rounded-lg.border.border-green-300.gap-2.text-sm.sm:text-base
+                %i.fas.fa-check-circle.text-base.sm:text-lg.md:text-xl
                 %span PAID
-              
-              %button.inline-flex.items-center.px-6.py-3.bg-purple-600.hover:bg-purple-700.text-white.font-medium.rounded-lg.transition-colors.duration-200.shadow-md.hover:shadow-lg.gap-2{type: 'button', onclick: 'window.print()'}
+
+              %button.inline-flex.items-center.px-4.sm:px-6.py-2.sm:py-3.bg-purple-600.hover:bg-purple-700.text-white.font-medium.rounded-lg.transition-colors.duration-200.shadow-md.hover:shadow-lg.gap-2.text-sm.sm:text-base.justify-center{type: 'button', onclick: 'window.print()'}
                 %i.fas.fa-print
                 %span Print Invoice
           - else
-            %p.mb-6
+            %p.mb-4.sm:mb-6.text-xs.sm:text-sm.md:text-base
               Your payment will be processed securely by Stripe
-            .flex.justify-center.gap-4.p-3.rounded-2xl
+            .flex.flex-col.sm:flex-row.justify-center.gap-3.sm:gap-4.p-2.sm:p-3.rounded-xl.sm:rounded-2xl
               = button_to create_checkout_users_payment_path(@booking.id), method: :post, data: { turbo: false },
                 id: 'payOnlineBtn',
-                class: 'inline-flex items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors duration-200 shadow-md hover:shadow-lg gap-2' do
+                class: 'inline-flex items-center px-4 sm:px-6 py-2 sm:py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors duration-200 shadow-md hover:shadow-lg gap-2 text-sm sm:text-base' do
                 %i.fas.fa-lock
                 %span Pay #{number_to_currency(@total_amount)}
-              
-              %button.inline-flex.items-center.px-6.py-3.bg-purple-600.hover:bg-purple-700.text-white.font-medium.rounded-lg.transition-colors.duration-200.shadow-md.hover:shadow-lg.gap-2{type: 'button', onclick: 'window.print()'}
+
+              %button.inline-flex.items-center.px-4.sm:px-6.py-2.sm:py-3.bg-purple-600.hover:bg-purple-700.text-white.font-medium.rounded-lg.transition-colors.duration-200.shadow-md.hover:shadow-lg.gap-2.text-sm.sm:text-base.justify-center{type: 'button', onclick: 'window.print()'}
                 %i.fas.fa-print
                 %span Print Invoice
 
     / Footer
-    .bg-gray-50.p-6.border-t.border-gray-200
-      .text-center.text-sm.text-gray-600
+    .bg-gray-50.p-4.sm:p-6.border-t.border-gray-200
+      .text-center.text-xs.sm:text-sm.text-gray-600
         %p
           %i.fas.fa-info-circle.mr-1
-          By proceeding with payment, you agree to our 
+          By proceeding with payment, you agree to our
           = link_to 'Terms of Service', '#', class: 'text-blue-600 hover:underline'
-          and 
+          and
           = link_to 'Privacy Policy', '#', class: 'text-blue-600 hover:underline'
 
 / Print-Only Invoice Layout
@@ -644,66 +643,103 @@
 
 :javascript
   // Handle payment mode selection
-  document.addEventListener('DOMContentLoaded', function() {
-    const payOnlineBtn = document.getElementById('payOnlineBtn');
-    const paymentModeRadios = document.querySelectorAll('.payment-mode-radio');
+  (function() {
+    console.log('🚀 Payment script loaded');
 
-    function updatePaymentButtonState() {
-      const selectedMode = document.querySelector('.payment-mode-radio:checked')?.value;
-      
-      if (selectedMode === 'Cash') {
-        // Disable pay online button
-        payOnlineBtn.disabled = true;
-        payOnlineBtn.style.opacity = '0.5';
-        payOnlineBtn.style.cursor = 'not-allowed';
-        payOnlineBtn.style.pointerEvents = 'none';
-      } else if (selectedMode === 'Online') {
-        // Enable pay online button
-        payOnlineBtn.disabled = false;
-        payOnlineBtn.style.opacity = '1';
-        payOnlineBtn.style.cursor = 'pointer';
-        payOnlineBtn.style.pointerEvents = 'auto';
+    function initializePaymentModeHandlers() {
+      console.log('🔧 Initializing payment mode handlers');
+
+      const payOnlineBtn = document.getElementById('payOnlineBtn');
+      const paymentModeRadios = document.querySelectorAll('.payment-mode-radio');
+
+      console.log('Found pay button:', payOnlineBtn ? 'YES' : 'NO');
+      console.log('Found radio buttons:', paymentModeRadios.length);
+
+      // Only proceed if payment button exists (booking is not confirmed)
+      if (!payOnlineBtn) {
+        console.log('⚠️ Payment button not found - booking may be confirmed');
+        return;
       }
-    }
 
-    // Attach change listeners to radio buttons
-    paymentModeRadios.forEach(radio => {
-      radio.addEventListener('change', function() {
-        const bookingId = this.getAttribute('data-booking-id');
-        const paymentMode = this.value;
+      function updatePaymentButtonState() {
+        const selectedMode = document.querySelector('.payment-mode-radio:checked')?.value;
 
-        console.log(`Payment mode changed to: ${paymentMode}`);
-        
-        // Update button state immediately
-        updatePaymentButtonState();
+        console.log('🔄 Updating button state for mode:', selectedMode);
 
-        // Send AJAX request to update payment mode on server
-        fetch(`/users/bookings/${bookingId}/update_payment_mode`, {
-          method: 'PATCH',
-          headers: {
-            'Content-Type': 'application/json',
-            'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-          },
-          body: JSON.stringify({
-            payment_mode: paymentMode
+        if (selectedMode === 'Cash') {
+          // Disable pay online button
+          payOnlineBtn.disabled = true;
+          payOnlineBtn.style.opacity = '0.5';
+          payOnlineBtn.style.cursor = 'not-allowed';
+          payOnlineBtn.style.pointerEvents = 'none';
+          console.log('✅ Pay button DISABLED for Cash mode');
+        } else if (selectedMode === 'Online') {
+          // Enable pay online button
+          payOnlineBtn.disabled = false;
+          payOnlineBtn.style.opacity = '1';
+          payOnlineBtn.style.cursor = 'pointer';
+          payOnlineBtn.style.pointerEvents = 'auto';
+          console.log('✅ Pay button ENABLED for Online mode');
+        } else {
+          console.log('⚠️ No payment mode selected');
+        }
+      }
+
+      // Attach change listeners to radio buttons
+      paymentModeRadios.forEach(radio => {
+        radio.addEventListener('change', function() {
+          const bookingId = this.getAttribute('data-booking-id');
+          const paymentMode = this.value;
+
+          console.log(`🔄 Payment mode changed to: ${paymentMode}`);
+
+          // Update button state immediately
+          updatePaymentButtonState();
+
+          // Send AJAX request to update payment mode on server
+          fetch(`/users/bookings/${bookingId}/update_payment_mode`, {
+            method: 'PATCH',
+            headers: {
+              'Content-Type': 'application/json',
+              'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+            },
+            body: JSON.stringify({
+              payment_mode: paymentMode
+            })
           })
-        })
-        .then(response => {
-          if (response.ok) {
-            console.log('Payment mode updated successfully');
-          } else {
-            console.error('Failed to update payment mode');
-            // Revert the selection if failed
-            document.querySelector(`.payment-mode-radio[value="${paymentMode === 'Online' ? 'Cash' : 'Online'}"]`).checked = true;
-            updatePaymentButtonState();
-          }
-        })
-        .catch(error => {
-          console.error('Error:', error);
+          .then(response => {
+            if (response.ok) {
+              console.log('✅ Payment mode updated successfully on server');
+            } else {
+              console.error('❌ Failed to update payment mode on server');
+              // Revert the selection if failed
+              document.querySelector(`.payment-mode-radio[value="${paymentMode === 'Online' ? 'Cash' : 'Online'}"]`).checked = true;
+              updatePaymentButtonState();
+            }
+          })
+          .catch(error => {
+            console.error('❌ Error updating payment mode:', error);
+          });
         });
       });
-    });
 
-    // Initial state
-    updatePaymentButtonState();
-  });
+      // Initial state - set button state based on current selection
+      console.log('🎯 Setting initial button state');
+      updatePaymentButtonState();
+    }
+
+    // Try to initialize immediately if DOM is ready
+    if (document.readyState === 'loading') {
+      console.log('⏳ DOM still loading, waiting...');
+      document.addEventListener('DOMContentLoaded', initializePaymentModeHandlers);
+    } else {
+      console.log('✅ DOM already loaded, initializing now');
+      initializePaymentModeHandlers();
+    }
+
+    // Also handle Turbo navigation
+    document.addEventListener('turbo:load', function() {
+      console.log('🔄 Turbo load event - reinitializing');
+      initializePaymentModeHandlers();
+    });
+  })();

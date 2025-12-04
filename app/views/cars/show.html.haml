@@ -462,7 +462,7 @@
         - if user_signed_in?
           %button.text-white.font-semibold.px-6.py-2.rounded-lg.shadow-md.transition.hover:shadow-lg{ type: "button", id: "createBookingBtn", style: "background-color: #3a6363; cursor: pointer;" } Create Booking
         - else
-          %a.text-white.font-semibold.px-6.py-2.rounded-lg.shadow-md.transition{ href: "#", id: "continueToLoginLink", disabled: true, style: "pointer-events: none; opacity: 0.5; background-color: #3a6363" } Continue to Sign In
+          %button.text-white.font-semibold.px-6.py-2.rounded-lg.shadow-md.transition.hover:shadow-lg{ type: "button", id: "continueToLoginLink", disabled: true, style: "pointer-events: none; opacity: 0.5; background-color: #3a6363; cursor: not-allowed;" } Continue to Sign In
 
 / Right-side Drawer for policy info
 #policyDrawer.fixed.top-0.right-0.h-full.w-96.bg-white.shadow-2xl.transform.translate-x-full.transition-transform.duration-300.z-50{ 'aria-hidden' => 'true' }
@@ -512,50 +512,55 @@
     const startInput = document.getElementById("startDateInput");
     const endInput = document.getElementById("endDateInput");
 
-    // Function to check if both dates are selected and update button state
-    function updateCreateButtonState() {
-      // Get the button fresh each time (in case it was replaced)
-      const btn = document.getElementById("createBookingBtn");
-      
-      if (startInput && endInput && btn) {
+    // Function to check if both dates are selected and update button states
+    function updateButtonStates() {
+      // Get both buttons fresh each time
+      const createBtn = document.getElementById("createBookingBtn");
+      const continueBtn = document.getElementById("continueToLoginLink");
+
+      if (startInput && endInput) {
         const startValue = startInput.value.trim();
         const endValue = endInput.value.trim();
-        
-        console.log('Checking dates - Start:', startValue, 'End:', endValue);
-        
+
         if (startValue && endValue) {
-          // Both dates selected - ENABLE button
-          btn.removeAttribute('disabled');
-          btn.style.pointerEvents = 'auto !important';
-          btn.style.opacity = '1 !important';
-          btn.style.cursor = 'pointer';
-          console.log('✅ Create button ENABLED');
+          // Both dates selected - ENABLE buttons
+          [createBtn, continueBtn].forEach(btn => {
+            if (btn) {
+              btn.removeAttribute('disabled');
+              btn.style.pointerEvents = 'auto';
+              btn.style.opacity = '1';
+              btn.style.cursor = 'pointer';
+            }
+          });
         } else {
-          // Missing a date - DISABLE button
-          btn.setAttribute('disabled', 'disabled');
-          btn.style.pointerEvents = 'none !important';
-          btn.style.opacity = '0.5 !important';
-          btn.style.cursor = 'not-allowed';
-          console.log('❌ Create button DISABLED');
+          // Missing a date - DISABLE buttons
+          [createBtn, continueBtn].forEach(btn => {
+            if (btn) {
+              btn.setAttribute('disabled', 'disabled');
+              btn.style.pointerEvents = 'none';
+              btn.style.opacity = '0.5';
+              btn.style.cursor = 'not-allowed';
+            }
+          });
         }
       }
     }
 
     // Attach listeners to both date inputs
     if (startInput) {
-      startInput.addEventListener('change', updateCreateButtonState);
-      startInput.addEventListener('input', updateCreateButtonState);
-      startInput.addEventListener('blur', updateCreateButtonState);
+      startInput.addEventListener('change', updateButtonStates);
+      startInput.addEventListener('input', updateButtonStates);
+      startInput.addEventListener('blur', updateButtonStates);
     }
 
     if (endInput) {
-      endInput.addEventListener('change', updateCreateButtonState);
-      endInput.addEventListener('input', updateCreateButtonState);
-      endInput.addEventListener('blur', updateCreateButtonState);
+      endInput.addEventListener('change', updateButtonStates);
+      endInput.addEventListener('input', updateButtonStates);
+      endInput.addEventListener('blur', updateButtonStates);
     }
 
-    // Initial state - button should be disabled
-    updateCreateButtonState();
+    // Initial state - buttons should be disabled
+    updateButtonStates();
 
     // Continue to Login button
     if (continueBtn) {
