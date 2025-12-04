@@ -15,7 +15,7 @@ class Booking < ApplicationRecord
 
   scope :active, -> {where("start_date > ?", Date.today)}
   
-  after_create :set_car_vendor, :log_booking_created
+  after_create :set_car_vendor, :log_booking_created, :populate_total_amount
   after_update :log_booking_status_change, if: :saved_change_to_status?
 
   def calculate_total_amount
@@ -40,6 +40,11 @@ class Booking < ApplicationRecord
     else # daily
       duration_days * selected_price.to_f
     end
+  end
+
+  def populate_total_amount
+    self.total_amount = calculate_total_amount
+    save(validate: false)
   end
   
   private
