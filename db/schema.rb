@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_12_03_115240) do
+ActiveRecord::Schema[7.2].define(version: 2025_12_04_182927) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -107,6 +107,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_12_03_115240) do
     t.decimal "selected_price", precision: 10, scale: 2
     t.integer "selected_mileage_limit"
     t.bigint "vendor_id"
+    t.decimal "total_amount", precision: 10, scale: 2, default: "0.0"
     t.index ["car_id"], name: "index_bookings_on_car_id"
     t.index ["payment_mode"], name: "index_bookings_on_payment_mode"
     t.index ["user_id"], name: "index_bookings_on_user_id"

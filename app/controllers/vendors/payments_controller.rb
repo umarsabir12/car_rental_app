@@ -51,44 +51,30 @@ class Vendors::PaymentsController < ApplicationController
   private
 
   def calculate_total_earnings(bookings)
-    bookings.sum do |booking|
-      if booking.car.daily_price
-        total_days = (booking.end_date - booking.start_date).to_i
-        booking.car.daily_price * total_days
-      else
-        0
-      end
-    end
+    bookings.sum(:total_amount) || 0
   end
 
   def calculate_monthly_earnings
-    current_month_bookings = Booking.includes(:car)
-                                   .where(car_id: current_vendor.cars.pluck(:id))
-                                   .where(payment_processed: true)
-                                   .where(created_at: Time.current.beginning_of_month..Time.current.end_of_month)
-    
-    calculate_total_earnings(current_month_bookings)
+    Booking.where(car_id: current_vendor.cars.pluck(:id))
+           .where(payment_processed: true)
+           .where(created_at: Time.current.beginning_of_month..Time.current.end_of_month)
+           .sum(:total_amount) || 0
   end
 
   def calculate_pending_payments
-    pending_bookings = Booking.includes(:car)
-                              .where(car_id: current_vendor.cars.pluck(:id))
-                              .where(payment_processed: false)
-    
-    calculate_total_earnings(pending_bookings)
+    Booking.where(car_id: current_vendor.cars.pluck(:id))
+           .where(payment_processed: false)
+           .sum(:total_amount) || 0
   end
 
   def calculate_payment_details(booking)
-    return {} unless booking.car.daily_price
-
     total_days = (booking.end_date - booking.start_date).to_i
-    daily_rate = booking.car.daily_price
-    total_amount = daily_rate * total_days
+    daily_rate = booking.car.daily_price || 0
 
     {
       daily_rate: daily_rate,
       total_days: total_days,
-      total_amount: total_amount,
+      total_amount: booking.total_amount || 0,
       payment_date: booking.updated_at,
       payment_method: 'Online Payment' # This could be enhanced with actual payment method data
     }
