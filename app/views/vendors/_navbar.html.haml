@@ -1,8 +1,19 @@
-.w-full.mt-5.bg-white.rounded-t-xl.flex.items-center.justify-center.gap-8.py-4.shadow-sm.border-b.border-gray-100
-  = link_to 'Dashboard', vendors_dashboard_path, class: 'font-semibold px-4 py-2 rounded-lg hover:bg-gray-50 transition-all duration-200', style: 'color: #3a6363'
-  = link_to 'Bookings', vendors_bookings_path, class: 'font-semibold px-4 py-2 rounded-lg hover:bg-gray-50 transition-all duration-200', style: 'color: #3a6363'
-  = link_to 'My Cars', vendors_cars_path, class: 'font-semibold px-4 py-2 rounded-lg hover:bg-gray-50 transition-all duration-200', style: 'color: #3a6363'
-  = link_to 'My Invoices', vendors_invoices_path, class: 'font-semibold px-4 py-2 rounded-lg hover:bg-gray-50 transition-all duration-200', style: 'color: #3a6363'
-  = link_to 'Payments', vendors_payments_path, class: 'font-semibold px-4 py-2 rounded-lg hover:bg-gray-50 transition-all duration-200', style: 'color: #3a6363'
-  = link_to 'Profile', vendor_path(current_vendor), class: 'font-semibold px-4 py-2 rounded-lg hover:bg-gray-50 transition-all duration-200', style: 'color: #3a6363'
-%hr.border-t.mb-8{style: 'border-color: #3a6363'}
+.w-full.mt-3.pt-5.sm:mt-4.md:mt-5.bg-white.rounded-t-lg.sm:rounded-t-xl.shadow-sm.border-b.border-gray-100
+  .overflow-x-auto.scrollbar-hide
+    .flex.items-center.justify-start.md:justify-center.gap-2.sm:gap-4.md:gap-6.lg:gap-8.py-3.sm:py-4.px-2.sm:px-0.min-w-max.md:min-w-0
+      = link_to 'Dashboard', vendors_dashboard_path, class: 'font-semibold px-3 sm:px-4 py-2 rounded-lg hover:bg-gray-50 transition-all duration-200 whitespace-nowrap text-sm sm:text-base', style: 'color: #3a6363'
+      = link_to 'Bookings', vendors_bookings_path, class: 'font-semibold px-3 sm:px-4 py-2 rounded-lg hover:bg-gray-50 transition-all duration-200 whitespace-nowrap text-sm sm:text-base', style: 'color: #3a6363'
+      = link_to 'My Cars', vendors_cars_path, class: 'font-semibold px-3 sm:px-4 py-2 rounded-lg hover:bg-gray-50 transition-all duration-200 whitespace-nowrap text-sm sm:text-base', style: 'color: #3a6363'
+      = link_to 'My Invoices', vendors_invoices_path, class: 'font-semibold px-3 sm:px-4 py-2 rounded-lg hover:bg-gray-50 transition-all duration-200 whitespace-nowrap text-sm sm:text-base', style: 'color: #3a6363'
+      = link_to 'Payments', vendors_payments_path, class: 'font-semibold px-3 sm:px-4 py-2 rounded-lg hover:bg-gray-50 transition-all duration-200 whitespace-nowrap text-sm sm:text-base', style: 'color: #3a6363'
+      = link_to 'Profile', vendor_path(current_vendor), class: 'font-semibold px-3 sm:px-4 py-2 rounded-lg hover:bg-gray-50 transition-all duration-200 whitespace-nowrap text-sm sm:text-base', style: 'color: #3a6363'
+%hr.border-t.mb-4.sm:mb-6.md:mb-8{style: 'border-color: #3a6363'}
+
+:css
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }

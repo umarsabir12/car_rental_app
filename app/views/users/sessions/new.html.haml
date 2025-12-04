@@ -17,6 +17,12 @@
         = hidden_field_tag :start_date, params[:start_date]
       - if params[:end_date].present?
         = hidden_field_tag :end_date, params[:end_date]
+      - if params[:selected_period].present?
+        = hidden_field_tag :selected_period, params[:selected_period]
+      - if params[:selected_price].present?
+        = hidden_field_tag :selected_price, params[:selected_price]
+      - if params[:selected_mileage_limit].present?
+        = hidden_field_tag :selected_mileage_limit, params[:selected_mileage_limit]
       
       .field.space-y-2
         = f.label :email, class: "block text-sm font-medium text-gray-700"

@@ -1,37 +1,97 @@
-.container-fluid.px-4.py-8
+.container-fluid.px-3.sm:px-4.py-4.sm:py-6.md:py-8
   = render partial: "vendors/navbar"
-  .bg-white.shadow-lg.rounded-xl.overflow-hidden.p-8.mt-5
+  .bg-white.shadow-lg.rounded-xl.overflow-hidden.p-4.sm:p-6.md:p-8.mt-3.sm:mt-4.md:mt-5
     / Header Section
-    .mb-6
-      %h1.text-3xl.font-extrabold{style: 'color: #3A6363'} My Invoices
-      %p.text-gray-600.mt-1 View and track all your invoices
+    .mb-4.sm:mb-6
+      %h1.text-2xl.sm:text-3xl.font-extrabold{style: 'color: #3A6363'} My Invoices
+      %p.text-sm.sm:text-base.text-gray-600.mt-1 View and track all your invoices
 
     / Summary Cards
-    .grid.grid-cols-1.md:grid-cols-3.gap-4.mb-6
-      .bg-gradient-to-r.from-blue-50.to-blue-100.rounded-lg.p-4.border.border-blue-200
+    .grid.grid-cols-1.md:grid-cols-3.gap-3.sm:gap-4.mb-4.sm:mb-6
+      .bg-gradient-to-r.from-blue-50.to-blue-100.rounded-lg.p-3.sm:p-4.border.border-blue-200
         .flex.items-center.justify-between
           %div
-            %p.text-sm.font-semibold.text-blue-600.uppercase Total Invoices
-            %p.text-3xl.font-bold.text-blue-900= current_vendor.invoices.count
-          %i.fas.fa-file-invoice.text-4xl.text-blue-300
+            %p.text-xs.sm:text-sm.font-semibold.text-blue-600.uppercase Total Invoices
+            %p.text-2xl.sm:text-3xl.font-bold.text-blue-900= current_vendor.invoices.count
+          %i.fas.fa-file-invoice.text-3xl.sm:text-4xl.text-blue-300
 
-      .bg-gradient-to-r.from-amber-50.to-amber-100.rounded-lg.p-4.border.border-amber-200
+      .bg-gradient-to-r.from-amber-50.to-amber-100.rounded-lg.p-3.sm:p-4.border.border-amber-200
         .flex.items-center.justify-between
           %div
-            %p.text-sm.font-semibold.text-amber-600.uppercase Pending Amount
-            %p.text-3xl.font-bold.text-amber-900= number_to_currency(current_vendor.total_pending_amount)
-          %i.fas.fa-clock.text-4xl.text-amber-300
+            %p.text-xs.sm:text-sm.font-semibold.text-amber-600.uppercase Pending Amount
+            %p.text-xl.sm:text-2xl.md:text-3xl.font-bold.text-amber-900= number_to_currency(current_vendor.total_pending_amount)
+          %i.fas.fa-clock.text-3xl.sm:text-4xl.text-amber-300
 
-      .bg-gradient-to-r.from-emerald-50.to-emerald-100.rounded-lg.p-4.border.border-emerald-200
+      .bg-gradient-to-r.from-emerald-50.to-emerald-100.rounded-lg.p-3.sm:p-4.border.border-emerald-200
         .flex.items-center.justify-between
           %div
-            %p.text-sm.font-semibold.text-emerald-600.uppercase Paid Amount
-            %p.text-3xl.font-bold.text-emerald-900= number_to_currency(current_vendor.total_paid_amount)
-          %i.fas.fa-check-circle.text-4xl.text-emerald-300
+            %p.text-xs.sm:text-sm.font-semibold.text-emerald-600.uppercase Paid Amount
+            %p.text-xl.sm:text-2xl.md:text-3xl.font-bold.text-emerald-900= number_to_currency(current_vendor.total_paid_amount)
+          %i.fas.fa-check-circle.text-3xl.sm:text-4xl.text-emerald-300
 
     / Invoices Table
     - if @invoices.any?
-      .bg-white.rounded-lg.shadow.overflow-hidden
+      / Mobile Card View (hidden on md and up)
+      .md:hidden
+        - @invoices.each do |invoice|
+          .bg-white.rounded-lg.shadow.p-4.mb-3.border.border-gray-200
+            / Invoice Header
+            .flex.items-start.justify-between.mb-3.pb-3.border-b.border-gray-200
+              %div
+                %div.text-xs.text-gray-500.mb-1 Invoice Number
+                %code.text-sm.font-mono.bg-gray-100.px-2.py-1.rounded.font-semibold= "##{invoice.id}"
+              %div
+                - case invoice.payment_status
+                - when 'paid'
+                  %span.inline-flex.items-center.px-2.py-1.rounded-full.text-xs.font-medium.bg-green-100.text-green-800
+                    %i.fas.fa-check-circle.mr-1
+                    Paid
+                - when 'pending'
+                  %span.inline-flex.items-center.px-2.py-1.rounded-full.text-xs.font-medium.bg-yellow-100.text-yellow-800
+                    %i.fas.fa-clock.mr-1
+                    Pending
+                - when 'overdue'
+                  %span.inline-flex.items-center.px-2.py-1.rounded-full.text-xs.font-medium.bg-red-100.text-red-800
+                    %i.fas.fa-exclamation-circle.mr-1
+                    Overdue
+                - when 'cancelled'
+                  %span.inline-flex.items-center.px-2.py-1.rounded-full.text-xs.font-medium.bg-gray-100.text-gray-800
+                    %i.fas.fa-ban.mr-1
+                    Cancelled
+
+            / Invoice Details
+            .space-y-2.mb-3
+              .flex.justify-between.items-start
+                %span.text-xs.text-gray-500 Date
+                .text-right
+                  %div.text-sm.font-medium.text-gray-900= invoice.created_at.strftime('%b %d, %Y')
+                  %div.text-xs.text-gray-500= invoice.created_at.strftime('%I:%M %p')
+
+              .flex.justify-between.items-start
+                %span.text-xs.text-gray-500 Items
+                .text-right
+                  - if invoice.invoice_items.any?
+                    %div.text-sm.text-gray-900
+                      %span.font-semibold= invoice.invoice_items.count
+                      = invoice.invoice_items.count == 1 ? 'item' : 'items'
+                    %div.text-xs.text-gray-500.mt-1
+                      = truncate(invoice.invoice_items.first.description, length: 30)
+                      - if invoice.invoice_items.count > 1
+                        %span.text-gray-400 +#{invoice.invoice_items.count - 1}
+                  - else
+                    %div.text-sm.text-gray-400.italic No items
+
+              .flex.justify-between.items-center.pt-2.border-t.border-gray-200
+                %span.text-xs.text-gray-500 Total Amount
+                %span.text-lg.font-bold.text-gray-900= number_to_currency(invoice.invoice_items.sum(:amount))
+
+            / Action Button
+            = link_to vendors_invoice_path(invoice), class: 'w-full inline-flex items-center justify-center px-4 py-2 text-white rounded-lg transition-colors duration-200 gap-2 hover:opacity-90 text-sm', style: 'background-color: #3A6363' do
+              %i.fas.fa-eye
+              %span View Invoice
+
+      / Desktop Table View (hidden on mobile)
+      .hidden.md:block.bg-white.rounded-lg.shadow.overflow-hidden
         .overflow-x-auto
           %table.min-w-full.divide-y.divide-gray-200
             %thead.bg-gray-50

@@ -41,35 +41,35 @@
 
       / Notifications Section
       - if current_user.bookings_notification?
-        .grid.grid-cols-1.md:grid-cols-2.lg:grid-cols-2.gap-4.mb-8
+        .grid.grid-cols-1.md:grid-cols-2.gap-3.md:gap-4.mb-6.md:mb-8
           / Unpaid Bookings Notification
           - if current_user.unpaid_bookings.any?
-            .bg-orange-50.border-l-4.border-orange-500.rounded-lg.p-4.shadow-sm
-              .flex.items-start.gap-3
-                %i.fas.fa-credit-card.text-orange-500.text-xl.mt-1
+            .bg-orange-50.border-l-4.border-orange-500.rounded-lg.p-3.md:p-4.shadow-sm
+              .flex.items-start.gap-2.md:gap-3
+                %i.fas.fa-credit-card.text-orange-500.text-lg.md:text-xl.mt-1
                 .flex-1
-                  %h3.font-semibold.text-orange-800.mb-1 Payment Required
-                  %p.text-orange-700.text-sm.mb-2
+                  %h3.text-sm.md:text-base.font-semibold.text-orange-800.mb-1 Payment Required
+                  %p.text-orange-700.text-xs.md:text-sm.mb-2
                     #{current_user.unpaid_bookings.count} booking#{current_user.unpaid_bookings.count == 1 ? '' : 's'} awaiting payment
-                  %ul.text-orange-600.text-xs.space-y-1.mb-3
+                  %ul.text-orange-600.text-xs.space-y-1.mb-2.md:mb-3
                     - current_user.unpaid_bookings.limit(3).each do |booking|
                       %li.flex.items-center.gap-1
                         %i.fas.fa-circle.text-xs
-                        #{booking.car.brand} #{booking.car.model} - #{booking.start_date.strftime('%b %d')}
+                        %span.truncate #{booking.car.brand} #{booking.car.model} - #{booking.start_date.strftime('%b %d')}
                     - if current_user.unpaid_bookings.count > 3
                       %li.text-orange-500.font-semibold +#{current_user.unpaid_bookings.count - 2} more...
 
           / Failed Payments Notification
           - if current_user.failed_payments.any?
-            .bg-red-50.border-l-4.border-red-700.rounded-lg.p-4.shadow-sm
-              .flex.items-start.gap-3
-                %i.fas.fa-exclamation-circle.text-red-700.text-xl.mt-1
+            .bg-red-50.border-l-4.border-red-700.rounded-lg.p-3.md:p-4.shadow-sm
+              .flex.items-start.gap-2.md:gap-3
+                %i.fas.fa-exclamation-circle.text-red-700.text-lg.md:text-xl.mt-1
                 .flex-1
-                  %h3.font-semibold.text-red-800.mb-1 Payment Failed
-                  %p.text-red-700.text-sm.mb-2
+                  %h3.text-sm.md:text-base.font-semibold.text-red-800.mb-1 Payment Failed
+                  %p.text-red-700.text-xs.md:text-sm.mb-2
                     #{current_user.failed_payments.count} payment#{current_user.failed_payments.count == 1 ? '' : 's'} failed
-                  %p.text-red-600.text-xs.mb-3 Please retry payment or contact support
-                  = link_to users_bookings_path, class: 'inline-flex items-center text-red-700 hover:text-red-900 font-semibold text-sm' do
+                  %p.text-red-600.text-xs.mb-2.md:mb-3 Please retry payment or contact support
+                  = link_to users_bookings_path, class: 'inline-flex items-center text-red-700 hover:text-red-900 font-semibold text-xs md:text-sm' do
                     Retry Payment
                     %i.fas.fa-arrow-right.ml-1
 
@@ -97,18 +97,18 @@
             .bg-white.rounded-2xl.shadow-md.hover:shadow-lg.transition-shadow.duration-300.border.border-gray-100.overflow-hidden.relative
               / Cancel Button - Top Right
               - if (booking.status == 'pending' || booking.status == 'confirmed') && !booking.payment_processed?
-                .absolute.top-4.right-4.z-10
-                  = button_to users_cancel_booking_path(booking.id), 
+                .absolute.top-2.right-2.lg:top-4.lg:right-4.z-10
+                  = button_to users_cancel_booking_path(booking.id),
                       method: :patch,
-                      class: 'bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded-2 text-sm font-medium transition-all duration-200 shadow-md hover:shadow-lg flex items-center',
+                      class: 'bg-red-600 hover:bg-red-700 text-white px-2 py-1 lg:px-3 lg:py-1 rounded-lg text-xs lg:text-sm font-medium transition-all duration-200 shadow-md hover:shadow-lg flex items-center',
                       data: { confirm: 'Are you sure you want to cancel this booking? This action cannot be undone.',turbo_confirm: 'Are you sure you want to cancel this booking? This action cannot be undone.'} do
-                    %i.fas.fa-times.mr-1
-                    Cancel
+                    %i.fas.fa-times.mr-1.text-xs.lg:text-sm
+                    %span.hidden.sm:inline Cancel
               
               .flex.flex-col.lg:flex-row
                 / Car Image Section
-                .relative.w-full.lg.bg-gray-50.flex.items-center.justify-center.p-6.w-50
-                  .w-full.h-48.bg-gray-100.rounded-lg.overflow-hidden
+                .relative.w-full.lg_w-33.bg-gray-50.flex.items-center.justify-center.p-4.lg:p-6
+                  .w-full.h-48.lg:h-full.bg-gray-100.rounded-lg.overflow-hidden
                     = car_main_image(booking.car, size: [400, 300])
                   / Status Badge
                   .absolute.top-4.left-4
@@ -117,110 +117,109 @@
                     - when 'pending' then 'bg-yellow-100 text-yellow-800'
                     - when 'cancelled' then 'bg-red-100 text-red-800'
                     - else 'bg-gray-100 text-gray-800'
-                    %span.inline-flex.items-center.px-3.py-1.rounded-full.text-sm.font-medium.shadow-sm{class: badge_class}
+                    %span.inline-flex.items-center.px-2.py-1.lg:px-3.lg:py-1.rounded-full.text-xs.lg:text-sm.font-medium.shadow-sm{class: badge_class}
                       - if booking.status == 'confirmed'
-                        %i.fas.fa-check-circle.mr-2
+                        %i.fas.fa-check-circle.mr-1.lg:mr-2.text-xs.lg:text-sm
                       - elsif booking.status == 'pending'
-                        %i.fas.fa-clock.mr-2
+                        %i.fas.fa-clock.mr-1.lg:mr-2.text-xs.lg:text-sm
                       - elsif booking.status == 'cancelled'
-                        %i.fas.fa-times-circle.mr-2
+                        %i.fas.fa-times-circle.mr-1.lg:mr-2.text-xs.lg:text-sm
                       = booking.status.titleize
 
                 / Details Section
-                .flex-1.p-6
+                .flex-1.p-4.lg:p-6
                   .flex.flex-col.h-full
                     / Car Info
                     %div
-                      %h3.text-2xl.font-bold.text-gray-900.mb-2= "#{booking.car&.brand} #{booking.car&.model}"
-                      .flex.flex-wrap.items-center.gap-x-6.gap-y-3.mb-4
+                      %h3.text-xl.lg:text-2xl.font-bold.text-gray-900.mb-2= "#{booking.car&.brand} #{booking.car&.model}"
+                      .flex.flex-wrap.items-center.gap-x-3.lg:gap-x-6.gap-y-2.lg:gap-y-3.mb-4.text-sm.lg:text-base
                         .flex.items-center.text-gray-600
-                          %i.fas.fa-calendar.mr-2.text-blue-500
+                          %i.fas.fa-calendar.mr-1.lg:mr-2.text-blue-500.text-sm
                           = booking.car&.year
                         .flex.items-center.text-gray-600
-                          %i.fas.fa-palette.mr-2.text-purple-500
+                          %i.fas.fa-palette.mr-1.lg:mr-2.text-purple-500.text-sm
                           = booking.car&.color
                         .flex.items-center.text-gray-600
-                          %i.fas.fa-tag.mr-2.text-green-500
+                          %i.fas.fa-tag.mr-1.lg:mr-2.text-green-500.text-sm
                           = booking.car&.category
-                      .text-xl.font-semibold.text-blue-600.mb-4
+                      .text-lg.lg:text-xl.font-semibold.text-blue-600.mb-4
                         = number_to_currency(booking.selected_price)
                         - if booking.selected_period == 'daily'
-                          %span.text-sm.font-normal.text-gray-500.ml-1 per day
+                          %span.text-xs.lg:text-sm.font-normal.text-gray-500.ml-1 per day
                         - elsif booking.selected_period == 'weekly'
-                          %span.text-sm.font-normal.text-gray-500.ml-1 per week
+                          %span.text-xs.lg:text-sm.font-normal.text-gray-500.ml-1 per week
                         - elsif booking.selected_period == 'monthly'
-                          %span.text-sm.font-normal.text-gray-500.ml-1 per month
+                          %span.text-xs.lg:text-sm.font-normal.text-gray-500.ml-1 per month
 
                           
 
                     / Rental Period
-                    .bg-gray-50.rounded-xl.mb-6.flex.items-center.justify-between
-                      
-                      .bg-gray-50.rounded-xl.p-3.flex.items-center.justify-between.text-sm
-                        .flex.items-center.space-x-4
+                    .bg-gray-50.rounded-xl.p-3.mb-4.lg:mb-6
+                      .flex.flex-col.sm:flex-row.sm:items-center.sm:justify-between.gap-3.sm:gap-4.text-xs.sm:text-sm
+                        .flex.flex-wrap.items-center.gap-2.sm:gap-4
                           .flex.items-center
-                            %i.fas.fa-calendar-day.mr-2.text-blue-500
+                            %i.fas.fa-calendar-day.mr-1.sm:mr-2.text-blue-500.text-sm
                             %span.font-medium= booking.start_date.strftime('%b %d')
-                          %i.fas.fa-arrow-right.text-gray-400
+                          %i.fas.fa-arrow-right.text-gray-400.text-xs
                           .flex.items-center
-                            %i.fas.fa-calendar-day.mr-2.text-blue-500
+                            %i.fas.fa-calendar-day.mr-1.sm:mr-2.text-blue-500.text-sm
                             %span.font-medium= booking.end_date.strftime('%b %d, %Y')
-                          .flex.items-center.border-l.border-gray-200.pl-4.ml-2
-                            %i.fas.fa-clock.mr-2.text-blue-500
-                            %span.font-bold.text-blue-600= pluralize((booking.end_date - booking.start_date).to_i, 'day')
+                        .flex.items-center.border-t.sm:border-t-0.sm:border-l.border-gray-200.pt-2.sm:pt-0.sm:pl-4
+                          %i.fas.fa-clock.mr-1.sm:mr-2.text-blue-500.text-sm
+                          %span.font-bold.text-blue-600= pluralize((booking.end_date - booking.start_date).to_i, 'day')
 
                     / Payment Section
-                    .mt-auto.pt-4.border-t.border-gray-200
-                      .flex.flex-col.sm:flex-row.items-start.sm:items-center.justify-between.gap-4
+                    .mt-auto.pt-3.lg:pt-4.border-t.border-gray-200
+                      .flex.flex-col.gap-3.lg:gap-4
                         .flex-1
                           - duration_days = (booking.end_date - booking.start_date).to_i
                           - daily_price = booking.car&.daily_price.to_f || 0
-                          
+
                           / Pricing breakdown based on selected period
                           - if booking.selected_period == 'weekly'
                             - weekly_price = booking.car&.weekly_price.to_f || 0
                             - full_weeks = duration_days / 7
                             - remaining_days = duration_days % 7
                             - total_amount = (full_weeks * weekly_price) + (remaining_days * daily_price)
-                            
-                            %p.text-sm.text-gray-600.mb-2
+
+                            %p.text-xs.sm:text-sm.text-gray-600.mb-2
                               %span.font-medium Pricing:
                               %span.ml-1
                                 = "#{full_weeks} week#{full_weeks == 1 ? '' : 's'} × AED #{weekly_price.to_i}"
                                 - if remaining_days > 0
                                   %span.ml-1 + #{remaining_days} day#{remaining_days == 1 ? '' : 's'} × AED #{daily_price.to_i}
-                            
+
                           - elsif booking.selected_period == 'monthly'
                             - monthly_price = booking.car&.monthly_price.to_f || 0
                             - full_months = duration_days / 30
                             - remaining_days = duration_days % 30
                             - total_amount = (full_months * monthly_price) + (remaining_days * daily_price)
-                            
-                            %p.text-sm.text-gray-600.mb-2
+
+                            %p.text-xs.sm:text-sm.text-gray-600.mb-2
                               %span.font-medium Pricing:
                               %span.ml-1
                                 = "#{full_months} month#{full_months == 1 ? '' : 's'} × AED #{monthly_price.to_i}"
                                 - if remaining_days > 0
                                   %span.ml-1 + #{remaining_days} day#{remaining_days == 1 ? '' : 's'} × AED #{daily_price.to_i}
-                          
+
                           - else
                             - total_amount = duration_days * daily_price
-                            %p.text-sm.text-gray-600.mb-2
+                            %p.text-xs.sm:text-sm.text-gray-600.mb-2
                               %span.font-medium Pricing:
                               %span.ml-1= "#{duration_days} days × AED #{daily_price.to_i}"
-                          
-                          %p.text-2xl.font-bold.text-green-600
+
+                          %p.text-xl.lg:text-2xl.font-bold.text-green-600
                             = number_to_currency(total_amount)
 
                         / Status Pill + Button Container
-                        .flex.items-center.gap-3
+                        .flex.flex-col.sm:flex-row.items-stretch.sm:items-center.gap-2.sm:gap-3
                           / Status Pill - Always Visible
                           - badge_class = case booking.status
                           - when 'confirmed' then 'bg-green-100 text-green-800'
                           - when 'pending' then 'bg-yellow-100 text-yellow-800'
                           - when 'cancelled' then 'bg-red-100 text-red-800'
                           - else 'bg-gray-100 text-gray-800'
-                          %span.inline-flex.items-center.px-3.py-1.rounded-full.text-xs.font-medium.shadow-sm.whitespace-nowrap{class: badge_class}
+                          %span.inline-flex.items-center.justify-center.px-3.py-1.rounded-full.text-xs.font-medium.shadow-sm.whitespace-nowrap{class: badge_class}
                             - if booking.status == 'confirmed'
                               %i.fas.fa-check-circle.mr-1.text-xs
                             - elsif booking.status == 'pending'
@@ -232,11 +231,11 @@
 
                           / View/Pay Button - Check Document Approval
                           - if !current_user.documents_approved?
-                            .payment-disabled.bg-gray-300.text-gray-500.px-6.py-3.rounded-lg.font-semibold.cursor-not-allowed.flex.items-center.justify-center.min-w-36.opacity-60{ title: 'Payment is disabled until your documents are approved' }
+                            .payment-disabled.bg-gray-300.text-gray-500.px-4.sm:px-6.py-2.sm:py-3.rounded-lg.text-sm.sm:text-base.font-semibold.cursor-not-allowed.flex.items-center.justify-center.opacity-60{ title: 'Payment is disabled until your documents are approved' }
                               %i.fas.fa-lock.mr-2
                               Payment Disabled
                           - else
-                            = link_to users_payment_path(booking.id), class: 'bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold transition-all duration-200 shadow-md hover:shadow-lg flex items-center justify-center min-w-36' do
+                            = link_to users_payment_path(booking.id), class: 'bg-blue-600 hover:bg-blue-700 text-white px-4 sm:px-6 py-2 sm:py-3 rounded-lg text-sm sm:text-base font-semibold transition-all duration-200 shadow-md hover:shadow-lg flex items-center justify-center' do
                               %i.fas.fa-eye.mr-2
                               View/Pay Booking
                         
