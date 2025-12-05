@@ -173,6 +173,7 @@ Rails.application.routes.draw do
         post :create_payment_intent
         post :confirm_payment
         get :payment_status
+        patch :update_payment_mode
       end
     end
   end

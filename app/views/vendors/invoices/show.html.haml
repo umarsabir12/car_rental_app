@@ -2,11 +2,11 @@
   .max-w-4xl.mx-auto
     .bg-white.shadow-lg.rounded-xl.overflow-hidden
       / Header
-      .bg-gradient-to-r.from-blue-600.to-blue-700.px-8.py-6.text-white
+      .px-8.py-6.text-white{style: "background: linear-gradient(to right, #3A6363, #2d4d4d);"}
         .flex.justify-between.items-start
           %div
             %h1.text-2xl.font-bold Invoice Details
-            %p.text-blue-100.mt-1
+            %p.mt-1{style: "color: #d1e0e0;"}
               Invoice #
               %span.font-mono= @invoice.id
           / Status Badge
@@ -89,6 +89,26 @@
                       Paid on
                       = @invoice.paid_at.strftime('%B %d, %Y at %I:%M %p')
 
+            / Payment Method Confirmed Badge - Show when paid
+            .rounded-lg.p-6.border.mb-6{style: "background-color: #e8f0f0; border-color: #3A6363;"}
+              .flex.items-center.justify-between.gap-3
+                .flex.items-center.gap-3.flex-1
+                  %i.fas.fa-check-circle.text-2xl{style: "color: #3A6363;"}
+                  .flex-1
+                    %h3.text-xl.font-semibold.text-gray-800
+                      Payment Method:
+                      %span{style: "color: #3A6363;"}
+                        - if @invoice.payment_mode == 'Online'
+                          Online Payment
+                        - else
+                          Cash Payment
+                    %p.text-sm.text-gray-600
+                      - if @invoice.payment_mode == 'Online'
+                        Payment has been processed securely
+                      - else
+                        Payment will be collected in cash
+                %i.fas.fa-lock.text-2xl.text-green-600
+
           - elsif @invoice.payment_status == 'pending' || @invoice.payment_status == 'overdue'
             - if @invoice.payment_status == 'overdue'
               .bg-red-50.rounded-lg.p-4.border.border-red-200.mb-4
@@ -107,28 +127,95 @@
                   %p.text-sm.text-yellow-800
                     You can pay this invoice securely using your credit card below.
 
+          / Payment Mode Selection - Only show for pending or overdue invoices
+          - if @invoice.payment_status == 'pending' || @invoice.payment_status == 'overdue'
+            .rounded-lg.p-6.border.mb-6{style: "background-color: #e8f0f0; border-color: #3A6363;"}
+              %h3.text-lg.font-semibold.text-gray-900.mb-4
+                %i.fas.fa-credit-card.mr-2{style: "color: #3A6363;"}
+                Payment Method
+
+              .space-y-4
+                / Payment Mode Radio Buttons
+                - current_payment_mode = @invoice.payment_mode || 'Online'
+                .flex.flex-col.sm:flex-row.gap-4
+                  / Online Payment Option
+                  - if current_payment_mode == 'Online'
+                    %label.flex.items-center.cursor-pointer.flex-1.p-4.border-2.rounded-xl.transition-all.duration-200{style: "border-color: #3A6363; background-color: #d1e0e0;"}
+                      %input.mr-4.w-5.h-5.cursor-pointer{
+                        type: 'radio',
+                        name: 'payment_mode',
+                        value: 'Online',
+                        data: { invoice_id: @invoice.id },
+                        checked: true,
+                        class: 'invoice-payment-mode-radio'
+                      }
+                      .flex-1
+                        %span.text-base.font-semibold.text-gray-800 Online Payment
+                        %p.text-sm.text-gray-600 Pay securely via Stripe (Card)
+                  - else
+                    %label.flex.items-center.cursor-pointer.flex-1.p-4.border-2.rounded-xl.transition-all.duration-200.border-gray-300.bg-white{style: "transition: all 0.2s;", onmouseover: "this.style.borderColor='#3A6363'", onmouseout: "this.style.borderColor='#d1d5db'"}
+                      %input.mr-4.w-5.h-5.cursor-pointer{
+                        type: 'radio',
+                        name: 'payment_mode',
+                        value: 'Online',
+                        data: { invoice_id: @invoice.id },
+                        checked: false,
+                        class: 'invoice-payment-mode-radio'
+                      }
+                      .flex-1
+                        %span.text-base.font-semibold.text-gray-800 Online Payment
+                        %p.text-sm.text-gray-600 Pay securely via Stripe (Card)
+
+                  / Cash Payment Option
+                  - if current_payment_mode == 'Cash'
+                    %label.flex.items-center.cursor-pointer.flex-1.p-4.border-2.rounded-xl.transition-all.duration-200{style: "border-color: #3A6363; background-color: #d1e0e0;"}
+                      %input.mr-4.w-5.h-5.cursor-pointer{
+                        type: 'radio',
+                        name: 'payment_mode',
+                        value: 'Cash',
+                        data: { invoice_id: @invoice.id },
+                        checked: true,
+                        class: 'invoice-payment-mode-radio'
+                      }
+                      .flex-1
+                        %span.text-base.font-semibold.text-gray-800 Cash Payment
+                        %p.text-sm.text-gray-600 Pay cash when collecting payment
+                  - else
+                    %label.flex.items-center.cursor-pointer.flex-1.p-4.border-2.rounded-xl.transition-all.duration-200.border-gray-300.bg-white{style: "transition: all 0.2s;", onmouseover: "this.style.borderColor='#3A6363'", onmouseout: "this.style.borderColor='#d1d5db'"}
+                      %input.mr-4.w-5.h-5.cursor-pointer{
+                        type: 'radio',
+                        name: 'payment_mode',
+                        value: 'Cash',
+                        data: { invoice_id: @invoice.id },
+                        checked: false,
+                        class: 'invoice-payment-mode-radio'
+                      }
+                      .flex-1
+                        %span.text-base.font-semibold.text-gray-800 Cash Payment
+                        %p.text-sm.text-gray-600 Pay cash when collecting payment
+
           / Payment Section - Only show for pending or overdue invoices
           - if @invoice.payment_status == 'pending' || @invoice.payment_status == 'overdue'
-            .bg-gradient-to-r.from-purple-50.to-blue-50.rounded-lg.p-6.border.border-purple-200.mb-6
+            .rounded-lg.p-6.border.mb-6{style: "background: linear-gradient(to right, #e8f0f0, #f0f5f5); border-color: #3A6363;"}
               .flex.items-center.justify-between.flex-wrap.gap-4
                 %div
                   %h3.text-lg.font-semibold.text-gray-900.mb-2
-                    %i.fas.fa-credit-card.mr-2.text-purple-600
+                    %i.fas.fa-credit-card.mr-2{style: "color: #3A6363;"}
                     Pay Invoice Online
                   %p.text-sm.text-gray-600.mb-1
                     Secure payment powered by
-                    %span.font-semibold.text-purple-600 Stripe
+                    %span.font-semibold{style: "color: #3A6363;"} Stripe
                   %p.text-xs.text-gray-500
                     %i.fas.fa-lock.mr-1
                     Your payment information is encrypted and secure
                 %div
-                  %button#openPaymentBtn.inline-flex.items-center.px-8.py-4.bg-gradient-to-r.from-purple-600.to-blue-600.hover:from-purple-700.hover:to-blue-700.text-white.font-bold.rounded-lg.transition-all.duration-200.shadow-lg.hover:shadow-xl.transform.hover:scale-105
+                  %button#openPaymentBtn.inline-flex.items-center.px-8.py-4.text-white.font-bold.rounded-lg.transition-all.duration-200.shadow-lg.transform{style: "background: linear-gradient(to right, #3A6363, #2d4d4d);", onmouseover: "this.style.background='linear-gradient(to right, #2d4d4d, #1f3535)'; this.style.boxShadow='0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)'; this.style.transform='scale(1.05)'", onmouseout: "this.style.background='linear-gradient(to right, #3A6363, #2d4d4d)'; this.style.boxShadow='0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)'; this.style.transform='scale(1)'"}
                     %i.fas.fa-lock.mr-2
                     %span.text-lg Pay #{number_to_currency(@invoice.invoice_items.sum(:amount))}
                     %i.fas.fa-arrow-right.ml-2
 
               / Accepted Payment Methods
-              .mt-4.pt-4.border-t.border-purple-200
+              .mt-4.pt-4.border-t{style: "border-color: #3A6363;"}
                 %p.text-xs.text-gray-600.mb-2 We accept:
                 .flex.items-center.gap-3.flex-wrap
                   .flex.items-center.gap-1.px-3.py-1.bg-white.rounded.border.border-gray-200
@@ -154,15 +241,15 @@
 
         / Action Buttons
         .flex.flex-wrap.gap-3
-          = link_to vendors_invoices_path, class: 'inline-flex items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors duration-200 shadow-md hover:shadow-lg gap-2' do
+          = link_to vendors_invoices_path, class: 'inline-flex items-center px-6 py-3 text-white font-medium rounded-lg transition-colors duration-200 shadow-md gap-2', style: 'background-color: #3A6363;', onmouseover: "this.style.backgroundColor='#2d4d4d'; this.style.boxShadow='0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)'", onmouseout: "this.style.backgroundColor='#3A6363'; this.style.boxShadow='0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)'" do
             %i.fas.fa-list
             %span View All Invoices
 
           = link_to vendors_dashboard_path, class: 'inline-flex items-center px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white font-medium rounded-lg transition-colors duration-200 gap-2' do
             %i.fas.fa-arrow-left
             %span Back to Dashboard
-            
-          %button.inline-flex.items-center.px-4.py-2.bg-purple-600.hover:bg-purple-700.text-white.font-medium.rounded-lg.transition-colors.duration-200.shadow-md.hover:shadow-lg.gap-2{type: 'button', onclick: 'window.print()'}
+
+          %button.inline-flex.items-center.px-4.py-2.text-white.font-medium.rounded-lg.transition-colors.duration-200.shadow-md.gap-2{type: 'button', onclick: 'window.print()', style: 'background-color: #3A6363;', onmouseover: "this.style.backgroundColor='#2d4d4d'; this.style.boxShadow='0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)'", onmouseout: "this.style.backgroundColor='#3A6363'; this.style.boxShadow='0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)'"}
             %i.fas.fa-print
             %span Print Invoice
 
@@ -170,19 +257,19 @@
 #paymentModal.hidden.fixed.inset-0.bg-gray-900.bg-opacity-50.z-50.flex.items-center.justify-center.p-4
   %div{class: "bg-white rounded-2xl shadow-2xl max-w-md w-full overflow-y-auto max-h-[90vh]"}
     / Modal Header
-    .bg-gradient-to-r.from-purple-600.to-blue-600.px-6.py-4.text-white.rounded-t-2xl
+    .px-6.py-4.text-white.rounded-t-2xl{style: "background: linear-gradient(to right, #3A6363, #2d4d4d);"}
       .flex.justify-between.items-center
         .text-left
           %h3.text-xl.font-bold Secure Payment
-          %p.text-sm.text-purple-100.mt-1 Powered by Stripe
+          %p.text-sm.mt-1{style: "color: #d1e0e0;"} Powered by Stripe
         %button#closePaymentBtn.text-white.hover:text-gray-200.transition-colors
           %i.fas.fa-times.text-2xl
 
     / Modal Body
     .p-6
       / Status
-      %div#paymentStatus.mb-4.p-3.rounded-lg.bg-blue-50.border.border-blue-200
-        %p.text-sm.text-blue-700
+      %div#paymentStatus.mb-4.p-3.rounded-lg.border{style: "background-color: #e8f0f0; border-color: #3A6363;"}
+        %p.text-sm{style: "color: #3A6363;"}
           %i.fas.fa-spinner.fa-spin.mr-2
           Loading payment form...
 
@@ -210,15 +297,15 @@
         / Cardholder Name
         %div
           %label.block.text-sm.font-medium.text-gray-700.mb-2 Cardholder Name
-          %input#cardholderName.w-full.px-4.py-3.border.border-gray-300.rounded-lg.focus:ring-2.focus:ring-purple-500.focus:border-transparent{type: 'text', placeholder: 'John Doe', required: true, value: current_vendor.full_name}
+          %input#cardholderName.w-full.px-4.py-3.border.border-gray-300.rounded-lg.focus:ring-2.focus:border-transparent{type: 'text', placeholder: 'John Doe', required: true, value: current_vendor.full_name, style: 'transition: all 0.2s;', onfocus: "this.style.borderColor='#3A6363'; this.style.boxShadow='0 0 0 3px rgba(58, 99, 99, 0.1)'", onblur: "this.style.borderColor='#d1d5db'; this.style.boxShadow='none'"}
 
         / Email
         %div
           %label.block.text-sm.font-medium.text-gray-700.mb-2 Email
-          %input#email.w-full.px-4.py-3.border.border-gray-300.rounded-lg.focus:ring-2.focus:ring-purple-500.focus:border-transparent{type: 'email', placeholder: 'john@example.com', required: true, value: current_vendor.email}
+          %input#email.w-full.px-4.py-3.border.border-gray-300.rounded-lg.focus:ring-2.focus:border-transparent{type: 'email', placeholder: 'john@example.com', required: true, value: current_vendor.email, style: 'transition: all 0.2s;', onfocus: "this.style.borderColor='#3A6363'; this.style.boxShadow='0 0 0 3px rgba(58, 99, 99, 0.1)'", onblur: "this.style.borderColor='#d1d5db'; this.style.boxShadow='none'"}
 
         / Submit
-        %button#submitPayment.w-full.px-6.py-3.bg-gradient-to-r.from-purple-600.to-blue-600.hover:from-purple-700.hover:to-blue-700.text-white.font-bold.rounded-lg.transition-all.duration-200.shadow-lg.hover:shadow-xl.disabled:opacity-50.disabled:cursor-not-allowed{type: 'submit', disabled: true}
+        %button#submitPayment.w-full.px-6.py-3.text-white.font-bold.rounded-lg.transition-all.duration-200.shadow-lg.disabled:opacity-50.disabled:cursor-not-allowed{type: 'submit', disabled: true, style: 'background: linear-gradient(to right, #3A6363, #2d4d4d);', onmouseover: "if(!this.disabled) { this.style.background='linear-gradient(to right, #2d4d4d, #1f3535)'; this.style.boxShadow='0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)'; }", onmouseout: "this.style.background='linear-gradient(to right, #3A6363, #2d4d4d)'; this.style.boxShadow='0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)';"}
           %span#buttonText
             %i.fas.fa-lock.mr-2
             Pay
@@ -325,64 +412,94 @@
 
 / MODAL AND PAYMENT HANDLER - INLINE
 :javascript
-  console.log('💳 Payment script initializing...');
+  (function() {
+    console.log('💳 Payment script initializing...');
 
-  // Get data
-  const paymentData = document.getElementById('payment-data');
-  const publishableKey = paymentData?.dataset.publishableKey;
-  const invoiceId = paymentData?.dataset.invoiceId;
+    let stripe = null;
+    let elements = null;
+    let cardElement = null;
+    let publishableKey = null;
+    let invoiceId = null;
+    let modal = null;
+    let openBtn = null;
+    let closeBtn = null;
+    let escapeHandler = null;
 
-  console.log('Invoice ID:', invoiceId);
-  console.log('Key configured:', !!publishableKey);
+    function initializePaymentModal() {
+      console.log('🔧 Initializing payment modal...');
 
-  // Modal references
-  const modal = document.getElementById('paymentModal');
-  const openBtn = document.getElementById('openPaymentBtn');
-  const closeBtn = document.getElementById('closePaymentBtn');
+      // Get data
+      const paymentData = document.getElementById('payment-data');
+      publishableKey = paymentData?.dataset.publishableKey;
+      invoiceId = paymentData?.dataset.invoiceId;
 
-  // Stripe references
-  let stripe = null;
-  let elements = null;
-  let cardElement = null;
+      console.log('Invoice ID:', invoiceId);
+      console.log('Key configured:', !!publishableKey);
 
-  // Open modal
-  if (openBtn) {
-    openBtn.addEventListener('click', function(e) {
-      e.preventDefault();
-      console.log('Opening payment modal');
-      modal.classList.remove('hidden');
-      document.body.style.overflow = 'hidden';
-      
-      // Initialize Stripe if not done yet
-      if (!stripe) {
-        initializeStripe();
+      // Modal references
+      modal = document.getElementById('paymentModal');
+      openBtn = document.getElementById('openPaymentBtn');
+      closeBtn = document.getElementById('closePaymentBtn');
+
+      if (!modal || !openBtn || !closeBtn) {
+        console.log('⚠️ Modal elements not found');
+        return;
       }
-    });
-  }
 
-  // Close modal
-  if (closeBtn) {
-    closeBtn.addEventListener('click', function(e) {
-      e.preventDefault();
-      console.log('Closing payment modal');
-      modal.classList.add('hidden');
-      document.body.style.overflow = 'auto';
-    });
-  }
+      console.log('✅ Modal elements found');
 
-  // Close on background click
-  modal.addEventListener('click', function(e) {
-    if (e.target === modal) {
-      closeBtn.click();
+      // Remove old event listeners by cloning
+      const newOpenBtn = openBtn.cloneNode(true);
+      openBtn.parentNode.replaceChild(newOpenBtn, openBtn);
+      openBtn = newOpenBtn;
+
+      const newCloseBtn = closeBtn.cloneNode(true);
+      closeBtn.parentNode.replaceChild(newCloseBtn, closeBtn);
+      closeBtn = newCloseBtn;
+
+      // Open modal
+      openBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        console.log('🔓 Opening payment modal');
+        modal.classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+
+        // Initialize Stripe if not done yet
+        if (!stripe) {
+          initializeStripe();
+        }
+      });
+
+      // Close modal
+      closeBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        console.log('🔒 Closing payment modal');
+        modal.classList.add('hidden');
+        document.body.style.overflow = 'auto';
+      });
+
+      // Close on background click
+      modal.addEventListener('click', function(e) {
+        if (e.target === modal) {
+          closeBtn.click();
+        }
+      });
+
+      // Remove old escape handler
+      if (escapeHandler) {
+        document.removeEventListener('keydown', escapeHandler);
+      }
+
+      // Close on Escape
+      escapeHandler = function(e) {
+        if (e.key === 'Escape' && modal && !modal.classList.contains('hidden')) {
+          closeBtn.click();
+        }
+      };
+      document.addEventListener('keydown', escapeHandler);
+
+      console.log('✅ Payment modal initialized');
     }
-  });
-
-  // Close on Escape
-  document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape' && !modal.classList.contains('hidden')) {
-      closeBtn.click();
-    }
-  });
 
   // Initialize Stripe
   function initializeStripe() {
@@ -458,6 +575,9 @@
       showStatus('Payment form ready', 'success');
       document.getElementById('submitPayment').disabled = false;
 
+      // Setup form submission handler
+      setupFormSubmission();
+
       console.log('✅✅✅ Stripe initialized successfully');
     } catch (e) {
       console.error('❌ Error initializing Stripe:', e);
@@ -466,70 +586,82 @@
   }
 
   // Form submission
-  document.getElementById('paymentForm').addEventListener('submit', async function(e) {
-    e.preventDefault();
-
-    if (!stripe || !cardElement) {
-      showError('Payment form not ready');
+  function setupFormSubmission() {
+    const paymentForm = document.getElementById('paymentForm');
+    if (!paymentForm) {
+      console.log('⚠️ Payment form not found');
       return;
     }
 
-    const name = document.getElementById('cardholderName').value.trim();
-    const email = document.getElementById('email').value.trim();
+    // Remove old listeners by cloning
+    const newForm = paymentForm.cloneNode(true);
+    paymentForm.parentNode.replaceChild(newForm, paymentForm);
 
-    if (!name || !email) {
-      showError('Name and email are required');
-      return;
-    }
+    newForm.addEventListener('submit', async function(e) {
+      e.preventDefault();
 
-    setLoading(true);
-
-    try {
-      const { paymentMethod, error } = await stripe.createPaymentMethod({
-        type: 'card',
-        card: cardElement,
-        billing_details: { name, email }
-      });
-
-      if (error) {
-        showError(error.message);
-        setLoading(false);
+      if (!stripe || !cardElement) {
+        showError('Payment form not ready');
         return;
       }
 
-      // Send to server
-      const response = await fetch(`/vendors/invoices/${invoiceId}/confirm_payment`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').content
-        },
-        body: JSON.stringify({ payment_method_id: paymentMethod.id })
-      });
+      const name = document.getElementById('cardholderName').value.trim();
+      const email = document.getElementById('email').value.trim();
 
-      const data = await response.json();
-
-      if (!response.ok) {
-        showError(data.error || 'Payment failed');
-        setLoading(false);
+      if (!name || !email) {
+        showError('Name and email are required');
         return;
       }
 
-      if (data.success) {
-        showSuccess('Payment successful! Redirecting...');
-        setTimeout(() => {
-          window.location.href = data.redirect_url;
-        }, 2000);
-      } else {
-        showError(data.message || 'Payment failed');
+      setLoading(true);
+
+      try {
+        const { paymentMethod, error } = await stripe.createPaymentMethod({
+          type: 'card',
+          card: cardElement,
+          billing_details: { name, email }
+        });
+
+        if (error) {
+          showError(error.message);
+          setLoading(false);
+          return;
+        }
+
+        // Send to server
+        const response = await fetch(`/vendors/invoices/${invoiceId}/confirm_payment`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').content
+          },
+          body: JSON.stringify({ payment_method_id: paymentMethod.id })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          showError(data.error || 'Payment failed');
+          setLoading(false);
+          return;
+        }
+
+        if (data.success) {
+          showSuccess('Payment successful! Redirecting...');
+          setTimeout(() => {
+            window.location.href = data.redirect_url;
+          }, 2000);
+        } else {
+          showError(data.message || 'Payment failed');
+          setLoading(false);
+        }
+      } catch (err) {
+        console.error('Payment error:', err);
+        showError('An error occurred during payment');
         setLoading(false);
       }
-    } catch (err) {
-      console.error('Payment error:', err);
-      showError('An error occurred during payment');
-      setLoading(false);
-    }
-  });
+    });
+  }
 
   function showError(message) {
     const errorDiv = document.getElementById('card-errors');
@@ -554,12 +686,128 @@
 
   function setLoading(isLoading) {
     const submitBtn = document.getElementById('submitPayment');
-    submitBtn.disabled = isLoading;
-    document.getElementById('buttonText').classList.toggle('hidden', isLoading);
-    document.getElementById('loadingText').classList.toggle('hidden', !isLoading);
+    if (submitBtn) {
+      submitBtn.disabled = isLoading;
+      const buttonText = document.getElementById('buttonText');
+      const loadingText = document.getElementById('loadingText');
+      if (buttonText) buttonText.classList.toggle('hidden', isLoading);
+      if (loadingText) loadingText.classList.toggle('hidden', !isLoading);
+    }
   }
 
-  console.log('✅ Payment script ready');
+    // Initialize on DOM ready
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initializePaymentModal);
+    } else {
+      initializePaymentModal();
+    }
+
+    // Reinitialize on Turbo navigation
+    document.addEventListener('turbo:load', initializePaymentModal);
+
+    console.log('✅ Payment script ready');
+  })();
+
+  // Handle payment mode selection for invoices
+  (function() {
+    console.log('🚀 Invoice payment mode script loaded');
+
+    function initializeInvoicePaymentModeHandlers() {
+      console.log('🔧 Initializing invoice payment mode handlers');
+
+      const paymentBtn = document.getElementById('openPaymentBtn');
+      const paymentModeRadios = document.querySelectorAll('.invoice-payment-mode-radio');
+
+      console.log('Found payment button:', paymentBtn ? 'YES' : 'NO');
+      console.log('Found radio buttons:', paymentModeRadios.length);
+
+      if (!paymentBtn) {
+        console.log('⚠️ Payment button not found - invoice may be paid');
+        return;
+      }
+
+      function updatePaymentButtonState() {
+        const selectedMode = document.querySelector('.invoice-payment-mode-radio:checked')?.value;
+
+        console.log('🔄 Updating button state for mode:', selectedMode);
+
+        if (selectedMode === 'Cash') {
+          // Disable payment button
+          paymentBtn.disabled = true;
+          paymentBtn.style.opacity = '0.5';
+          paymentBtn.style.cursor = 'not-allowed';
+          paymentBtn.style.pointerEvents = 'none';
+          console.log('✅ Payment button DISABLED for Cash mode');
+        } else if (selectedMode === 'Online') {
+          // Enable payment button
+          paymentBtn.disabled = false;
+          paymentBtn.style.opacity = '1';
+          paymentBtn.style.cursor = 'pointer';
+          paymentBtn.style.pointerEvents = 'auto';
+          console.log('✅ Payment button ENABLED for Online mode');
+        } else {
+          console.log('⚠️ No payment mode selected');
+        }
+      }
+
+      // Attach change listeners to radio buttons
+      paymentModeRadios.forEach(radio => {
+        radio.addEventListener('change', function() {
+          const invoiceId = this.getAttribute('data-invoice-id');
+          const paymentMode = this.value;
+
+          console.log(`🔄 Payment mode changed to: ${paymentMode}`);
+
+          // Update button state immediately
+          updatePaymentButtonState();
+
+          // Send AJAX request to update payment mode on server
+          fetch(`/vendors/invoices/${invoiceId}/update_payment_mode`, {
+            method: 'PATCH',
+            headers: {
+              'Content-Type': 'application/json',
+              'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+            },
+            body: JSON.stringify({
+              payment_mode: paymentMode
+            })
+          })
+          .then(response => {
+            if (response.ok) {
+              console.log('✅ Payment mode updated successfully on server');
+            } else {
+              console.error('❌ Failed to update payment mode on server');
+              // Revert the selection if failed
+              document.querySelector(`.invoice-payment-mode-radio[value="${paymentMode === 'Online' ? 'Cash' : 'Online'}"]`).checked = true;
+              updatePaymentButtonState();
+            }
+          })
+          .catch(error => {
+            console.error('❌ Error updating payment mode:', error);
+          });
+        });
+      });
+
+      // Initial state - set button state based on current selection
+      console.log('🎯 Setting initial button state');
+      updatePaymentButtonState();
+    }
+
+    // Try to initialize immediately if DOM is ready
+    if (document.readyState === 'loading') {
+      console.log('⏳ DOM still loading, waiting...');
+      document.addEventListener('DOMContentLoaded', initializeInvoicePaymentModeHandlers);
+    } else {
+      console.log('✅ DOM already loaded, initializing now');
+      initializeInvoicePaymentModeHandlers();
+    }
+
+    // Also handle Turbo navigation
+    document.addEventListener('turbo:load', function() {
+      console.log('🔄 Turbo load event - reinitializing');
+      initializeInvoicePaymentModeHandlers();
+    });
+  })();
 
 :css
   /* Hide print layout on screen */

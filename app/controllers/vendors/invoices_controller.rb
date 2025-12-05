@@ -1,7 +1,7 @@
 # app/controllers/vendors/invoices_controller.rb
 class Vendors::InvoicesController < ApplicationController
   before_action :authenticate_vendor!
-  before_action :set_invoice, only: [:show, :pay, :payment_status, :confirm_payment]
+  before_action :set_invoice, only: [:show, :pay, :payment_status, :confirm_payment, :update_payment_mode]
   before_action :set_publishable_key, only: [:show]
 
   def index
@@ -9,6 +9,10 @@ class Vendors::InvoicesController < ApplicationController
   end
 
   def show
+    # Set default payment mode if not set (for existing invoices)
+    if @invoice.payment_mode.blank?
+      @invoice.update(payment_mode: 'Online')
+    end
   end
 
   # Create Stripe PaymentIntent and return client secret
@@ -141,6 +145,22 @@ class Vendors::InvoicesController < ApplicationController
       end
     rescue Stripe::StripeError => e
       render json: { error: e.message }, status: :unprocessable_entity
+    end
+  end
+
+  # Update payment mode
+  def update_payment_mode
+    payment_mode = params[:payment_mode]
+
+    unless Invoice::PAYMENT_MODES.include?(payment_mode)
+      render json: { error: 'Invalid payment mode' }, status: :unprocessable_entity
+      return
+    end
+
+    if @invoice.update(payment_mode: payment_mode)
+      render json: { success: true, payment_mode: payment_mode }, status: :ok
+    else
+      render json: { error: @invoice.errors.full_messages.join(', ') }, status: :unprocessable_entity
     end
   end
 
