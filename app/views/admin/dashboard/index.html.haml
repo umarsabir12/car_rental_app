@@ -1,145 +1,193 @@
-%div.max-w-5xl.mx-auto.mt-10
-  %div.mb-8
-    %h1.text-2xl.font-bold.text-blue-900.mb-2 Overview
-    %p.text-gray-600 Here is a summary of your platform activity.
-  %div.grid.grid-cols-1.md:grid-cols-4.gap-6.mb-10
+%div.max-w-5xl.mx-auto.mt-6.sm:mt-10.px-4.sm:px-6.lg:px-8
+  %div.mb-6.sm:mb-8
+    %h1.text-xl.sm:text-2xl.font-bold.mb-2{style: "color: #3A6363;"} Overview
+    %p.text-sm.sm:text-base.text-gray-600 Here is a summary of your platform activity.
+  %div.grid.grid-cols-2.md:grid-cols-4.gap-3.sm:gap-6.mb-8.sm:mb-10
     - @stats.each do |label, value|
-      %div.bg-white.rounded-xl.shadow.p-6.text-center.border-t-4.border-blue-900
-        %div.text-3xl.font-bold.text-blue-900.mb-1
+      %div.bg-white.rounded-lg.sm:rounded-xl.shadow.p-4.sm:p-6.text-center.border-t-4{style: "border-color: #3A6363;"}
+        %div.text-2xl.sm:text-3xl.font-bold.mb-1{style: "color: #3A6363;"}
           = value
-        %div.text-gray-600.font-semibold
+        %div.text-xs.sm:text-base.text-gray-600.font-semibold
           = label.to_s.titleize
 
   / Activity Tracker Section
-  .bg-white.rounded-xl.shadow.p-8.mb-10
-    .flex.items-center.justify-between.mb-6
-      %h2.text-xl.font-bold.text-blue-900 Activity Tracker
-      = link_to admin_activities_path, class: 'inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700' do
+  .bg-white.rounded-lg.sm:rounded-xl.shadow.p-4.sm:p-8.mb-8.sm:mb-10
+    .flex.flex-col.sm:flex-row.items-start.sm:items-center.justify-between.mb-4.sm:mb-6.gap-3
+      %h2.text-lg.sm:text-xl.font-bold{style: "color: #3A6363;"} Activity Tracker
+      = link_to admin_activities_path, class: 'inline-flex items-center px-3 sm:px-4 py-2 border border-transparent rounded-md shadow-sm text-xs sm:text-sm font-medium text-white transition-colors', style: 'background-color: #3A6363;', onmouseover: "this.style.backgroundColor='#2d4d4d'", onmouseout: "this.style.backgroundColor='#3A6363'" do
         %i.fas.fa-chart-line.mr-2
-        View All Activities
-    
+        %span.hidden.sm:inline View All Activities
+        %span.sm:hidden All Activities
+
     / User Activities Section
-    .mb-8
-      .flex.items-center.justify-between.mb-4
-        %h3.text-lg.font-semibold.text-blue-800.flex.items-center.gap-2
-          %i.fas.fa-users.text-blue-600
+    .mb-6.sm:mb-8
+      .flex.flex-col.sm:flex-row.items-start.sm:items-center.justify-between.mb-3.sm:mb-4.gap-2
+        %h3.text-base.sm:text-lg.font-semibold.flex.items-center.gap-2{style: "color: #3A6363;"}
+          %i.fas.fa-users{style: "color: #3A6363;"}
           Customer Activities
-        %span.text-sm.text-gray-500.bg-blue-100.text-blue-800.px-2.py-1.rounded-full= Activity.user_activities.count
-      
+        %span.text-xs.sm:text-sm.text-gray-500.px-2.py-1.rounded-full{style: "background-color: #e8f0f0; color: #3A6363;"}= Activity.user_activities.count
+
       - if @recent_user_activities.any?
-        .space-y-3
+        .space-y-2.sm:space-y-3
           - @recent_user_activities.each do |activity|
-            .flex.items-start.space-x-3.p-3.bg-blue-50.rounded-lg.hover:bg-blue-100.transition-colors
+            .flex.items-start.space-x-2.sm:space-x-3.p-2.sm:p-3.rounded-lg.transition-colors{style: "background-color: #e8f0f0;", onmouseover: "this.style.backgroundColor='#d1e0e0'", onmouseout: "this.style.backgroundColor='#e8f0f0'"}
               .flex-shrink-0
-                .w-6.h-6.rounded-full.bg-white.flex.items-center.justify-center.shadow-sm
+                .w-5.h-5.sm:w-6.sm:h-6.rounded-full.bg-white.flex.items-center.justify-center.shadow-sm
                   %i{class: "#{activity.action_icon} #{activity.action_color} text-xs"}
               .flex-1.min-w-0
-                %p.text-sm.font-medium.text-gray-900= activity.description
+                %p.text-xs.sm:text-sm.font-medium.text-gray-900= activity.description
                 %p.text-xs.text-gray-500
                   %span.font-medium= activity.user.full_name
                   %span.mx-1 •
                   %span= activity.formatted_time
               .flex-shrink-0
-                = link_to admin_activity_path(activity), class: 'text-blue-600 hover:text-blue-900' do
+                = link_to admin_activity_path(activity), class: 'hover:text-gray-900', style: 'color: #3A6363;' do
                   %i.fas.fa-eye.text-xs
       - else
-        .text-center.py-6
-          %i.fas.fa-users.text-2xl.text-gray-300.mb-2
-          %p.text-gray-500.text-sm No customer activities found
+        .text-center.py-4.sm:py-6
+          %i.fas.fa-users.text-xl.sm:text-2xl.text-gray-300.mb-2
+          %p.text-gray-500.text-xs.sm:text-sm No customer activities found
 
     / Vendor Activities Section
-    .mb-8
-      .flex.items-center.justify-between.mb-4
-        %h3.text-lg.font-semibold.text-green-800.flex.items-center.gap-2
-          %i.fas.fa-store.text-green-600
+    .mb-6.sm:mb-8
+      .flex.flex-col.sm:flex-row.items-start.sm:items-center.justify-between.mb-3.sm:mb-4.gap-2
+        %h3.text-base.sm:text-lg.font-semibold.flex.items-center.gap-2{style: "color: #3A6363;"}
+          %i.fas.fa-store{style: "color: #3A6363;"}
           Vendor Activities
-        %span.text-sm.text-gray-500.bg-green-100.text-green-800.px-2.py-1.rounded-full= Activity.vendor_activities.count
-      
+        %span.text-xs.sm:text-sm.text-gray-500.px-2.py-1.rounded-full{style: "background-color: #e8f0f0; color: #3A6363;"}= Activity.vendor_activities.count
+
       - if @recent_vendor_activities.any?
-        .space-y-3
+        .space-y-2.sm:space-y-3
           - @recent_vendor_activities.each do |activity|
-            .flex.items-start.space-x-3.p-3.bg-green-50.rounded-lg.hover:bg-green-100.transition-colors
+            .flex.items-start.space-x-2.sm:space-x-3.p-2.sm:p-3.rounded-lg.transition-colors{style: "background-color: #e8f0f0;", onmouseover: "this.style.backgroundColor='#d1e0e0'", onmouseout: "this.style.backgroundColor='#e8f0f0'"}
               .flex-shrink-0
-                .w-6.h-6.rounded-full.bg-white.flex.items-center.justify-center.shadow-sm
+                .w-5.h-5.sm:w-6.sm:h-6.rounded-full.bg-white.flex.items-center.justify-center.shadow-sm
                   %i{class: "#{activity.action_icon} #{activity.action_color} text-xs"}
               .flex-1.min-w-0
-                %p.text-sm.font-medium.text-gray-900= activity.description
+                %p.text-xs.sm:text-sm.font-medium.text-gray-900= activity.description
                 %p.text-xs.text-gray-500
                   %span.font-medium= activity.vendor.company_name
                   %span.mx-1 •
                   %span= activity.formatted_time
               .flex-shrink-0
-                = link_to admin_activity_path(activity), class: 'text-green-600 hover:text-green-900' do
+                = link_to admin_activity_path(activity), class: 'hover:text-gray-900', style: 'color: #3A6363;' do
                   %i.fas.fa-eye.text-xs
       - else
-        .text-center.py-6
-          %i.fas.fa-store.text-2xl.text-gray-300.mb-2
-          %p.text-gray-500.text-sm No vendor activities found 
+        .text-center.py-4.sm:py-6
+          %i.fas.fa-store.text-xl.sm:text-2xl.text-gray-300.mb-2
+          %p.text-gray-500.text-xs.sm:text-sm No vendor activities found
 
   / ==== Pending Documents Section ====
   - pending_docs = Document.includes(:user).where(status: 'pending')
   - if pending_docs.any?
-    .bg-white.rounded-xl.shadow.p-8.mb-8
-      %h2.text-xl.font-bold.text-blue-900.mb-4 Pending Documents
-      %table.min-w-full.border-separate{ style: "border-spacing: 0 0.75rem;" }
-        %thead
-          %tr
-            %th.px-6.py-3.text-left.text-xs.font-bold.text-blue-700.uppercase.bg-blue-50.rounded-l-lg User
-            %th.px-6.py-3.text-left.text-xs.font-bold.text-blue-700.uppercase.bg-blue-50 Document
-            %th.px-6.py-3.text-left.text-xs.font-bold.text-blue-700.uppercase.bg-blue-50 Type
-            %th.px-6.py-3.text-left.text-xs.font-bold.text-blue-700.uppercase.bg-blue-50.rounded-r-lg Status
-        %tbody
-          - pending_docs.each do |doc|
-            %tr.bg-blue-50.rounded-lg.shadow.hover:bg-blue-100.transition.cursor-pointer{ onclick: "window.location='#{admin_document_path(doc)}'" }
-              %td.px-6.py-4.font-medium.text-gray-900.rounded-l-lg= doc.user&.full_name.presence || doc.user&.email
-              %td.px-6.py-4.text-gray-700= doc.doc_name
-              %td.px-6.py-4.text-gray-700= doc.document_type.titleize
-              %td.px-6.py-4.text-yellow-700.rounded-r-lg Pending
+    .bg-white.rounded-lg.sm:rounded-xl.shadow.p-4.sm:p-8.mb-6.sm:mb-8
+      %h2.text-lg.sm:text-xl.font-bold.mb-3.sm:mb-4{style: "color: #3A6363;"} Pending Documents
+      / Mobile Card View
+      .block.md:hidden.space-y-3
+        - pending_docs.each do |doc|
+          .rounded-lg.shadow.p-4.transition-colors{style: "background-color: #e8f0f0;", onclick: "window.location='#{admin_document_path(doc)}'"}
+            .flex.justify-between.items-start.mb-2
+              %span.font-medium.text-gray-900.text-sm= doc.user&.full_name.presence || doc.user&.email
+              %span.text-xs.px-2.py-1.rounded-full.bg-yellow-100.text-yellow-700 Pending
+            .text-xs.text-gray-700.mb-1
+              %strong Document:
+              = doc.doc_name
+            .text-xs.text-gray-700
+              %strong Type:
+              = doc.document_type.titleize
+      / Desktop Table View
+      .hidden.md:block.overflow-x-auto
+        %table.min-w-full.border-separate{ style: "border-spacing: 0 0.75rem;" }
+          %thead
+            %tr
+              %th.px-6.py-3.text-left.text-xs.font-bold.uppercase.rounded-l-lg{style: "background-color: #e8f0f0; color: #3A6363;"} User
+              %th.px-6.py-3.text-left.text-xs.font-bold.uppercase{style: "background-color: #e8f0f0; color: #3A6363;"} Document
+              %th.px-6.py-3.text-left.text-xs.font-bold.uppercase{style: "background-color: #e8f0f0; color: #3A6363;"} Type
+              %th.px-6.py-3.text-left.text-xs.font-bold.uppercase.rounded-r-lg{style: "background-color: #e8f0f0; color: #3A6363;"} Status
+          %tbody
+            - pending_docs.each do |doc|
+              %tr.rounded-lg.shadow.transition.cursor-pointer{style: "background-color: #e8f0f0;", onclick: "window.location='#{admin_document_path(doc)}'", onmouseover: "this.style.backgroundColor='#d1e0e0'", onmouseout: "this.style.backgroundColor='#e8f0f0'"}
+                %td.px-6.py-4.font-medium.text-gray-900.rounded-l-lg= doc.user&.full_name.presence || doc.user&.email
+                %td.px-6.py-4.text-gray-700= doc.doc_name
+                %td.px-6.py-4.text-gray-700= doc.document_type.titleize
+                %td.px-6.py-4.text-yellow-700.rounded-r-lg Pending
   - else
-    .bg-white.rounded-xl.shadow.p-8.mb-8
-      %h2.text-xl.font-bold.text-blue-900.mb-4 Pending Documents
-      %p.text-gray-500 No pending documents found.
+    .bg-white.rounded-lg.sm:rounded-xl.shadow.p-4.sm:p-8.mb-6.sm:mb-8
+      %h2.text-lg.sm:text-xl.font-bold.mb-3.sm:mb-4{style: "color: #3A6363;"} Pending Documents
+      %p.text-sm.sm:text-base.text-gray-500 No pending documents found.
 
   / ==== Pending Car Documents Section ====
   - pending_car_docs = CarDocument.includes(car: :vendor).where(document_status: CarDocument.document_statuses[:pending])
   - pending_vendor_trade_license = VendorDocument.includes(:vendor).where(document_status: VendorDocument.document_statuses[:pending])
   - if pending_car_docs.any? || pending_vendor_trade_license.any?
-    .bg-white.rounded-xl.shadow.p-8.mb-8
-      %h2.text-xl.font-bold.text-blue-900.mb-4 Vendor Pending Documents
-      %table.min-w-full.border-separate{ style: "border-spacing: 0 0.75rem;" }
-        %thead
-          %tr
-            %th.px-6.py-3.text-left.text-xs.font-bold.text-blue-700.uppercase.bg-blue-50.rounded-l-lg Item
-            %th.px-6.py-3.text-left.text-xs.font-bold.text-blue-700.uppercase.bg-blue-50 Vendor
-            %th.px-6.py-3.text-left.text-xs.font-bold.text-blue-700.uppercase.bg-blue-50 Document Type
-            %th.px-6.py-3.text-left.text-xs.font-bold.text-blue-700.uppercase.bg-blue-50 Status
-            %th.px-6.py-3.text-left.text-xs.font-bold.text-blue-700.uppercase.bg-blue-50.rounded-r-lg Actions
-        %tbody
-          - pending_car_docs.each do |car_doc|
-            %tr.bg-blue-50.rounded-lg.shadow.hover:bg-blue-100.transition
-              %td.px-6.py-4.font-medium.text-gray-900.rounded-l-lg= car_doc.car&.full_name
-              %td.px-6.py-4.text-gray-700= car_doc.car&.vendor&.display_name || '-'
-              %td.px-6.py-4.text-gray-700
-                %span.inline-flex.items-center.px-2.5.py-0.5.rounded-full.text-xs.font-medium.bg-purple-100.text-purple-800
-                  %i.fas.fa-car.mr-1
-                  Car Document
-              %td.px-6.py-4.text-yellow-700 Pending
-              %td.px-6.py-4.rounded-r-lg.flex.gap-2
-                - if car_doc.mulkiya.attached?  
-                  = link_to 'View', admin_document_path(car_doc, type: 'car_document'), class: 'inline-block bg-blue-100 text-blue-800 font-semibold px-4 py-1 rounded-lg hover:bg-blue-200 transition'
-          - pending_vendor_trade_license.each do |vendor_doc|
-            %tr.bg-blue-50.rounded-lg.shadow.hover:bg-blue-100.transition
-              %td.px-6.py-4.font-medium.text-gray-900.rounded-l-lg= vendor_doc.vendor.company_name
-              %td.px-6.py-4.text-gray-700= vendor_doc.vendor&.display_name || '-'
-              %td.px-6.py-4.text-gray-700
-                %span.inline-flex.items-center.px-2.5.py-0.5.rounded-full.text-xs.font-medium.bg-green-100.text-green-800
-                  %i.fas.fa-store.mr-1
-                  Trade License
-              %td.px-6.py-4.text-yellow-700 Pending
-              %td.px-6.py-4.rounded-r-lg.flex.gap-2
-                - if vendor_doc.trade_license.attached?  
-                  = link_to 'View', admin_document_path(vendor_doc, type: 'trade_license'), class: 'inline-block bg-blue-100 text-blue-800 font-semibold px-4 py-1 rounded-lg hover:bg-blue-200 transition'
+    .bg-white.rounded-lg.sm:rounded-xl.shadow.p-4.sm:p-8.mb-6.sm:mb-8
+      %h2.text-lg.sm:text-xl.font-bold.mb-3.sm:mb-4{style: "color: #3A6363;"} Vendor Pending Documents
+      / Mobile Card View
+      .block.md:hidden.space-y-3
+        - pending_car_docs.each do |car_doc|
+          .rounded-lg.shadow.p-4{style: "background-color: #e8f0f0;"}
+            .flex.justify-between.items-start.mb-2
+              %span.font-medium.text-gray-900.text-sm= car_doc.car&.full_name
+              %span.text-xs.px-2.py-1.rounded-full.bg-yellow-100.text-yellow-700 Pending
+            .text-xs.text-gray-700.mb-1
+              %strong Vendor:
+              = car_doc.car&.vendor&.display_name || '-'
+            .flex.items-center.gap-2.mb-2
+              %span.inline-flex.items-center.px-2.py-0.5.rounded-full.text-xs.font-medium.bg-purple-100.text-purple-800
+                %i.fas.fa-car.mr-1
+                Car Document
+            - if car_doc.mulkiya.attached?
+              = link_to 'View Document', admin_document_path(car_doc, type: 'car_document'), class: 'inline-block text-white font-semibold px-3 py-1.5 rounded-lg transition text-xs', style: 'background-color: #3A6363;', onmouseover: "this.style.backgroundColor='#2d4d4d'", onmouseout: "this.style.backgroundColor='#3A6363'"
+        - pending_vendor_trade_license.each do |vendor_doc|
+          .rounded-lg.shadow.p-4{style: "background-color: #e8f0f0;"}
+            .flex.justify-between.items-start.mb-2
+              %span.font-medium.text-gray-900.text-sm= vendor_doc.vendor.company_name
+              %span.text-xs.px-2.py-1.rounded-full.bg-yellow-100.text-yellow-700 Pending
+            .text-xs.text-gray-700.mb-1
+              %strong Vendor:
+              = vendor_doc.vendor&.display_name || '-'
+            .flex.items-center.gap-2.mb-2
+              %span.inline-flex.items-center.px-2.py-0.5.rounded-full.text-xs.font-medium.bg-green-100.text-green-800
+                %i.fas.fa-store.mr-1
+                Trade License
+            - if vendor_doc.trade_license.attached?
+              = link_to 'View Document', admin_document_path(vendor_doc, type: 'trade_license'), class: 'inline-block text-white font-semibold px-3 py-1.5 rounded-lg transition text-xs', style: 'background-color: #3A6363;', onmouseover: "this.style.backgroundColor='#2d4d4d'", onmouseout: "this.style.backgroundColor='#3A6363'"
+      / Desktop Table View
+      .hidden.md:block.overflow-x-auto
+        %table.min-w-full.border-separate{ style: "border-spacing: 0 0.75rem;" }
+          %thead
+            %tr
+              %th.px-6.py-3.text-left.text-xs.font-bold.uppercase.rounded-l-lg{style: "background-color: #e8f0f0; color: #3A6363;"} Item
+              %th.px-6.py-3.text-left.text-xs.font-bold.uppercase{style: "background-color: #e8f0f0; color: #3A6363;"} Vendor
+              %th.px-6.py-3.text-left.text-xs.font-bold.uppercase{style: "background-color: #e8f0f0; color: #3A6363;"} Document Type
+              %th.px-6.py-3.text-left.text-xs.font-bold.uppercase{style: "background-color: #e8f0f0; color: #3A6363;"} Status
+              %th.px-6.py-3.text-left.text-xs.font-bold.uppercase.rounded-r-lg{style: "background-color: #e8f0f0; color: #3A6363;"} Actions
+          %tbody
+            - pending_car_docs.each do |car_doc|
+              %tr.rounded-lg.shadow.transition{style: "background-color: #e8f0f0;", onmouseover: "this.style.backgroundColor='#d1e0e0'", onmouseout: "this.style.backgroundColor='#e8f0f0'"}
+                %td.px-6.py-4.font-medium.text-gray-900.rounded-l-lg= car_doc.car&.full_name
+                %td.px-6.py-4.text-gray-700= car_doc.car&.vendor&.display_name || '-'
+                %td.px-6.py-4.text-gray-700
+                  %span.inline-flex.items-center.px-2.5.py-0.5.rounded-full.text-xs.font-medium.bg-purple-100.text-purple-800
+                    %i.fas.fa-car.mr-1
+                    Car Document
+                %td.px-6.py-4.text-yellow-700 Pending
+                %td.px-6.py-4.rounded-r-lg.flex.gap-2
+                  - if car_doc.mulkiya.attached?
+                    = link_to 'View', admin_document_path(car_doc, type: 'car_document'), class: 'inline-block text-white font-semibold px-4 py-1 rounded-lg transition', style: 'background-color: #3A6363;', onmouseover: "this.style.backgroundColor='#2d4d4d'", onmouseout: "this.style.backgroundColor='#3A6363'"
+            - pending_vendor_trade_license.each do |vendor_doc|
+              %tr.rounded-lg.shadow.transition{style: "background-color: #e8f0f0;", onmouseover: "this.style.backgroundColor='#d1e0e0'", onmouseout: "this.style.backgroundColor='#e8f0f0'"}
+                %td.px-6.py-4.font-medium.text-gray-900.rounded-l-lg= vendor_doc.vendor.company_name
+                %td.px-6.py-4.text-gray-700= vendor_doc.vendor&.display_name || '-'
+                %td.px-6.py-4.text-gray-700
+                  %span.inline-flex.items-center.px-2.5.py-0.5.rounded-full.text-xs.font-medium.bg-green-100.text-green-800
+                    %i.fas.fa-store.mr-1
+                    Trade License
+                %td.px-6.py-4.text-yellow-700 Pending
+                %td.px-6.py-4.rounded-r-lg.flex.gap-2
+                  - if vendor_doc.trade_license.attached?
+                    = link_to 'View', admin_document_path(vendor_doc, type: 'trade_license'), class: 'inline-block text-white font-semibold px-4 py-1 rounded-lg transition', style: 'background-color: #3A6363;', onmouseover: "this.style.backgroundColor='#2d4d4d'", onmouseout: "this.style.backgroundColor='#3A6363'"
   - else
-    .bg-white.rounded-xl.shadow.p-8.mb-8
-      %h2.text-xl.font-bold.text-blue-900.mb-4 Vendor Pending Documents
-      %p.text-gray-500 No pending car documents found.
+    .bg-white.rounded-lg.sm:rounded-xl.shadow.p-4.sm:p-8.mb-6.sm:mb-8
+      %h2.text-lg.sm:text-xl.font-bold.mb-3.sm:mb-4{style: "color: #3A6363;"} Vendor Pending Documents
+      %p.text-sm.sm:text-base.text-gray-500 No pending car documents found.

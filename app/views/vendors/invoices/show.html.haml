@@ -526,6 +526,7 @@
       
       console.log('Creating card element...');
       cardElement = elements.create('card', {
+        hidePostalCode: false,
         style: {
           base: {
             fontSize: '16px',
@@ -586,6 +587,8 @@
   }
 
   // Form submission
+  let formSubmitHandler = null;
+
   function setupFormSubmission() {
     const paymentForm = document.getElementById('paymentForm');
     if (!paymentForm) {
@@ -593,11 +596,12 @@
       return;
     }
 
-    // Remove old listeners by cloning
-    const newForm = paymentForm.cloneNode(true);
-    paymentForm.parentNode.replaceChild(newForm, paymentForm);
+    // Remove old listener if exists
+    if (formSubmitHandler) {
+      paymentForm.removeEventListener('submit', formSubmitHandler);
+    }
 
-    newForm.addEventListener('submit', async function(e) {
+    formSubmitHandler = async function(e) {
       e.preventDefault();
 
       if (!stripe || !cardElement) {
@@ -660,7 +664,9 @@
         showError('An error occurred during payment');
         setLoading(false);
       }
-    });
+    };
+
+    paymentForm.addEventListener('submit', formSubmitHandler);
   }
 
   function showError(message) {
