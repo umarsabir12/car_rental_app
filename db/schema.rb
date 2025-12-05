@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_12_04_182927) do
+ActiveRecord::Schema[7.2].define(version: 2025_12_05_071244) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -230,6 +230,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_12_04_182927) do
     t.datetime "paid_at"
     t.string "payment_method_id"
     t.boolean "save_payment_method", default: false
+    t.string "payment_mode", default: "Online"
     t.index ["payment_status"], name: "index_invoices_on_payment_status"
     t.index ["stripe_payment_intent_id"], name: "index_invoices_on_stripe_payment_intent_id", unique: true
     t.index ["vendor_id"], name: "index_invoices_on_vendor_id"

@@ -5,7 +5,12 @@ class Invoice < ApplicationRecord
   accepts_nested_attributes_for :invoice_items, allow_destroy: true, reject_if: :all_blank
 
   PAYMENT_STATUSES = %w[pending paid cancelled overdue].freeze
+  PAYMENT_MODES = %w[Online Cash].freeze
 
+  # Set default payment mode
+  after_initialize :set_default_payment_mode, if: :new_record?
+
+  validates :payment_mode, inclusion: { in: PAYMENT_MODES }
   validates :payment_status, inclusion: { in: PAYMENT_STATUSES }
   validates :amount, presence: true, numericality: { greater_than: 0 }
 
@@ -98,5 +103,11 @@ class Invoice < ApplicationRecord
   # Check if payment can be processed
   def can_process_payment?
     payment_status == 'pending' || payment_status == 'overdue'
+  end
+
+  private
+
+  def set_default_payment_mode
+    self.payment_mode ||= 'Online'
   end
 end
