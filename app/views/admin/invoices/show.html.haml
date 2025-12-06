@@ -1,91 +1,111 @@
-.container.mx-auto.px-4.py-8
+.container.mx-auto.px-4.sm:px-6.lg:px-8.py-6.sm:py-8
   .max-w-5xl.mx-auto
     / Header Actions (Screen Only)
-    .flex.justify-between.items-center.mb-6.no-print
-      %h1.text-3xl.font-extrabold.text-blue-900 Invoice Details
-      .flex.gap-3
-        = link_to admin_vendor_invoices_path(@invoice.vendor), class: 'inline-flex items-center px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white font-medium rounded-lg transition-colors duration-200 gap-2' do
+    .flex.flex-col.sm:flex-row.sm:justify-between.sm:items-center.mb-4.sm:mb-6.gap-3.no-print
+      %h1.text-2xl.sm:text-3xl.font-extrabold{style: "color: #3A6363;"} Invoice Details
+      .flex.flex-col.sm:flex-row.gap-2.sm:gap-3.w-full.sm:w-auto
+        = link_to admin_vendor_invoices_path(@invoice.vendor), class: 'inline-flex items-center justify-center px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white font-medium rounded-lg transition-colors duration-200 gap-2 text-sm sm:text-base' do
           %i.fas.fa-list
           %span All Invoices
-        = link_to admin_vendor_path(@invoice.vendor), class: 'inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors duration-200 gap-2' do
+        = link_to admin_vendor_path(@invoice.vendor), class: 'inline-flex items-center justify-center px-4 py-2 text-white font-medium rounded-lg transition-colors duration-200 gap-2 text-sm sm:text-base', style: 'background-color: #3A6363;', onmouseover: "this.style.backgroundColor='#2d4d4d'", onmouseout: "this.style.backgroundColor='#3A6363'" do
           %i.fas.fa-user
           %span View Vendor
 
-    / Main Invoice Card (Screen View - unchanged)
+    / Main Invoice Card (Screen View)
     .bg-white.shadow-lg.rounded-xl.overflow-hidden.no-print
       / Invoice Header
-      .bg-gradient-to-r.from-blue-600.to-blue-700.px-8.py-6.text-white
-        .flex.justify-between.items-start
+      .px-4.sm:px-8.py-4.sm:py-6.text-white{style: "background: linear-gradient(to right, #3A6363, #2d4d4d);"}
+        .flex.flex-col.sm:flex-row.sm:justify-between.sm:items-start.gap-3
           %div
-            %h2.text-2xl.font-bold.mb-2 Invoice
-            %p.text-blue-100
+            %h2.text-xl.sm:text-2xl.font-bold.mb-2 Invoice
+            %p{style: "color: #d1e0e0;"}
               Invoice Number:
               %span.font-mono.font-semibold.ml-2= "##{@invoice.id}"
-            %p.text-blue-100.text-sm.mt-1
+            %p.text-xs.sm:text-sm.mt-1{style: "color: #d1e0e0;"}
               Created:
               = @invoice.created_at.strftime('%B %d, %Y at %I:%M %p')
           / Status Badge
           - case @invoice.payment_status
           - when 'paid'
-            .inline-flex.items-center.px-4.py-2.rounded-full.text-sm.font-semibold.bg-green-500.text-white
+            .inline-flex.items-center.px-3.sm:px-4.py-1.sm:py-2.rounded-full.text-xs.sm:text-sm.font-semibold.bg-green-500.text-white.self-start
               %i.fas.fa-check-circle.mr-2
               Paid
           - when 'pending'
-            .inline-flex.items-center.px-4.py-2.rounded-full.text-sm.font-semibold.bg-yellow-500.text-white
+            .inline-flex.items-center.px-3.sm:px-4.py-1.sm:py-2.rounded-full.text-xs.sm:text-sm.font-semibold.bg-yellow-500.text-white.self-start
               %i.fas.fa-clock.mr-2
-              Pending Payment
+              Pending
           - when 'overdue'
-            .inline-flex.items-center.px-4.py-2.rounded-full.text-sm.font-semibold.bg-red-500.text-white
+            .inline-flex.items-center.px-3.sm:px-4.py-1.sm:py-2.rounded-full.text-xs.sm:text-sm.font-semibold.bg-red-500.text-white.self-start
               %i.fas.fa-exclamation-circle.mr-2
               Overdue
           - when 'cancelled'
-            .inline-flex.items-center.px-4.py-2.rounded-full.text-sm.font-semibold.bg-gray-500.text-white
+            .inline-flex.items-center.px-3.sm:px-4.py-1.sm:py-2.rounded-full.text-xs.sm:text-sm.font-semibold.bg-gray-500.text-white.self-start
               %i.fas.fa-ban.mr-2
               Cancelled
 
       / Invoice Content
-      .p-8
+      .p-4.sm:p-6.lg:p-8
         / Vendor Information Section
-        .mb-8.pb-8.border-b.border-gray-200
-          %h3.text-lg.font-semibold.text-gray-900.mb-4.flex.items-center
-            %i.fas.fa-building.text-blue-600.mr-2
+        .mb-6.sm:mb-8.pb-6.sm:pb-8.border-b.border-gray-200
+          %h3.text-base.sm:text-lg.font-semibold.text-gray-900.mb-3.sm:mb-4.flex.items-center
+            %i.fas.fa-building.mr-2{style: "color: #3A6363;"}
             Vendor Information
-          .bg-gray-50.rounded-lg.p-6
-            .grid.grid-cols-1.md:grid-cols-2.gap-6
+          .bg-gray-50.rounded-lg.p-4.sm:p-6
+            .grid.grid-cols-1.sm:grid-cols-2.gap-4.sm:gap-6
               %div
-                %p.text-sm.font-medium.text-gray-500.mb-1 Company Name
-                %p.text-base.font-semibold.text-gray-900
-                  = link_to @invoice.vendor.company_name, admin_vendor_path(@invoice.vendor), class: 'text-blue-600 hover:text-blue-800 hover:underline'
+                %p.text-xs.sm:text-sm.font-medium.text-gray-500.mb-1 Company Name
+                %p.text-sm.sm:text-base.font-semibold.text-gray-900.break-all
+                  = link_to @invoice.vendor.company_name, admin_vendor_path(@invoice.vendor), class: 'hover:underline', style: 'color: #3A6363;'
               %div
-                %p.text-sm.font-medium.text-gray-500.mb-1 Email
-                %p.text-base.text-gray-900= @invoice.vendor.email
+                %p.text-xs.sm:text-sm.font-medium.text-gray-500.mb-1 Email
+                %p.text-sm.sm:text-base.text-gray-900.break-all= @invoice.vendor.email
               - if @invoice.vendor.phone.present?
                 %div
-                  %p.text-sm.font-medium.text-gray-500.mb-1 Phone
-                  %p.text-base.text-gray-900= @invoice.vendor.phone
+                  %p.text-xs.sm:text-sm.font-medium.text-gray-500.mb-1 Phone
+                  %p.text-sm.sm:text-base.text-gray-900= @invoice.vendor.phone
               - if @invoice.vendor.address.present?
                 %div
-                  %p.text-sm.font-medium.text-gray-500.mb-1 Address
-                  %p.text-base.text-gray-900= @invoice.vendor.address
+                  %p.text-xs.sm:text-sm.font-medium.text-gray-500.mb-1 Address
+                  %p.text-sm.sm:text-base.text-gray-900= @invoice.vendor.address
 
         / Invoice Items Section
-        .mb-8
-          %h3.text-lg.font-semibold.text-gray-900.mb-4.flex.items-center
-            %i.fas.fa-file-invoice.text-blue-600.mr-2
+        .mb-6.sm:mb-8
+          %h3.text-base.sm:text-lg.font-semibold.text-gray-900.mb-3.sm:mb-4.flex.items-center
+            %i.fas.fa-file-invoice.mr-2{style: "color: #3A6363;"}
             Invoice Items
 
-          .bg-white.border.border-gray-200.rounded-lg.overflow-hidden
+          / Mobile Card View
+          .block.md:hidden.space-y-3
+            - if @invoice.invoice_items.any?
+              - @invoice.invoice_items.each do |item|
+                .bg-gray-50.rounded-lg.p-3.border-l-4{style: "border-color: #3A6363;"}
+                  .mb-2
+                    %p.text-xs.font-medium.text-gray-500 Description
+                    %p.text-sm.text-gray-900= item.description
+                  .flex.justify-between.items-center.pt-2.border-t.border-gray-200
+                    %p.text-xs.font-medium.text-gray-500 Amount
+                    %p.text-base.font-bold{style: "color: #3A6363;"}= number_to_currency(item.amount)
+              .bg-white.rounded-lg.p-3.border-2{style: "border-color: #3A6363;"}
+                .flex.justify-between.items-center
+                  %p.text-sm.font-semibold.text-gray-900 Total Amount:
+                  %p.text-lg.font-bold{style: "color: #3A6363;"}= number_to_currency(@invoice.invoice_items.sum(:amount))
+            - else
+              .bg-gray-50.rounded-lg.p-4.text-center
+                %p.text-sm.text-gray-500.italic No items added yet
+
+          / Desktop Table View
+          .bg-white.border.border-gray-200.rounded-lg.overflow-hidden.hidden.md:block
             %table.min-w-full.divide-y.divide-gray-200
-              %thead.bg-gray-50
+              %thead{style: "background-color: #e8f0f0;"}
                 %tr
-                  %th.px-6.py-3.text-left.text-xs.font-medium.text-gray-500.uppercase.tracking-wider
+                  %th.px-6.py-3.text-left.text-xs.font-medium.uppercase.tracking-wider{style: "color: #3A6363;"}
                     Description
-                  %th.px-6.py-3.text-right.text-xs.font-medium.text-gray-500.uppercase.tracking-wider
+                  %th.px-6.py-3.text-right.text-xs.font-medium.uppercase.tracking-wider{style: "color: #3A6363;"}
                     Amount
               %tbody.bg-white.divide-y.divide-gray-200
                 - if @invoice.invoice_items.any?
                   - @invoice.invoice_items.each do |item|
-                    %tr.hover:bg-gray-50
+                    %tr.transition-colors{style: "transition: background-color 0.2s;", onmouseover: "this.style.backgroundColor='#e8f0f0'", onmouseout: "this.style.backgroundColor='white'"}
                       %td.px-6.py-4.text-sm.text-gray-900
                         = item.description
                       %td.px-6.py-4.text-sm.text-gray-900.text-right.font-medium
@@ -94,78 +114,79 @@
                   %tr
                     %td.px-6.py-4.text-sm.text-gray-500.text-center.italic{colspan: 2}
                       No items added yet
-              %tfoot.bg-gray-50
+              %tfoot{style: "background-color: #e8f0f0;"}
                 %tr
                   %td.px-6.py-4.text-right.text-sm.font-semibold.text-gray-900
                     Total Amount:
-                  %td.px-6.py-4.text-right.text-lg.font-bold.text-blue-600
+                  %td.px-6.py-4.text-right.text-lg.font-bold{style: "color: #3A6363;"}
                     = number_to_currency(@invoice.invoice_items.sum(:amount))
 
         / Payment Status Information
         - if @invoice.payment_status == 'pending' || @invoice.payment_status == 'overdue'
-          .bg-yellow-50.rounded-lg.p-4.border-l-4.border-yellow-400.mb-6
+          .bg-yellow-50.rounded-lg.p-3.sm:p-4.border-l-4.border-yellow-400.mb-4.sm:mb-6
             .flex.items-start
-              %i.fas.fa-info-circle.text-yellow-600.text-lg.mt-1.mr-3
+              %i.fas.fa-info-circle.text-yellow-600.text-base.sm:text-lg.mt-1.mr-3
               %div
-                %p.text-sm.font-medium.text-yellow-900.mb-1 Payment Required
-                %p.text-sm.text-yellow-800
+                %p.text-xs.sm:text-sm.font-medium.text-yellow-900.mb-1 Payment Required
+                %p.text-xs.sm:text-sm.text-yellow-800
                   This invoice is awaiting payment. You can mark it as paid once payment has been received.
 
         / Action Buttons Section
-        %hr.my-8
-        .flex.flex-wrap.gap-3
+        %hr.my-6.sm:my-8
+        .flex.flex-wrap.gap-2.sm:gap-3
           / Mark as Paid Button
           - if @invoice.payment_status == 'pending' || @invoice.payment_status == 'overdue'
-            = button_to mark_as_paid_admin_invoice_path(@invoice), method: :patch, class: 'inline-flex items-center px-6 py-3 bg-green-600 hover:bg-green-700 text-white font-medium rounded-lg transition-colors duration-200 shadow-md hover:shadow-lg gap-2', data: { turbo_confirm: 'Mark this invoice as paid?' } do
+            = button_to mark_as_paid_admin_invoice_path(@invoice), method: :patch, class: 'inline-flex items-center px-4 sm:px-6 py-2 sm:py-3 bg-green-600 hover:bg-green-700 text-white font-medium rounded-lg transition-colors duration-200 shadow-md hover:shadow-lg gap-2 text-sm sm:text-base', data: { turbo_confirm: 'Mark this invoice as paid?' } do
               %i.fas.fa-check-circle
-              %span Mark as Paid
+              %span.hidden.sm:inline Mark as Paid
+              %span.sm:hidden Paid
 
           / Edit Button - Opens Modal
-          %button.inline-flex.items-center.px-6.py-3.bg-yellow-600.hover:bg-yellow-700.text-white.font-medium.rounded-lg.transition-colors.duration-200.shadow-md.hover:shadow-lg.gap-2{type: 'button', onclick: 'openEditModal()'}
+          %button.inline-flex.items-center.px-4.sm:px-6.py-2.sm:py-3.bg-yellow-600.hover:bg-yellow-700.text-white.font-medium.rounded-lg.transition-colors.duration-200.shadow-md.hover:shadow-lg.gap-2.text-sm.sm:text-base{type: 'button', onclick: 'openEditModal()'}
             %i.fas.fa-edit
-            %span Edit Invoice
+            %span Edit
 
           / Delete Button
           = form_with url: admin_invoice_path(@invoice), method: :delete, local: false, class: 'inline-block' do |f|
-            = f.button type: 'submit', class: 'inline-flex items-center px-6 py-3 bg-red-600 hover:bg-red-700 text-white font-medium rounded-lg transition-colors duration-200 shadow-md hover:shadow-lg gap-2', data: { turbo_confirm: 'Are you sure you want to delete this invoice? This action cannot be undone.' } do
+            = f.button type: 'submit', class: 'inline-flex items-center px-4 sm:px-6 py-2 sm:py-3 bg-red-600 hover:bg-red-700 text-white font-medium rounded-lg transition-colors duration-200 shadow-md hover:shadow-lg gap-2 text-sm sm:text-base', data: { turbo_confirm: 'Are you sure you want to delete this invoice? This action cannot be undone.' } do
               %i.fas.fa-trash-alt
-              %span Delete Invoice
+              %span Delete
 
           / Download/Print Button
-          %button.inline-flex.items-center.px-6.py-3.bg-purple-600.hover:bg-purple-700.text-white.font-medium.rounded-lg.transition-colors.duration-200.shadow-md.hover:shadow-lg.gap-2{type: 'button', onclick: 'window.print()'}
+          %button.inline-flex.items-center.px-4.sm:px-6.py-2.sm:py-3.bg-purple-600.hover:bg-purple-700.text-white.font-medium.rounded-lg.transition-colors.duration-200.shadow-md.hover:shadow-lg.gap-2.text-sm.sm:text-base{type: 'button', onclick: 'window.print()'}
             %i.fas.fa-print
-            %span Print Invoice
+            %span Print
 
     / Invoice Timeline (Screen Only)
-    .mt-8.bg-white.shadow-lg.rounded-xl.overflow-hidden.p-6.no-print
-      %h3.text-lg.font-semibold.text-gray-900.mb-4.flex.items-center
-        %i.fas.fa-history.text-blue-600.mr-2
+    .mt-6.sm:mt-8.bg-white.shadow-lg.rounded-xl.overflow-hidden.p-4.sm:p-6.no-print
+      %h3.text-base.sm:text-lg.font-semibold.text-gray-900.mb-3.sm:mb-4.flex.items-center
+        %i.fas.fa-history.mr-2{style: "color: #3A6363;"}
         Invoice Timeline
-      .space-y-4
+      .space-y-3.sm:space-y-4
         / Created Event
         .flex.items-start
-          .bg-blue-100.rounded-full.p-2.mr-4
-            %i.fas.fa-plus-circle.text-blue-600
+          .rounded-full.p-2.mr-3.sm:mr-4{style: "background-color: #e8f0f0;"}
+            %i.fas.fa-plus-circle{style: "color: #3A6363;"}
           %div
-            %p.text-sm.font-medium.text-gray-900 Invoice Created
+            %p.text-xs.sm:text-sm.font-medium.text-gray-900 Invoice Created
             %p.text-xs.text-gray-500= @invoice.created_at.strftime('%B %d, %Y at %I:%M %p')
-        
+
         / Updated Event (if different from created)
         - if @invoice.updated_at != @invoice.created_at
           .flex.items-start
-            .bg-yellow-100.rounded-full.p-2.mr-4
+            .bg-yellow-100.rounded-full.p-2.mr-3.sm:mr-4
               %i.fas.fa-edit.text-yellow-600
             %div
-              %p.text-sm.font-medium.text-gray-900 Last Updated
+              %p.text-xs.sm:text-sm.font-medium.text-gray-900 Last Updated
               %p.text-xs.text-gray-500= @invoice.updated_at.strftime('%B %d, %Y at %I:%M %p')
-        
+
         / Payment Status
         - if @invoice.payment_status == 'paid'
           .flex.items-start
-            .bg-green-100.rounded-full.p-2.mr-4
+            .bg-green-100.rounded-full.p-2.mr-3.sm:mr-4
               %i.fas.fa-check-circle.text-green-600
             %div
-              %p.text-sm.font-medium.text-gray-900 Marked as Paid
+              %p.text-xs.sm:text-sm.font-medium.text-gray-900 Marked as Paid
               %p.text-xs.text-gray-500 Payment received
 
 / Print-Only Invoice Layout
@@ -259,63 +280,64 @@
   .company-stamp-section
     = image_tag 'company-stamp.png', alt: 'stamp', class: 'h-22 w-auto pl-20 pt-5'
 
-/ Edit Invoice Modal (unchanged)
+/ Edit Invoice Modal
 #editInvoiceModal.fixed.inset-0.bg-gray-900.bg-opacity-50.hidden.z-50.overflow-y-auto
-  .flex.items-center.justify-center.min-h-screen.px-4.py-6
-    .bg-white.rounded-2xl.shadow-2xl.w-full.max-w-4xl.relative.transform.transition-all
+  .flex.items-center.justify-center.min-h-screen.px-4.py-4.sm:py-6
+    .bg-white.rounded-xl.sm:rounded-2xl.shadow-2xl.w-full.max-w-4xl.relative.transform.transition-all.max-h-screen.overflow-y-auto
       / Modal Header
-      .bg-gradient-to-r.from-yellow-600.to-orange-600.px-6.py-4.rounded-t-2xl
+      .px-4.sm:px-6.py-3.sm:py-4.rounded-t-xl.sm:rounded-t-2xl.sticky.top-0.z-10{style: "background: linear-gradient(to right, #3A6363, #2d4d4d);"}
         .flex.justify-between.items-center
-          %h3.text-xl.font-bold.text-white
+          %h3.text-base.sm:text-xl.font-bold.text-white
             %i.fas.fa-edit.mr-2
-            Edit Invoice ##{@invoice.id}
+            %span.hidden.sm:inline Edit Invoice ##{@invoice.id}
+            %span.sm:hidden Edit Invoice
           %button.text-white.hover:text-gray-200.transition-colors{type: 'button', onclick: 'closeEditModal()'}
-            %i.fas.fa-times.text-2xl
+            %i.fas.fa-times.text-xl.sm:text-2xl
 
       / Modal Body
-      .p-6
-        = form_with(model: [:admin, @invoice], url: admin_invoice_path(@invoice), method: :patch, local: true, html: { class: 'space-y-6' }) do |f|
+      .p-4.sm:p-6
+        = form_with(model: [:admin, @invoice], url: admin_invoice_path(@invoice), method: :patch, local: true, html: { class: 'space-y-4 sm:space-y-6' }) do |f|
           / Payment Status
           .space-y-1
             = f.label :payment_status, 'Payment Status', class: 'block text-sm font-medium text-gray-700'
-            = f.select :payment_status, Invoice::PAYMENT_STATUSES.map { |status| [status.capitalize, status] }, {}, class: 'mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-yellow-500 focus:ring-yellow-500 sm:text-sm px-4 py-2 border'
+            = f.select :payment_status, Invoice::PAYMENT_STATUSES.map { |status| [status.capitalize, status] }, {}, class: 'mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-yellow-500 focus:ring-yellow-500 text-sm px-3 sm:px-4 py-2 border', style: 'transition: all 0.2s;', onfocus: "this.style.borderColor='#3A6363'; this.style.boxShadow='0 0 0 3px rgba(58, 99, 99, 0.1)'", onblur: "this.style.borderColor='#d1d5db'; this.style.boxShadow='none'"
 
           / Invoice Items
-          .space-y-4
-            .flex.items-center.justify-between
+          .space-y-3.sm:space-y-4
+            .flex.flex-col.sm:flex-row.sm:items-center.sm:justify-between.gap-2
               %label.block.text-sm.font-medium.text-gray-700 Invoice Items
-              %button.inline-flex.items-center.px-3.py-2.text-sm.font-medium.text-blue-600.hover:text-blue-700.hover:bg-blue-50.rounded-md.transition-colors{type: 'button', onclick: 'addInvoiceItem()'}
+              %button.inline-flex.items-center.px-3.py-2.text-sm.font-medium.text-white.rounded-md.transition-colors.self-start{type: 'button', onclick: 'addInvoiceItem()', style: 'background-color: #3A6363;', onmouseover: "this.style.backgroundColor='#2d4d4d'", onmouseout: "this.style.backgroundColor='#3A6363'"}
                 %i.fas.fa-plus-circle.mr-1
                 Add Item
 
             #invoice-items-container
               = f.fields_for :invoice_items do |item_fields|
-                .invoice-item-row.bg-gray-50.rounded-lg.p-4.space-y-3.mb-3{data: { item_id: item_fields.object.id }}
-                  .flex.items-start.gap-3
+                .invoice-item-row.bg-gray-50.rounded-lg.p-3.sm:p-4.space-y-3.mb-3{data: { item_id: item_fields.object.id }}
+                  .flex.items-start.gap-2.sm:gap-3
                     .flex-grow.grid.grid-cols-1.md:grid-cols-2.gap-3
                       .space-y-1
                         = item_fields.label :description, 'Description', class: 'block text-xs font-medium text-gray-700'
-                        = item_fields.text_area :description, rows: 2, class: 'mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-yellow-500 focus:ring-yellow-500 sm:text-sm px-3 py-2 border', placeholder: 'Item description', required: true
+                        = item_fields.text_area :description, rows: 2, class: 'mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-yellow-500 focus:ring-yellow-500 text-sm px-3 py-2 border', placeholder: 'Item description', required: true, style: 'transition: all 0.2s;', onfocus: "this.style.borderColor='#3A6363'; this.style.boxShadow='0 0 0 3px rgba(58, 99, 99, 0.1)'", onblur: "this.style.borderColor='#d1d5db'; this.style.boxShadow='none'"
 
                       .space-y-1
                         = item_fields.label :amount, 'Amount', class: 'block text-xs font-medium text-gray-700'
                         .mt-1.relative.rounded-md.shadow-sm
                           .absolute.inset-y-0.left-0.pl-3.flex.items-center.pointer-events-none
-                            %span.text-gray-500.sm:text-sm AED
-                          = item_fields.number_field :amount, step: '0.01', class: 'block w-full pl-12 pr-3 py-2 border border-gray-300 rounded-md focus:ring-yellow-500 focus:border-yellow-500 sm:text-sm', placeholder: '0.00', required: true
+                            %span.text-gray-500.text-sm AED
+                          = item_fields.number_field :amount, step: '0.01', class: 'block w-full pl-12 pr-3 py-2 border border-gray-300 rounded-md focus:ring-yellow-500 focus:border-yellow-500 text-sm', placeholder: '0.00', required: true, style: 'transition: all 0.2s;', onfocus: "this.style.borderColor='#3A6363'; this.style.boxShadow='0 0 0 3px rgba(58, 99, 99, 0.1)'", onblur: "this.style.borderColor='#d1d5db'; this.style.boxShadow='none'"
 
-                    %button.inline-flex.items-center.justify-center.w-10.h-10.text-red-600.hover:text-red-700.hover:bg-red-50.rounded-md.transition-colors.mt-6{type: 'button', onclick: 'removeInvoiceItem(this)'}
-                      %i.fas.fa-trash-alt
+                    %button.inline-flex.items-center.justify-center.w-8.h-8.sm:w-10.sm:h-10.text-red-600.hover:text-red-700.hover:bg-red-50.rounded-md.transition-colors.mt-6{type: 'button', onclick: 'removeInvoiceItem(this)'}
+                      %i.fas.fa-trash-alt.text-sm.sm:text-base
 
                   - if item_fields.object.persisted?
                     = item_fields.hidden_field :id
                     = item_fields.hidden_field :_destroy, class: 'destroy-field'
 
           / Submit Button
-          .flex.items-center.justify-end.gap-4.pt-4.border-t
-            %button.inline-flex.items-center.px-4.py-2.border.border-gray-300.shadow-sm.text-sm.font-medium.rounded-md.text-gray-700.bg-white.hover:bg-gray-50.focus:outline-none.focus:ring-2.focus:ring-offset-2.focus:ring-yellow-500{type: 'button', onclick: 'closeEditModal()'}
+          .flex.flex-col.sm:flex-row.items-stretch.sm:items-center.justify-end.gap-2.sm:gap-4.pt-4.border-t
+            %button.inline-flex.items-center.justify-center.px-4.py-2.border.border-gray-300.shadow-sm.text-sm.font-medium.rounded-md.text-gray-700.bg-white.hover:bg-gray-50.focus:outline-none.focus:ring-2.focus:ring-offset-2{type: 'button', onclick: 'closeEditModal()', style: 'transition: all 0.2s;', onfocus: "this.style.borderColor='#3A6363'; this.style.boxShadow='0 0 0 3px rgba(58, 99, 99, 0.1)'"}
               Cancel
-            = f.submit 'Update Invoice', class: 'inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-yellow-600 hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500'
+            = f.submit 'Update Invoice', class: 'inline-flex items-center justify-center px-6 py-3 border border-transparent text-sm sm:text-base font-medium rounded-md shadow-sm text-white focus:outline-none focus:ring-2 focus:ring-offset-2 transition-colors', style: 'background-color: #3A6363;', onmouseover: "this.style.backgroundColor='#2d4d4d'", onmouseout: "this.style.backgroundColor='#3A6363'"
 
 :javascript
   let itemIndex = #{@invoice.invoice_items.size};
@@ -333,25 +355,25 @@
   function addInvoiceItem() {
     const container = document.getElementById('invoice-items-container');
     const newItem = `
-      <div class="invoice-item-row bg-gray-50 rounded-lg p-4 space-y-3 mb-3">
-        <div class="flex items-start gap-3">
+      <div class="invoice-item-row bg-gray-50 rounded-lg p-3 sm:p-4 space-y-3 mb-3">
+        <div class="flex items-start gap-2 sm:gap-3">
           <div class="flex-grow grid grid-cols-1 md:grid-cols-2 gap-3">
             <div class="space-y-1">
               <label class="block text-xs font-medium text-gray-700">Description</label>
-              <textarea name="invoice[invoice_items_attributes][${itemIndex}][description]" rows="2" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-yellow-500 focus:ring-yellow-500 sm:text-sm px-3 py-2 border" placeholder="Item description" required></textarea>
+              <textarea name="invoice[invoice_items_attributes][${itemIndex}][description]" rows="2" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-yellow-500 focus:ring-yellow-500 text-sm px-3 py-2 border" placeholder="Item description" required style="transition: all 0.2s;" onfocus="this.style.borderColor='#3A6363'; this.style.boxShadow='0 0 0 3px rgba(58, 99, 99, 0.1)'" onblur="this.style.borderColor='#d1d5db'; this.style.boxShadow='none'"></textarea>
             </div>
             <div class="space-y-1">
               <label class="block text-xs font-medium text-gray-700">Amount</label>
               <div class="mt-1 relative rounded-md shadow-sm">
                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <span class="text-gray-500 sm:text-sm">AED</span>
+                  <span class="text-gray-500 text-sm">AED</span>
                 </div>
-                <input type="number" step="0.01" name="invoice[invoice_items_attributes][${itemIndex}][amount]" class="block w-full pl-12 pr-3 py-4 border border-gray-300 rounded-md focus:ring-yellow-500 focus:border-yellow-500 sm:text-sm" placeholder="0.00" required />
+                <input type="number" step="0.01" name="invoice[invoice_items_attributes][${itemIndex}][amount]" class="block w-full pl-12 pr-3 py-2 border border-gray-300 rounded-md focus:ring-yellow-500 focus:border-yellow-500 text-sm" placeholder="0.00" required style="transition: all 0.2s;" onfocus="this.style.borderColor='#3A6363'; this.style.boxShadow='0 0 0 3px rgba(58, 99, 99, 0.1)'" onblur="this.style.borderColor='#d1d5db'; this.style.boxShadow='none'" />
               </div>
             </div>
           </div>
-          <button type="button" class="inline-flex items-center justify-center w-10 h-10 text-red-600 hover:text-red-700 hover:bg-red-50 rounded-md transition-colors mt-6" onclick="removeInvoiceItem(this)">
-            <i class="fas fa-trash-alt"></i>
+          <button type="button" class="inline-flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 text-red-600 hover:text-red-700 hover:bg-red-50 rounded-md transition-colors mt-6" onclick="removeInvoiceItem(this)">
+            <i class="fas fa-trash-alt text-sm sm:text-base"></i>
           </button>
         </div>
       </div>
@@ -363,7 +385,7 @@
   function removeInvoiceItem(button) {
     const itemRow = button.closest('.invoice-item-row');
     const destroyField = itemRow.querySelector('.destroy-field');
-    
+
     if (destroyField) {
       // For existing items, mark for destruction
       destroyField.value = '1';
