@@ -1,49 +1,69 @@
 -# app/views/admin/features/index.html.haml
-.container.mx-auto.px-4.py-8
-  .flex.justify-between.items-center.mb-6
-    %h1.text-3xl.font-bold.text-blue-900 Car Features
-    %button#addFeatureBtn.bg-blue-600.hover:bg-blue-700.text-white.px-6.py-2.rounded-lg.flex.items-center.gap-2{type: "button"}
+.container.mx-auto.px-3.sm:px-4.lg:px-6.py-4.sm:py-6.lg:py-8
+  .flex.flex-col.sm:flex-row.justify-between.items-start.sm:items-center.gap-3.sm:gap-4.mb-4.sm:mb-6
+    %h1.text-xl.sm:text-2xl.lg:text-3xl.font-bold{style: "color: #3A6363;"} Car Features
+    %button#addFeatureBtn.text-white.px-4.sm:px-6.py-2.sm:py-2.5.rounded-lg.flex.items-center.gap-2.w-full.sm:w-auto.justify-center.transition-colors{type: "button", style: "background-color: #3A6363;", onmouseover: "this.style.backgroundColor='#2d4d4d'", onmouseout: "this.style.backgroundColor='#3A6363'"}
       %svg.w-5.h-5{fill: "none", stroke: "currentColor", viewBox: "0 0 24 24"}
         %path{"stroke-linecap": "round", "stroke-linejoin": "round", "stroke-width": "2", d: "M12 4v16m8-8H4"}
       %span Add New Feature
 
   -# Search Bar
-  .mb-6
+  .mb-4.sm:mb-6
     .relative
-      %input#searchInput.w-full.px-4.py-3.pl-10.border.border-gray-300.rounded-lg.focus:outline-none.focus:ring-2.focus:ring-blue-500{type: "text", placeholder: "Search features..."}
-      %svg.absolute.left-3.top-3.5.w-5.h-5.text-gray-400{fill: "none", stroke: "currentColor", viewBox: "0 0 24 24"}
+      %input#searchInput.w-full.px-4.py-2.sm:py-3.pl-10.border.border-gray-300.rounded-lg.focus:outline-none.focus:ring-2{type: "text", placeholder: "Search features...", style: "focus:ring-color: #3A6363;"}
+      %svg.absolute.left-3.top-2.5.sm:top-3.5.w-5.h-5.text-gray-400{fill: "none", stroke: "currentColor", viewBox: "0 0 24 24"}
         %path{"stroke-linecap": "round", "stroke-linejoin": "round", "stroke-width": "2", d: "M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"}
 
   -# Common Features Section
-  .mb-8
-    .bg-green-50.border-l-4.border-green-500.p-4.mb-4
-      %h2.text-2xl.font-semibold.text-green-800
+  .mb-6.sm:mb-8
+    .border-l-4.p-3.sm:p-4.mb-3.sm:mb-4.rounded-r-lg{style: "background-color: #d4edda; border-color: #28a745;"}
+      %h2.text-lg.sm:text-xl.lg:text-2xl.font-semibold{style: "color: #28a745;"}
         Common Features
         %span#commonCount.ml-2 (#{@common_features.count})
-      %p.text-green-700.text-sm Standard features available in most vehicles
+      %p.text-sm.sm:text-base{style: "color: #1e7e34;"} Standard features available in most vehicles
 
-    .bg-white.rounded-lg.shadow.overflow-hidden
+    / Mobile Card View - Hidden on Desktop
+    .block.lg:hidden.space-y-3#commonFeaturesMobile
+      - @common_features.each do |feature|
+        .bg-white.rounded-lg.shadow.p-4.border-l-4.feature-row{"data-feature-name": feature.name.downcase, style: "border-color: #28a745;"}
+          .flex.justify-between.items-start.mb-3
+            .flex-1
+              .text-xs.text-gray-500.mb-1 ID: #{feature.id}
+              %h3.text-base.font-bold{style: "color: #3A6363;"}= feature.name
+              %span.inline-flex.items-center.px-2.py-1.rounded-full.text-xs.font-semibold.mt-2{style: "background-color: #d4edda; color: #28a745;"}
+                ✓ Common
+            .flex.flex-col.gap-2.ml-2
+              %button.edit-feature-btn.p-2.rounded.transition-colors{type: "button", "data-feature-id": feature.id, "data-feature-name": feature.name, "data-feature-common": feature.common.to_s, title: "Edit", style: "color: #3A6363;", onmouseover: "this.style.backgroundColor='#e8f0f0'", onmouseout: "this.style.backgroundColor='transparent'"}
+                %svg.w-5.h-5{fill: "none", stroke: "currentColor", viewBox: "0 0 24 24"}
+                  %path{"stroke-linecap": "round", "stroke-linejoin": "round", "stroke-width": "2", d: "M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"}
+              = button_to admin_feature_path(feature), method: :delete, data: { confirm: 'Are you sure?' }, class: "text-red-600 hover:bg-red-50 p-2 rounded transition-colors", title: "Delete" do
+                %svg.w-5.h-5{fill: "none", stroke: "currentColor", viewBox: "0 0 24 24"}
+                  %path{"stroke-linecap": "round", "stroke-linejoin": "round", "stroke-width": "2", d: "M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"}
+      #commonEmptyStateMobile.text-center.py-8.text-gray-500.hidden No common features found
+
+    / Desktop Table View - Hidden on Mobile
+    .bg-white.rounded-lg.shadow.overflow-hidden.hidden.lg:block
       .overflow-y-auto{style: "max-height: 400px;"}
         %table.min-w-full.divide-y.divide-gray-200
-          %thead.bg-gray-50.sticky.top-0.z-10
+          %thead.sticky.top-0.z-10{style: "background-color: #e8f0f0;"}
             %tr
-              %th.px-6.py-3.text-left.text-xs.font-medium.text-gray-500.uppercase.tracking-wider ID
-              %th.px-6.py-3.text-left.text-xs.font-medium.text-gray-500.uppercase.tracking-wider Name
-              %th.px-6.py-3.text-center.text-xs.font-medium.text-gray-500.uppercase.tracking-wider Common
-              %th.px-6.py-3.text-center.text-xs.font-medium.text-gray-500.uppercase.tracking-wider Actions
+              %th.px-6.py-3.text-left.text-xs.font-medium.uppercase.tracking-wider{style: "color: #3A6363;"} ID
+              %th.px-6.py-3.text-left.text-xs.font-medium.uppercase.tracking-wider{style: "color: #3A6363;"} Name
+              %th.px-6.py-3.text-center.text-xs.font-medium.uppercase.tracking-wider{style: "color: #3A6363;"} Common
+              %th.px-6.py-3.text-center.text-xs.font-medium.uppercase.tracking-wider{style: "color: #3A6363;"} Actions
           %tbody#commonFeaturesBody.bg-white.divide-y.divide-gray-200
             - @common_features.each do |feature|
-              %tr.hover:bg-gray-50.feature-row{"data-feature-name": feature.name.downcase}
+              %tr.feature-row.transition-colors{"data-feature-name": feature.name.downcase, onmouseover: "this.style.backgroundColor='#e8f0f0'", onmouseout: "this.style.backgroundColor='white'"}
                 %td.px-6.py-4.whitespace-nowrap
                   .text-sm.text-gray-500= feature.id
                 %td.px-6.py-4.whitespace-nowrap
                   .text-sm.font-medium.text-gray-900= feature.name
                 %td.px-6.py-4.whitespace-nowrap.text-center
-                  %span.px-2.inline-flex.text-xs.leading-5.font-semibold.rounded-full.bg-green-100.text-green-800
+                  %span.px-2.inline-flex.text-xs.leading-5.font-semibold.rounded-full{style: "background-color: #d4edda; color: #28a745;"}
                     ✓ Yes
                 %td.px-6.py-4.whitespace-nowrap.text-center
                   .flex.items-center.justify-center.gap-2
-                    %button.edit-feature-btn.text-blue-600.hover:text-blue-800.p-1{type: "button", "data-feature-id": feature.id, "data-feature-name": feature.name, "data-feature-common": feature.common.to_s, title: "Edit"}
+                    %button.edit-feature-btn.p-1.transition-colors{type: "button", "data-feature-id": feature.id, "data-feature-name": feature.name, "data-feature-common": feature.common.to_s, title: "Edit", style: "color: #3A6363;", onmouseover: "this.style.color='#2d4d4d'", onmouseout: "this.style.color='#3A6363'"}
                       %svg.w-5.h-5{fill: "none", stroke: "currentColor", viewBox: "0 0 24 24"}
                         %path{"stroke-linecap": "round", "stroke-linejoin": "round", "stroke-width": "2", d: "M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"}
                     = button_to admin_feature_path(feature), method: :delete, data: { confirm: 'Are you sure?' }, class: "text-red-600 hover:text-red-800 p-1", title: "Delete" do
@@ -52,25 +72,47 @@
       #commonEmptyState.text-center.py-8.text-gray-500.hidden No common features found
 
   -# Premium Features Section
-  .mb-8
-    .bg-purple-50.border-l-4.border-purple-500.p-4.mb-4
-      %h2.text-2xl.font-semibold.text-purple-800
+  .mb-6.sm:mb-8
+    .border-l-4.p-3.sm:p-4.mb-3.sm:mb-4.rounded-r-lg{style: "background-color: #e8f0f0; border-color: #3A6363;"}
+      %h2.text-lg.sm:text-xl.lg:text-2xl.font-semibold{style: "color: #3A6363;"}
         Premium Features
         %span#premiumCount.ml-2 (#{@premium_features.count})
-      %p.text-purple-700.text-sm Luxury features for high-end vehicles
+      %p.text-sm.sm:text-base{style: "color: #2d4d4d;"} Luxury features for high-end vehicles
 
-    .bg-white.rounded-lg.shadow.overflow-hidden
+    / Mobile Card View - Hidden on Desktop
+    .block.lg:hidden.space-y-3#premiumFeaturesMobile
+      - @premium_features.each do |feature|
+        .bg-white.rounded-lg.shadow.p-4.border-l-4.feature-row{"data-feature-name": feature.name.downcase, style: "border-color: #3A6363;"}
+          .flex.justify-between.items-start.mb-3
+            .flex-1
+              .text-xs.text-gray-500.mb-1 ID: #{feature.id}
+              .flex.items-center
+                %span.text-yellow-500.mr-2 ⭐
+                %h3.text-base.font-bold{style: "color: #3A6363;"}= feature.name
+              %span.inline-flex.items-center.px-2.py-1.rounded-full.text-xs.font-semibold.mt-2{style: "background-color: #e8f0f0; color: #3A6363;"}
+                Premium
+            .flex.flex-col.gap-2.ml-2
+              %button.edit-feature-btn.p-2.rounded.transition-colors{type: "button", "data-feature-id": feature.id, "data-feature-name": feature.name, "data-feature-common": feature.common.to_s, title: "Edit", style: "color: #3A6363;", onmouseover: "this.style.backgroundColor='#e8f0f0'", onmouseout: "this.style.backgroundColor='transparent'"}
+                %svg.w-5.h-5{fill: "none", stroke: "currentColor", viewBox: "0 0 24 24"}
+                  %path{"stroke-linecap": "round", "stroke-linejoin": "round", "stroke-width": "2", d: "M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"}
+              = button_to admin_feature_path(feature), method: :delete, data: { confirm: 'Are you sure?' }, class: "text-red-600 hover:bg-red-50 p-2 rounded transition-colors", title: "Delete" do
+                %svg.w-5.h-5{fill: "none", stroke: "currentColor", viewBox: "0 0 24 24"}
+                  %path{"stroke-linecap": "round", "stroke-linejoin": "round", "stroke-width": "2", d: "M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"}
+      #premiumEmptyStateMobile.text-center.py-8.text-gray-500.hidden No premium features found
+
+    / Desktop Table View - Hidden on Mobile
+    .bg-white.rounded-lg.shadow.overflow-hidden.hidden.lg:block
       .overflow-y-auto{style: "max-height: 400px;"}
         %table.min-w-full.divide-y.divide-gray-200
-          %thead.bg-gray-50.sticky.top-0.z-10
+          %thead.sticky.top-0.z-10{style: "background-color: #e8f0f0;"}
             %tr
-              %th.px-6.py-3.text-left.text-xs.font-medium.text-gray-500.uppercase.tracking-wider ID
-              %th.px-6.py-3.text-left.text-xs.font-medium.text-gray-500.uppercase.tracking-wider Name
-              %th.px-6.py-3.text-center.text-xs.font-medium.text-gray-500.uppercase.tracking-wider Common
-              %th.px-6.py-3.text-center.text-xs.font-medium.text-gray-500.uppercase.tracking-wider Actions
+              %th.px-6.py-3.text-left.text-xs.font-medium.uppercase.tracking-wider{style: "color: #3A6363;"} ID
+              %th.px-6.py-3.text-left.text-xs.font-medium.uppercase.tracking-wider{style: "color: #3A6363;"} Name
+              %th.px-6.py-3.text-center.text-xs.font-medium.uppercase.tracking-wider{style: "color: #3A6363;"} Common
+              %th.px-6.py-3.text-center.text-xs.font-medium.uppercase.tracking-wider{style: "color: #3A6363;"} Actions
           %tbody#premiumFeaturesBody.bg-white.divide-y.divide-gray-200
             - @premium_features.each do |feature|
-              %tr.hover:bg-gray-50.feature-row{"data-feature-name": feature.name.downcase}
+              %tr.feature-row.transition-colors{"data-feature-name": feature.name.downcase, onmouseover: "this.style.backgroundColor='#e8f0f0'", onmouseout: "this.style.backgroundColor='white'"}
                 %td.px-6.py-4.whitespace-nowrap
                   .text-sm.text-gray-500= feature.id
                 %td.px-6.py-4.whitespace-nowrap
@@ -78,11 +120,11 @@
                     %span.text-yellow-500.mr-2 ⭐
                     .text-sm.font-medium.text-gray-900= feature.name
                 %td.px-6.py-4.whitespace-nowrap.text-center
-                  %span.px-2.inline-flex.text-xs.leading-5.font-semibold.rounded-full.bg-gray-100.text-gray-600
+                  %span.px-2.inline-flex.text-xs.leading-5.font-semibold.rounded-full{style: "background-color: #e8f0f0; color: #3A6363;"}
                     No
                 %td.px-6.py-4.whitespace-nowrap.text-center
                   .flex.items-center.justify-center.gap-2
-                    %button.edit-feature-btn.text-blue-600.hover:text-blue-800.p-1{type: "button", "data-feature-id": feature.id, "data-feature-name": feature.name, "data-feature-common": feature.common.to_s, title: "Edit"}
+                    %button.edit-feature-btn.p-1.transition-colors{type: "button", "data-feature-id": feature.id, "data-feature-name": feature.name, "data-feature-common": feature.common.to_s, title: "Edit", style: "color: #3A6363;", onmouseover: "this.style.color='#2d4d4d'", onmouseout: "this.style.color='#3A6363'"}
                       %svg.w-5.h-5{fill: "none", stroke: "currentColor", viewBox: "0 0 24 24"}
                         %path{"stroke-linecap": "round", "stroke-linejoin": "round", "stroke-width": "2", d: "M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"}
                     = button_to admin_feature_path(feature), method: :delete, data: { confirm: 'Are you sure?' }, class: "text-red-600 hover:text-red-800 p-1", title: "Delete" do
@@ -92,36 +134,36 @@
 
 -# Tailwind Modal
 #featureModal.fixed.inset-0.bg-gray-600.bg-opacity-50.overflow-y-auto.h-full.w-full.z-50.hidden
-  .relative.top-20.mx-auto.p-5.border.w-96.shadow-lg.rounded-md.bg-white
+  .relative.top-10.sm:top-20.mx-3.sm:mx-auto.p-4.sm:p-5.border.w-auto.sm:w-96.shadow-lg.rounded-md.bg-white
     .flex.justify-between.items-center.mb-4
-      %h3#featureModalLabel.text-lg.font-semibold.text-gray-900 Add New Feature
+      %h3#featureModalLabel.text-base.sm:text-lg.font-semibold{style: "color: #3A6363;"} Add New Feature
       %button#closeModalBtn.text-gray-400.hover:text-gray-600{type: "button"}
         %svg.w-6.h-6{fill: "none", stroke: "currentColor", viewBox: "0 0 24 24"}
           %path{"stroke-linecap": "round", "stroke-linejoin": "round", "stroke-width": "2", d: "M6 18L18 6M6 6l12 12"}
-    
+
     = form_with(model: [:admin, @feature], html: { id: "featureForm" }) do |f|
       - if @feature.errors.any?
-        .mb-4.bg-red-50.border-l-4.border-red-500.p-4
-          %h4.text-red-800.font-semibold.mb-2
+        .mb-4.border-l-4.p-3.sm:p-4.rounded-r{style: "background-color: #fee; border-color: #dc3545;"}
+          %h4.font-semibold.mb-2{style: "color: #dc3545;"}
             = pluralize(@feature.errors.count, "error")
             prohibited this feature from being saved:
-          %ul.list-disc.list-inside.text-red-700
+          %ul.list-disc.list-inside{style: "color: #dc3545;"}
             - @feature.errors.full_messages.each do |message|
               %li= message
 
       .mb-4
-        = f.label :name, class: "block text-sm font-medium text-gray-700 mb-2"
-        = f.text_field :name, class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500", placeholder: "e.g., Bluetooth Connectivity", required: true
+        = f.label :name, class: "block text-sm font-medium mb-2", style: "color: #3A6363;"
+        = f.text_field :name, class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2", placeholder: "e.g., Bluetooth Connectivity", required: true, style: "focus:ring-color: #3A6363;"
 
       .mb-4
         .flex.items-center
-          = f.check_box :common, class: "h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+          = f.check_box :common, class: "h-4 w-4 border-gray-300 rounded", style: "color: #3A6363; focus:ring-color: #3A6363;"
           = f.label :common, "Common Feature", class: "ml-2 block text-sm text-gray-900"
         %p.text-xs.text-gray-500.mt-1 Check if this is a common/standard feature
 
-      .flex.justify-end.gap-3.mt-6
-        %button#cancelModalBtn.px-4.py-2.bg-gray-200.text-gray-800.rounded-md.hover:bg-gray-300{type: "button"} Cancel
-        = f.submit "Save Feature", class: "px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+      .flex.flex-col.sm:flex-row.justify-end.gap-2.sm:gap-3.mt-6
+        %button#cancelModalBtn.px-4.py-2.bg-gray-200.text-gray-800.rounded-md.hover:bg-gray-300.transition-colors{type: "button"} Cancel
+        = f.submit "Save Feature", class: "px-4 py-2 text-white rounded-md transition-colors", style: "background-color: #3A6363;", onmouseover: "this.style.backgroundColor='#2d4d4d'", onmouseout: "this.style.backgroundColor='#3A6363'"
 
 = javascript_tag do
   :plain
@@ -201,8 +243,8 @@
       // Search functionality
       searchInput.addEventListener('input', function() {
         const searchTerm = this.value.toLowerCase().trim();
-        
-        // Search in common features
+
+        // Search in common features (desktop table)
         const commonRows = document.querySelectorAll('#commonFeaturesBody .feature-row');
         let commonVisibleCount = 0;
         commonRows.forEach(function(row) {
@@ -214,16 +256,39 @@
             row.style.display = 'none';
           }
         });
-        
+
+        // Search in common features (mobile cards)
+        const commonMobileRows = document.querySelectorAll('#commonFeaturesMobile .feature-row');
+        let commonMobileVisibleCount = 0;
+        commonMobileRows.forEach(function(row) {
+          const featureName = row.getAttribute('data-feature-name');
+          if (featureName.includes(searchTerm)) {
+            row.style.display = '';
+            commonMobileVisibleCount++;
+          } else {
+            row.style.display = 'none';
+          }
+        });
+
         // Update common count and show/hide empty state
-        document.getElementById('commonCount').textContent = `(${commonVisibleCount})`;
+        const totalCommonVisible = Math.max(commonVisibleCount, commonMobileVisibleCount);
+        document.getElementById('commonCount').textContent = `(${totalCommonVisible})`;
+
         if (commonVisibleCount === 0) {
           document.getElementById('commonEmptyState').classList.remove('hidden');
         } else {
           document.getElementById('commonEmptyState').classList.add('hidden');
         }
-        
-        // Search in premium features
+
+        if (commonMobileVisibleCount === 0) {
+          const mobileEmpty = document.getElementById('commonEmptyStateMobile');
+          if (mobileEmpty) mobileEmpty.classList.remove('hidden');
+        } else {
+          const mobileEmpty = document.getElementById('commonEmptyStateMobile');
+          if (mobileEmpty) mobileEmpty.classList.add('hidden');
+        }
+
+        // Search in premium features (desktop table)
         const premiumRows = document.querySelectorAll('#premiumFeaturesBody .feature-row');
         let premiumVisibleCount = 0;
         premiumRows.forEach(function(row) {
@@ -235,13 +300,36 @@
             row.style.display = 'none';
           }
         });
-        
+
+        // Search in premium features (mobile cards)
+        const premiumMobileRows = document.querySelectorAll('#premiumFeaturesMobile .feature-row');
+        let premiumMobileVisibleCount = 0;
+        premiumMobileRows.forEach(function(row) {
+          const featureName = row.getAttribute('data-feature-name');
+          if (featureName.includes(searchTerm)) {
+            row.style.display = '';
+            premiumMobileVisibleCount++;
+          } else {
+            row.style.display = 'none';
+          }
+        });
+
         // Update premium count and show/hide empty state
-        document.getElementById('premiumCount').textContent = `(${premiumVisibleCount})`;
+        const totalPremiumVisible = Math.max(premiumVisibleCount, premiumMobileVisibleCount);
+        document.getElementById('premiumCount').textContent = `(${totalPremiumVisible})`;
+
         if (premiumVisibleCount === 0) {
           document.getElementById('premiumEmptyState').classList.remove('hidden');
         } else {
           document.getElementById('premiumEmptyState').classList.add('hidden');
+        }
+
+        if (premiumMobileVisibleCount === 0) {
+          const mobileEmpty = document.getElementById('premiumEmptyStateMobile');
+          if (mobileEmpty) mobileEmpty.classList.remove('hidden');
+        } else {
+          const mobileEmpty = document.getElementById('premiumEmptyStateMobile');
+          if (mobileEmpty) mobileEmpty.classList.add('hidden');
         }
       });
       
