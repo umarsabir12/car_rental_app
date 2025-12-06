@@ -1,145 +1,150 @@
-.container.mx-auto.px-4.py-8
+.container.mx-auto.px-4.sm:px-6.lg:px-8.py-6.sm:py-8
   / ==== Static Vendor Info ====
-  .flex.items-center.bg-white.shadow.mb-6.p-4.rounded-lg.gap-4
+  .flex.flex-col.sm:flex-row.items-start.sm:items-center.bg-white.shadow-md.mb-4.sm:mb-6.p-3.sm:p-4.rounded-lg.gap-3.sm:gap-4
     - if @car.vendor.avatar.attached?
-      %img.w-14.h-14.rounded-full.object-cover{ src: @vendor_avatar_url, alt: 'Vendor Avatar' }
+      %img.w-12.h-12.sm:w-14.sm:h-14.rounded-full.object-cover{ src: @vendor_avatar_url, alt: 'Vendor Avatar' }
     - else
-      %div.w-14.h-14.rounded-full.flex.items-center.justify-center.font-bold.text-white.text-2xl{ style: 'background-color: #3a6363' }
+      %div.w-12.h-12.sm:w-14.sm:h-14.rounded-full.flex.items-center.justify-center.font-bold.text-white.text-xl.sm:text-2xl.flex-shrink-0{ style: 'background-color: #3A6363' }
         = @car.vendor.display_name.first.upcase
-    .flex-1
-      %div.text-lg.font-bold.text-gray-800= "Vendor: #{@car.vendor.display_name}"
-      %div.text-sm.text-gray-500= "Contact: #{@car.vendor.email} | #{@car.vendor.phone}"
+    .flex-1.min-w-0
+      %div.text-base.sm:text-lg.font-bold{style: "color: #3A6363;"}= "Vendor: #{@car.vendor.display_name}"
+      %div.text-xs.sm:text-sm.text-gray-500.break-all= "Contact: #{@car.vendor.email} | #{@car.vendor.phone}"
 
   .bg-white.shadow-lg.rounded-xl.overflow-hidden
     %div{ class: "md:flex" }
       / ==== Left Column: Car Images ====
       %div{ class: "md:w-1/2" }
         / Car Images Slider
-        = car_image_slider(@car, height: 'h-96', show_counter: true, show_navigation: true, show_pagination: true)
+        = car_image_slider(@car, height: 'h-64 sm:h-80 md:h-96', show_counter: true, show_navigation: true, show_pagination: true)
 
       / ==== Right Column: Car Details ====
-      %div{ class: "md:w-1/2 p-6 flex flex-col" }
-        %h1.text-3xl.font-bold.text-gray-800.mb-2= "#{@car.brand} #{@car.model}"
-        %p.text-lg.text-gray-500.mb-2= "#{@car.year} • #{@car.color} • #{@car.transmission&.titleize} • #{@car.category}"
-        %span.inline-block.rounded-full.text-xs.font-semibold.px-2.py-1.mb-4{ class: @car.status == 'Available' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700' }
+      %div{ class: "md:w-1/2 p-4 sm:p-6 flex flex-col" }
+        %h1.text-2xl.sm:text-3xl.font-bold.mb-2{style: "color: #3A6363;"}= "#{@car.brand} #{@car.model}"
+        %p.text-sm.sm:text-base.lg:text-lg.text-gray-500.mb-2.break-words= "#{@car.year} • #{@car.color} • #{@car.transmission&.titleize} • #{@car.category}"
+        %span.inline-block.rounded-full.text-xs.font-semibold.px-2.py-1.mb-3.sm:mb-4{ class: @car.status == 'Available' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700' }
           = @car.status
 
         / ==== Specs Grid ====
-        .grid.grid-cols-2.gap-4.text-sm.text-gray-700.mb-4
-          %div
-            %strong Fuel Type:
-            = @car.fuel_type
-          %div
-            %strong Seats:
-            = @car.seats
-          %div
-            %strong Engine Size:
-            = @car.engine_size
-          %div
-            %strong Air Conditioning:
-            = @car.air_conditioning ? 'Yes' : 'No'
-          %div
-            %strong GPS:
-            = @car.gps ? 'Yes' : 'No'
-          %div
-            %strong Sunroof:
-            = @car.sunroof ? 'Yes' : 'No'
-          %div
-            %strong Bluetooth:
-            = @car.bluetooth ? 'Yes' : 'No'
-          %div
-            %strong Featured:
-            = @car.featured ? 'Yes' : 'No'
-          %div
-            %strong Insurance Policy:
-            = @car.insurance_policy
-          %div
-            %strong Additional Mileage Charge:
-            = @car.additional_mileage_charge ? number_to_currency(@car.additional_mileage_charge) : 'N/A'
-          %div
-            %strong Daily Mileage:
-            = @car.daily_milleage
-          %div
-            %strong Weekly Mileage:
-            = @car.weekly_milleage
-          %div
-            %strong Monthly Mileage:
-            = @car.monthly_milleage
+        .grid.grid-cols-1.sm:grid-cols-2.gap-3.sm:gap-4.text-xs.sm:text-sm.text-gray-700.mb-4
+          %div.py-2.border-b.border-gray-100.sm:border-0
+            %strong{style: "color: #3A6363;"} Fuel Type:
+            %span.ml-2= @car.fuel_type
+          %div.py-2.border-b.border-gray-100.sm:border-0
+            %strong{style: "color: #3A6363;"} Seats:
+            %span.ml-2= @car.seats
+          %div.py-2.border-b.border-gray-100.sm:border-0
+            %strong{style: "color: #3A6363;"} Engine Size:
+            %span.ml-2= @car.engine_size
+          %div.py-2.border-b.border-gray-100.sm:border-0
+            %strong{style: "color: #3A6363;"} Air Conditioning:
+            %span.ml-2= @car.air_conditioning ? 'Yes' : 'No'
+          %div.py-2.border-b.border-gray-100.sm:border-0
+            %strong{style: "color: #3A6363;"} GPS:
+            %span.ml-2= @car.gps ? 'Yes' : 'No'
+          %div.py-2.border-b.border-gray-100.sm:border-0
+            %strong{style: "color: #3A6363;"} Sunroof:
+            %span.ml-2= @car.sunroof ? 'Yes' : 'No'
+          %div.py-2.border-b.border-gray-100.sm:border-0
+            %strong{style: "color: #3A6363;"} Bluetooth:
+            %span.ml-2= @car.bluetooth ? 'Yes' : 'No'
+          %div.py-2.border-b.border-gray-100.sm:border-0
+            %strong{style: "color: #3A6363;"} Featured:
+            %span.ml-2= @car.featured ? 'Yes' : 'No'
+          %div.py-2.border-b.border-gray-100.sm:border-0
+            %strong{style: "color: #3A6363;"} Insurance Policy:
+            %span.ml-2= @car.insurance_policy
+          %div.py-2.border-b.border-gray-100.sm:border-0
+            %strong{style: "color: #3A6363;"} Additional Mileage Charge:
+            %span.ml-2= @car.additional_mileage_charge ? number_to_currency(@car.additional_mileage_charge) : 'N/A'
+          %div.py-2.border-b.border-gray-100.sm:border-0
+            %strong{style: "color: #3A6363;"} Daily Mileage:
+            %span.ml-2= @car.daily_milleage
+          %div.py-2.border-b.border-gray-100.sm:border-0
+            %strong{style: "color: #3A6363;"} Weekly Mileage:
+            %span.ml-2= @car.weekly_milleage
+          %div.py-2.border-b.border-gray-100.sm:border-0
+            %strong{style: "color: #3A6363;"} Monthly Mileage:
+            %span.ml-2= @car.monthly_milleage
 
         / ==== Price and CTA ====
-        .mt-6.flex.items-center.justify-between
-          %span.text-2xl.font-semibold.text-blue-700= number_to_currency(@car.daily_price) + " / day"
-          %span.text-2xl.font-semibold.text-blue-700= number_to_currency(@car.weekly_price) + " / week"
-          %span.text-2xl.font-semibold.text-blue-700= number_to_currency(@car.monthly_price) + " / month"
-          -# = link_to "Book Now", new_booking_path(car_id: @car.id), class: "bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded shadow text-lg font-bold"
+        .mt-4.sm:mt-6.space-y-2.sm:space-y-0.sm:flex.sm:items-center.sm:justify-between.sm:gap-2
+          %span.block.text-lg.sm:text-xl.lg:text-2xl.font-semibold{style: "color: #3A6363;"}
+            = number_to_currency(@car.daily_price)
+            %span.text-xs.sm:text-sm.text-gray-500 / day
+          %span.block.text-lg.sm:text-xl.lg:text-2xl.font-semibold{style: "color: #3A6363;"}
+            = number_to_currency(@car.weekly_price)
+            %span.text-xs.sm:text-sm.text-gray-500 / week
+          %span.block.text-lg.sm:text-xl.lg:text-2xl.font-semibold{style: "color: #3A6363;"}
+            = number_to_currency(@car.monthly_price)
+            %span.text-xs.sm:text-sm.text-gray-500 / month
 
-        %p.text-xs.text-gray-400.mt-4 Last updated: #{@car.updated_at.strftime('%b %d, %Y')}
+        %p.text-xs.text-gray-400.mt-3.sm:mt-4 Last updated: #{@car.updated_at.strftime('%b %d, %Y')}
 
   / ==== Car Document Section ====
-  .bg-white.shadow-lg.rounded-xl.overflow-hidden.mt-8
+  .bg-white.shadow-lg.rounded-xl.overflow-hidden.mt-6.sm:mt-8
     / Header Section
-    .bg-gradient-to-r.from-blue-50.to-indigo-50.px-6.py-4.border-b.border-blue-100
-      %h2.text-xl.font-bold.flex.items-center.gap-3.text-blue-700
-        .p-2.rounded-lg.bg-blue-100
-          %i.fas.fa-id-card.text-blue-600
+    .px-4.sm:px-6.py-3.sm:py-4.border-b{style: "background: linear-gradient(to right, #e8f0f0, #f0f5f5); border-color: #3A6363;"}
+      %h2.text-lg.sm:text-xl.font-bold.flex.items-center.gap-2.sm:gap-3{style: "color: #3A6363;"}
+        .p-1.sm:p-2.rounded-lg{style: "background-color: #d1e0e0;"}
+          %i.fas.fa-id-card{style: "color: #3A6363;"}
         Car Document (Mulkiya)
 
-    / Content Section  
-    .p-6
+    / Content Section
+    .p-4.sm:p-6
       - if @car.car_document.present? && @car.car_document.mulkiya.attached?
-        .space-y-6
+        .space-y-4.sm:space-y-6
           / Document Preview & Actions Row
-          .flex.flex-col.lg:flex-row.gap-6.items-start
+          .flex.flex-col.lg:flex-row.gap-4.sm:gap-6.items-start
             / Document Preview
             .flex-shrink-0.w-full.lg:w-48
-              .w-full.lg:w-48.h-36.rounded-xl.overflow-hidden.bg-gradient-to-br.from-gray-50.to-gray-100.border-2.border-dashed.border-blue-300.flex.items-center.justify-center.relative.group.transition-all.duration-300.hover:shadow-lg
+              .w-full.lg:w-48.h-32.sm:h-36.rounded-xl.overflow-hidden.bg-gradient-to-br.from-gray-50.to-gray-100.border-2.border-dashed.flex.items-center.justify-center.relative.group.transition-all.duration-300.hover:shadow-lg{style: "border-color: #d1e0e0;"}
                 - content_type = @car.car_document.mulkiya.content_type.to_s
                 - if content_type.start_with?("image/")
                   = image_tag url_for(@car.car_document.mulkiya.variant(resize_to_fill: [192, 144])), class: 'w-full h-full object-cover transition-transform duration-300 group-hover:scale-110'
                   .absolute.inset-0.bg-black.bg-opacity-0.group-hover:bg-opacity-20.transition-all.duration-300.flex.items-center.justify-center
-                    %i.fas.fa-search-plus.text-white.opacity-0.group-hover:opacity-100.text-xl
+                    %i.fas.fa-search-plus.text-white.opacity-0.group-hover:opacity-100.text-lg.sm:text-xl
                 - elsif content_type == 'application/pdf'
                   .text-center.space-y-2
-                    %i.fas.fa-file-pdf.text-5xl.text-red-500
-                    %span.text-sm.font-medium.text-gray-600 PDF Document
+                    %i.fas.fa-file-pdf.text-4xl.sm:text-5xl.text-red-500
+                    %span.text-xs.sm:text-sm.font-medium.text-gray-600 PDF Document
                 - else
                   .text-center.space-y-2
-                    %i.fas.fa-file-alt.text-5xl.text-gray-400
-                    %span.text-sm.font-medium.text-gray-600 Document
-            
+                    %i.fas.fa-file-alt.text-4xl.sm:text-5xl.text-gray-400
+                    %span.text-xs.sm:text-sm.font-medium.text-gray-600 Document
+
             / Document Info & Actions
-            .flex-1.min-w-0.space-y-4
+            .flex-1.min-w-0.space-y-3.sm:space-y-4
               / Document Details
-              .bg-gray-50.rounded-lg.p-4
-                %h3.text-lg.font-semibold.text-gray-800.mb-2 Document Information
-                .grid.grid-cols-1.md:grid-cols-2.gap-3.text-sm
-                  %div
+              .rounded-lg.p-3.sm:p-4{style: "background-color: #f0f5f5;"}
+                %h3.text-base.sm:text-lg.font-semibold.mb-2{style: "color: #3A6363;"} Document Information
+                .grid.grid-cols-1.md:grid-cols-2.gap-2.sm:gap-3.text-xs.sm:text-sm
+                  %div.py-1
                     %span.font-medium.text-gray-600 File Name:
-                    %span.ml-2.text-gray-800= @car.car_document.mulkiya.filename
-                  %div
+                    %span.ml-2.text-gray-800.break-all= @car.car_document.mulkiya.filename
+                  %div.py-1
                     %span.font-medium.text-gray-600 File Size:
                     %span.ml-2.text-gray-800= number_to_human_size(@car.car_document.mulkiya.byte_size)
-                  %div
+                  %div.py-1
                     %span.font-medium.text-gray-600 Uploaded:
                     %span.ml-2.text-gray-800= @car.car_document.mulkiya.created_at.strftime('%b %d, %Y at %I:%M %p')
-                  %div
+                  %div.py-1
                     %span.font-medium.text-gray-600 Content Type:
-                    %span.ml-2.text-gray-800= @car.car_document.mulkiya.content_type
-              
+                    %span.ml-2.text-gray-800.break-all= @car.car_document.mulkiya.content_type
+
               / Action Buttons & Status
               .flex.flex-col.sm:flex-row.gap-3.items-start.sm:items-center.justify-between.flex-wrap
                 / Action Buttons
-                .flex.flex-wrap.gap-3
+                .flex.flex-col.sm:flex-row.gap-2.sm:gap-3.w-full.sm:w-auto
                   / Download Button
-                  = link_to url_for(@car.car_document.mulkiya), target: '_blank', class: 'inline-flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-all duration-200 shadow hover:shadow-md whitespace-nowrap' do
+                  = link_to url_for(@car.car_document.mulkiya), target: '_blank', class: 'inline-flex items-center justify-center gap-2 px-3 sm:px-4 py-2 text-white text-xs sm:text-sm font-medium rounded-lg transition-all duration-200 shadow hover:shadow-md whitespace-nowrap', style: 'background-color: #3A6363;', onmouseover: "this.style.backgroundColor='#2d4d4d'", onmouseout: "this.style.backgroundColor='#3A6363'" do
                     %i.fas.fa-download
                     %span Download
 
                   / Show Button
-                  = link_to admin_document_path(@car.car_document, type: 'car_document'), target: '_blank', class: 'inline-flex items-center gap-2 px-4 py-2 bg-green-600 hover:bg-green-700 text-white text-sm font-medium rounded-lg transition-all duration-200 shadow hover:shadow-md whitespace-nowrap' do
+                  = link_to admin_document_path(@car.car_document, type: 'car_document'), target: '_blank', class: 'inline-flex items-center justify-center gap-2 px-3 sm:px-4 py-2 bg-green-600 hover:bg-green-700 text-white text-xs sm:text-sm font-medium rounded-lg transition-all duration-200 shadow hover:shadow-md whitespace-nowrap' do
                     %i.fas.fa-eye
                     %span View Document
-                
+
                 / Status Badge
                 - status = @car.car_document.document_status
                 - case status
@@ -155,22 +160,22 @@
                 - else
                   - badge_classes = 'bg-gray-50 text-gray-700 border-gray-200'
                   - icon_class = 'fas fa-question-circle text-gray-600'
-                
-                .inline-flex.items-center.gap-2.px-4.py-2.rounded-lg.text-sm.font-semibold.border-2.transition-all.duration-200.whitespace-nowrap{class: badge_classes}
+
+                .inline-flex.items-center.gap-2.px-3.sm:px-4.py-2.rounded-lg.text-xs.sm:text-sm.font-semibold.border-2.transition-all.duration-200.whitespace-nowrap.w-full.sm:w-auto.justify-center{class: badge_classes}
                   %i{class: icon_class}
                   %span= status.to_s.titleize
-        
+
       - else
         / Empty State
-        .text-center.py-16.space-y-6
-          .w-32.h-32.mx-auto.rounded-full.bg-blue-50.flex.items-center.justify-center
-            %i.fas.fa-file-plus.text-4xl.text-blue-600
-          .space-y-3
-            %h3.text-xl.font-semibold.text-gray-800 No Car Document Found
-            %p.text-gray-600.max-w-md.mx-auto.leading-relaxed
+        .text-center.py-12.sm:py-16.space-y-4.sm:space-y-6
+          .w-24.h-24.sm:w-32.sm:h-32.mx-auto.rounded-full.flex.items-center.justify-center{style: "background-color: #e8f0f0;"}
+            %i.fas.fa-file-plus.text-3xl.sm:text-4xl{style: "color: #3A6363;"}
+          .space-y-2.sm:space-y-3.px-4
+            %h3.text-lg.sm:text-xl.font-semibold{style: "color: #3A6363;"} No Car Document Found
+            %p.text-sm.sm:text-base.text-gray-600.max-w-md.mx-auto.leading-relaxed
               This car doesn't have a Mulkiya document uploaded yet. The vendor needs to upload the car's registration document to complete the verification process.
-            .mt-6
-              %span.inline-flex.items-center.px-4.py-2.rounded-lg.text-sm.font-medium.bg-gray-100.text-gray-600
+            .mt-4.sm:mt-6
+              %span.inline-flex.items-center.px-3.sm:px-4.py-2.rounded-lg.text-xs.sm:text-sm.font-medium.bg-gray-100.text-gray-600
                 %i.fas.fa-info-circle.mr-2
                 Document required for car verification
 

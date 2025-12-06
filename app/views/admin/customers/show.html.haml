@@ -1,156 +1,241 @@
 -# Admin User Show Page
-.container.mx-auto.px-4.py-8
-  .bg-white.shadow-lg.rounded-xl.overflow-hidden.p-8.flex.flex-col.md:flex-row.gap-8
+.container.mx-auto.px-4.sm:px-6.lg:px-8.py-6.sm:py-8
+  .bg-white.shadow-lg.rounded-xl.overflow-hidden.p-4.sm:p-6.lg:p-8.flex.flex-col.md:flex-row.gap-6.sm:gap-8
     -# %img.w-32.h-32.rounded-full.object-cover.shadow.mb-4.md:mb-0{ src: image_path('placeholder-avatar.png'), alt: @user.full_name.presence || @user.email }
     .flex-1
-      .flex.justify-between.items-center.mb-6
-        %h1.text-3xl.font-extrabold.text-blue-900.mb-2 Customer Details
-        = button_tag type: 'button', class: 'items-center px-4 bg-blue-50 py-2 font-medium text-blue-600 hover:text-blue-800 hover:bg-blue-50 rounded-md transition-colors duration-200 flex gap-2', disabled: true do
+      .flex.flex-col.sm:flex-row.justify-between.items-start.sm:items-center.mb-4.sm:mb-6.gap-3
+        %h1.text-2xl.sm:text-3xl.font-extrabold{style: "color: #3A6363;"} Customer Details
+        = button_tag type: 'button', class: 'w-full sm:w-auto items-center justify-center px-4 py-2 font-medium rounded-md transition-colors duration-200 flex gap-2 text-sm sm:text-base', style: 'background-color: #e8f0f0; color: #3A6363;', disabled: true do
           %i.fas.fa-envelope.mr-2
-          Send Email
+          %span Send Email
       
       / Customer Information
-      .space-y-3
+      .space-y-3.sm:space-y-4
         / Name
         .flex.items-start
-          %i.fas.fa-user.text-blue-600.w-6.mt-1
-          .ml-3
+          %i.fas.fa-user.w-5.sm:w-6.mt-1{style: "color: #3A6363;"}
+          .ml-3.flex-1.min-w-0
             %p.text-xs.font-semibold.text-gray-500.uppercase Name
-            %p.text-lg.font-bold.text-gray-800= @user.full_name.presence || 'Not provided'
-        
+            %p.text-base.sm:text-lg.font-bold.text-gray-800.break-words= @user.full_name.presence || 'Not provided'
+
         / Email
         .flex.items-start
-          %i.fas.fa-envelope.text-blue-600.w-6.mt-1
-          .ml-3
+          %i.fas.fa-envelope.w-5.sm:w-6.mt-1{style: "color: #3A6363;"}
+          .ml-3.flex-1.min-w-0
             %p.text-xs.font-semibold.text-gray-500.uppercase Email
-            %p.text-lg.text-gray-700= @user.email
-        
+            %p.text-base.sm:text-lg.text-gray-700.break-all= @user.email
+
         / Phone
         .flex.items-start
-          %i.fas.fa-phone.text-blue-600.w-6.mt-1
-          .ml-3
+          %i.fas.fa-phone.w-5.sm:w-6.mt-1{style: "color: #3A6363;"}
+          .ml-3.flex-1.min-w-0
             %p.text-xs.font-semibold.text-gray-500.uppercase Phone Number
-            %p.text-lg.text-gray-700= @user.phone.presence || 'Not provided'
-        
+            %p.text-base.sm:text-lg.text-gray-700= @user.phone.presence || 'Not provided'
+
         / WhatsApp Number
         .flex.items-start
-          %i.fab.fa-whatsapp.text-green-600.w-6.mt-1.text-xl
-          .ml-3
+          %i.fab.fa-whatsapp.text-green-600.w-5.sm:w-6.mt-1.text-lg.sm:text-xl
+          .ml-3.flex-1.min-w-0
             %p.text-xs.font-semibold.text-gray-500.uppercase.flex.items-center
               WhatsApp Number
             - if @user.whatsapp_number.present?
-              .flex.items-center.gap-3
-                %p.text-lg.text-gray-700= @user.whatsapp_display || @user.whatsapp_number
-                = link_to @user.whatsapp_link, target: '_blank', class: 'inline-flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white font-semibold px-3 py-1 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg text-sm' do
+              .flex.flex-col.sm:flex-row.items-start.sm:items-center.gap-2.sm:gap-3
+                %p.text-base.sm:text-lg.text-gray-700= @user.whatsapp_display || @user.whatsapp_number
+                = link_to @user.whatsapp_link, target: '_blank', class: 'inline-flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white font-semibold px-3 py-1.5 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg text-xs sm:text-sm' do
                   %i.fab.fa-whatsapp
                   %span Chat
             - else
-              %p.text-lg.text-gray-500.italic Not provided
-        
+              %p.text-base.sm:text-lg.text-gray-500.italic Not provided
+
         / Address
         - if @user.home_address.present?
           .flex.items-start
-            %i.fas.fa-home.text-blue-600.w-6.mt-1
-            .ml-3
+            %i.fas.fa-home.w-5.sm:w-6.mt-1{style: "color: #3A6363;"}
+            .ml-3.flex-1.min-w-0
               %p.text-xs.font-semibold.text-gray-500.uppercase Home Address
-              %p.text-lg.text-gray-700= @user.home_address
-        
+              %p.text-base.sm:text-lg.text-gray-700.break-words= @user.home_address
+
         / Nationality
         .flex.items-start
-          %i.fas.fa-globe.text-blue-600.w-6.mt-1
-          .ml-3
+          %i.fas.fa-globe.w-5.sm:w-6.mt-1{style: "color: #3A6363;"}
+          .ml-3.flex-1.min-w-0
             %p.text-xs.font-semibold.text-gray-500.uppercase Status
             - if @user.nationality.present?
-              %span.inline-flex.items-center.px-3.py-1.rounded-full.text-sm.font-semibold{class: @user.nationality == 'resident' ? 'bg-blue-100 text-blue-700' : 'bg-yellow-100 text-yellow-700'}
-                %i{class: @user.nationality == 'resident' ? 'fas fa-home mr-2' : 'fas fa-plane mr-2'}
+              %span.inline-flex.items-center.px-2.sm:px-3.py-1.rounded-full.text-xs.sm:text-sm.font-semibold{class: @user.nationality == 'resident' ? 'bg-blue-100 text-blue-700' : 'bg-yellow-100 text-yellow-700'}
+                %i{class: @user.nationality == 'resident' ? 'fas fa-home mr-1 sm:mr-2' : 'fas fa-plane mr-1 sm:mr-2'}
                 = @user.nationality.capitalize
             - else
-              %p.text-lg.text-gray-500.italic Not specified
-        
+              %p.text-base.sm:text-lg.text-gray-500.italic Not specified
+
         / Member Since
         .flex.items-start
-          %i.fas.fa-calendar-plus.text-blue-600.w-6.mt-1
-          .ml-3
+          %i.fas.fa-calendar-plus.w-5.sm:w-6.mt-1{style: "color: #3A6363;"}
+          .ml-3.flex-1.min-w-0
             %p.text-xs.font-semibold.text-gray-500.uppercase Member Since
-            %p.text-lg.text-gray-700= @user.created_at.strftime('%B %d, %Y')
-        
-        / Terms & Payment Status
-        .flex.items-start.gap-4.pt-2
-          .flex.items-center
-            %i.fas.fa-file-contract.text-blue-600.mr-2
-            - if @user.terms_accepted?
-              %span.inline-flex.items-center.px-3.py-1.rounded-full.text-xs.font-semibold.bg-green-100.text-green-700
-                %i.fas.fa-check-circle.mr-1
-                Terms Accepted
-            - else
-              %span.inline-flex.items-center.px-3.py-1.rounded-full.text-xs.font-semibold.bg-red-100.text-red-700
-                %i.fas.fa-times-circle.mr-1
-                Terms Not Accepted
-          
-          .flex.items-center
-            %i.fas.fa-credit-card.text-blue-600.mr-2
-            - if @user.payment_done?
-              %span.inline-flex.items-center.px-3.py-1.rounded-full.text-xs.font-semibold.bg-green-100.text-green-700
-                %i.fas.fa-check-circle.mr-1
-                Payment Done
-            - else
-              %span.inline-flex.items-center.px-3.py-1.rounded-full.text-xs.font-semibold.bg-red-100.text-red-700
-                %i.fas.fa-times-circle.mr-1
-                Payment Not Done
+            %p.text-base.sm:text-lg.text-gray-700= @user.created_at.strftime('%B %d, %Y')
 
-  .mt-10
-    %h2.text-2xl.font-bold.text-blue-900.mb-4 Bookings
+        / Terms & Payment Status
+        .flex.flex-col.sm:flex-row.items-start.sm:items-start.gap-3.sm:gap-4.pt-2
+          .flex.items-center
+            %i.fas.fa-file-contract.mr-2{style: "color: #3A6363;"}
+            - if @user.terms_accepted?
+              %span.inline-flex.items-center.px-2.sm:px-3.py-1.rounded-full.text-xs.font-semibold.bg-green-100.text-green-700
+                %i.fas.fa-check-circle.mr-1
+                %span.hidden.sm:inline Terms Accepted
+                %span.sm:hidden Accepted
+            - else
+              %span.inline-flex.items-center.px-2.sm:px-3.py-1.rounded-full.text-xs.font-semibold.bg-red-100.text-red-700
+                %i.fas.fa-times-circle.mr-1
+                %span.hidden.sm:inline Terms Not Accepted
+                %span.sm:hidden Not Accepted
+
+          .flex.items-center
+            %i.fas.fa-credit-card.mr-2{style: "color: #3A6363;"}
+            - if @user.payment_done?
+              %span.inline-flex.items-center.px-2.sm:px-3.py-1.rounded-full.text-xs.font-semibold.bg-green-100.text-green-700
+                %i.fas.fa-check-circle.mr-1
+                %span.hidden.sm:inline Payment Done
+                %span.sm:hidden Paid
+            - else
+              %span.inline-flex.items-center.px-2.sm:px-3.py-1.rounded-full.text-xs.font-semibold.bg-red-100.text-red-700
+                %i.fas.fa-times-circle.mr-1
+                %span.hidden.sm:inline Payment Not Done
+                %span.sm:hidden Unpaid
+
+  .mt-6.sm:mt-8.lg:mt-10
+    %h2.text-xl.sm:text-2xl.font-bold.mb-3.sm:mb-4{style: "color: #3A6363;"} Bookings
     - if @user.bookings.any?
-      .overflow-x-auto
+      / Mobile Card View - Hidden on Desktop
+      .block.lg:hidden.space-y-3.sm:space-y-4
+        - @user.bookings.each do |booking|
+          .bg-white.rounded-lg.shadow-md.p-4.border-l-4{style: "border-color: #3A6363;"}
+            .space-y-2
+              .flex.justify-between.items-center.pb-2.border-b.border-gray-100
+                %span.text-xs.font-medium.text-gray-500 Car
+                %span.text-sm.font-semibold.text-gray-900= booking.car&.model || 'N/A'
+
+              .flex.justify-between.items-center.py-2.border-b.border-gray-100
+                %span.text-xs.font-medium.text-gray-500 Start Date
+                %span.text-sm.text-gray-900= booking.start_date
+
+              .flex.justify-between.items-center.py-2.border-b.border-gray-100
+                %span.text-xs.font-medium.text-gray-500 End Date
+                %span.text-sm.text-gray-900= booking.end_date
+
+              .flex.justify-between.items-center.py-2.border-b.border-gray-100
+                %span.text-xs.font-medium.text-gray-500 Status
+                %span.text-sm.text-gray-900= booking.status
+
+              .flex.justify-between.items-center.py-2.border-b.border-gray-100
+                %span.text-xs.font-medium.text-gray-500 Payment
+                %div
+                  - if booking.payment_processed?
+                    %span.inline-flex.items-center.bg-green-100.text-green-700.rounded-full.px-2.py-1.text-xs.font-semibold
+                      %i.fas.fa-check.mr-1
+                      Paid
+                  - else
+                    %span.inline-flex.items-center.bg-red-100.text-red-700.rounded-full.px-2.py-1.text-xs.font-semibold
+                      %i.fas.fa-times.mr-1
+                      Unpaid
+
+              .pt-2
+                = link_to admin_car_path(booking.car), class: 'inline-flex items-center justify-center gap-2 w-full px-4 py-2 text-white font-semibold rounded-lg transition-colors shadow-md text-sm', style: 'background-color: #3A6363;', onmouseover: "this.style.backgroundColor='#2d4d4d'", onmouseout: "this.style.backgroundColor='#3A6363'" do
+                  %i.fas.fa-eye
+                  %span View Car
+
+      / Desktop Table View - Hidden on Mobile
+      .overflow-x-auto.hidden.lg:block
         %table.min-w-full.border-separate{ style: "border-spacing: 0 0.75rem;" }
           %thead
             %tr
-              %th.px-6.py-3.text-left.text-xs.font-bold.text-blue-700.uppercase.bg-blue-50.rounded-l-lg Car
-              %th.px-6.py-3.text-left.text-xs.font-bold.text-blue-700.uppercase.bg-blue-50 Start Date
-              %th.px-6.py-3.text-left.text-xs.font-bold.text-blue-700.uppercase.bg-blue-50 End Date
-              %th.px-6.py-3.text-left.text-xs.font-bold.text-blue-700.uppercase.bg-blue-50 Status
-              %th.px-6.py-3.text-left.text-xs.font-bold.text-blue-700.uppercase.bg-blue-50 Payment
-              %th.px-6.py-3.text-left.text-xs.font-bold.text-blue-700.uppercase.bg-blue-50.rounded-r-lg Action
+              %th.px-6.py-3.text-left.text-xs.font-bold.uppercase.rounded-l-lg{style: "color: #3A6363; background-color: #e8f0f0;"} Car
+              %th.px-6.py-3.text-left.text-xs.font-bold.uppercase{style: "color: #3A6363; background-color: #e8f0f0;"} Start Date
+              %th.px-6.py-3.text-left.text-xs.font-bold.uppercase{style: "color: #3A6363; background-color: #e8f0f0;"} End Date
+              %th.px-6.py-3.text-left.text-xs.font-bold.uppercase{style: "color: #3A6363; background-color: #e8f0f0;"} Status
+              %th.px-6.py-3.text-left.text-xs.font-bold.uppercase{style: "color: #3A6363; background-color: #e8f0f0;"} Payment
+              %th.px-6.py-3.text-left.text-xs.font-bold.uppercase.rounded-r-lg{style: "color: #3A6363; background-color: #e8f0f0;"} Action
           %tbody
             - @user.bookings.each do |booking|
-              %tr.bg-blue-50.rounded-lg.shadow.hover:bg-blue-100.transition
+              %tr.rounded-lg.shadow.transition{style: "background-color: #e8f0f0;", onmouseover: "this.style.backgroundColor='#d1e0e0'", onmouseout: "this.style.backgroundColor='#e8f0f0'"}
                 %td.px-6.py-4.font-medium.text-gray-900.rounded-l-lg= booking.car&.model || 'N/A'
                 %td.px-6.py-4.text-gray-700= booking.start_date
                 %td.px-6.py-4.text-gray-700= booking.end_date
                 %td.px-6.py-4.text-gray-700= booking.status
                 %td.px-6.py-4.text-gray-700
                   - if booking.payment_processed?
-                    %span.inline-block.bg-green-100.text-green-700.rounded-full.px-3.py-1.text-xs.font-semibold Paid
+                    %span.inline-block.bg-green-100.text-green-700.rounded-full.px-3.py-1.text-xs.font-semibold
+                      %i.fas.fa-check.mr-1
+                      Paid
                   - else
-                    %span.inline-block.bg-red-100.text-red-700.rounded-full.px-3.py-1.text-xs.font-semibold Unpaid
+                    %span.inline-block.bg-red-100.text-red-700.rounded-full.px-3.py-1.text-xs.font-semibold
+                      %i.fas.fa-times.mr-1
+                      Unpaid
                 %td.px-6.py-4.rounded-r-lg
-                  = link_to 'View Car', admin_car_path(booking.car), class: 'inline-block bg-blue-100 text-blue-800 font-semibold px-4 py-1 rounded-lg hover:bg-blue-200 transition'
+                  = link_to admin_car_path(booking.car), class: 'inline-flex items-center gap-2 font-semibold px-4 py-1.5 rounded-lg transition-colors', style: 'background-color: #3A6363; color: white;', onmouseover: "this.style.backgroundColor='#2d4d4d'", onmouseout: "this.style.backgroundColor='#3A6363'" do
+                    %i.fas.fa-eye
+                    %span View Car
     - else
-      %p.text-gray-500 No bookings found for this user.
+      %p.text-sm.sm:text-base.text-gray-500 No bookings found for this user.
       
-  .mt-10
-    %h2.text-2xl.font-bold.text-blue-900.mb-4 Documents
+  .mt-6.sm:mt-8.lg:mt-10
+    %h2.text-xl.sm:text-2xl.font-bold.mb-3.sm:mb-4{style: "color: #3A6363;"} Documents
     - if @user.documents.any?
-      .overflow-x-auto
+      / Mobile Card View - Hidden on Desktop
+      .block.lg:hidden.space-y-3.sm:space-y-4
+        - @user.documents.each do |doc|
+          .bg-white.rounded-lg.shadow-md.p-4.border-l-4{style: "border-color: #3A6363;"}
+            .space-y-2
+              .flex.justify-between.items-center.pb-2.border-b.border-gray-100
+                %span.text-xs.font-medium.text-gray-500 Document Name
+                %span.text-sm.font-semibold.text-gray-900= doc.doc_name
+
+              .flex.justify-between.items-center.py-2.border-b.border-gray-100
+                %span.text-xs.font-medium.text-gray-500 Uploaded At
+                %span.text-sm.text-gray-900= doc.updated_at.strftime('%b %d, %Y')
+
+              .flex.justify-between.items-center.py-2.border-b.border-gray-100
+                %span.text-xs.font-medium.text-gray-500 Status
+                %div
+                  - status_color = doc.status == 'approved' ? 'bg-green-100 text-green-700' : doc.status == 'pending' ? 'bg-yellow-100 text-yellow-700' : 'bg-red-100 text-red-700'
+                  - status_icon = doc.status == 'approved' ? 'fa-check' : doc.status == 'pending' ? 'fa-clock' : 'fa-times'
+                  %span.inline-flex.items-center.rounded-full.px-2.py-1.text-xs.font-semibold{class: status_color}
+                    %i.fas{class: status_icon + ' mr-1'}
+                    = doc.status.titleize
+
+              .pt-2
+                - if doc.images.attached?
+                  = link_to admin_document_path(doc), class: 'inline-flex items-center justify-center gap-2 w-full px-4 py-2 text-white font-semibold rounded-lg transition-colors shadow-md text-sm', style: 'background-color: #3A6363;', onmouseover: "this.style.backgroundColor='#2d4d4d'", onmouseout: "this.style.backgroundColor='#3A6363'", target: '_blank' do
+                    %i.fas.fa-eye
+                    %span View Document
+                - else
+                  %span.inline-flex.items-center.justify-center.w-full.px-4.py-2.text-gray-400.text-sm.border.border-gray-200.rounded-lg Not Uploaded
+
+      / Desktop Table View - Hidden on Mobile
+      .overflow-x-auto.hidden.lg:block
         %table.min-w-full.border-separate{ style: "border-spacing: 0 0.75rem;" }
           %thead
             %tr
-              %th.px-6.py-3.text-left.text-xs.font-bold.text-blue-700.uppercase.bg-blue-50.rounded-l-lg Name
-              %th.px-6.py-3.text-left.text-xs.font-bold.text-blue-700.uppercase.bg-blue-50 Uploaded At
-              %th.px-6.py-3.text-left.text-xs.font-bold.text-blue-700.uppercase.bg-blue-50 Status
-              %th.px-6.py-3.text-left.text-xs.font-bold.text-blue-700.uppercase.bg-blue-50.rounded-r-lg View
+              %th.px-6.py-3.text-left.text-xs.font-bold.uppercase.rounded-l-lg{style: "color: #3A6363; background-color: #e8f0f0;"} Name
+              %th.px-6.py-3.text-left.text-xs.font-bold.uppercase{style: "color: #3A6363; background-color: #e8f0f0;"} Uploaded At
+              %th.px-6.py-3.text-left.text-xs.font-bold.uppercase{style: "color: #3A6363; background-color: #e8f0f0;"} Status
+              %th.px-6.py-3.text-left.text-xs.font-bold.uppercase.rounded-r-lg{style: "color: #3A6363; background-color: #e8f0f0;"} View
           %tbody
             - @user.documents.each do |doc|
-              %tr.bg-blue-50.rounded-lg.shadow.hover:bg-blue-100.transition
+              %tr.rounded-lg.shadow.transition{style: "background-color: #e8f0f0;", onmouseover: "this.style.backgroundColor='#d1e0e0'", onmouseout: "this.style.backgroundColor='#e8f0f0'"}
                 %td.px-6.py-4.font-medium.text-gray-900.rounded-l-lg= doc.doc_name
                 %td.px-6.py-4.text-gray-700= doc.updated_at.strftime('%b %d, %Y')
                 %td.px-6.py-4.text-gray-700
                   - status_color = doc.status == 'approved' ? 'bg-green-100 text-green-700' : doc.status == 'pending' ? 'bg-yellow-100 text-yellow-700' : 'bg-red-100 text-red-700'
-                  %span.inline-block.rounded-full.px-4.py-1.text-xs.font-semibold{class: status_color}= doc.status.titleize
+                  - status_icon = doc.status == 'approved' ? 'fa-check' : doc.status == 'pending' ? 'fa-clock' : 'fa-times'
+                  %span.inline-flex.items-center.rounded-full.px-3.py-1.text-xs.font-semibold{class: status_color}
+                    %i.fas{class: status_icon + ' mr-1'}
+                    = doc.status.titleize
                 %td.px-6.py-4.rounded-r-lg
                   - if doc.images.attached?
-                    = link_to 'View', admin_document_path(doc), class: 'inline-block bg-blue-100 text-blue-800 font-semibold px-4 py-1 rounded-lg hover:bg-blue-200 transition', target: '_blank'
+                    = link_to admin_document_path(doc), class: 'inline-flex items-center gap-2 font-semibold px-4 py-1.5 rounded-lg transition-colors', style: 'background-color: #3A6363; color: white;', onmouseover: "this.style.backgroundColor='#2d4d4d'", onmouseout: "this.style.backgroundColor='#3A6363'", target: '_blank' do
+                      %i.fas.fa-eye
+                      %span View
                   - else
-                    %span.text-gray-400 Not Uploaded
+                    %span.text-gray-400.text-sm Not Uploaded
     - else
-      %p.text-gray-500 No documents found for this user.
+      %p.text-sm.sm:text-base.text-gray-500 No documents found for this user.

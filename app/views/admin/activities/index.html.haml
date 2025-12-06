@@ -1,11 +1,11 @@
 %div.min-h-screen.bg-gray-50
-  .max-w-7xl.mx-auto.px-4.sm:px-6.lg:px-8.py-8
+  .max-w-7xl.mx-auto.px-4.sm:px-6.lg:px-8.py-6.sm:py-8
     / Header Section
-    .mb-8
-      .flex.items-center.justify-between
+    .mb-6.sm:mb-8
+      .flex.flex-col.sm:flex-row.items-start.sm:items-center.justify-between.gap-3
         .flex-1
-          %h1.text-3xl.font-bold.text-gray-900 Activity Tracker
-          %p.text-gray-600 Monitor all customer activities and system events
+          %h1.text-2xl.sm:text-3xl.font-bold{style: "color: #3A6363;"} Activity Tracker
+          %p.text-sm.sm:text-base.text-gray-600 Monitor all customer activities and system events
         -# .flex.gap-3
           = link_to admin_activities_path(format: :csv), class: 'inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50' do
             %i.fas.fa-download.mr-2
@@ -15,131 +15,128 @@
             Back to Dashboard
 
     / Stats Cards
-    .grid.grid-cols-1.md:grid-cols-2.lg:grid-cols-5.gap-6.mb-8
-      .bg-white.overflow-hidden.shadow.rounded-lg
-        .p-5
-          .flex.items-center
-            .flex-shrink-0
-              %i.fas.fa-chart-line.text-2xl.text-blue-600
-            .ml-5.w-0.flex-1
+    .grid.grid-cols-2.md:grid-cols-3.lg:grid-cols-5.gap-3.sm:gap-4.lg:gap-6.mb-6.sm:mb-8
+      .bg-white.overflow-hidden.shadow-md.rounded-lg
+        .p-3.sm:p-4.lg:p-5
+          .flex.flex-col.sm:flex-row.items-center.text-center.sm:text-left
+            .flex-shrink-0.mb-2.sm:mb-0
+              %i.fas.fa-chart-line.text-xl.sm:text-2xl{style: "color: #3A6363;"}
+            .sm:ml-4.lg:ml-5.w-0.flex-1
               %dl
-                %dt.text-sm.font-medium.text-gray-500.truncate Total Activities
-                %dd.text-lg.font-medium.text-gray-900= @stats[:total_activities]
-      
-      .bg-white.overflow-hidden.shadow.rounded-lg
-        .p-5
-          .flex.items-center
-            .flex-shrink-0
-              %i.fas.fa-users.text-2xl.text-blue-600
-            .ml-5.w-0.flex-1
-              %dl
-                %dt.text-sm.font-medium.text-gray-500.truncate Customer Activities
-                %dd.text-lg.font-medium.text-gray-900= @stats[:user_activities]
-      
-      .bg-white.overflow-hidden.shadow.rounded-lg
-        .p-5
-          .flex.items-center
-            .flex-shrink-0
-              %i.fas.fa-store.text-2xl.text-green-600
-            .ml-5.w-0.flex-1
-              %dl
-                %dt.text-sm.font-medium.text-gray-500.truncate Vendor Activities
-                %dd.text-lg.font-medium.text-gray-900= @stats[:vendor_activities]
-      
-      .bg-white.overflow-hidden.shadow.rounded-lg
-        .p-5
-          .flex.items-center
-            .flex-shrink-0
-              %i.fas.fa-calendar-day.text-2xl.text-purple-600
-            .ml-5.w-0.flex-1
-              %dl
-                %dt.text-sm.font-medium.text-gray-500.truncate Today
-                %dd.text-lg.font-medium.text-gray-900= @stats[:today_activities]
-      
-      .bg-white.overflow-hidden.shadow.rounded-lg
-        .p-5
-          .flex.items-center
-            .flex-shrink-0
-              %i.fas.fa-calendar-check.text-2xl.text-orange-600
-            .ml-5.w-0.flex-1
-              %dl
-                %dt.text-sm.font-medium.text-gray-500.truncate Bookings
-                %dd.text-lg.font-medium.text-gray-900= @stats[:booking_activities]
+                %dt.text-xs.sm:text-sm.font-medium.text-gray-500.truncate Total Activities
+                %dd.text-base.sm:text-lg.font-bold.text-gray-900= @stats[:total_activities]
 
-    / Filters Section - Single Line
-    .bg-white.shadow.rounded-lg.mb-8
-      .px-6.py-4
-        = form_with url: admin_activities_path, method: :get, local: true, class: 'flex items-center gap-4 flex-wrap' do |f|
-          .flex.items-center.gap-2
-            = f.label :actor_type, 'Show:', class: 'text-sm font-medium text-gray-700 whitespace-nowrap'
-            = f.select :actor_type, 
-                options_for_select([['All Activities', ''],['Customer Activities', 'user'],['Vendor Activities', 'vendor']], params[:actor_type]), {}, { class: 'px-3 py-1 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 text-sm' }
-          
-          .flex.items-center.gap-2
-            = f.label :action_filter, 'Type:', class: 'text-sm font-medium text-gray-700 whitespace-nowrap'
-            = f.select :action_filter, 
-                options_for_select([['All Activities', ''],['Booking Created', 'booking_created'],['Booking Confirmed', 'booking_confirmed'],['Booking Cancelled', 'booking_cancelled'],['Document Uploaded', 'document_uploaded'],['Document Approved', 'document_approved'],['Document Rejected', 'document_rejected'],['Payment Completed', 'payment_completed'],['Payment Failed', 'payment_failed'],['Profile Updated', 'profile_updated'],['Registration Completed', 'registration_completed'],['Vendor Registration', 'vendor_registration'],['Car Added', 'car_added'],['Car Updated', 'car_updated'],['Car Deleted', 'car_deleted'],['Vendor Deleted', 'vendor_deleted'],['Vendor Restored', 'vendor_restored']], params[:action_filter]), {}, { class: 'px-3 py-1 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 text-sm' }
-          
-          .flex.items-center.gap-2
-            = f.label :date_from, 'From:', class: 'text-sm font-medium text-gray-700 whitespace-nowrap'
-            = f.date_field :date_from, value: params[:date_from], class: 'px-3 py-1 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 text-sm'
-          
-          .flex.items-center.gap-2
-            = f.label :date_to, 'To:', class: 'text-sm font-medium text-gray-700 whitespace-nowrap'
-            = f.date_field :date_to, value: params[:date_to], class: 'px-3 py-1 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 text-sm'
-          
-          .flex.items-center.gap-2
-            = f.submit 'Apply', class: 'px-3 py-1 bg-blue-600 text-white rounded-md hover:bg-blue-700 text-sm'
-            = link_to 'Clear', admin_activities_path, class: 'px-3 py-1 bg-gray-500 text-white rounded-md hover:bg-gray-600 text-sm'
+      .bg-white.overflow-hidden.shadow-md.rounded-lg
+        .p-3.sm:p-4.lg:p-5
+          .flex.flex-col.sm:flex-row.items-center.text-center.sm:text-left
+            .flex-shrink-0.mb-2.sm:mb-0
+              %i.fas.fa-users.text-xl.sm:text-2xl{style: "color: #3A6363;"}
+            .sm:ml-4.lg:ml-5.w-0.flex-1
+              %dl
+                %dt.text-xs.sm:text-sm.font-medium.text-gray-500.truncate Customer Activities
+                %dd.text-base.sm:text-lg.font-bold.text-gray-900= @stats[:user_activities]
+
+      .bg-white.overflow-hidden.shadow-md.rounded-lg
+        .p-3.sm:p-4.lg:p-5
+          .flex.flex-col.sm:flex-row.items-center.text-center.sm:text-left
+            .flex-shrink-0.mb-2.sm:mb-0
+              %i.fas.fa-store.text-xl.sm:text-2xl.text-green-600
+            .sm:ml-4.lg:ml-5.w-0.flex-1
+              %dl
+                %dt.text-xs.sm:text-sm.font-medium.text-gray-500.truncate Vendor Activities
+                %dd.text-base.sm:text-lg.font-bold.text-gray-900= @stats[:vendor_activities]
+
+      .bg-white.overflow-hidden.shadow-md.rounded-lg
+        .p-3.sm:p-4.lg:p-5
+          .flex.flex-col.sm:flex-row.items-center.text-center.sm:text-left
+            .flex-shrink-0.mb-2.sm:mb-0
+              %i.fas.fa-calendar-day.text-xl.sm:text-2xl.text-purple-600
+            .sm:ml-4.lg:ml-5.w-0.flex-1
+              %dl
+                %dt.text-xs.sm:text-sm.font-medium.text-gray-500.truncate Today
+                %dd.text-base.sm:text-lg.font-bold.text-gray-900= @stats[:today_activities]
+
+      .bg-white.overflow-hidden.shadow-md.rounded-lg.col-span-2.md:col-span-1
+        .p-3.sm:p-4.lg:p-5
+          .flex.flex-col.sm:flex-row.items-center.text-center.sm:text-left
+            .flex-shrink-0.mb-2.sm:mb-0
+              %i.fas.fa-calendar-check.text-xl.sm:text-2xl.text-orange-600
+            .sm:ml-4.lg:ml-5.w-0.flex-1
+              %dl
+                %dt.text-xs.sm:text-sm.font-medium.text-gray-500.truncate Bookings
+                %dd.text-base.sm:text-lg.font-bold.text-gray-900= @stats[:booking_activities]
+
+    / Filters Section
+    .bg-white.shadow-md.rounded-lg.mb-6.sm:mb-8
+      .px-4.sm:px-6.py-3.sm:py-4
+        = form_with url: admin_activities_path, method: :get, local: true, class: 'space-y-3' do |f|
+          .grid.grid-cols-1.sm:grid-cols-2.lg:grid-cols-3.gap-3
+            .flex.flex-col.gap-1
+              = f.label :actor_type, 'Show:', class: 'text-xs sm:text-sm font-medium text-gray-700'
+              = f.select :actor_type,
+                  options_for_select([['All Activities', ''],['Customer Activities', 'user'],['Vendor Activities', 'vendor']], params[:actor_type]), {}, { class: 'px-3 py-2 text-sm border border-gray-300 rounded-md transition-all', style: 'transition: all 0.2s;', onfocus: "this.style.borderColor='#3A6363'; this.style.boxShadow='0 0 0 3px rgba(58, 99, 99, 0.1)'", onblur: "this.style.borderColor='#d1d5db'; this.style.boxShadow='none'" }
+
+            .flex.flex-col.gap-1
+              = f.label :action_filter, 'Type:', class: 'text-xs sm:text-sm font-medium text-gray-700'
+              = f.select :action_filter,
+                  options_for_select([['All Activities', ''],['Booking Created', 'booking_created'],['Booking Confirmed', 'booking_confirmed'],['Booking Cancelled', 'booking_cancelled'],['Document Uploaded', 'document_uploaded'],['Document Approved', 'document_approved'],['Document Rejected', 'document_rejected'],['Payment Completed', 'payment_completed'],['Payment Failed', 'payment_failed'],['Profile Updated', 'profile_updated'],['Registration Completed', 'registration_completed'],['Vendor Registration', 'vendor_registration'],['Car Added', 'car_added'],['Car Updated', 'car_updated'],['Car Deleted', 'car_deleted'],['Vendor Deleted', 'vendor_deleted'],['Vendor Restored', 'vendor_restored']], params[:action_filter]), {}, { class: 'px-3 py-2 text-sm border border-gray-300 rounded-md transition-all', style: 'transition: all 0.2s;', onfocus: "this.style.borderColor='#3A6363'; this.style.boxShadow='0 0 0 3px rgba(58, 99, 99, 0.1)'", onblur: "this.style.borderColor='#d1d5db'; this.style.boxShadow='none'" }
+
+            .flex.flex-col.gap-1
+              = f.label :date_from, 'From:', class: 'text-xs sm:text-sm font-medium text-gray-700'
+              = f.date_field :date_from, value: params[:date_from], class: 'px-3 py-2 text-sm border border-gray-300 rounded-md transition-all', style: 'transition: all 0.2s;', onfocus: "this.style.borderColor='#3A6363'; this.style.boxShadow='0 0 0 3px rgba(58, 99, 99, 0.1)'", onblur: "this.style.borderColor='#d1d5db'; this.style.boxShadow='none'"
+
+            .flex.flex-col.gap-1
+              = f.label :date_to, 'To:', class: 'text-xs sm:text-sm font-medium text-gray-700'
+              = f.date_field :date_to, value: params[:date_to], class: 'px-3 py-2 text-sm border border-gray-300 rounded-md transition-all', style: 'transition: all 0.2s;', onfocus: "this.style.borderColor='#3A6363'; this.style.boxShadow='0 0 0 3px rgba(58, 99, 99, 0.1)'", onblur: "this.style.borderColor='#d1d5db'; this.style.boxShadow='none'"
+
+          .flex.gap-2.pt-2
+            = f.submit 'Apply', class: 'flex-1 sm:flex-none px-4 py-2 text-white rounded-md transition text-sm font-medium shadow-md', style: 'background-color: #3A6363;', onmouseover: "this.style.backgroundColor='#2d4d4d'", onmouseout: "this.style.backgroundColor='#3A6363'"
+            = link_to 'Clear', admin_activities_path, class: 'flex-1 sm:flex-none px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600 transition text-sm font-medium shadow-md'
 
 
 
     / Activities List
-    .bg-white.shadow.rounded-lg
-      .px-6.py-4.border-b.border-gray-200
-        %h3.text-lg.font-medium.text-gray-900 Recent Activities
+    .bg-white.shadow-md.rounded-lg
+      .px-4.sm:px-6.py-3.sm:py-4.border-b{style: "border-color: #d1e0e0;"}
+        %h3.text-base.sm:text-lg.font-medium{style: "color: #3A6363;"} Recent Activities
       .divide-y.divide-gray-200
         - if @activities.any?
           - @activities.each do |activity|
-            .p-6.hover:bg-gray-50.transition-colors
-              .flex.items-start.space-x-4
+            .p-4.sm:p-6.transition-colors{style: "transition: background-color 0.2s;", onmouseover: "this.style.backgroundColor='#f9fafa'", onmouseout: "this.style.backgroundColor='white'"}
+              .flex.flex-col.sm:flex-row.items-start.gap-3.sm:gap-4
                 .flex-shrink-0
-                  .w-10.h-10.rounded-full.bg-gray-100.flex.items-center.justify-center
-                    %i{class: "#{activity.action_icon} #{activity.action_color}"}
-                
+                  .w-10.h-10.rounded-full.flex.items-center.justify-center{style: "background-color: #e8f0f0;"}
+                    %i{class: "#{activity.action_icon}", style: "color: #3A6363;"}
+
                 .flex-1.min-w-0
-                  .flex.items-center.justify-between
-                    %div
-                      %p.text-sm.font-medium.text-gray-900= activity.description
-                      %p.text-sm.text-gray-500
-                        %span.font-medium= activity.actor_name
-                        %span.mx-1 •
+                  .flex.flex-col.sm:flex-row.items-start.sm:items-center.justify-between.gap-3
+                    %div.flex-1.min-w-0
+                      %p.text-sm.sm:text-base.font-medium.text-gray-900.break-words= activity.description
+                      .flex.flex-wrap.items-center.gap-2.mt-1.sm:mt-2
+                        %span.text-xs.sm:text-sm.font-medium.text-gray-700= activity.actor_name
+                        %span.text-gray-400.hidden.sm:inline •
                         %span.text-xs.px-2.py-1.rounded-full{class: activity.user.present? ? 'bg-blue-100 text-blue-800' : 'bg-green-100 text-green-800'}= activity.actor_type
-                        %span.mx-1 •
-                        %span= activity.formatted_time
-                    
-                    .flex.items-center.space-x-2
-                      %span.inline-flex.items-center.px-2.5.py-0.5.rounded-full.text-xs.font-medium{class: "bg-#{activity.action_color.gsub('text-', '')}-100 text-#{activity.action_color.gsub('text-', '')}-800"}= activity.action.humanize
-                      = link_to admin_activity_path(activity), class: 'text-blue-600 hover:text-blue-900' do
+                        %span.text-gray-400.hidden.sm:inline •
+                        %span.text-xs.sm:text-sm.text-gray-500= activity.formatted_time
+
+                    .flex.items-center.gap-2.flex-shrink-0
+                      %span.inline-flex.items-center.px-2.py-1.rounded-full.text-xs.font-medium{class: "bg-#{activity.action_color.gsub('text-', '')}-100 text-#{activity.action_color.gsub('text-', '')}-800"}= activity.action.humanize
+                      = link_to admin_activity_path(activity), class: 'transition-colors', style: 'color: #3A6363;', onmouseover: "this.style.color='#2d4d4d'", onmouseout: "this.style.color='#3A6363'" do
                         %i.fas.fa-eye
-                    
-                    -# .flex-shrink-0
-                    -#   %button.text-gray-400.hover:text-gray-600{onclick: "toggleMetadata('#{activity.id}')"}
-                    -#     %i.fas.fa-info-circle
-                
+
                 - if activity.metadata.present?
-                  .mt-4.hidden{id: "metadata-#{activity.id}"}
-                    .bg-gray-50.rounded-lg.p-4
-                      %h4.text-sm.font-medium.text-gray-900.mb-2 Additional Information
-                      %pre.text-xs.text-gray-600= JSON.pretty_generate(activity.metadata_hash)
+                  .mt-3.sm:mt-4.hidden{id: "metadata-#{activity.id}"}
+                    .rounded-lg.p-3.sm:p-4{style: "background-color: #f9fafa;"}
+                      %h4.text-xs.sm:text-sm.font-medium.text-gray-900.mb-2 Additional Information
+                      %pre.text-xs.text-gray-600.overflow-x-auto= JSON.pretty_generate(activity.metadata_hash)
         - else
-          .p-12.text-center
-            %i.fas.fa-chart-line.text-4xl.text-gray-300.mb-4
-            %p.text-gray-500 No activities found matching your criteria.
+          .p-8.sm:p-12.text-center
+            %i.fas.fa-chart-line.text-3xl.sm:text-4xl.text-gray-300.mb-3.sm:mb-4
+            %p.text-sm.sm:text-base.text-gray-500 No activities found matching your criteria.
 
     / Pagination
     - if @activities.respond_to?(:current_page)
-      .mt-8.flex.justify-center
+      .mt-6.sm:mt-8.flex.justify-center
         = paginate @activities
 
 :javascript
