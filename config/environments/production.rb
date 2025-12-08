@@ -23,11 +23,26 @@ Rails.application.configure do
   # Enable serving static files from `public/`, relying on NGINX/Apache to do so instead.
   config.public_file_server.enabled = ENV['RAILS_SERVE_STATIC_FILES'].present?
 
+  # Add far-future expires headers for static assets
+  if ENV['RAILS_SERVE_STATIC_FILES'].present?
+    config.public_file_server.headers = {
+      'Cache-Control' => 'public, max-age=31536000',
+      'Expires' => 1.year.from_now.to_formatted_s(:rfc822)
+    }
+  end
+
   # Compress CSS using a preprocessor.
   # config.assets.css_compressor = :sass
 
   # Do not fall back to assets pipeline if a precompiled asset is missed.
   config.assets.compile = false
+
+  # Enable asset compression and fingerprinting
+  config.assets.compress = true
+  config.assets.digest = true
+
+  # Precompile additional assets
+  config.assets.precompile += %w( *.js *.css *.png *.jpg *.jpeg *.gif *.svg )
 
   # Enable serving of images, stylesheets, and JavaScripts from an asset server.
   # config.asset_host = "http://assets.example.com"
@@ -68,7 +83,15 @@ Rails.application.configure do
   config.log_level = ENV.fetch("RAILS_LOG_LEVEL", "info")
 
   # Use a different cache store in production.
-  # config.cache_store = :mem_cache_store
+  config.cache_store = :redis_cache_store, {
+    url: ENV.fetch('REDIS_URL', 'redis://localhost:6379/1'),
+    expires_in: 90.minutes,
+    reconnect_attempts: 1,
+    error_handler: -> (method:, returning:, exception:) {
+      Rails.logger.error("Redis cache error: #{exception.message}")
+      Rails.logger.error(exception.backtrace.join("\n"))
+    }
+  }
 
   # Use a real queuing backend for Active Job (and separate queues per environment).
   # config.active_job.queue_adapter = :resque
