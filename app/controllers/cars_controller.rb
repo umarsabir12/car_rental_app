@@ -9,8 +9,8 @@ class CarsController < ApplicationController
     @car_models = Car.distinct.pluck(:model).compact.sort
 
     # Only show cars with approved mulkiya documents
-    @cars = Car.with_approved_mulkiya
-  
+    @cars = Car.with_approved_mulkiya.includes(:vendor)
+
     # Apply filters
     @cars = apply_filters(@cars)
 
@@ -73,17 +73,19 @@ class CarsController < ApplicationController
   end
 
   def show
-    @car = Car.friendly.find(params[:id])
+    @car = Car.includes(:bookings, :features, :vendor).friendly.find(params[:id])
     @booking_success = flash[:notice] if flash[:notice].present?
-    
+
     @booked_dates = @car.bookings
+      .select(:start_date, :end_date)
       .flat_map { |b| (b.start_date..b.end_date).to_a }
       .uniq
       .map(&:to_s)
       .sort
-    
+
     @recommended_cars = ['SUV', 'Luxury', 'Sports'].flat_map do |category|
       Car.with_approved_mulkiya
+         .includes(:vendor)
          .where(category: category)
          .left_joins(:bookings)
          .select('cars.*, COUNT(bookings.id) as total_bookings')

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_12_05_071244) do
+ActiveRecord::Schema[7.2].define(version: 2025_12_07_162859) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -55,6 +55,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_12_05_071244) do
     t.datetime "updated_at", null: false
     t.bigint "vendor_id"
     t.index ["action"], name: "index_activities_on_action"
+    t.index ["created_at"], name: "index_activities_on_created_at"
     t.index ["subject_type", "subject_id"], name: "index_activities_on_subject"
     t.index ["subject_type", "subject_id"], name: "index_activities_on_subject_type_and_subject_id"
     t.index ["user_id", "created_at"], name: "index_activities_on_user_id_and_created_at"
@@ -108,9 +109,13 @@ ActiveRecord::Schema[7.2].define(version: 2025_12_05_071244) do
     t.integer "selected_mileage_limit"
     t.bigint "vendor_id"
     t.decimal "total_amount", precision: 10, scale: 2, default: "0.0"
+    t.index ["car_id", "created_at"], name: "index_bookings_on_car_id_and_created_at"
     t.index ["car_id"], name: "index_bookings_on_car_id"
+    t.index ["created_at"], name: "index_bookings_on_created_at"
     t.index ["payment_mode"], name: "index_bookings_on_payment_mode"
+    t.index ["status"], name: "index_bookings_on_status"
     t.index ["user_id"], name: "index_bookings_on_user_id"
+    t.index ["vendor_id", "created_at"], name: "index_bookings_on_vendor_id_and_created_at"
     t.index ["vendor_id"], name: "index_bookings_on_vendor_id"
   end
 
@@ -164,7 +169,13 @@ ActiveRecord::Schema[7.2].define(version: 2025_12_05_071244) do
     t.integer "additional_mileage_charge", default: 0
     t.integer "bookings_count", default: 0, null: false
     t.string "slug"
+    t.index ["brand"], name: "index_cars_on_brand"
+    t.index ["category"], name: "index_cars_on_category"
+    t.index ["created_at"], name: "index_cars_on_created_at"
+    t.index ["featured"], name: "index_cars_on_featured"
     t.index ["slug"], name: "index_cars_on_slug", unique: true
+    t.index ["status", "featured"], name: "index_cars_on_status_and_featured"
+    t.index ["status"], name: "index_cars_on_status"
     t.index ["stripe_price_id"], name: "index_cars_on_stripe_price_id"
     t.index ["stripe_product_id"], name: "index_cars_on_stripe_product_id"
     t.index ["vendor_id"], name: "index_cars_on_vendor_id"
@@ -231,8 +242,10 @@ ActiveRecord::Schema[7.2].define(version: 2025_12_05_071244) do
     t.string "payment_method_id"
     t.boolean "save_payment_method", default: false
     t.string "payment_mode", default: "Online"
+    t.index ["created_at"], name: "index_invoices_on_created_at"
     t.index ["payment_status"], name: "index_invoices_on_payment_status"
     t.index ["stripe_payment_intent_id"], name: "index_invoices_on_stripe_payment_intent_id", unique: true
+    t.index ["vendor_id", "payment_status"], name: "index_invoices_on_vendor_id_and_payment_status"
     t.index ["vendor_id"], name: "index_invoices_on_vendor_id"
   end
 
@@ -275,6 +288,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_12_05_071244) do
     t.string "whatsapp_country_code", limit: 3
     t.string "provider"
     t.string "uid"
+    t.index ["created_at"], name: "index_users_on_created_at"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
     t.index ["whatsapp_country_code"], name: "index_users_on_whatsapp_country_code"
@@ -327,8 +341,10 @@ ActiveRecord::Schema[7.2].define(version: 2025_12_05_071244) do
     t.string "provider"
     t.string "uid"
     t.boolean "is_active", default: true
+    t.index ["created_at"], name: "index_vendors_on_created_at"
     t.index ["email"], name: "index_vendors_on_email", unique: true
     t.index ["emirates_id"], name: "index_vendors_on_emirates_id", unique: true, where: "(emirates_id IS NOT NULL)"
+    t.index ["is_active"], name: "index_vendors_on_is_active"
     t.index ["reset_password_token"], name: "index_vendors_on_reset_password_token", unique: true
     t.index ["whatsapp_country_code"], name: "index_vendors_on_whatsapp_country_code"
     t.index ["whatsapp_number"], name: "index_vendors_on_whatsapp_number"
