@@ -106,7 +106,7 @@ class User < ApplicationRecord
     required_docs = nationality == "resident" ? Document::RESIDENT : Document::TOURIST
     user_docs = documents.where(doc_name: required_docs)
     statuses = user_docs.pluck(:status)
-    statuses.size < required_docs.size || statuses.include?("reject")
+    statuses.size < required_docs.size || statuses.include?("rejected")
   end
 
 

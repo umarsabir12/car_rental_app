@@ -54,6 +54,15 @@ Rails.application.configure do
   # Store uploaded files on the local file system (see config/storage.yml for options).
   config.active_storage.service = :amazon
 
+  # Enable Active Storage direct uploads for faster performance
+  config.active_storage.resolve_model_to_route = :rails_storage_proxy
+
+  # Set asset host to S3 bucket URL for direct serving (faster image loading)
+  # This serves images directly from S3 instead of proxying through Rails
+  if ENV['S3_ASSET_HOST'].present?
+    config.asset_host = ENV['S3_ASSET_HOST']
+  end
+
   # Mount Action Cable outside main process or domain.
   # config.action_cable.mount_path = nil
   # config.action_cable.url = "wss://example.com/cable"

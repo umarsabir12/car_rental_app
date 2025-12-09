@@ -10,7 +10,7 @@ class VendorRequestsController < ApplicationController
     
     if @vendor_request.save
       VendorMailer.request_email(@vendor_request.id).deliver_now
-      redirect_to vendor_hub_path, notice: 'Your request has been submitted successfully! We will review it and get back to you soon.'
+      redirect_to root_path, notice: 'Your request has been submitted successfully! We will review it and get back to you soon.'
     else
       flash.now[:alert] = "Please fix the following errors:\n#{@vendor_request.errors.full_messages.join(', ')}"
       render :new, status: :unprocessable_entity
