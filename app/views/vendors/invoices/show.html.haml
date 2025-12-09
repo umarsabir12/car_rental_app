@@ -98,15 +98,9 @@
                     %h3.text-xl.font-semibold.text-gray-800
                       Payment Method:
                       %span{style: "color: #3A6363;"}
-                        - if @invoice.payment_mode == 'Online'
-                          Online Payment
-                        - else
-                          Cash Payment
+                        Online Payment
                     %p.text-sm.text-gray-600
-                      - if @invoice.payment_mode == 'Online'
-                        Payment has been processed securely
-                      - else
-                        Payment will be collected in cash
+                      Payment has been processed securely
                 %i.fas.fa-lock.text-2xl.text-green-600
 
           - elsif @invoice.payment_status == 'pending' || @invoice.payment_status == 'overdue'
@@ -126,73 +120,6 @@
                   %p.text-sm.font-semibold.text-yellow-900.mb-1 Payment Required
                   %p.text-sm.text-yellow-800
                     You can pay this invoice securely using your credit card below.
-
-          / Payment Mode Selection - Only show for pending or overdue invoices
-          - if @invoice.payment_status == 'pending' || @invoice.payment_status == 'overdue'
-            .rounded-lg.p-6.border.mb-6{style: "background-color: #e8f0f0; border-color: #3A6363;"}
-              %h3.text-lg.font-semibold.text-gray-900.mb-4
-                %i.fas.fa-credit-card.mr-2{style: "color: #3A6363;"}
-                Payment Method
-
-              .space-y-4
-                / Payment Mode Radio Buttons
-                - current_payment_mode = @invoice.payment_mode || 'Online'
-                .flex.flex-col.sm:flex-row.gap-4
-                  / Online Payment Option
-                  - if current_payment_mode == 'Online'
-                    %label.flex.items-center.cursor-pointer.flex-1.p-4.border-2.rounded-xl.transition-all.duration-200{style: "border-color: #3A6363; background-color: #d1e0e0;"}
-                      %input.mr-4.w-5.h-5.cursor-pointer{
-                        type: 'radio',
-                        name: 'payment_mode',
-                        value: 'Online',
-                        data: { invoice_id: @invoice.id },
-                        checked: true,
-                        class: 'invoice-payment-mode-radio'
-                      }
-                      .flex-1
-                        %span.text-base.font-semibold.text-gray-800 Online Payment
-                        %p.text-sm.text-gray-600 Pay securely via Stripe (Card)
-                  - else
-                    %label.flex.items-center.cursor-pointer.flex-1.p-4.border-2.rounded-xl.transition-all.duration-200.border-gray-300.bg-white{style: "transition: all 0.2s;", onmouseover: "this.style.borderColor='#3A6363'", onmouseout: "this.style.borderColor='#d1d5db'"}
-                      %input.mr-4.w-5.h-5.cursor-pointer{
-                        type: 'radio',
-                        name: 'payment_mode',
-                        value: 'Online',
-                        data: { invoice_id: @invoice.id },
-                        checked: false,
-                        class: 'invoice-payment-mode-radio'
-                      }
-                      .flex-1
-                        %span.text-base.font-semibold.text-gray-800 Online Payment
-                        %p.text-sm.text-gray-600 Pay securely via Stripe (Card)
-
-                  / Cash Payment Option
-                  - if current_payment_mode == 'Cash'
-                    %label.flex.items-center.cursor-pointer.flex-1.p-4.border-2.rounded-xl.transition-all.duration-200{style: "border-color: #3A6363; background-color: #d1e0e0;"}
-                      %input.mr-4.w-5.h-5.cursor-pointer{
-                        type: 'radio',
-                        name: 'payment_mode',
-                        value: 'Cash',
-                        data: { invoice_id: @invoice.id },
-                        checked: true,
-                        class: 'invoice-payment-mode-radio'
-                      }
-                      .flex-1
-                        %span.text-base.font-semibold.text-gray-800 Cash Payment
-                        %p.text-sm.text-gray-600 Pay cash when collecting payment
-                  - else
-                    %label.flex.items-center.cursor-pointer.flex-1.p-4.border-2.rounded-xl.transition-all.duration-200.border-gray-300.bg-white{style: "transition: all 0.2s;", onmouseover: "this.style.borderColor='#3A6363'", onmouseout: "this.style.borderColor='#d1d5db'"}
-                      %input.mr-4.w-5.h-5.cursor-pointer{
-                        type: 'radio',
-                        name: 'payment_mode',
-                        value: 'Cash',
-                        data: { invoice_id: @invoice.id },
-                        checked: false,
-                        class: 'invoice-payment-mode-radio'
-                      }
-                      .flex-1
-                        %span.text-base.font-semibold.text-gray-800 Cash Payment
-                        %p.text-sm.text-gray-600 Pay cash when collecting payment
 
           / Payment Section - Only show for pending or overdue invoices
           - if @invoice.payment_status == 'pending' || @invoice.payment_status == 'overdue'
@@ -714,106 +641,6 @@
     console.log('✅ Payment script ready');
   })();
 
-  // Handle payment mode selection for invoices
-  (function() {
-    console.log('🚀 Invoice payment mode script loaded');
-
-    function initializeInvoicePaymentModeHandlers() {
-      console.log('🔧 Initializing invoice payment mode handlers');
-
-      const paymentBtn = document.getElementById('openPaymentBtn');
-      const paymentModeRadios = document.querySelectorAll('.invoice-payment-mode-radio');
-
-      console.log('Found payment button:', paymentBtn ? 'YES' : 'NO');
-      console.log('Found radio buttons:', paymentModeRadios.length);
-
-      if (!paymentBtn) {
-        console.log('⚠️ Payment button not found - invoice may be paid');
-        return;
-      }
-
-      function updatePaymentButtonState() {
-        const selectedMode = document.querySelector('.invoice-payment-mode-radio:checked')?.value;
-
-        console.log('🔄 Updating button state for mode:', selectedMode);
-
-        if (selectedMode === 'Cash') {
-          // Disable payment button
-          paymentBtn.disabled = true;
-          paymentBtn.style.opacity = '0.5';
-          paymentBtn.style.cursor = 'not-allowed';
-          paymentBtn.style.pointerEvents = 'none';
-          console.log('✅ Payment button DISABLED for Cash mode');
-        } else if (selectedMode === 'Online') {
-          // Enable payment button
-          paymentBtn.disabled = false;
-          paymentBtn.style.opacity = '1';
-          paymentBtn.style.cursor = 'pointer';
-          paymentBtn.style.pointerEvents = 'auto';
-          console.log('✅ Payment button ENABLED for Online mode');
-        } else {
-          console.log('⚠️ No payment mode selected');
-        }
-      }
-
-      // Attach change listeners to radio buttons
-      paymentModeRadios.forEach(radio => {
-        radio.addEventListener('change', function() {
-          const invoiceId = this.getAttribute('data-invoice-id');
-          const paymentMode = this.value;
-
-          console.log(`🔄 Payment mode changed to: ${paymentMode}`);
-
-          // Update button state immediately
-          updatePaymentButtonState();
-
-          // Send AJAX request to update payment mode on server
-          fetch(`/vendors/invoices/${invoiceId}/update_payment_mode`, {
-            method: 'PATCH',
-            headers: {
-              'Content-Type': 'application/json',
-              'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-            },
-            body: JSON.stringify({
-              payment_mode: paymentMode
-            })
-          })
-          .then(response => {
-            if (response.ok) {
-              console.log('✅ Payment mode updated successfully on server');
-            } else {
-              console.error('❌ Failed to update payment mode on server');
-              // Revert the selection if failed
-              document.querySelector(`.invoice-payment-mode-radio[value="${paymentMode === 'Online' ? 'Cash' : 'Online'}"]`).checked = true;
-              updatePaymentButtonState();
-            }
-          })
-          .catch(error => {
-            console.error('❌ Error updating payment mode:', error);
-          });
-        });
-      });
-
-      // Initial state - set button state based on current selection
-      console.log('🎯 Setting initial button state');
-      updatePaymentButtonState();
-    }
-
-    // Try to initialize immediately if DOM is ready
-    if (document.readyState === 'loading') {
-      console.log('⏳ DOM still loading, waiting...');
-      document.addEventListener('DOMContentLoaded', initializeInvoicePaymentModeHandlers);
-    } else {
-      console.log('✅ DOM already loaded, initializing now');
-      initializeInvoicePaymentModeHandlers();
-    }
-
-    // Also handle Turbo navigation
-    document.addEventListener('turbo:load', function() {
-      console.log('🔄 Turbo load event - reinitializing');
-      initializeInvoicePaymentModeHandlers();
-    });
-  })();
 
 :css
   /* Hide print layout on screen */
