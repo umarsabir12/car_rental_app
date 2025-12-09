@@ -457,6 +457,30 @@
           %label.block.text-sm.font-medium.mb-1{style: 'color: #2d4f4f'} Return Date
           = text_field_tag :end_date, nil, required: true, class: "w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 flatpickr", autocomplete: "off", id: "endDateInput", style: "--tw-ring-color:#3a6363"
 
+        .mb-4
+          %label.block.text-sm.font-medium.mb-2{style: 'color: #2d4f4f'} Service Option (Optional)
+          %p.text-xs.text-gray-500.mb-2.italic Leave unselected if you don't need pickup or delivery service
+          .grid.grid-cols-2.gap-3
+            %label.cursor-pointer.border-2.rounded-lg.p-3.transition-all.hover:border-opacity-70{ class: "delivery-option-card", "data-option" => "pickup", style: "border-color: #ccc;" }
+              .flex.items-center
+                %input.mr-3{ type: "radio", name: "delivery_option", value: "pickup", id: "pickupOption", style: "accent-color: #3a6363;" }
+                .flex-1
+                  .flex.items-center.gap-2.mb-1
+                    %i.fas.fa-car{style: "color: #3a6363;"}
+                    %span.font-semibold.text-gray-800 Pickup
+                  %p.text-xs.text-gray-600 Pickup from your location
+                  %p.text-xs.font-semibold{style: "color: #3a6363;"} +AED 50
+
+            %label.cursor-pointer.border-2.rounded-lg.p-3.transition-all.hover:border-opacity-70{ class: "delivery-option-card", "data-option" => "delivery", style: "border-color: #ccc;" }
+              .flex.items-center
+                %input.mr-3{ type: "radio", name: "delivery_option", value: "delivery", id: "deliveryOption", style: "accent-color: #3a6363;" }
+                .flex-1
+                  .flex.items-center.gap-2.mb-1
+                    %i.fas.fa-shipping-fast{style: "color: #3a6363;"}
+                    %span.font-semibold.text-gray-800 Delivery
+                  %p.text-xs.text-gray-600 Car delivered to you
+                  %p.text-xs.font-semibold{style: "color: #3a6363;"} +AED 50
+
       .modal-footer.flex.justify-end.gap-4.px-6.py-4
         %button.bg-gray-200.text-gray-700.font-semibold.px-5.py-2.rounded-lg.hover:bg-gray-300.transition{ "data-bs-dismiss" => "modal", type: "button" } Close
         - if user_signed_in?
@@ -562,6 +586,27 @@
     // Initial state - buttons should be disabled
     updateButtonStates();
 
+    // Delivery Option Cards Selection
+    const deliveryOptionCards = document.querySelectorAll('.delivery-option-card');
+    const deliveryRadios = document.querySelectorAll('input[name="delivery_option"]');
+
+    deliveryOptionCards.forEach(card => {
+      card.addEventListener('click', function() {
+        const option = this.getAttribute('data-option');
+        const radio = document.getElementById(option + 'Option');
+        if (radio) {
+          radio.checked = true;
+          // Update card styling
+          deliveryOptionCards.forEach(c => {
+            c.style.borderColor = '#ccc';
+            c.style.backgroundColor = 'transparent';
+          });
+          this.style.borderColor = '#3a6363';
+          this.style.backgroundColor = '#e8f0f0';
+        }
+      });
+    });
+
     // Continue to Login button
     if (continueBtn) {
       continueBtn.addEventListener("click", function (e) {
@@ -577,13 +622,15 @@
         const selectedPeriod = document.getElementById("selectedPeriodInput")?.value || "daily";
         const selectedPrice = document.getElementById("selectedPriceInput")?.value || "0";
         const selectedMileage = document.getElementById("selectedMileageInput")?.value || "0";
+        const deliveryOption = document.querySelector('input[name="delivery_option"]:checked')?.value || "";
         const queryParams = new URLSearchParams({
           car_id: carId,
           start_date: startDate,
           end_date: endDate,
           selected_period: selectedPeriod,
           selected_price: selectedPrice,
-          selected_mileage_limit: selectedMileage
+          selected_mileage_limit: selectedMileage,
+          delivery_option: deliveryOption
         });
         window.location.href = "/users/sign_in?" + queryParams.toString();
       });
@@ -623,6 +670,10 @@
         formData.append('booking[selected_period]', document.getElementById("selectedPeriodInput")?.value || 'daily');
         formData.append('booking[selected_price]', document.getElementById("selectedPriceInput")?.value || '0');
         formData.append('booking[selected_mileage_limit]', document.getElementById("selectedMileageInput")?.value || '0');
+        const deliveryOption = document.querySelector('input[name="delivery_option"]:checked')?.value || "";
+        if (deliveryOption) {
+          formData.append('booking[delivery_option]', deliveryOption);
+        }
 
         fetch('/bookings', {
           method: 'POST',
