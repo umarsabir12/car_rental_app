@@ -86,12 +86,19 @@
                       %span.font-semibold= number_to_currency(daily_price)
                     %span.text-sm.sm:text-base.font-semibold.text-blue-600= number_to_currency(remaining_days * daily_price)
 
+                - if @booking.delivery_option.present?
+                  .flex.justify-between.items-center.py-2.sm:py-3.border-b.border-blue-200
+                    %span.text-sm.sm:text-base.text-gray-700
+                      = @booking.delivery_option.capitalize
+                      Charge
+                    %span.text-sm.sm:text-base.font-semibold.text-purple-600= number_to_currency(@booking.delivery_charge)
+
                 .flex.justify-between.items-center.py-2.sm:py-3.border-b.border-blue-200
                   %span.text-sm.sm:text-base.text-gray-700 Tax
                   %span.text-sm.sm:text-base.text-green-600 Free
                 .flex.justify-between.items-center.py-3.sm:py-4
                   %span.text-base.sm:text-lg.md:text-xl.font-bold.text-gray-800 Total Amount
-                  %span.text-lg.sm:text-xl.md:text-2xl.font-bold.text-blue-600= number_to_currency(subtotal)
+                  %span.text-lg.sm:text-xl.md:text-2xl.font-bold.text-blue-600= number_to_currency(subtotal + @booking.delivery_charge)
               
               - elsif @selected_period == 'monthly'
                 - full_months = duration_days / 30
@@ -124,12 +131,19 @@
                       %span.font-semibold= number_to_currency(daily_price)
                     %span.text-sm.sm:text-base.font-semibold.text-blue-600= number_to_currency(remaining_days * daily_price)
 
+                - if @booking.delivery_option.present?
+                  .flex.justify-between.items-center.py-2.sm:py-3.border-b.border-blue-200
+                    %span.text-sm.sm:text-base.text-gray-700
+                      = @booking.delivery_option.capitalize
+                      Charge
+                    %span.text-sm.sm:text-base.font-semibold.text-purple-600= number_to_currency(@booking.delivery_charge)
+
                 .flex.justify-between.items-center.py-2.sm:py-3.border-b.border-blue-200
                   %span.text-sm.sm:text-base.text-gray-700 Tax
                   %span.text-sm.sm:text-base.text-green-600 Free
                 .flex.justify-between.items-center.py-3.sm:py-4
                   %span.text-base.sm:text-lg.md:text-xl.font-bold.text-gray-800 Total Amount
-                  %span.text-lg.sm:text-xl.md:text-2xl.font-bold.text-blue-600= number_to_currency(subtotal)
+                  %span.text-lg.sm:text-xl.md:text-2xl.font-bold.text-blue-600= number_to_currency(subtotal + @booking.delivery_charge)
               
               - else
                 / Daily pricing (default)
@@ -144,12 +158,20 @@
                 .flex.justify-between.items-center.py-2.sm:py-3.border-b.border-blue-200
                   %span.text-sm.sm:text-base.text-gray-700 Subtotal
                   %span.text-sm.sm:text-base.font-semibold= number_to_currency(subtotal)
+
+                - if @booking.delivery_option.present?
+                  .flex.justify-between.items-center.py-2.sm:py-3.border-b.border-blue-200
+                    %span.text-sm.sm:text-base.text-gray-700
+                      = @booking.delivery_option.capitalize
+                      Charge
+                    %span.text-sm.sm:text-base.font-semibold.text-purple-600= number_to_currency(@booking.delivery_charge)
+
                 .flex.justify-between.items-center.py-2.sm:py-3.border-b.border-blue-200
                   %span.text-sm.sm:text-base.text-gray-700 Tax
                   %span.text-sm.sm:text-base.text-green-600 Free
                 .flex.justify-between.items-center.py-3.sm:py-4
                   %span.text-base.sm:text-lg.md:text-xl.font-bold.text-gray-800 Total Amount
-                  %span.text-lg.sm:text-xl.md:text-2xl.font-bold.text-blue-600= number_to_currency(subtotal)
+                  %span.text-lg.sm:text-xl.md:text-2xl.font-bold.text-blue-600= number_to_currency(subtotal + @booking.delivery_charge)
 
       / Payment Mode Selection - Only show if booking is not confirmed
       - unless @booking.status == 'confirmed'
@@ -315,9 +337,17 @@
         - period_base = { 'weekly' => 7.0, 'monthly' => 30.0 }.fetch(@booking.selected_period, 1.0)
         - period_count = @days.to_f / period_base
         - display_count = (period_count % 1).zero? ? period_count.to_i : period_count.round(1)
+        - rental_subtotal = @total_amount - @booking.delivery_charge
         .col-days= pluralize(display_count, period_unit)
         .col-rate= "AED #{number_with_precision(@car.daily_price, precision: 2)}"
-        .col-amount= "AED #{number_with_precision(@total_amount, precision: 2)}"
+        .col-amount= "AED #{number_with_precision(rental_subtotal, precision: 2)}"
+
+      - if @booking.delivery_option.present?
+        .table-row
+          .col-description= "#{@booking.delivery_option.capitalize} Charge"
+          .col-days 1
+          .col-rate= "AED #{number_with_precision(@booking.delivery_charge, precision: 2)}"
+          .col-amount= "AED #{number_with_precision(@booking.delivery_charge, precision: 2)}"
 
       .table-total
         .total-label Total:

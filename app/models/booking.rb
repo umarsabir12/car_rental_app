@@ -3,11 +3,15 @@ class Booking < ApplicationRecord
   belongs_to :user
   belongs_to :vendor, optional: true
   has_many :activities, as: :subject, dependent: :destroy
-  
+
   # Enum for payment mode
   enum payment_mode: { Cash: 0, Online: 1 }, _default: :Online
-  
+
+  # Constants
+  DELIVERY_CHARGE = 50.0
+
   validates :car_id, :user_id, :start_date, :end_date, :selected_period, presence: true
+  validates :delivery_option, inclusion: { in: %w[delivery pickup], allow_blank: true }
   validate :end_date_after_start_date
   validate :no_overlapping_bookings
 
@@ -20,26 +24,39 @@ class Booking < ApplicationRecord
 
   def calculate_total_amount
     return 0 unless car && start_date && end_date
-    
+
     duration_days = (end_date - start_date).to_i
     daily_price = car.daily_price.to_f
-    
-    case selected_period
+
+    base_amount = case selected_period
     when 'weekly'
       weekly_price = selected_price.to_f
       full_weeks = duration_days / 7
       remaining_days = duration_days % 7
       (full_weeks * weekly_price) + (remaining_days * daily_price)
-      
+
     when 'monthly'
       monthly_price = selected_price.to_f
       full_months = duration_days / 30
       remaining_days = duration_days % 30
       (full_months * monthly_price) + (remaining_days * daily_price)
-      
+
     else # daily
       duration_days * selected_price.to_f
     end
+
+    # Add delivery or pickup charge if applicable
+    base_amount += delivery_charge if delivery_charge_applicable?
+
+    base_amount
+  end
+
+  def delivery_charge_applicable?
+    delivery_option.present? && %w[delivery pickup].include?(delivery_option)
+  end
+
+  def delivery_charge
+    delivery_charge_applicable? ? DELIVERY_CHARGE : 0
   end
 
   def populate_total_amount

@@ -208,8 +208,15 @@
                               %span.font-medium Pricing:
                               %span.ml-1= "#{duration_days} days × AED #{daily_price.to_i}"
 
+                          / Delivery/Pickup Charge if selected
+                          - if booking.delivery_option.present?
+                            %p.text-xs.sm:text-sm.text-purple-600.mb-2
+                              %i.fas{class: booking.delivery_option == 'delivery' ? 'fa-shipping-fast' : 'fa-car'}
+                              %span.font-medium= "#{booking.delivery_option.capitalize} Charge:"
+                              %span.ml-1= "AED #{booking.delivery_charge.to_i}"
+
                           %p.text-xl.lg:text-2xl.font-bold.text-green-600
-                            = number_to_currency(total_amount)
+                            = number_to_currency(total_amount + booking.delivery_charge)
 
                         / Status Pill + Button Container
                         .flex.flex-col.sm:flex-row.items-stretch.sm:items-center.gap-2.sm:gap-3
