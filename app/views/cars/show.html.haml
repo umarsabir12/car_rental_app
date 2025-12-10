@@ -705,7 +705,7 @@
     }
 
     // Policy Drawer Logic
-    const insurancePolicy = "#{@car.insurance_policy.present? ? @car.insurance_policy.gsub('"', '\\"').gsub("\n", ' ') : 'No Insurance Provided'}";
+    const insurancePolicy = #{@car.insurance_policy.present? ? @car.insurance_policy.to_json : '"No Insurance Provided"'.html_safe};
     
     const policyContent = {
       mileage: {
