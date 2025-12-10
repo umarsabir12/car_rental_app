@@ -11,7 +11,7 @@ class BookingsController < ApplicationController
       redirect_to user_home_path, notice: "Booking created! Please complete your payment."
     else
       # Redirect back to car show page with error message
-      redirect_to car_path(params[:booking][:car_id]), alert: @booking.errors.full_messages.join(", ")
+      redirect_to car_path(@booking.car_id), alert: @booking.errors.full_messages.join(", ")
     end
   end
 
