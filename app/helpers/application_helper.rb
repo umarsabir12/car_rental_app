@@ -106,4 +106,16 @@ module ApplicationHelper
     return nil if AppConstants::ADMIN_WHATSAPP_NUMBER.blank?
     @parsed_whatsapp ||= Phonelib.parse(AppConstants::ADMIN_WHATSAPP_NUMBER)
   end
+
+  # Sanitize WhatsApp link to prevent XSS
+  def safe_whatsapp_link(url)
+    return nil if url.blank?
+    url.to_s.start_with?("https://wa.me/") ? url : nil
+  end
+
+  # Sanitize website URL to prevent XSS
+  def safe_website_url(url)
+    return nil if url.blank?
+    url.to_s.match?(URI::DEFAULT_PARSER.make_regexp(%w[http https])) ? url : nil
+  end
 end

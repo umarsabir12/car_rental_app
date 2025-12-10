@@ -54,8 +54,8 @@
               - if @vendor.whatsapp_number.present?
                 .flex.flex-col.sm:flex-row.sm:items-center.gap-2.sm:gap-3
                   %p.text-base.sm:text-lg.text-gray-700= @vendor.whatsapp_display || @vendor.whatsapp_number
-                  - whatsapp_url = @vendor.whatsapp_link
-                  - if whatsapp_url&.start_with?('https://wa.me/')
+                  - whatsapp_url = safe_whatsapp_link(@vendor.whatsapp_link)
+                  - if whatsapp_url
                     = link_to whatsapp_url, target: '_blank', class: 'inline-flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white font-semibold px-3 py-1.5 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg text-sm self-start' do
                       %i.fab.fa-whatsapp
                       %span Chat
@@ -75,11 +75,11 @@
               %i.fas.fa-globe.w-5.sm:w-6.mt-1{style: "color: #3A6363;"}
               .ml-3
                 %p.text-xs.font-semibold.text-gray-500.uppercase Website
-                - website_url = @vendor.website
-                - if website_url =~ URI::DEFAULT_PARSER.make_regexp(%w[http https])
-                  = link_to website_url, website_url, target: '_blank', class: 'text-base sm:text-lg hover:underline break-all', style: 'color: #3A6363;'
+                - safe_url = safe_website_url(@vendor.website)
+                - if safe_url
+                  = link_to safe_url, safe_url, target: '_blank', class: 'text-base sm:text-lg hover:underline break-all', style: 'color: #3A6363;'
                 - else
-                  %p.text-base.sm:text-lg.text-gray-700.break-all= website_url
+                  %p.text-base.sm:text-lg.text-gray-700.break-all= @vendor.website
 
         / Description
         - if @vendor.description.present?
