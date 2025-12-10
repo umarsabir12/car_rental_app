@@ -165,40 +165,39 @@ class Vendor < ApplicationRecord
 
   # Calculate total pending amount from all pending invoices
   def total_pending_amount
-    invoices.where(payment_status: 'pending')
+    invoices.where(payment_status: "pending")
             .joins(:invoice_items)
-            .sum('invoice_items.amount')
+            .sum("invoice_items.amount")
   end
-  
+
   # Calculate total paid amount from all paid invoices
   def total_paid_amount
-    invoices.where(payment_status: 'paid')
+    invoices.where(payment_status: "paid")
             .joins(:invoice_items)
-            .sum('invoice_items.amount')
+            .sum("invoice_items.amount")
   end
-  
+
   # Calculate total amount across all invoices
   def total_invoice_amount
     invoices.joins(:invoice_items)
-            .sum('invoice_items.amount')
+            .sum("invoice_items.amount")
   end
 
   private
 
   def emirates_id_expiry_in_future
     return if emirates_id_expires_on.blank?
-    if emirates_id_expires_on <= Date.current
-      errors.add(:emirates_id_expires_on, "must be in the future")
-    end
+
+    errors.add(:emirates_id_expires_on, "must be in the future") if emirates_id_expires_on <= Date.current
   end
 
   def log_vendor_registration
     Activity.log_activity(
       vendor: self,
       subject: self,
-      action: 'vendor_registration',
+      action: "vendor_registration",
       description: "New vendor registered: #{company_name} (#{email})",
-      metadata: { 
+      metadata: {
         company_name: company_name,
         email: email,
         phone: phone
@@ -210,9 +209,9 @@ class Vendor < ApplicationRecord
     Activity.log_activity(
       vendor: self,
       subject: self,
-      action: 'vendor_profile_updated',
+      action: "vendor_profile_updated",
       description: "#{company_name} updated their profile",
-      metadata: { 
+      metadata: {
         previous_company_name: company_name_before_last_save,
         new_company_name: company_name
       }

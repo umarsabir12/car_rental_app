@@ -10,23 +10,23 @@ class Car < ApplicationRecord
   has_many :car_features, dependent: :destroy
   has_many :features, through: :car_features
 
-  validates :images, presence: { message: 'at least one image is required' }
+  validates :images, presence: { message: "at least one image is required" }
   validate :images_presence_on_create, on: :create
   validates :insurance_policy, presence: true
 
   FEATURE_COLUMNS = %w[air_conditioning gps sunroof bluetooth].freeze
-  
+
   def active_features
     FEATURE_COLUMNS.select { |feature| send(feature) }.map { |feature| feature.humanize }
   end
-  
+
   after_create :log_car_added, :create_common_features
   after_update :log_car_updated, if: :saved_change_to_brand? || :saved_change_to_model? || :saved_change_to_daily_price?
   before_destroy :log_car_deleted, :purge_attachments
-  
-  scope :available, -> { where(status: 'available') }
-  scope :with_approved_mulkiya, -> { 
-    joins(:car_document).where(car_documents: { document_status: 'approved' }) 
+
+  scope :available, -> { where(status: "available") }
+  scope :with_approved_mulkiya, -> {
+    joins(:car_document).where(car_documents: { document_status: "approved" })
   }
 
   def full_name
@@ -35,9 +35,9 @@ class Car < ApplicationRecord
 
   def booking_status
     if bookings.any?
-      bookings.exists?(['start_date <= ? AND end_date >= ?', Date.today, Date.today]) ? 'rented' : 'available'
+      bookings.exists?(["start_date <= ? AND end_date >= ?", Date.today, Date.today]) ? "rented" : "available"
     else
-      'available'
+      "available"
     end
   end
 
@@ -47,9 +47,9 @@ class Car < ApplicationRecord
     return false if start_date.blank?
 
     days_to_check = case period_type
-                    when 'daily' then 1
-                    when 'weekly' then 7
-                    when 'monthly' then 30
+                    when "daily" then 1
+                    when "weekly" then 7
+                    when "monthly" then 30
                     else 1
                     end
 
@@ -99,10 +99,10 @@ class Car < ApplicationRecord
 
     s = slug_or_name.to_s.downcase
     # If model has brand_slug column, prefer it; otherwise fallback to brand name
-    if column_names.include?('brand_slug')
-      scope.where('lower(brand_slug) LIKE ? OR lower(brand) LIKE ?', "%#{s}%", "%#{s}%")
+    if column_names.include?("brand_slug")
+      scope.where("lower(brand_slug) LIKE ? OR lower(brand) LIKE ?", "%#{s}%", "%#{s}%")
     else
-      scope.where('lower(brand) LIKE ?', "%#{s}%")
+      scope.where("lower(brand) LIKE ?", "%#{s}%")
     end
   end
 
@@ -114,7 +114,7 @@ class Car < ApplicationRecord
       [:brand, :model, :year, :category]
     ]
   end
-  
+
   # Regenerate slug when relevant fields change
   def should_generate_new_friendly_id?
     brand_changed? || model_changed? || year_changed? || super
@@ -123,14 +123,14 @@ class Car < ApplicationRecord
   private
 
   def images_presence_on_create
-    if new_record? && images.attached? == false
-      errors.add(:images, 'at least one image must be uploaded before creating the car')
-    end
+    return unless new_record? && images.attached? == false
+
+    errors.add(:images, "at least one image must be uploaded before creating the car")
   end
 
   def create_stripe_product
     return if stripe_product_id.present?
-    
+
     product = Stripe::Product.create(
       name: full_name,
       metadata: {
@@ -144,11 +144,11 @@ class Car < ApplicationRecord
 
   def create_stripe_price
     return if stripe_price_id.present?
-    
+
     stripe_price = Stripe::Price.create(
       product: stripe_product_id,
-      unit_amount: self.daily_price.to_i * 100,
-      currency: 'usd'
+      unit_amount: daily_price.to_i * 100,
+      currency: "usd"
     )
 
     update(stripe_price_id: stripe_price.id)
