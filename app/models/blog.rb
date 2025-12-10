@@ -3,8 +3,8 @@ class Blog < ApplicationRecord
   has_many_attached :reference_images, dependent: :purge_later
 
   validates :title, :content, :category, :author_name, presence: true
-  
-  scope :published, -> { where('published_at <= ?', Time.current) }
+
+  scope :published, -> { where("published_at <= ?", Time.current) }
 
   before_save :generate_slug
 

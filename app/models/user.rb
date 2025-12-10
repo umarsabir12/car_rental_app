@@ -9,7 +9,7 @@ class User < ApplicationRecord
   has_many :bookings, dependent: :destroy
   has_many :documents, dependent: :destroy
   has_many :activities, dependent: :destroy
-  
+
   before_validation :normalize_whatsapp_number, if: :whatsapp_number_changed?
 
   # Validations
@@ -23,9 +23,9 @@ class User < ApplicationRecord
             phone: {
               possible: true,
               allow_blank: true,
-              types: [:mobile, :fixed_or_mobile],
+              types: [ :mobile, :fixed_or_mobile ],
               message: :invalid_phone
-            } 
+            }
   validates :whatsapp_number,
             uniqueness: { case_sensitive: false },
             allow_blank: true,
@@ -34,26 +34,26 @@ class User < ApplicationRecord
 
 
   after_create :create_documents, :log_registration
-  
+
   def full_name
     "#{self.first_name} #{self.last_name}"
   end
 
   def self.from_omniauth(auth, nationality = nil, terms_accepted = false, allow_creation)
     user = where(provider: auth.provider, uid: auth.uid).first
-  
+
     # If user exists, update nationality if provided and not already set
     if user.present?
       updates = {}
-  
+
       if nationality.present? && user.nationality.blank?
         updates[:nationality] = nationality
       end
-  
+
       if terms_accepted.present? && !user.terms_accepted?
         updates[:terms_accepted] = true
       end
-  
+
       user.update_columns(updates) if updates.any?
 
       return user
@@ -61,32 +61,32 @@ class User < ApplicationRecord
 
     # If user doesn't exist and creation is not allowed, return nil
     return unless allow_creation
-  
+
     # Create new user without validation
     user = new do |u|
       u.provider = auth.provider
       u.uid = auth.uid
       u.email = auth.info.email
       u.password = Devise.friendly_token[0, 20]
-      
+
       if auth.info.first_name.present? && auth.info.last_name.present?
         u.first_name = auth.info.first_name
         u.last_name = auth.info.last_name
       else
         # Fallback: split full name if first_name/last_name not available
-        name_parts = auth.info.name.to_s.split(' ', 2)
+        name_parts = auth.info.name.to_s.split(" ", 2)
         u.first_name = name_parts.first
-        u.last_name = name_parts.last || ''
+        u.last_name = name_parts.last || ""
       end
-      
+
       # Set nationality if provided
       u.nationality = nationality if nationality.present?
       u.terms_accepted = terms_accepted
-      
+
       # Set default values for any required fields
       # Example: u.phone = '' # if phone is required but can be blank
     end
-    
+
     # Save without validation
     user.save(validate: false)
     user
@@ -98,7 +98,7 @@ class User < ApplicationRecord
     elsif first_name.present?
       first_name
     else
-      email.split('@').first
+      email.split("@").first
     end
   end
 
@@ -106,7 +106,7 @@ class User < ApplicationRecord
     required_docs = nationality == "resident" ? Document::RESIDENT : Document::TOURIST
     user_docs = documents.where(doc_name: required_docs)
     statuses = user_docs.pluck(:status)
-    statuses.size < required_docs.size || statuses.include?("reject")
+    statuses.size < required_docs.size || statuses.include?("rejected")
   end
 
 
@@ -118,36 +118,36 @@ class User < ApplicationRecord
   def create_documents
     doc_names = nationality == "resident" ? Document::RESIDENT : Document::TOURIST
     doc_names.each do |doc_name|
-      documents.create!(doc_name: doc_name, document_type: self.nationality == 'resident' ? 'Resident' : 'Tourist', status: 'not uploaded')
+      documents.create!(doc_name: doc_name, document_type: nationality == "resident" ? "Resident" : "Tourist",
+                        status: "not uploaded")
     end
   end
 
   def document_alert_message
     docs = documents.to_a
-    has_pending_booking = bookings.where(status: 'pending').exists?
+    has_pending_booking = bookings.where(status: "pending").exists?
     return nil unless has_pending_booking
-    if docs.any? { |d| d.status == 'rejected' }
-      'Some of your documents have been rejected. Please review and re-upload them to proceed with your booking.'
-    else
-      nil
+
+    if docs.any? { |d| d.status == "rejected" }
+      "Some of your documents have been rejected. Please review and re-upload them to proceed with your booking."
     end
   end
 
   # Notification helper methods
   def missing_documents
-    documents.where(status: 'not uploaded')
+    documents.where(status: "not uploaded")
   end
 
   def pending_documents
-    documents.where(status: 'pending')
+    documents.where(status: "pending")
   end
 
   def rejected_documents
-    documents.where(status: 'rejected')
+    documents.where(status: "rejected")
   end
 
   def approved_documents
-    documents.where(status: 'approved')
+    documents.where(status: "approved")
   end
 
   def documents_notification?
@@ -159,11 +159,11 @@ class User < ApplicationRecord
   end
 
   def unpaid_bookings
-    bookings.where(payment_processed: [false, nil])
+    bookings.where(payment_processed: [ false, nil ])
   end
 
   def failed_payments
-    Transaction.joins(:booking).where(bookings: { user_id: id }, status: 'failed')
+    Transaction.joins(:booking).where(bookings: { user_id: id }, status: "failed")
   end
 
   def bookings_notification?
@@ -185,34 +185,34 @@ class User < ApplicationRecord
     return nil if whatsapp_number.blank?
     @parsed_whatsapp ||= Phonelib.parse(whatsapp_number)
   end
-  
+
   # Get formatted number for display
   def whatsapp_display
     parsed_whatsapp&.international || whatsapp_number
   end
-  
+
   # Get E164 format for API calls (WhatsApp Business API, Twilio, etc.)
   def whatsapp_e164
     parsed_whatsapp&.e164
   end
-  
+
   # Get national format
   def whatsapp_national
     parsed_whatsapp&.national
   end
-  
+
   # Get country information
   def whatsapp_country
     parsed_whatsapp&.country
   end
-  
+
   # Check if it's a valid mobile number
   def whatsapp_mobile?
     return false if whatsapp_number.blank?
     parsed = parsed_whatsapp
     parsed.valid? && (parsed.type == :mobile || parsed.type == :fixed_or_mobile)
   end
-  
+
   # WhatsApp link generator
   def whatsapp_link(message = nil)
     return nil unless whatsapp_e164
@@ -226,7 +226,7 @@ class User < ApplicationRecord
     Activity.log_activity(
       user: self,
       subject: self,
-      action: 'registration_completed',
+      action: "registration_completed",
       description: "New user registered: #{full_name} (#{email})",
       metadata: { nationality: nationality, phone: phone }
     )
@@ -234,10 +234,10 @@ class User < ApplicationRecord
 
   def normalize_whatsapp_number
     return if whatsapp_number.blank?
-    
+
     # Parse and normalize to E164 format
     parsed = Phonelib.parse(whatsapp_number)
-    
+
     if parsed.valid?
       self.whatsapp_number = parsed.e164
       self.whatsapp_country_code = parsed.country_code
@@ -245,9 +245,9 @@ class User < ApplicationRecord
       @parsed_whatsapp = nil
     else
       # Try to clean the number
-      cleaned = whatsapp_number.to_s.gsub(/[^\d+]/, '')
-      cleaned = "+#{cleaned}" unless cleaned.start_with?('+')
-      
+      cleaned = whatsapp_number.to_s.gsub(/[^\d+]/, "")
+      cleaned = "+#{cleaned}" unless cleaned.start_with?("+")
+
       reparsed = Phonelib.parse(cleaned)
       if reparsed.valid?
         self.whatsapp_number = reparsed.e164
@@ -256,22 +256,22 @@ class User < ApplicationRecord
       end
     end
   end
-  
+
   def whatsapp_number_requirements
     return if whatsapp_number.blank?
-    
+
     parsed = parsed_whatsapp
-    
+
     unless parsed.valid?
       errors.add(:whatsapp_number, :invalid_format)
       return
     end
-    
+
     # WhatsApp requires mobile numbers (some countries allow landline)
     unless parsed.types.include?(:mobile) || parsed.types.include?(:fixed_or_mobile)
       errors.add(:whatsapp_number, :must_be_mobile)
     end
-    
+
     # Additional length check (WhatsApp specific)
     unless whatsapp_number.length.between?(8, 16)
       errors.add(:whatsapp_number, :invalid_length)

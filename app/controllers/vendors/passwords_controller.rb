@@ -8,9 +8,9 @@ class Vendors::PasswordsController < Devise::PasswordsController
   def create
     super do |resource|
       if resource.errors.empty?
-        flash[:notice] = 'Password reset instructions have been sent to your email address.'
+        flash[:notice] = "Password reset instructions have been sent to your email address."
       else
-        flash[:alert] = 'Email address not found. Please check and try again.'
+        flash[:alert] = "Email address not found. Please check and try again."
       end
     end
   end
@@ -24,9 +24,9 @@ class Vendors::PasswordsController < Devise::PasswordsController
   def update
     super do |resource|
       if resource.errors.empty?
-        flash[:notice] = 'Your password has been successfully updated.'
+        flash[:notice] = "Your password has been successfully updated."
       else
-        flash[:alert] = 'Password reset failed. Please check the errors below.'
+        flash[:alert] = "Password reset failed. Please check the errors below."
       end
     end
   end
@@ -40,4 +40,4 @@ class Vendors::PasswordsController < Devise::PasswordsController
   def after_sending_reset_password_instructions_path_for(resource_name)
     new_vendor_password_path
   end
-end 
+end

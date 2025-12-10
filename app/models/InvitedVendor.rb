@@ -1,5 +1,4 @@
 class InvitedVendor < ApplicationRecord
-  
   after_create :send_invite_email
 
   def send_invite_email

@@ -1,7 +1,7 @@
 class Vendors::CarsController < ApplicationController
   before_action :authenticate_vendor!
-  before_action :set_car, only: [:show, :edit, :update, :destroy, :remove_image]
-  before_action :load_premium_features, only: [:new, :edit]
+  before_action :set_car, only: [ :show, :edit, :update, :destroy, :remove_image ]
+  before_action :load_premium_features, only: [ :new, :edit ]
 
   def index
     @cars = current_vendor.cars.includes(:features)
@@ -17,7 +17,7 @@ class Vendors::CarsController < ApplicationController
 
   def create
     @car = current_vendor.cars.build(car_params.except(:mulkiya, :feature_ids))
-    
+
     # Validate that at least one image is uploaded
     if params[:car][:images].blank? || params[:car][:images].all?(&:blank?)
       @car.errors.add(:images, "At least one image is required")
@@ -33,24 +33,24 @@ class Vendors::CarsController < ApplicationController
       render :new
       return
     end
-    
+
     # Attach mulkiya before save so validations pass
     if params[:car][:mulkiya].present?
       @car.car_document = CarDocument.new
-      @car.car_document.mulkiya.attach(params[:car][:mulkiya]) 
+      @car.car_document.mulkiya.attach(params[:car][:mulkiya])
       @car.car_document.document_status = :pending
       @car.car_document.save
     end
 
     if @car.save
-      
+
       # Assign selected premium features
       if params[:car][:feature_ids].present?
         feature_ids = params[:car][:feature_ids].reject(&:blank?).map(&:to_i)
         @car.feature_ids = (@car.feature_ids + feature_ids).uniq
       end
-      
-      redirect_to vendors_car_path(@car), notice: 'Car was successfully created.'
+
+      redirect_to vendors_car_path(@car), notice: "Car was successfully created."
     else
       load_premium_features
       flash.now[:alert] = "Please fix the following errors:\n#{@car.errors.full_messages.join(', ')}"
@@ -72,24 +72,24 @@ class Vendors::CarsController < ApplicationController
         end
       end
     end
-    
+
     # Handle image management - append new images instead of replacing
     if params[:car][:images].present?
       # Filter out blank file inputs
       new_images = params[:car][:images].reject(&:blank?)
-      
+
       if new_images.any?
         # Append new images to existing ones
         @car.images.attach(new_images)
       end
-      
+
       # Remove the images from params to prevent Rails from replacing all images
       params[:car].delete(:images)
     end
-    
+
     # Handle feature associations
     update_car_features if params[:car][:feature_ids].present?
-    
+
     if @car.update(car_params.except(:mulkiya, :feature_ids))
       # Attach/replace mulkiya if provided
       if params[:car][:mulkiya].present?
@@ -107,7 +107,7 @@ class Vendors::CarsController < ApplicationController
         end
       end
 
-      redirect_to vendors_car_path(@car), notice: 'Car was successfully updated.'
+      redirect_to vendors_car_path(@car), notice: "Car was successfully updated."
     else
       load_premium_features
       render :edit
@@ -116,30 +116,30 @@ class Vendors::CarsController < ApplicationController
 
   def destroy
     @car.destroy
-    redirect_to vendors_cars_path, notice: 'Car was successfully deleted.'
+    redirect_to vendors_cars_path, notice: "Car was successfully deleted."
   end
 
   def remove_image
     # Handle both JSON and form parameters
-    image_index = if request.content_type == 'application/json'
-      JSON.parse(request.body.read)['image_index'].to_i
+    image_index = if request.content_type == "application/json"
+      JSON.parse(request.body.read)["image_index"].to_i
     else
       params[:image_index].to_i
     end
-    
+
     Rails.logger.info "Attempting to remove image at index #{image_index} for car #{@car.id}"
-    
+
     if @car.images[image_index]
       @car.images[image_index].purge
       Rails.logger.info "Successfully removed image at index #{image_index} for car #{@car.id}"
-      render json: { success: true, message: 'Image removed successfully' }
+      render json: { success: true, message: "Image removed successfully" }
     else
       Rails.logger.warn "Image not found at index #{image_index} for car #{@car.id}"
-      render json: { success: false, message: 'Image not found' }, status: :not_found
+      render json: { success: false, message: "Image not found" }, status: :not_found
     end
   rescue => e
     Rails.logger.error "Error removing image: #{e.message}"
-    render json: { success: false, message: 'Error removing image' }, status: :internal_server_error
+    render json: { success: false, message: "Error removing image" }, status: :internal_server_error
   end
 
   private
@@ -155,10 +155,10 @@ class Vendors::CarsController < ApplicationController
   def update_car_features
     # Get selected premium feature IDs (filter out blank values)
     selected_premium_ids = params[:car][:feature_ids].reject(&:blank?).map(&:to_i)
-    
+
     # Combine common features with selected premium features
     new_feature_ids = (selected_premium_ids).uniq
-    
+
     # Update the car's features
     @car.feature_ids = new_feature_ids
   end
@@ -168,7 +168,7 @@ class Vendors::CarsController < ApplicationController
       :model, :brand, :category, :color, :year, :daily_price, :weekly_price, :monthly_price, :status, :description,
       :transmission, :fuel_type, :seats, :engine_size,
       :air_conditioning, :gps, :sunroof, :bluetooth, :daily_milleage, :weekly_milleage, :monthly_milleage, :featured,
-      :main_image_url, :insurance_policy, :additional_mileage_charge, :mulkiya, 
+      :main_image_url, :insurance_policy, :additional_mileage_charge, :mulkiya,
       images: [], feature_ids: []
     )
   end

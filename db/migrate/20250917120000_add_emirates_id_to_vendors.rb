@@ -5,5 +5,3 @@ class AddEmiratesIdToVendors < ActiveRecord::Migration[7.2]
     add_index :vendors, :emirates_id, unique: true, where: "emirates_id IS NOT NULL"
   end
 end
-
-

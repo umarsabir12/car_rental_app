@@ -5,5 +5,3 @@ class RenamePriceAddWeeklyMonthlyToCars < ActiveRecord::Migration[7.2]
     add_column :cars, :monthly_price, :decimal, precision: 10, scale: 2
   end
 end
-
-

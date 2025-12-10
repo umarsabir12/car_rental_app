@@ -37,7 +37,7 @@ Rails.application.configure do
   # Don't care if the mailer can't send.
   config.action_mailer.delivery_method = :letter_opener
   config.action_mailer.perform_deliveries = true
-  
+
   # Disable caching for Action Mailer templates even if Action Controller
   # caching is enabled.
   config.action_mailer.perform_caching = false
@@ -45,7 +45,7 @@ Rails.application.configure do
   config.action_mailer.default_url_options = { host: "localhost", port: 3000 }
 
   # Print deprecation notices to the Rails logger.
-  
+
   config.hosts << "curvy-ideas-travel.loca.lt"
   config.active_support.deprecation = :log
 

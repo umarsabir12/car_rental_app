@@ -13,7 +13,7 @@ class Admin::InvitedVendorsController < ApplicationController
   def create
     @invited_vendor = InvitedVendor.new(invited_vendor_params)
     if @invited_vendor.save
-      redirect_to admin_vendors_path, notice: 'Invited vendor created successfully'
+      redirect_to admin_vendors_path, notice: "Invited vendor created successfully"
     end
   end
 

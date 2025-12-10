@@ -1,11 +1,10 @@
 class Users::SessionsController < Devise::SessionsController
-
     def new
         super do
             @car_id = params[:car_id]
             @start_date = params[:start_date]
             @end_date = params[:end_date]
-            @selected_period = params[:selected_period] || 'daily'
+            @selected_period = params[:selected_period] || "daily"
             @selected_price = params[:selected_price] || 0
             @selected_mileage_limit = params[:selected_mileage_limit] || 0
         end
@@ -20,15 +19,14 @@ class Users::SessionsController < Devise::SessionsController
             car_id: params[:car_id],
             start_date: params[:start_date],
             end_date: params[:end_date],
-            selected_period: params[:selected_period] || 'daily',
+            selected_period: params[:selected_period] || "daily",
             selected_price: params[:selected_price] || 0,
             selected_mileage_limit: params[:selected_mileage_limit] || 0,
             payment_processed: false
           )
           # Redirect to payment page
-          redirect_to  user_home_path and return
+          redirect_to user_home_path and return
         end
      end
     end
-
 end

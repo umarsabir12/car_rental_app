@@ -23,7 +23,7 @@
       .px-6.py-4.border-b.border-gray-200
         .flex.items-center.space-x-4
           .w-12.h-12.rounded-full.bg-gray-100.flex.items-center.justify-center
-            %i{class: "#{@activity.action_icon} #{@activity.action_color} text-xl"}
+            %i{class: "#{h @activity.action_icon} #{h @activity.action_color} text-xl"}
           .flex-1
             %h2.text-xl.font-semibold.text-gray-900= @activity.description
             %p.text-sm.text-gray-500
@@ -103,7 +103,7 @@
               .p-4.hover:bg-gray-50.transition-colors
                 .flex.items-center.space-x-4
                   .w-8.h-8.rounded-full.bg-gray-100.flex.items-center.justify-center
-                    %i{class: "#{activity.action_icon} #{activity.action_color} text-sm"}
+                    %i{class: "#{h activity.action_icon} #{h activity.action_color} text-sm"}
                   .flex-1.min-w-0
                     %p.text-sm.font-medium.text-gray-900= activity.description
                     %p.text-xs.text-gray-500= activity.formatted_time
@@ -121,7 +121,7 @@
               .p-4.hover:bg-gray-50.transition-colors
                 .flex.items-center.space-x-4
                   .w-8.h-8.rounded-full.bg-gray-100.flex.items-center.justify-center
-                    %i{class: "#{activity.action_icon} #{activity.action_color} text-sm"}
+                    %i{class: "#{h activity.action_icon} #{h activity.action_color} text-sm"}
                   .flex-1.min-w-0
                     %p.text-sm.font-medium.text-gray-900= activity.description
                     %p.text-xs.text-gray-500= activity.formatted_time

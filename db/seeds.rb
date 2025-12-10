@@ -58,7 +58,7 @@ user1 = User.create!(
 )
 
 user2 = User.create!(
-  email: "jane@example.com", 
+  email: "jane@example.com",
   password: "password123",
   password_confirmation: "password123",
   first_name: "Jane",
@@ -621,7 +621,7 @@ cars_data.each do |car_data|
   car.save!(validate: false)
   # Ensure each car has a CarDocument with a mix of statuses (bypass file validations)
   next unless car.persisted?
-  status = [:pending, :approved, :rejected][rand(0..2)]
+  status = [ :pending, :approved, :rejected ][rand(0..2)]
   car_doc = CarDocument.new(car: car, document_status: status)
   car_doc.save(validate: false)
 end
@@ -770,21 +770,21 @@ InvitedVendor.skip_callback(:create, :after, :send_invite_email) rescue nil
 InvitedVendor.skip_callback(:after_create, :send_invite_email) rescue nil
 
 InvitedVendor.create!([
-  { 
-    email: 'newpartner@rents.com', 
-    first_name: 'New', 
-    last_name: 'Partner', 
+  {
+    email: 'newpartner@rents.com',
+    first_name: 'New',
+    last_name: 'Partner',
     invite_token: SecureRandom.hex(16), # Use longer token to avoid collisions
-    invite_sent: true, 
-    status: 'pending' 
+    invite_sent: true,
+    status: 'pending'
   },
-  { 
-    email: 'expired@vendor.com', 
-    first_name: 'Old', 
-    last_name: 'Invite', 
+  {
+    email: 'expired@vendor.com',
+    first_name: 'Old',
+    last_name: 'Invite',
     invite_token: SecureRandom.hex(16), # Use longer token to avoid collisions
-    invite_sent: true, 
-    status: 'pending' 
+    invite_sent: true,
+    status: 'pending'
   }
 ])
 

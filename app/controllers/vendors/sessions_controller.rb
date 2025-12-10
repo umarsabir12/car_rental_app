@@ -26,4 +26,4 @@ class Vendors::SessionsController < Devise::SessionsController
   def destroy
     super
   end
-end 
+end

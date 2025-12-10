@@ -17,14 +17,14 @@ class Admin::CarsController < ApplicationController
   end
 
   def download_report
-    require 'csv'
+    require "csv"
     @cars = Car.includes(:vendor).all
     csv_data = CSV.generate(headers: true) do |csv|
-      csv << ["ID", "Brand", "Model", "Year", "Status", "Vendor", "Created At"]
+      csv << [ "ID", "Brand", "Model", "Year", "Status", "Vendor", "Created At" ]
       @cars.each do |car|
-        csv << [car.id, car.brand, car.model, car.year, car.status, car.vendor&.name, car.created_at]
+        csv << [ car.id, car.brand, car.model, car.year, car.status, car.vendor&.name, car.created_at ]
       end
     end
     send_data csv_data, filename: "cars_report_#{Date.today}.csv"
   end
-end 
+end

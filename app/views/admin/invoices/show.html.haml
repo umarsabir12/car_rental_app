@@ -340,7 +340,7 @@
             = f.submit 'Update Invoice', class: 'inline-flex items-center justify-center px-6 py-3 border border-transparent text-sm sm:text-base font-medium rounded-md shadow-sm text-white focus:outline-none focus:ring-2 focus:ring-offset-2 transition-colors', style: 'background-color: #3A6363;', onmouseover: "this.style.backgroundColor='#2d4d4d'", onmouseout: "this.style.backgroundColor='#3A6363'"
 
 :javascript
-  let itemIndex = #{@invoice.invoice_items.size};
+  let itemIndex = #{@invoice.invoice_items.size.to_i};
 
   function openEditModal() {
     document.getElementById('editInvoiceModal').classList.remove('hidden');

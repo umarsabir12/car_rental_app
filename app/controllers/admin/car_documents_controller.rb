@@ -7,40 +7,40 @@ class Admin::CarDocumentsController < ApplicationController
 
   def approve
     @car_document.update(document_status: :approved)
-    
+
     # Log activity for car document approval
     Activity.log_activity(
       vendor: @car_document.car.vendor,
       subject: @car_document,
-      action: 'car_document_approved',
+      action: "car_document_approved",
       description: "Admin approved mulkiya document for #{@car_document.car.full_name}",
-      metadata: { 
+      metadata: {
         car_id: @car_document.car.id,
         car_name: @car_document.car.full_name,
-        admin_action: 'approved'
+        admin_action: "approved"
       }
     )
-    
-    redirect_back fallback_location: admin_dashboard_index_path, notice: 'Car document approved.'
+
+    redirect_back fallback_location: admin_dashboard_index_path, notice: "Car document approved."
   end
 
   def reject
     @car_document.update(document_status: :rejected)
-    
+
     # Log activity for car document rejection
     Activity.log_activity(
       vendor: @car_document.car.vendor,
       subject: @car_document,
-      action: 'car_document_rejected',
+      action: "car_document_rejected",
       description: "Admin rejected mulkiya document for #{@car_document.car.full_name}",
-      metadata: { 
+      metadata: {
         car_id: @car_document.car.id,
         car_name: @car_document.car.full_name,
-        admin_action: 'rejected'
+        admin_action: "rejected"
       }
     )
-    
-    redirect_back fallback_location: admin_dashboard_index_path, notice: 'Car document rejected.'
+
+    redirect_back fallback_location: admin_dashboard_index_path, notice: "Car document rejected."
   end
 
   private
@@ -48,5 +48,3 @@ class Admin::CarDocumentsController < ApplicationController
       @car_document = CarDocument.find(params[:id])
     end
 end
-
-

@@ -1,10 +1,10 @@
 module ApplicationHelper
-  def car_main_image(car, size: [400, 400], use_variant: true)
+  def car_main_image(car, size: [ 400, 400 ], use_variant: true)
     return safe_car_placeholder if car.nil?
-    
+
     if car.images.attached? && car.images.any?
       image = car.images.first
-      
+
       if use_variant && defined?(MiniMagick)
         image_tag image.variant(resize_to_limit: size), class: "car-image w-full h-full object-cover"
       else
@@ -15,9 +15,9 @@ module ApplicationHelper
     end
   end
 
-  def car_image_slider(car, height: 'h-96', show_counter: true, show_navigation: true, show_pagination: true)
+  def car_image_slider(car, height: "h-96", show_counter: true, show_navigation: true, show_pagination: true)
     return safe_car_placeholder if car.nil?
-    
+
     if car.images.attached? && car.images.any?
       content_tag :div, class: "relative #{height} bg-gray-100" do
         # Slider Container
@@ -73,7 +73,7 @@ module ApplicationHelper
 
   def car_images_for_slider(car)
     return [] if car.nil?
-    
+
     if car.images.attached? && car.images.any?
       car.images.map { |image| url_for(image) }
     else
@@ -105,5 +105,17 @@ module ApplicationHelper
   def parsed_whatsapp
     return nil if AppConstants::ADMIN_WHATSAPP_NUMBER.blank?
     @parsed_whatsapp ||= Phonelib.parse(AppConstants::ADMIN_WHATSAPP_NUMBER)
+  end
+
+  # Sanitize WhatsApp link to prevent XSS
+  def safe_whatsapp_link(url)
+    return nil if url.blank?
+    url.to_s.start_with?("https://wa.me/") ? url : nil
+  end
+
+  # Sanitize website URL to prevent XSS
+  def safe_website_url(url)
+    return nil if url.blank?
+    url.to_s.match?(URI::DEFAULT_PARSER.make_regexp(%w[http https])) ? url : nil
   end
 end

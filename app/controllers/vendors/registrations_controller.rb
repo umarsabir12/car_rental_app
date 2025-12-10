@@ -1,5 +1,5 @@
 class Vendors::RegistrationsController <  Devise::RegistrationsController
-  before_action :check_invite_token, only: [:new]
+  before_action :check_invite_token, only: [ :new ]
 
   def new
     if @invited_vendor.present?
@@ -37,7 +37,7 @@ class Vendors::RegistrationsController <  Devise::RegistrationsController
       Rails.logger.info "Checking invite token: #{params[:token]}"
       @invited_vendor = InvitedVendor.find_by(invite_token: params[:token])
       Rails.logger.info "Found invited vendor: #{@invited_vendor.inspect}"
-      
+
       unless @invited_vendor.present?
         Rails.logger.error "Invalid invite token: #{params[:token]}"
         redirect_to new_vendor_session_path, alert: "Invalid invite token"

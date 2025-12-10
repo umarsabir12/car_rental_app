@@ -1,8 +1,8 @@
 class Admin::FeaturesController < ApplicationController
   layout "admin"
   before_action :authenticate_admin!
-  before_action :set_feature, only: [:edit, :update, :destroy]
-  
+  before_action :set_feature, only: [ :edit, :update, :destroy ]
+
   def index
     @common_features = Feature.where(common: true).order(:name)
     @premium_features = Feature.where(common: false).order(:name)
@@ -11,9 +11,9 @@ class Admin::FeaturesController < ApplicationController
 
   def create
     @feature = Feature.new(feature_params)
-    
+
     if @feature.save
-      redirect_to admin_features_path, notice: 'Feature was successfully created.'
+      redirect_to admin_features_path, notice: "Feature was successfully created."
     else
       @common_features = Feature.where(common: true).order(:name)
       @premium_features = Feature.where(common: false).order(:name)
@@ -30,7 +30,7 @@ class Admin::FeaturesController < ApplicationController
 
   def update
     if @feature.update(feature_params)
-      redirect_to admin_features_path, notice: 'Feature was successfully updated.'
+      redirect_to admin_features_path, notice: "Feature was successfully updated."
     else
       render :edit, status: :unprocessable_entity
     end
@@ -38,7 +38,7 @@ class Admin::FeaturesController < ApplicationController
 
   def destroy
     @feature.destroy
-    redirect_to admin_features_path, notice: 'Feature was successfully deleted.'
+    redirect_to admin_features_path, notice: "Feature was successfully deleted."
   end
 
   private

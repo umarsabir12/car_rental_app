@@ -28,9 +28,9 @@ class VendorsController < ApplicationController
         end
       end
 
-      redirect_to vendor_path(@vendor), notice: 'Profile was successfully updated.'
+      redirect_to vendor_path(@vendor), notice: "Profile was successfully updated."
     else
-      flash.now[:alert] = 'Failed to update profile. Please check the errors below.'
+      flash.now[:alert] = "Failed to update profile. Please check the errors below."
       render :edit
     end
   end
@@ -48,4 +48,4 @@ class VendorsController < ApplicationController
       :emirates_id, :emirates_id_expires_on, :trade_license, :whatsapp_number
     )
   end
-end 
+end
