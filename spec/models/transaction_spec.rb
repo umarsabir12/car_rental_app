@@ -79,7 +79,7 @@ RSpec.describe Transaction, type: :model do
         end
 
         # Get only the test transactions to avoid interference from let! blocks
-        test_transactions = Transaction.where(id: [@old_transaction.id, @new_transaction.id]).recent
+        test_transactions = Transaction.where(id: [ @old_transaction.id, @new_transaction.id ]).recent
         expect(test_transactions.first).to eq(@new_transaction)
         expect(test_transactions.last).to eq(@old_transaction)
       end

@@ -14,28 +14,28 @@ class Admin::VendorsController < ApplicationController
     Rails.logger.info "=== DELETE REQUEST RECEIVED ==="
     Rails.logger.info "Params: #{params.inspect}"
     Rails.logger.info "Current admin: #{current_admin&.email}"
-    
+
     @vendor = Vendor.find(params[:id])
-    
+
     # Debug logging
     Rails.logger.info "Attempting to delete vendor: #{@vendor.id} - #{@vendor.company_name}"
-    
+
     @vendor.soft_delete!
 
     Activity.log_activity(
       vendor: @vendor,
       subject: @vendor,
-      action: 'vendor_deleted',
+      action: "vendor_deleted",
       description: "Vendor #{@vendor.company_name} was removed by admin",
-      metadata: { 
+      metadata: {
         vendor_id: @vendor.id,
         vendor_name: @vendor.company_name,
         removed_by: current_admin.email
       }
     )
-    
+
     Rails.logger.info "Vendor deleted successfully: #{@vendor.id}"
-    redirect_to admin_vendors_path, notice: 'Vendor has been deleted successfully.'
+    redirect_to admin_vendors_path, notice: "Vendor has been deleted successfully."
   rescue => e
     Rails.logger.error "Error deleting vendor: #{e.message}"
     Rails.logger.error e.backtrace.join("\n")
@@ -45,30 +45,30 @@ class Admin::VendorsController < ApplicationController
   def restore
     @vendor = Vendor.find(params[:id])
     @vendor.restore!
-    
+
     # Log vendor restoration activity
     Activity.log_activity(
       vendor: @vendor,
       subject: @vendor,
-      action: 'vendor_restored',
+      action: "vendor_restored",
       description: "Vendor #{@vendor.company_name} was restored by admin",
-      metadata: { 
+      metadata: {
         vendor_id: @vendor.id,
         vendor_name: @vendor.company_name,
         restored_by: current_admin.email
       }
     )
-    
-    redirect_to admin_vendors_path, notice: 'Vendor has been restored successfully.'
+
+    redirect_to admin_vendors_path, notice: "Vendor has been restored successfully."
   end
 
   def download_report
-    require 'csv'
+    require "csv"
     @vendors = Vendor.all
     csv_data = CSV.generate(headers: true) do |csv|
-      csv << ["ID", "Name", "Email", "Phone", "Company Name", "Created At"]
+      csv << [ "ID", "Name", "Email", "Phone", "Company Name", "Created At" ]
       @vendors.each do |vendor|
-        csv << [vendor.id, vendor.name, vendor.email, vendor.phone, vendor.company_name, vendor.created_at]
+        csv << [ vendor.id, vendor.name, vendor.email, vendor.phone, vendor.company_name, vendor.created_at ]
       end
     end
     send_data csv_data, filename: "vendors_report_#{Date.today}.csv"
@@ -81,7 +81,7 @@ class Admin::VendorsController < ApplicationController
       Activity.log_activity(
         vendor: @vendor,
         subject: @vendor,
-        action: 'vendor_activated',
+        action: "vendor_activated",
         description: "Vendor #{@vendor.company_name} was activated by admin",
         metadata: {
           vendor_id: @vendor.id,
@@ -90,9 +90,9 @@ class Admin::VendorsController < ApplicationController
         }
       )
 
-      redirect_to admin_vendor_path(@vendor), notice: 'Vendor has been activated successfully.'
+      redirect_to admin_vendor_path(@vendor), notice: "Vendor has been activated successfully."
     else
-      redirect_to admin_vendor_path(@vendor), alert: 'Failed to activate vendor.'
+      redirect_to admin_vendor_path(@vendor), alert: "Failed to activate vendor."
     end
   end
 
@@ -103,7 +103,7 @@ class Admin::VendorsController < ApplicationController
       Activity.log_activity(
         vendor: @vendor,
         subject: @vendor,
-        action: 'vendor_deactivated',
+        action: "vendor_deactivated",
         description: "Vendor #{@vendor.company_name} was deactivated by admin",
         metadata: {
           vendor_id: @vendor.id,
@@ -112,10 +112,9 @@ class Admin::VendorsController < ApplicationController
         }
       )
 
-      redirect_to admin_vendor_path(@vendor), notice: 'Vendor has been deactivated successfully.'
+      redirect_to admin_vendor_path(@vendor), notice: "Vendor has been deactivated successfully."
     else
-      redirect_to admin_vendor_path(@vendor), alert: 'Failed to deactivate vendor.'
+      redirect_to admin_vendor_path(@vendor), alert: "Failed to deactivate vendor."
     end
   end
-
-end 
+end

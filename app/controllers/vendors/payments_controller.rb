@@ -10,11 +10,11 @@ class Vendors::PaymentsController < ApplicationController
 
     # Apply filters
     @paid_bookings = @paid_bookings.where(status: params[:status]) if params[:status].present?
-    
+
     # Search by user name or email
     if params[:search].present?
       @paid_bookings = @paid_bookings.joins(:user)
-                                     .where("users.first_name ILIKE ? OR users.last_name ILIKE ? OR users.email ILIKE ?", 
+                                     .where("users.first_name ILIKE ? OR users.last_name ILIKE ? OR users.email ILIKE ?",
                                             "%#{params[:search]}%", "%#{params[:search]}%", "%#{params[:search]}%")
     end
 
@@ -43,7 +43,7 @@ class Vendors::PaymentsController < ApplicationController
                       .where(car_id: current_vendor.cars.pluck(:id))
                       .where(payment_processed: true)
                       .find(params[:id])
-    
+
     # Calculate payment details
     @payment_details = calculate_payment_details(@booking)
   end
@@ -76,7 +76,7 @@ class Vendors::PaymentsController < ApplicationController
       total_days: total_days,
       total_amount: booking.total_amount || 0,
       payment_date: booking.updated_at,
-      payment_method: 'Online Payment' # This could be enhanced with actual payment method data
+      payment_method: "Online Payment" # This could be enhanced with actual payment method data
     }
   end
-end 
+end

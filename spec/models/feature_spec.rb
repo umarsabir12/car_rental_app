@@ -35,9 +35,9 @@ RSpec.describe Feature, type: :model do
       it 'assigns common feature to all existing cars' do
         car1 = create(:car)
         car2 = create(:car)
-        
+
         common_feature = create(:feature, :common)
-        
+
         expect(car1.reload.features).to include(common_feature)
         expect(car2.reload.features).to include(common_feature)
       end
@@ -47,11 +47,11 @@ RSpec.describe Feature, type: :model do
       it 'assigns feature to all cars when changed from premium to common' do
         car = create(:car)
         feature = create(:feature, :premium)
-        
+
         expect(car.features).not_to include(feature)
-        
+
         feature.update(common: true)
-        
+
         expect(car.reload.features).to include(feature)
       end
     end

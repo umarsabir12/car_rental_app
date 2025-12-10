@@ -71,7 +71,7 @@ RSpec.describe Activity, type: :model do
         end
 
         # Get only the test activities to avoid interference from let! blocks
-        test_activities = Activity.where(id: [@old_activity.id, @new_activity.id]).recent
+        test_activities = Activity.where(id: [ @old_activity.id, @new_activity.id ]).recent
         expect(test_activities.first).to eq(@new_activity)
         expect(test_activities.last).to eq(@old_activity)
       end

@@ -4,6 +4,6 @@ class Admins::SessionsController < Devise::SessionsController
   private
 
   def resolve_layout
-    action_name == 'new' ? false : 'admin'
+    action_name == "new" ? false : "admin"
   end
-end 
+end

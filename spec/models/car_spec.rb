@@ -237,7 +237,7 @@ RSpec.describe Car, type: :model do
   describe '#active_features' do
     it 'returns humanized names of true feature columns' do
       car = build(:car, air_conditioning: true, gps: true, sunroof: false, bluetooth: false)
-      expect(car.active_features).to match_array(['Air conditioning', 'Gps'])
+      expect(car.active_features).to match_array([ 'Air conditioning', 'Gps' ])
     end
 
     it 'returns empty array if no features are active' do

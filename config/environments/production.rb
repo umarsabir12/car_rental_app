@@ -21,13 +21,13 @@ Rails.application.configure do
   # config.require_master_key = true
 
   # Enable serving static files from `public/`, relying on NGINX/Apache to do so instead.
-  config.public_file_server.enabled = ENV['RAILS_SERVE_STATIC_FILES'].present?
+  config.public_file_server.enabled = ENV["RAILS_SERVE_STATIC_FILES"].present?
 
   # Add far-future expires headers for static assets
-  if ENV['RAILS_SERVE_STATIC_FILES'].present?
+  if ENV["RAILS_SERVE_STATIC_FILES"].present?
     config.public_file_server.headers = {
-      'Cache-Control' => 'public, max-age=31536000',
-      'Expires' => 1.year.from_now.to_formatted_s(:rfc822)
+      "Cache-Control" => "public, max-age=31536000",
+      "Expires" => 1.year.from_now.to_formatted_s(:rfc822)
     }
   end
 
@@ -42,7 +42,7 @@ Rails.application.configure do
   config.assets.digest = true
 
   # Precompile additional assets
-  config.assets.precompile += %w( *.js *.css *.png *.jpg *.jpeg *.gif *.svg )
+  config.assets.precompile += %w[ *.js *.css *.png *.jpg *.jpeg *.gif *.svg ]
 
   # Enable serving of images, stylesheets, and JavaScripts from an asset server.
   # config.asset_host = "http://assets.example.com"
@@ -59,8 +59,8 @@ Rails.application.configure do
 
   # Set asset host to S3 bucket URL for direct serving (faster image loading)
   # This serves images directly from S3 instead of proxying through Rails
-  if ENV['S3_ASSET_HOST'].present?
-    config.asset_host = ENV['S3_ASSET_HOST']
+  if ENV["S3_ASSET_HOST"].present?
+    config.asset_host = ENV["S3_ASSET_HOST"]
   end
 
   # Mount Action Cable outside main process or domain.
@@ -93,10 +93,10 @@ Rails.application.configure do
 
   # Use a different cache store in production.
   config.cache_store = :redis_cache_store, {
-    url: ENV.fetch('REDIS_URL', 'redis://localhost:6379/1'),
+    url: ENV.fetch("REDIS_URL", "redis://localhost:6379/1"),
     expires_in: 90.minutes,
     reconnect_attempts: 1,
-    error_handler: -> (method:, returning:, exception:) {
+    error_handler: ->(method:, returning:, exception:) {
       Rails.logger.error("Redis cache error: #{exception.message}")
       Rails.logger.error(exception.backtrace.join("\n"))
     }
@@ -127,9 +127,9 @@ Rails.application.configure do
   }
 
   # ✅ CHANGED: Default URL options for ActionMailer - Updated to custom domain
-  config.action_mailer.default_url_options = { 
+  config.action_mailer.default_url_options = {
     host: "wheelsonrent.ae", # ✅ CHANGED from herokuapp.com to custom domain
-    protocol: 'https'
+    protocol: "https"
   }
 
   # Enable locale fallbacks for I18n (makes lookups for any locale fall back to
@@ -149,7 +149,7 @@ Rails.application.configure do
     "www.wheelsonrent.ae",  # Allow requests from www subdomain
     ".herokuapp.com"        # Keep Heroku domain working too
   ]
-  
+
   # Skip DNS rebinding protection for the default health check endpoint.
   # config.host_authorization = { exclude: ->(request) { request.path == "/up" } }
 end

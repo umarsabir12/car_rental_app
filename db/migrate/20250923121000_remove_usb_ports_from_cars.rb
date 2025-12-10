@@ -3,5 +3,3 @@ class RemoveUsbPortsFromCars < ActiveRecord::Migration[7.2]
     remove_column :cars, :usb_ports, :integer
   end
 end
-
-

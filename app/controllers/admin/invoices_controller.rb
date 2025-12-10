@@ -2,8 +2,8 @@ class Admin::InvoicesController < ApplicationController
   layout "admin"
 
   before_action :authenticate_admin!
-  before_action :set_vendor, only: [:index, :new, :create]
-  before_action :set_invoice, only: [:show, :edit, :update, :destroy, :mark_as_paid]
+  before_action :set_vendor, only: [ :index, :new, :create ]
+  before_action :set_invoice, only: [ :show, :edit, :update, :destroy, :mark_as_paid ]
 
   def index
     @invoices = @vendor.invoices.recent
@@ -20,7 +20,7 @@ class Admin::InvoicesController < ApplicationController
     @invoice = @vendor.invoices.build(invoice_params)
 
     if @invoice.save!
-      redirect_to admin_vendor_path(@vendor), notice: 'Invoice was successfully created.'
+      redirect_to admin_vendor_path(@vendor), notice: "Invoice was successfully created."
     else
       render :new, status: :unprocessable_entity
     end
@@ -30,8 +30,8 @@ class Admin::InvoicesController < ApplicationController
   end
 
   def update
-    if @invoice.update!(invoice_params.merge(payment_status: 'pending'))
-      redirect_to admin_invoice_path(@invoice), notice: 'Invoice was successfully updated.'
+    if @invoice.update!(invoice_params.merge(payment_status: "pending"))
+      redirect_to admin_invoice_path(@invoice), notice: "Invoice was successfully updated."
     else
       render :edit, status: :unprocessable_entity
     end
@@ -40,14 +40,14 @@ class Admin::InvoicesController < ApplicationController
   def destroy
     vendor = @invoice.vendor  # Store vendor before destroying invoice
     @invoice.destroy
-    redirect_to admin_vendor_invoices_path(vendor), notice: 'Invoice was successfully deleted.'
+    redirect_to admin_vendor_invoices_path(vendor), notice: "Invoice was successfully deleted."
   end
 
   def mark_as_paid
     if @invoice.mark_as_paid!
-      redirect_to admin_invoice_path(@invoice), notice: 'Invoice marked as paid.'
+      redirect_to admin_invoice_path(@invoice), notice: "Invoice marked as paid."
     else
-      redirect_to admin_invoice_path(@invoice), alert: 'Could not update invoice.'
+      redirect_to admin_invoice_path(@invoice), alert: "Could not update invoice."
     end
   end
 
@@ -65,7 +65,7 @@ class Admin::InvoicesController < ApplicationController
     params.require(:invoice).permit(
       :payment_status,
       :amount,
-      invoice_items_attributes: [:id, :description, :amount, :_destroy]
+      invoice_items_attributes: [ :id, :description, :amount, :_destroy ]
     )
   end
 end

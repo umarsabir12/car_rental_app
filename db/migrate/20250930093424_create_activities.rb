@@ -11,9 +11,9 @@ class CreateActivities < ActiveRecord::Migration[7.2]
 
       t.timestamps
     end
-    
-    add_index :activities, [:user_id, :created_at]
-    add_index :activities, [:subject_type, :subject_id]
+
+    add_index :activities, [ :user_id, :created_at ]
+    add_index :activities, [ :subject_type, :subject_id ]
     add_index :activities, :action
   end
 end

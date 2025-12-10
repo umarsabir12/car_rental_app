@@ -3,7 +3,7 @@ namespace :features do
   desc "Seed car features (common and premium)"
   task seed: :environment do
     puts "Starting to seed car features..."
-    
+
     common_features = [
       "Airbags",
       "Anti-lock Brakes (ABS)",
@@ -17,7 +17,7 @@ namespace :features do
       "Power Side Mirrors",
       "Steering Wheel Controls"
     ]
-    
+
     premium_features = [
       "Surround/360° Camera",
       "Blind Spot Warning",
@@ -37,14 +37,14 @@ namespace :features do
       "Power Liftgate",
       "All-Wheel Drive"
     ]
-    
+
     # Add common features
     common_count = 0
     common_features.each do |feature_name|
       feature = Feature.find_or_create_by(name: feature_name) do |f|
         f.common = true
       end
-      
+
       if feature.persisted? && feature.previously_new_record?
         common_count += 1
         puts "✓ Added common feature: #{feature_name}"
@@ -52,14 +52,14 @@ namespace :features do
         puts "- Skipped (already exists): #{feature_name}"
       end
     end
-    
+
     # Add premium features
     premium_count = 0
     premium_features.each do |feature_name|
       feature = Feature.find_or_create_by(name: feature_name) do |f|
         f.common = false
       end
-      
+
       if feature.persisted? && feature.previously_new_record?
         premium_count += 1
         puts "★ Added premium feature: #{feature_name}"
@@ -67,7 +67,7 @@ namespace :features do
         puts "- Skipped (already exists): #{feature_name}"
       end
     end
-    
+
     puts "\n" + "="*50
     puts "Feature seeding completed!"
     puts "Common features added: #{common_count}"

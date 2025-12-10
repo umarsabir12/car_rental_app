@@ -4,4 +4,4 @@ class Vendors::DashboardController < ApplicationController
   def index
     # Add dashboard stats and data here
   end
-end 
+end

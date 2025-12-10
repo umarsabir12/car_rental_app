@@ -14,14 +14,14 @@ class Admin::CustomersController < ApplicationController
   end
 
   def download_report
-    require 'csv'
+    require "csv"
     @users = User.all
     csv_data = CSV.generate(headers: true) do |csv|
-      csv << ["ID", "Name", "Email", "Phone", "Created At"]
+      csv << [ "ID", "Name", "Email", "Phone", "Created At" ]
       @users.each do |user|
-        csv << [user.id, "#{user.first_name} #{user.last_name}", user.email, user.phone, user.created_at]
+        csv << [ user.id, "#{user.first_name} #{user.last_name}", user.email, user.phone, user.created_at ]
       end
     end
     send_data csv_data, filename: "customers_report_ #{Date.today}.csv"
   end
-end 
+end

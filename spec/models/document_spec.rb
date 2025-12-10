@@ -28,8 +28,8 @@ RSpec.describe Document, type: :model do
 
     it 'has DOC_FIELDS constant with field mappings' do
       expect(Document::DOC_FIELDS).to be_a(Hash)
-      expect(Document::DOC_FIELDS['uae_license']).to eq(['A Valid UAE driving license', 'uae_license'])
-      expect(Document::DOC_FIELDS['emirates_id']).to eq(['Emirates ID front and back', 'emirates_id'])
+      expect(Document::DOC_FIELDS['uae_license']).to eq([ 'A Valid UAE driving license', 'uae_license' ])
+      expect(Document::DOC_FIELDS['emirates_id']).to eq([ 'Emirates ID front and back', 'emirates_id' ])
     end
   end
 
@@ -130,7 +130,7 @@ RSpec.describe Document, type: :model do
     describe '.doc_info_for_field' do
       it 'returns document info for valid field' do
         result = Document.doc_info_for_field('uae_license')
-        expect(result).to eq(['A Valid UAE driving license', 'uae_license'])
+        expect(result).to eq([ 'A Valid UAE driving license', 'uae_license' ])
       end
 
       it 'returns nil for invalid field' do

@@ -20,26 +20,26 @@ gem "jbuilder"
 gem "redis", ">= 4.0.1"
 
 # Use this for phone number validations
-gem 'phonelib'
+gem "phonelib"
 
-gem 'rack-cors'
-gem 'devise'
-gem 'devise-jwt'
-gem 'tailwindcss-rails'
-gem 'html2haml', '~> 2.2'
-gem 'haml-rails'
+gem "rack-cors"
+gem "devise"
+gem "devise-jwt"
+gem "tailwindcss-rails"
+gem "html2haml", "~> 2.2"
+gem "haml-rails"
 
-gem 'jquery-rails'
-gem 'aws-sdk-s3'
-gem 'dotenv-rails'
-gem 'stripe'
+gem "jquery-rails"
+gem "aws-sdk-s3"
+gem "dotenv-rails"
+gem "stripe"
 # Background jobs - removed Sidekiq and Redis dependencies
 
 # For Google OAuth2 authentication
-gem 'omniauth-google-oauth2'
-gem 'omniauth-rails_csrf_protection'
+gem "omniauth-google-oauth2"
+gem "omniauth-rails_csrf_protection"
 
-gem 'figaro'
+gem "figaro"
 
 # Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]
 gem "image_processing", "~> 1.2"
@@ -57,7 +57,7 @@ gem "tzinfo-data", platforms: %i[ windows jruby ]
 gem "bootsnap", require: false
 
 # Uses slug instead of id in url
-gem 'friendly_id', '~> 5.5.0'
+gem "friendly_id", "~> 5.5.0"
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
@@ -70,17 +70,17 @@ group :development, :test do
   gem "rubocop-rails-omakase", require: false
 
   # RSpec testing framework
-  gem 'rspec-rails', '~> 6.1.0'
-  gem 'factory_bot_rails'
-  gem 'faker'
+  gem "rspec-rails", "~> 6.1.0"
+  gem "factory_bot_rails"
+  gem "faker"
 
   gem "rails-controller-testing"
 end
 
 group :development do
   # Use console on exceptions pages [https://github.com/rails/web-console]
-  gem 'letter_opener'
-  gem 'letter_opener_web'
+  gem "letter_opener"
+  gem "letter_opener_web"
   gem "web-console"
 end
 
@@ -89,7 +89,7 @@ group :test do
   gem "capybara"
   gem "selenium-webdriver"
 
-  gem 'shoulda-matchers', '~> 6.0'
-  gem 'database_cleaner-active_record'
-  gem 'simplecov', require: false
+  gem "shoulda-matchers", "~> 6.0"
+  gem "database_cleaner-active_record"
+  gem "simplecov", require: false
 end

@@ -11,8 +11,8 @@ class Admin < ApplicationRecord
   validates :role_type, presence: true, inclusion: { in: %w[admin super_admin], message: "must be either 'admin' or 'super_admin'" }
 
   # Scopes
-  scope :super_admins, -> { where(role_type: 'super_admin') }
-  scope :admins, -> { where(role_type: 'admin') }
+  scope :super_admins, -> { where(role_type: "super_admin") }
+  scope :admins, -> { where(role_type: "admin") }
 
   # Instance methods
   def full_name
@@ -25,12 +25,12 @@ class Admin < ApplicationRecord
     elsif first_name.present?
       first_name
     else
-      email.split('@').first
+      email.split("@").first
     end
   end
 
   def super_admin?
-    role_type == 'super_admin'
+    role_type == "super_admin"
   end
 
   def can_create_admins?

@@ -5,5 +5,3 @@ class AddMilleageColumnsToCars < ActiveRecord::Migration[7.2]
     add_column :cars, :monthly_milleage, :integer, default: 0
   end
 end
-
-

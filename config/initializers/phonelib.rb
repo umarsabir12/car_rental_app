@@ -1,4 +1,4 @@
-require 'phonelib'
+require "phonelib"
 
 # Load phone number data
 Phonelib.parse_special = true

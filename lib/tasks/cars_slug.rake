@@ -7,7 +7,7 @@ namespace :cars_slug do
     Car.find_each do |car|
       car.save(validate: false)
     end
-    
+
     puts "\n" + "="*50
     puts "Slug seeding completed!"
     puts "Total Cars in database: #{Car.count}"

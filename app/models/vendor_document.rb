@@ -2,7 +2,7 @@ class VendorDocument < ApplicationRecord
   belongs_to :vendor
   has_one_attached :trade_license
 
-  validates :trade_license, presence: { message: 'is required for vendor' }
+  validates :trade_license, presence: { message: "is required for vendor" }
 
   enum document_status: {
     pending: 0,
@@ -18,19 +18,19 @@ class VendorDocument < ApplicationRecord
     return unless trade_license.attached?
 
     allowed_types = [
-      'application/pdf',
-      'image/jpeg',
-      'image/jpg',
-      'image/png',
-      'image/webp',
-      'image/heic',
-      'image/heif',
-      'image/heic-sequence',
-      'image/heif-sequence'
+      "application/pdf",
+      "image/jpeg",
+      "image/jpg",
+      "image/png",
+      "image/webp",
+      "image/heic",
+      "image/heif",
+      "image/heic-sequence",
+      "image/heif-sequence"
     ]
 
     unless allowed_types.include?(trade_license.content_type)
-      errors.add(:trade_license, 'must be a PDF or an image (JPEG, PNG, WEBP)')
+      errors.add(:trade_license, "must be a PDF or an image (JPEG, PNG, WEBP)")
     end
   end
 end

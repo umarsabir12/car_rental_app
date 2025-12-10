@@ -6,16 +6,16 @@ namespace :update_expire_status do
 
     count = 0
 
-    InvitedVendor.where(status: 'expired').each do | invited_vendor |
+    InvitedVendor.where(status: "expired").each do | invited_vendor |
       if Vendor.find_by_email(invited_vendor.email)
-        invited_vendor.update(status: 'accepted', invite_token: nil)
+        invited_vendor.update(status: "accepted", invite_token: nil)
         count += 1
       else
-        invited_vendor.update(status: 'pending')
+        invited_vendor.update(status: "pending")
         count += 1
       end
     end
-    
+
     puts "\n" + "="*50
     puts "Updated #{count} Expired invites"
     puts "Expired Invites updating completed!"

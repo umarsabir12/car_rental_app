@@ -1,5 +1,5 @@
 class BookingsController < ApplicationController
-  before_action :authenticate_user!, only: [:create]
+  before_action :authenticate_user!, only: [ :create ]
 
   def create
     @booking = Booking.new(booking_params)
@@ -8,7 +8,7 @@ class BookingsController < ApplicationController
     @booking.payment_mode = "Online"
 
     if @booking.save
-      redirect_to  user_home_path, notice: "Booking created! Please complete your payment."
+      redirect_to user_home_path, notice: "Booking created! Please complete your payment."
     else
       # Redirect back to car show page with error message
       redirect_to car_path(params[:booking][:car_id]), alert: @booking.errors.full_messages.join(", ")
@@ -21,4 +21,4 @@ class BookingsController < ApplicationController
     params.require(:booking).permit(:car_id, :start_date, :end_date, :selected_period, :selected_price,
                                     :selected_mileage_limit, :delivery_option)
   end
-end 
+end

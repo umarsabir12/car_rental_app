@@ -29,21 +29,21 @@ class Booking < ApplicationRecord
     daily_price = car.daily_price.to_f
 
     base_amount = case selected_period
-                  when "weekly"
+    when "weekly"
                     weekly_price = selected_price.to_f
                     full_weeks = duration_days / 7
                     remaining_days = duration_days % 7
                     (full_weeks * weekly_price) + (remaining_days * daily_price)
 
-                  when "monthly"
+    when "monthly"
                     monthly_price = selected_price.to_f
                     full_months = duration_days / 30
                     remaining_days = duration_days % 30
                     (full_months * monthly_price) + (remaining_days * daily_price)
 
-                  else # daily
+    else # daily
                     duration_days * selected_price.to_f
-                  end
+    end
 
     # Add delivery or pickup charge if applicable
     base_amount += delivery_charge if delivery_charge_applicable?
@@ -63,7 +63,7 @@ class Booking < ApplicationRecord
     self.total_amount = calculate_total_amount
     save(validate: false)
   end
-  
+
   private
 
   def end_date_after_start_date
@@ -116,4 +116,4 @@ class Booking < ApplicationRecord
     # Set the vendor to the car's owner when booking is created
     update_column(:vendor_id, car.vendor_id) if car&.vendor && vendor_id.blank?
   end
-end 
+end

@@ -4,16 +4,16 @@ class Document < ApplicationRecord
   has_many :activities, as: :subject, dependent: :destroy
   # before_create :set_pending_status
 
-  TOURIST =  ["Home country driving license and IDP", "Passport Copy", "Copy of visa Entry Stamp"]
-  RESIDENT = ["A Valid UAE driving license", "Emirates ID front and back"]
+  TOURIST =  [ "Home country driving license and IDP", "Passport Copy", "Copy of visa Entry Stamp" ]
+  RESIDENT = [ "A Valid UAE driving license", "Emirates ID front and back" ]
 
   DOC_FIELDS = {
-    "uae_license" => ["A Valid UAE driving license", "uae_license"],
-    "emirates_id" => ["Emirates ID front and back", "emirates_id"],
-    "passport_visa" => ["Passport and Visa copy", "passport_visa"],
-    "foreign_license_idp" => ["Home country driving license and IDP", "foreign_license_idp"],
-    "visa_entry_stamp" => ["Copy of visa Entry Stamp", "visa_entry_stamp"],
-    "passport_copy" => ["Passport Copy", "passport_copy"]
+    "uae_license" => [ "A Valid UAE driving license", "uae_license" ],
+    "emirates_id" => [ "Emirates ID front and back", "emirates_id" ],
+    "passport_visa" => [ "Passport and Visa copy", "passport_visa" ],
+    "foreign_license_idp" => [ "Home country driving license and IDP", "foreign_license_idp" ],
+    "visa_entry_stamp" => [ "Copy of visa Entry Stamp", "visa_entry_stamp" ],
+    "passport_copy" => [ "Passport Copy", "passport_copy" ]
   }.freeze
 
   # Callbacks to update booking status when document status changes

@@ -32,18 +32,18 @@ class UsersController < ApplicationController
       Activity.log_activity(
         user: @user,
         subject: @user,
-        action: 'profile_updated',
+        action: "profile_updated",
         description: "#{@user.full_name} updated their profile",
-        metadata: { 
+        metadata: {
           updated_fields: user_params.keys,
           nationality: @user.nationality,
           whatsapp_number: @user.whatsapp_number
         },
         request: request
       )
-      redirect_to user_path(@user), notice: 'Profile updated successfully.'
+      redirect_to user_path(@user), notice: "Profile updated successfully."
     else
-      flash.now[:alert] = 'Failed to update profile. Please check the errors below.'
+      flash.now[:alert] = "Failed to update profile. Please check the errors below."
       render :edit
     end
   end
@@ -60,9 +60,8 @@ class UsersController < ApplicationController
 
   def user_params
     params.require(:user).permit(
-      :first_name, :last_name, :email, :phone, :home_address, 
+      :first_name, :last_name, :email, :phone, :home_address,
       :nationality, :terms_accepted, :whatsapp_number
     )
   end
-
-end 
+end

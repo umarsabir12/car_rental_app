@@ -7,5 +7,3 @@ class CheckExpiredEmiratesIdsJob < ApplicationJob
     end
   end
 end
-
-

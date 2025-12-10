@@ -11,7 +11,7 @@ class CreateInvoices < ActiveRecord::Migration[7.2]
 
       t.timestamps
     end
-    
+
     add_index :invoices, :payment_status
     add_index :invoices, :billing_type
   end

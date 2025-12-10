@@ -64,7 +64,7 @@ RSpec.describe Invoice, type: :model do
         end
 
         # Get only the test invoices to avoid interference from let! blocks
-        test_invoices = Invoice.where(id: [@old_invoice.id, @new_invoice.id]).recent
+        test_invoices = Invoice.where(id: [ @old_invoice.id, @new_invoice.id ]).recent
         expect(test_invoices.first).to eq(@new_invoice)
         expect(test_invoices.last).to eq(@old_invoice)
       end
