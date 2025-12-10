@@ -41,9 +41,11 @@
             - if @user.whatsapp_number.present?
               .flex.flex-col.sm:flex-row.items-start.sm:items-center.gap-2.sm:gap-3
                 %p.text-base.sm:text-lg.text-gray-700= @user.whatsapp_display || @user.whatsapp_number
-                = link_to sanitize(@user.whatsapp_link), target: '_blank', class: 'inline-flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white font-semibold px-3 py-1.5 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg text-xs sm:text-sm' do
-                  %i.fab.fa-whatsapp
-                  %span Chat
+                - whatsapp_url = @user.whatsapp_link
+                - if whatsapp_url&.start_with?('https://wa.me/')
+                  = link_to whatsapp_url, target: '_blank', class: 'inline-flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white font-semibold px-3 py-1.5 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg text-xs sm:text-sm' do
+                    %i.fab.fa-whatsapp
+                    %span Chat
             - else
               %p.text-base.sm:text-lg.text-gray-500.italic Not provided
 
