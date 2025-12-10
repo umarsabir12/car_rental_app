@@ -24,10 +24,6 @@ FactoryBot.define do
       created_at { 31.days.ago }
     end
 
-    trait :cash do
-      payment_mode { 'Cash' }
-    end
-
     trait :with_items do
       after(:create) do |invoice|
         create_list(:invoice_item, 3, invoice: invoice)

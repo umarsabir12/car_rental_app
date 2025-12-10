@@ -22,7 +22,7 @@ RSpec.describe Invoice, type: :model do
     end
 
     it 'defines PAYMENT_MODES' do
-      expect(Invoice::PAYMENT_MODES).to eq(%w[Online Cash])
+      expect(Invoice::PAYMENT_MODES).to eq(%w[Online])
     end
   end
 
@@ -79,14 +79,8 @@ RSpec.describe Invoice, type: :model do
       end
 
       it 'does not override existing payment_mode' do
-        invoice = Invoice.new(payment_mode: 'Cash')
-        expect(invoice.payment_mode).to eq('Cash')
-      end
-
-      it 'does not set payment_mode for existing records' do
-        invoice = create(:invoice, :cash)
-        invoice.reload
-        expect(invoice.payment_mode).to eq('Cash')
+        invoice = Invoice.new(payment_mode: 'Online')
+        expect(invoice.payment_mode).to eq('Online')
       end
     end
   end
