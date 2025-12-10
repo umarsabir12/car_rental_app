@@ -118,36 +118,36 @@ class User < ApplicationRecord
   def create_documents
     doc_names = nationality == "resident" ? Document::RESIDENT : Document::TOURIST
     doc_names.each do |doc_name|
-      documents.create!(doc_name: doc_name, document_type: self.nationality == 'resident' ? 'Resident' : 'Tourist', status: 'not uploaded')
+      documents.create!(doc_name: doc_name, document_type: nationality == "resident" ? "Resident" : "Tourist",
+                        status: "not uploaded")
     end
   end
 
   def document_alert_message
     docs = documents.to_a
-    has_pending_booking = bookings.where(status: 'pending').exists?
+    has_pending_booking = bookings.where(status: "pending").exists?
     return nil unless has_pending_booking
-    if docs.any? { |d| d.status == 'rejected' }
-      'Some of your documents have been rejected. Please review and re-upload them to proceed with your booking.'
-    else
-      nil
+
+    if docs.any? { |d| d.status == "rejected" }
+      "Some of your documents have been rejected. Please review and re-upload them to proceed with your booking."
     end
   end
 
   # Notification helper methods
   def missing_documents
-    documents.where(status: 'not uploaded')
+    documents.where(status: "not uploaded")
   end
 
   def pending_documents
-    documents.where(status: 'pending')
+    documents.where(status: "pending")
   end
 
   def rejected_documents
-    documents.where(status: 'rejected')
+    documents.where(status: "rejected")
   end
 
   def approved_documents
-    documents.where(status: 'approved')
+    documents.where(status: "approved")
   end
 
   def documents_notification?

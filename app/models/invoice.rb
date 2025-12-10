@@ -14,10 +14,10 @@ class Invoice < ApplicationRecord
   validates :payment_status, inclusion: { in: PAYMENT_STATUSES }
   validates :amount, presence: true, numericality: { greater_than: 0 }
 
-  scope :pending, -> { where(payment_status: 'pending') }
-  scope :paid, -> { where(payment_status: 'paid') }
+  scope :pending, -> { where(payment_status: "pending") }
+  scope :paid, -> { where(payment_status: "paid") }
   scope :recent, -> { order(created_at: :desc) }
-  scope :overdue, -> { where(payment_status: 'overdue') }
+  scope :overdue, -> { where(payment_status: "overdue") }
 
   # Create Stripe PaymentIntent for invoice
   def create_stripe_intent
@@ -25,7 +25,7 @@ class Invoice < ApplicationRecord
 
     intent = Stripe::PaymentIntent.create(
       amount: (amount * 100).to_i, # Amount in cents
-      currency: 'aed',
+      currency: "aed",
       metadata: {
         invoice_id: id,
         vendor_id: vendor_id,
@@ -69,10 +69,10 @@ class Invoice < ApplicationRecord
 
     # Update invoice based on intent status
     case intent.status
-    when 'succeeded'
+    when "succeeded"
       mark_as_paid!
       true
-    when 'requires_action'
+    when "requires_action"
       false
     else
       false
@@ -85,7 +85,7 @@ class Invoice < ApplicationRecord
   # Mark invoice as paid
   def mark_as_paid!
     update(
-      payment_status: 'paid',
+      payment_status: "paid",
       paid_at: Time.current
     )
   end
@@ -102,12 +102,12 @@ class Invoice < ApplicationRecord
 
   # Check if payment can be processed
   def can_process_payment?
-    payment_status == 'pending' || payment_status == 'overdue'
+    payment_status == "pending" || payment_status == "overdue"
   end
 
   private
 
   def set_default_payment_mode
-    self.payment_mode ||= 'Online'
+    self.payment_mode ||= "Online"
   end
 end
