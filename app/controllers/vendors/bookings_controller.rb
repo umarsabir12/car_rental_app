@@ -10,7 +10,7 @@ class Vendors::BookingsController < ApplicationController
 
     # Apply filters
     @bookings = @bookings.where(status: params[:status]) if params[:status].present?
-    @bookings = @bookings.where(payment_processed: params[:payment_status] == "paid") if params[:payment_status].present?
+    @bookings = @bookings.where(payment_status: params[:payment_status]) if params[:payment_status].present?
 
     # Search by user name or email
     if params[:search].present?
@@ -81,31 +81,29 @@ class Vendors::BookingsController < ApplicationController
 
   # Update payment status via AJAX
   def update_payment_status
-    payment_status = params[:payment_status]
+    new_payment_status = params[:payment_status]
 
     # Validate payment status
-    unless [ "true", "false", true, false ].include?(payment_status)
+    unless Booking::PAYMENT_STATUSES.include?(new_payment_status)
       return respond_to do |format|
         format.json { render json: { success: false, message: "Invalid payment status" }, status: :unprocessable_entity }
         format.html { redirect_to vendors_booking_path(@booking), alert: "Invalid payment status" }
       end
     end
 
-    # Convert to boolean
-    is_paid = payment_status.to_s == "true"
+    if @booking.update(payment_status: new_payment_status)
+      # Also update payment_processed for backward compatibility
+      @booking.update_column(:payment_processed, new_payment_status == "paid")
 
-    if @booking.update(payment_processed: is_paid)
-      status_text = is_paid ? "Paid" : "Pending"
       respond_to do |format|
         format.json {
           render json: {
             success: true,
-            message: "Payment status updated to #{status_text}",
-            payment_processed: is_paid,
-            payment_status_text: status_text
+            message: "Payment status updated to #{new_payment_status.titleize}",
+            payment_status: new_payment_status
           }, status: :ok
         }
-        format.html { redirect_to vendors_booking_path(@booking), notice: "Payment status updated to #{status_text}" }
+        format.html { redirect_to vendors_booking_path(@booking), notice: "Payment status updated to #{new_payment_status.titleize}" }
       end
     else
       respond_to do |format|

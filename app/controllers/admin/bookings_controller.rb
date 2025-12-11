@@ -29,6 +29,37 @@ class Admin::BookingsController < ApplicationController
     end
   end
 
+  def cancel
+    @booking = Booking.find(params[:id])
+    if @booking.cancel_by_admin!("refund_pending")
+      redirect_to admin_booking_path(@booking), notice: "Booking has been cancelled successfully. Refund is pending."
+    else
+      redirect_to admin_booking_path(@booking), alert: "Failed to cancel booking. It may already be cancelled."
+    end
+  end
+
+  def update_status
+    @booking = Booking.find(params[:id])
+    new_status = params[:status]
+
+    if Booking::STATUSES.include?(new_status) && @booking.update(status: new_status)
+      redirect_to admin_booking_path(@booking), notice: "Booking status updated to #{new_status.titleize} successfully."
+    else
+      redirect_to admin_booking_path(@booking), alert: "Failed to update booking status."
+    end
+  end
+
+  def update_payment_status
+    @booking = Booking.find(params[:id])
+    new_payment_status = params[:payment_status]
+
+    if Booking::PAYMENT_STATUSES.include?(new_payment_status) && @booking.update(payment_status: new_payment_status)
+      redirect_to admin_booking_path(@booking), notice: "Payment status updated to #{new_payment_status.titleize} successfully."
+    else
+      redirect_to admin_booking_path(@booking), alert: "Failed to update payment status."
+    end
+  end
+
   def download_report
     require "csv"
     @bookings = Booking.includes(:user, car: :vendor).all

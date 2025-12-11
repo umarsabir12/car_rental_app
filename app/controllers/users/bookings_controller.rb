@@ -1,6 +1,6 @@
 class Users::BookingsController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_booking, only: [ :cancel, :update_payment_mode ]
+  before_action :set_booking, only: [ :show, :cancel, :update_payment_mode ]
 
   def index
     @bookings = current_user.bookings.includes(:car)
@@ -10,7 +10,7 @@ class Users::BookingsController < ApplicationController
     when "active"
       @bookings = @bookings.where(status: [ "pending", "confirmed" ])
     when "cancelled"
-      @bookings = @bookings.where(status: "cancelled")
+      @bookings = @bookings.where(status: [ "cancelled", "refunded", "refund_pending" ])
     else
       # 'all' or no filter - show all bookings
       @bookings = @bookings
@@ -22,6 +22,10 @@ class Users::BookingsController < ApplicationController
     if (msg = current_user.document_alert_message)
       flash.now[:alert] = msg
     end
+  end
+
+  def show
+    # @booking is already set by before_action
   end
 
   def cancel

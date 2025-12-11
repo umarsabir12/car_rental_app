@@ -9,15 +9,23 @@ class Booking < ApplicationRecord
 
   # Constants
   DELIVERY_CHARGE = 50.0
+  # Booking statuses (separate from payment)
+  STATUSES = %w[pending confirmed cancelled].freeze
+  # Payment statuses
+  PAYMENT_STATUSES = %w[pending paid unpaid refunded refund_pending].freeze
 
   validates :car_id, :user_id, :start_date, :end_date, :selected_period, presence: true
   validates :delivery_option, inclusion: { in: %w[delivery pickup], allow_blank: true }
+  validates :status, inclusion: { in: STATUSES }
+  validates :payment_status, inclusion: { in: PAYMENT_STATUSES }
   validate :end_date_after_start_date
   validate :no_overlapping_bookings
 
-  # payment_processed is a boolean attribute
+  # payment_processed is a boolean attribute (deprecated - use payment_status)
 
   scope :active, -> { where("start_date > ?", Date.today) }
+  scope :paid, -> { where(payment_status: "paid") }
+  scope :unpaid, -> { where(payment_status: %w[pending unpaid]) }
 
   after_create :set_car_vendor, :log_booking_created, :populate_total_amount
   after_update :log_booking_status_change, if: :saved_change_to_status?
@@ -62,6 +70,33 @@ class Booking < ApplicationRecord
   def populate_total_amount
     self.total_amount = calculate_total_amount
     save(validate: false)
+  end
+
+  # Check if booking is cancelled
+  def cancelled?
+    status == "cancelled"
+  end
+
+  # Check if payment needs refund
+  def needs_refund?
+    payment_status.in?(%w[refunded refund_pending])
+  end
+
+  # Check if booking was cancelled and needs/has refund
+  def cancelled_with_refund?
+    cancelled? && needs_refund?
+  end
+
+  # Cancel booking and set appropriate payment refund status
+  def cancel_by_admin!(refund_status = "refund_pending")
+    return false unless %w[pending confirmed].include?(status)
+
+    update(status: "cancelled", payment_status: refund_status)
+  end
+
+  # Check if payment is completed
+  def payment_completed?
+    payment_status == "paid"
   end
 
   private
