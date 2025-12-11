@@ -12,10 +12,10 @@
           %div.text-lg.sm:text-xl.md:text-2xl.font-bold.text-blue-600= @bookings.count
           %div.text-xs.sm:text-sm.text-gray-600 Total
         .bg-green-50.rounded-lg.p-2.sm:p-3.md:p-4.text-center.flex-1.min-w-20.sm:min-w-24
-          %div.text-lg.sm:text-xl.md:text-2xl.font-bold.text-green-600= @bookings.where(payment_processed: true).count
+          %div.text-lg.sm:text-xl.md:text-2xl.font-bold.text-green-600= @bookings.where(payment_status: 'paid').count
           %div.text-xs.sm:text-sm.text-gray-600 Paid
         .bg-yellow-50.rounded-lg.p-2.sm:p-3.md:p-4.text-center.flex-1.min-w-20.sm:min-w-24
-          %div.text-lg.sm:text-xl.md:text-2xl.font-bold.text-yellow-600= @bookings.where(payment_processed: false).count
+          %div.text-lg.sm:text-xl.md:text-2xl.font-bold.text-yellow-600= @bookings.where(payment_status: 'pending').count
           %div.text-xs.sm:text-sm.text-gray-600 Pending
 
   / Filters Section
@@ -29,12 +29,12 @@
         = f.text_field :search, value: params[:search], placeholder: 'Name or email...', class: 'w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500'
 
       .field.w-full.sm:flex-1.sm:min-w-48
-        = f.label :status, 'Status', class: 'block text-xs sm:text-sm font-medium text-gray-700 mb-1'
-        = f.select :status, options_for_select([['All Statuses', ''], ['Pending', 'Pending'], ['Confirmed', 'Confirmed'], ['Cancelled', 'Cancelled']], params[:status]), {}, { class: 'w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500' }
+        = f.label :status, 'Booking Status', class: 'block text-xs sm:text-sm font-medium text-gray-700 mb-1'
+        = f.select :status, options_for_select([['All Statuses', ''], ['Pending', 'pending'], ['Confirmed', 'confirmed'], ['Cancelled', 'cancelled']], params[:status]), {}, { class: 'w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500' }
 
       .field.w-full.sm:flex-1.sm:min-w-48
-        = f.label :payment_status, 'Payment', class: 'block text-xs sm:text-sm font-medium text-gray-700 mb-1'
-        = f.select :payment_status, options_for_select([['All Payments', ''], ['Paid', 'paid'], ['Pending', 'pending']], params[:payment_status]), {}, { class: 'w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500' }
+        = f.label :payment_status, 'Payment Status', class: 'block text-xs sm:text-sm font-medium text-gray-700 mb-1'
+        = f.select :payment_status, options_for_select([['All Payments', ''], ['Pending', 'pending'], ['Paid', 'paid'], ['Unpaid', 'unpaid'], ['Refunded', 'refunded'], ['Refund Pending', 'refund_pending']], params[:payment_status]), {}, { class: 'w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500' }
 
       .field.w-full.sm:flex-1.sm:min-w-48
         = f.label :start_date, 'From Date', class: 'block text-xs sm:text-sm font-medium text-gray-700 mb-1'
@@ -98,10 +98,8 @@
 
               .flex.justify-between.items-center
                 %span.text-xs.text-gray-500 Payment
-                - if booking.payment_processed?
-                  %span.inline-block.bg-green-100.text-green-700.px-2.py-1.rounded-full.text-xs.font-semibold Paid
-                - else
-                  %span.inline-block.bg-yellow-100.text-yellow-700.px-2.py-1.rounded-full.text-xs.font-semibold Pending
+                - payment_status_classes = {'paid' => 'bg-green-100 text-green-700', 'pending' => 'bg-yellow-100 text-yellow-700', 'unpaid' => 'bg-red-100 text-red-700', 'refunded' => 'bg-purple-100 text-purple-700', 'refund_pending' => 'bg-orange-100 text-orange-700'}
+                %span.inline-block.px-2.py-1.rounded-full.text-xs.font-semibold{class: payment_status_classes[booking.payment_status] || 'bg-gray-100 text-gray-700'}= booking.payment_status.titleize
 
               .flex.justify-between.items-center
                 %span.text-xs.text-gray-500 Payment Mode
@@ -153,10 +151,8 @@
                   - status_classes = {'Pending' => 'bg-yellow-100 text-yellow-700', 'Confirmed' => 'bg-green-100 text-green-700', 'Cancelled' => 'bg-red-100 text-red-700'}
                   %span.inline-block.rounded-full.text-xs.font-semibold.px-3.py-1{class: status_classes[booking.status] || 'bg-gray-100 text-gray-700'}= booking.status
                 %td.px-6.py-4.whitespace-nowrap
-                  - if booking.payment_processed?
-                    %span.inline-block.bg-green-100.text-green-700.px-3.py-1.rounded-full.text-xs.font-semibold Paid
-                  - else
-                    %span.inline-block.bg-yellow-100.text-yellow-700.px-3.py-1.rounded-full.text-xs.font-semibold Pending
+                  - payment_status_classes = {'paid' => 'bg-green-100 text-green-700', 'pending' => 'bg-yellow-100 text-yellow-700', 'unpaid' => 'bg-red-100 text-red-700', 'refunded' => 'bg-purple-100 text-purple-700', 'refund_pending' => 'bg-orange-100 text-orange-700'}
+                  %span.inline-block.px-3.py-1.rounded-full.text-xs.font-semibold{class: payment_status_classes[booking.payment_status] || 'bg-gray-100 text-gray-700'}= booking.payment_status.titleize
                 %td.px-6.py-4.whitespace-nowrap
                   - payment_mode_classes = {'Cash' => 'bg-yellow-100 text-yellow-700', 'Online' => 'bg-green-100 text-green-700'}
                   %span.inline-block.rounded-full.text-xs.font-semibold.px-3.py-1{class: payment_mode_classes[booking.payment_mode] || 'bg-gray-100 text-gray-700'}= booking.payment_mode

@@ -8,12 +8,34 @@ RSpec.describe Booking, type: :model do
     it { should have_many(:activities).dependent(:destroy) }
   end
 
+  describe 'constants' do
+    it 'defines STATUSES' do
+      expect(Booking::STATUSES).to eq(%w[pending confirmed cancelled])
+    end
+
+    it 'defines PAYMENT_STATUSES' do
+      expect(Booking::PAYMENT_STATUSES).to eq(%w[pending paid unpaid refunded refund_pending])
+    end
+  end
+
   describe 'validations' do
     it { should validate_presence_of(:car_id) }
     it { should validate_presence_of(:user_id) }
     it { should validate_presence_of(:start_date) }
     it { should validate_presence_of(:end_date) }
     it { should validate_presence_of(:selected_period) }
+
+    it 'validates status inclusion in STATUSES' do
+      booking = build(:booking, status: 'invalid_status')
+      expect(booking).not_to be_valid
+      expect(booking.errors[:status]).to include('is not included in the list')
+    end
+
+    it 'validates payment_status inclusion in PAYMENT_STATUSES' do
+      booking = build(:booking, payment_status: 'invalid_status')
+      expect(booking).not_to be_valid
+      expect(booking.errors[:payment_status]).to include('is not included in the list')
+    end
 
     describe 'end_date_after_start_date' do
       let(:car) { create(:car) }
@@ -86,6 +108,108 @@ RSpec.describe Booking, type: :model do
       it 'returns only future bookings' do
         expect(Booking.active).to include(active_booking)
         expect(Booking.active).not_to include(past_booking)
+      end
+    end
+
+    describe '.paid' do
+      let!(:paid_booking) { create(:booking, :paid) }
+      let!(:unpaid_booking) { create(:booking, :unpaid) }
+
+      it 'returns only paid bookings' do
+        expect(Booking.paid).to include(paid_booking)
+        expect(Booking.paid).not_to include(unpaid_booking)
+      end
+    end
+
+    describe '.unpaid' do
+      let!(:paid_booking) { create(:booking, :paid) }
+      let!(:pending_booking) { create(:booking, payment_status: 'pending') }
+      let!(:unpaid_booking) { create(:booking, :unpaid) }
+
+      it 'returns pending and unpaid bookings' do
+        expect(Booking.unpaid).to include(pending_booking, unpaid_booking)
+        expect(Booking.unpaid).not_to include(paid_booking)
+      end
+    end
+  end
+
+  describe 'instance methods' do
+    describe '#cancelled?' do
+      it 'returns true when booking status is cancelled' do
+        booking = build(:booking, :cancelled)
+        expect(booking.cancelled?).to be true
+      end
+
+      it 'returns false when booking status is not cancelled' do
+        booking = build(:booking, status: 'confirmed')
+        expect(booking.cancelled?).to be false
+      end
+    end
+
+    describe '#needs_refund?' do
+      it 'returns true when payment_status is refunded' do
+        booking = build(:booking, :refunded)
+        expect(booking.needs_refund?).to be true
+      end
+
+      it 'returns true when payment_status is refund_pending' do
+        booking = build(:booking, :refund_pending)
+        expect(booking.needs_refund?).to be true
+      end
+
+      it 'returns false for other payment statuses' do
+        booking = build(:booking, payment_status: 'paid')
+        expect(booking.needs_refund?).to be false
+      end
+    end
+
+    describe '#cancelled_with_refund?' do
+      it 'returns true when booking is cancelled and needs refund' do
+        booking = build(:booking, :refunded)
+        expect(booking.cancelled_with_refund?).to be true
+      end
+
+      it 'returns false when booking is not cancelled' do
+        booking = build(:booking, status: 'confirmed', payment_status: 'refunded')
+        expect(booking.cancelled_with_refund?).to be false
+      end
+
+      it 'returns false when booking is cancelled but does not need refund' do
+        booking = build(:booking, status: 'cancelled', payment_status: 'pending')
+        expect(booking.cancelled_with_refund?).to be false
+      end
+    end
+
+    describe '#payment_completed?' do
+      it 'returns true when payment_status is paid' do
+        booking = build(:booking, :paid)
+        expect(booking.payment_completed?).to be true
+      end
+
+      it 'returns false when payment_status is not paid' do
+        booking = build(:booking, payment_status: 'pending')
+        expect(booking.payment_completed?).to be false
+      end
+    end
+
+    describe '#cancel_by_admin!' do
+      let(:booking) { create(:booking, status: 'confirmed', payment_status: 'paid') }
+
+      it 'cancels booking and sets payment status to refund_pending' do
+        expect(booking.cancel_by_admin!('refund_pending')).to be true
+        expect(booking.reload.status).to eq('cancelled')
+        expect(booking.payment_status).to eq('refund_pending')
+      end
+
+      it 'can set payment status to refunded' do
+        expect(booking.cancel_by_admin!('refunded')).to be true
+        expect(booking.reload.status).to eq('cancelled')
+        expect(booking.payment_status).to eq('refunded')
+      end
+
+      it 'returns false if booking is already cancelled' do
+        cancelled_booking = create(:booking, :cancelled)
+        expect(cancelled_booking.cancel_by_admin!('refund_pending')).to be false
       end
     end
   end

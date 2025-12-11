@@ -220,24 +220,51 @@
 
                         / Status Pill + Button Container
                         .flex.flex-col.sm:flex-row.items-stretch.sm:items-center.gap-2.sm:gap-3
-                          / Status Pill - Always Visible
-                          - badge_class = case booking.status
-                          - when 'confirmed' then 'bg-green-100 text-green-800'
-                          - when 'pending' then 'bg-yellow-100 text-yellow-800'
-                          - when 'cancelled' then 'bg-red-100 text-red-800'
-                          - else 'bg-gray-100 text-gray-800'
-                          %span.inline-flex.items-center.justify-center.px-3.py-1.rounded-full.text-xs.font-medium.shadow-sm.whitespace-nowrap{class: badge_class}
-                            - if booking.status == 'confirmed'
-                              %i.fas.fa-check-circle.mr-1.text-xs
-                            - elsif booking.status == 'pending'
-                              %i.fas.fa-clock.mr-1.text-xs
-                            - elsif booking.status == 'cancelled'
-                              %i.fas.fa-times-circle.mr-1.text-xs
-                            = booking.status.titleize
+                          / Status Pills - Always Visible
+                          .flex.flex-wrap.gap-2
+                            / Booking Status
+                            - badge_class = case booking.status
+                            - when 'confirmed' then 'bg-green-100 text-green-800'
+                            - when 'pending' then 'bg-yellow-100 text-yellow-800'
+                            - when 'cancelled' then 'bg-red-100 text-red-800'
+                            - else 'bg-gray-100 text-gray-800'
+                            %span.inline-flex.items-center.justify-center.px-3.py-1.rounded-full.text-xs.font-medium.shadow-sm.whitespace-nowrap{class: badge_class}
+                              - if booking.status == 'confirmed'
+                                %i.fas.fa-check-circle.mr-1.text-xs
+                              - elsif booking.status == 'pending'
+                                %i.fas.fa-clock.mr-1.text-xs
+                              - elsif booking.status == 'cancelled'
+                                %i.fas.fa-times-circle.mr-1.text-xs
+                              = booking.status.titleize
 
+                            / Payment Status
+                            - payment_badge_class = case booking.payment_status
+                            - when 'paid' then 'bg-green-100 text-green-800'
+                            - when 'pending' then 'bg-yellow-100 text-yellow-800'
+                            - when 'unpaid' then 'bg-red-100 text-red-800'
+                            - when 'refunded' then 'bg-purple-100 text-purple-800'
+                            - when 'refund_pending' then 'bg-orange-100 text-orange-800'
+                            - else 'bg-gray-100 text-gray-800'
+                            %span.inline-flex.items-center.justify-center.px-3.py-1.rounded-full.text-xs.font-medium.shadow-sm.whitespace-nowrap{class: payment_badge_class}
+                              - if booking.payment_status == 'paid'
+                                %i.fas.fa-check-circle.mr-1.text-xs
+                              - elsif booking.payment_status == 'pending'
+                                %i.fas.fa-clock.mr-1.text-xs
+                              - elsif booking.payment_status == 'unpaid'
+                                %i.fas.fa-times-circle.mr-1.text-xs
+                              - elsif booking.payment_status == 'refunded'
+                                %i.fas.fa-undo.mr-1.text-xs
+                              - elsif booking.payment_status == 'refund_pending'
+                                %i.fas.fa-hourglass-half.mr-1.text-xs
+                              = "Payment: #{booking.payment_status.titleize}"
 
-                          / View/Pay Button - Check Document Approval
-                          - if !current_user.documents_approved?
+                          / Action Buttons
+                          - if booking.cancelled_with_refund?
+                            / View Details Button for Cancelled/Refunded Bookings
+                            = link_to users_booking_path(booking), class: 'bg-red-600 hover:bg-red-700 text-white px-4 sm:px-6 py-2 sm:py-3 rounded-lg text-sm sm:text-base font-semibold transition-all duration-200 shadow-md hover:shadow-lg flex items-center justify-center' do
+                              %i.fas.fa-exclamation-circle.mr-2
+                              View Details
+                          - elsif !current_user.documents_approved?
                             .payment-disabled.bg-gray-300.text-gray-500.px-4.sm:px-6.py-2.sm:py-3.rounded-lg.text-sm.sm:text-base.font-semibold.cursor-not-allowed.flex.items-center.justify-center.opacity-60{ title: 'Payment is disabled until your documents are approved' }
                               %i.fas.fa-lock.mr-2
                               Payment Disabled

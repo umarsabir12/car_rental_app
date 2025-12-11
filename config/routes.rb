@@ -109,6 +109,9 @@ Rails.application.routes.draw do
       end
       member do
         patch :update
+        patch :cancel
+        patch :update_status
+        patch :update_payment_status
       end
     end
     resources :cars do

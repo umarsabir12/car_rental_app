@@ -11,6 +11,7 @@ FactoryBot.define do
     status { 'pending' }
     payment_mode { 'Online' }
     payment_processed { false }
+    payment_status { 'pending' }
 
     trait :daily do
       selected_period { 'daily' }
@@ -36,10 +37,31 @@ FactoryBot.define do
     trait :confirmed do
       status { 'confirmed' }
       payment_processed { true }
+      payment_status { 'paid' }
     end
 
     trait :cancelled do
       status { 'cancelled' }
+    end
+
+    trait :paid do
+      payment_status { 'paid' }
+      payment_processed { true }
+    end
+
+    trait :unpaid do
+      payment_status { 'unpaid' }
+      payment_processed { false }
+    end
+
+    trait :refunded do
+      status { 'cancelled' }
+      payment_status { 'refunded' }
+    end
+
+    trait :refund_pending do
+      status { 'cancelled' }
+      payment_status { 'refund_pending' }
     end
 
     trait :cash_payment do

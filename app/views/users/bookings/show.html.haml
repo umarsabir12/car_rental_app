@@ -1,0 +1,154 @@
+-# User Booking Show Page
+.container.mx-auto.px-4.sm:px-6.lg:px-8.py-6.sm:py-8
+  %h1.text-2xl.sm:text-3xl.font-bold.mb-4.sm:mb-6{style: "color: #3A6363;"} Booking Details
+
+  / Cancellation Alert - Show if booking was cancelled
+  - if @booking.cancelled_with_refund?
+    .mb-6.bg-red-50.border-l-4.border-red-500.p-4.sm:p-6.rounded-r-lg.shadow-md
+      .flex.items-start
+        .flex-shrink-0
+          %i.fas.fa-exclamation-circle.text-red-500.text-2xl.sm:text-3xl
+        .ml-3.sm:ml-4.flex-1
+          %h3.text-base.sm:text-lg.font-bold.text-red-900.mb-2
+            Booking Cancelled
+          %p.text-sm.sm:text-base.text-red-800.mb-3
+            - if @booking.payment_status == 'refunded'
+              Your booking has been cancelled and refunded by the admin.
+            - elsif @booking.payment_status == 'refund_pending'
+              Your booking has been cancelled and your refund is being processed.
+            - else
+              Your booking has been cancelled.
+
+          %p.text-sm.sm:text-base.text-red-800.mb-4
+            For refund assistance or any questions, please contact us on WhatsApp:
+
+          - whatsapp_url = safe_whatsapp_link(admin_whatsapp_link)
+          - if whatsapp_url
+            = link_to whatsapp_url, target: '_blank', class: 'inline-flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white font-semibold px-4 py-2 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg text-sm sm:text-base' do
+              %i.fab.fa-whatsapp.text-lg
+              %span Contact Support on WhatsApp
+
+  .bg-white.shadow-lg.rounded-xl.overflow-hidden.p-4.sm:p-6.lg:p-8.mb-6.sm:mb-8
+    %h2.text-lg.sm:text-xl.font-bold.mb-3.sm:mb-4{style: "color: #3A6363;"} Booking Information
+    .grid.grid-cols-1.sm:grid-cols-2.gap-4.sm:gap-6
+
+      .flex.items-start.mb-3.sm:mb-4
+        %i.fas.fa-hashtag.w-5.sm:w-6.mt-1{style: "color: #3A6363;"}
+        .ml-3.flex-1.min-w-0
+          %p.text-xs.font-semibold.text-gray-500.uppercase Booking ID
+          %p.text-base.sm:text-lg.font-bold{style: "color: #3A6363;"}= @booking.id
+
+      .flex.items-start.mb-3.sm:mb-4
+        %i.fas.fa-info-circle.w-5.sm:w-6.mt-1{style: "color: #3A6363;"}
+        .ml-3.flex-1.min-w-0
+          %p.text-xs.font-semibold.text-gray-500.uppercase Booking Status
+          - status_class = case @booking.status
+          - when 'confirmed' then 'bg-green-100 text-green-800'
+          - when 'pending' then 'bg-yellow-100 text-yellow-800'
+          - when 'cancelled' then 'bg-red-100 text-red-800'
+          - else 'bg-gray-100 text-gray-800'
+          %span.inline-flex.items-center.px-2.sm:px-3.py-1.rounded-full.text-xs.font-semibold{class: status_class}
+            - if @booking.status == 'confirmed'
+              %i.fas.fa-check-circle.mr-1
+            - elsif @booking.status == 'pending'
+              %i.fas.fa-clock.mr-1
+            - elsif @booking.status == 'cancelled'
+              %i.fas.fa-times-circle.mr-1
+            = @booking.status.titleize
+
+      .flex.items-start.mb-3.sm:mb-4
+        %i.fas.fa-credit-card.w-5.sm:w-6.mt-1{style: "color: #3A6363;"}
+        .ml-3.flex-1.min-w-0
+          %p.text-xs.font-semibold.text-gray-500.uppercase Payment Status
+          - payment_status_class = case @booking.payment_status
+          - when 'paid' then 'bg-green-100 text-green-800'
+          - when 'pending' then 'bg-yellow-100 text-yellow-800'
+          - when 'unpaid' then 'bg-red-100 text-red-800'
+          - when 'refunded' then 'bg-purple-100 text-purple-800'
+          - when 'refund_pending' then 'bg-orange-100 text-orange-800'
+          - else 'bg-gray-100 text-gray-800'
+          %span.inline-flex.items-center.px-2.sm:px-3.py-1.rounded-full.text-xs.font-semibold{class: payment_status_class}
+            - if @booking.payment_status == 'paid'
+              %i.fas.fa-check-circle.mr-1
+            - elsif @booking.payment_status == 'pending'
+              %i.fas.fa-clock.mr-1
+            - elsif @booking.payment_status == 'unpaid'
+              %i.fas.fa-times-circle.mr-1
+            - elsif @booking.payment_status == 'refunded'
+              %i.fas.fa-undo.mr-1
+            - elsif @booking.payment_status == 'refund_pending'
+              %i.fas.fa-hourglass-half.mr-1
+            = @booking.payment_status.titleize
+
+      .flex.items-start.mb-3.sm:mb-4
+        %i.fas.fa-calendar-alt.w-5.sm:w-6.mt-1{style: "color: #3A6363;"}
+        .ml-3.flex-1.min-w-0
+          %p.text-xs.font-semibold.text-gray-500.uppercase Start Date
+          %p.text-base.sm:text-lg.text-gray-800= @booking.start_date&.strftime('%b %d, %Y')
+
+      .flex.items-start.mb-3.sm:mb-4
+        %i.fas.fa-calendar-check.w-5.sm:w-6.mt-1{style: "color: #3A6363;"}
+        .ml-3.flex-1.min-w-0
+          %p.text-xs.font-semibold.text-gray-500.uppercase End Date
+          %p.text-base.sm:text-lg.text-gray-800= @booking.end_date&.strftime('%b %d, %Y')
+
+      .flex.items-start.mb-3.sm:mb-4
+        %i.fas.fa-clock.w-5.sm:w-6.mt-1{style: "color: #3A6363;"}
+        .ml-3.flex-1.min-w-0
+          %p.text-xs.font-semibold.text-gray-500.uppercase Selected Period
+          %p.text-base.sm:text-lg.text-gray-800= @booking.selected_period&.titleize || 'Not set'
+
+      .flex.items-start.mb-3.sm:mb-4
+        %i.fas.fa-receipt.w-5.sm:w-6.mt-1{style: "color: #3A6363;"}
+        .ml-3.flex-1.min-w-0
+          %p.text-xs.font-semibold.text-gray-500.uppercase Total Amount
+          %p.text-base.sm:text-lg.font-bold{style: "color: #3A6363;"}= @booking.total_amount.present? ? number_to_currency(@booking.total_amount) : 'Not calculated'
+
+      - if @booking.delivery_option.present?
+        .flex.items-start.mb-3.sm:mb-4
+          %i.fas{class: @booking.delivery_option == 'delivery' ? 'fa-shipping-fast' : 'fa-car', style: "color: #3A6363;"}
+          .ml-3.flex-1.min-w-0
+            %p.text-xs.font-semibold.text-gray-500.uppercase= "#{@booking.delivery_option.titleize} Service"
+            %p.text-base.sm:text-lg.text-purple-600= number_to_currency(@booking.delivery_charge)
+
+  / Car Details
+  .bg-white.shadow-lg.rounded-xl.overflow-hidden.p-4.sm:p-6.lg:p-8.mb-6.sm:mb-8
+    %h2.text-lg.sm:text-xl.font-bold.mb-3.sm:mb-4{style: "color: #3A6363;"} Car Details
+    - car = @booking.car
+    - if car
+      .flex.items-center.gap-3.mb-4
+        %i.fas.fa-car.text-2xl{style: "color: #3A6363;"}
+        %div
+          %p.text-lg.sm:text-xl.font-bold.text-gray-900= "#{car.brand} #{car.model}"
+          %p.text-sm.text-gray-500= car.year
+
+      .grid.grid-cols-1.sm:grid-cols-2.gap-4
+
+        .flex.items-start
+          %i.fas.fa-tag.w-5.sm:w-6.mt-1{style: "color: #3A6363;"}
+          .ml-3.flex-1.min-w-0
+            %p.text-xs.font-semibold.text-gray-500.uppercase Category
+            %p.text-sm.sm:text-base.text-gray-700= car.category
+
+        .flex.items-start
+          %i.fas.fa-palette.w-5.sm:w-6.mt-1{style: "color: #3A6363;"}
+          .ml-3.flex-1.min-w-0
+            %p.text-xs.font-semibold.text-gray-500.uppercase Color
+            %p.text-sm.sm:text-base.text-gray-700= car.color
+
+        .flex.items-start
+          %i.fas.fa-dollar-sign.w-5.sm:w-6.mt-1{style: "color: #3A6363;"}
+          .ml-3.flex-1.min-w-0
+            %p.text-xs.font-semibold.text-gray-500.uppercase Daily Price
+            %p.text-sm.sm:text-base.font-bold{style: "color: #3A6363;"}= number_to_currency(car.daily_price)
+
+  / Action Buttons
+  .flex.flex-col.sm:flex-row.gap-3.sm:gap-4
+    = link_to users_bookings_path, class: 'inline-flex items-center justify-center gap-2 px-6 py-3 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors font-medium text-sm sm:text-base' do
+      %i.fas.fa-arrow-left
+      %span Back to My Bookings
+
+    - unless @booking.cancelled?
+      = link_to users_payment_path(@booking), class: 'inline-flex items-center justify-center gap-2 px-6 py-3 rounded-lg text-white transition-colors font-medium text-sm sm:text-base shadow-md hover:shadow-lg', style: 'background-color: #3A6363;', onmouseover: "this.style.backgroundColor='#2d4d4d'", onmouseout: "this.style.backgroundColor='#3A6363'" do
+        %i.fas.fa-credit-card
+        %span View Payment Details
