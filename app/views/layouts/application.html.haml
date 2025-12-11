@@ -21,6 +21,14 @@
     %script{ src: "https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js" }
     = javascript_importmap_tags
     = stylesheet_link_tag "application", "data-turbo-track": "reload"
+    / Google Tag Manager
+    :javascript
+      (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+      new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+      j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+      'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+      })(window,document,'script','dataLayer','GTM-KHNRX3WS');
+    / End Google Tag Manager
     :javascript
       (function(c,l,a,r,i,t,y){
           c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
@@ -74,6 +82,10 @@
         font-weight: bold;
       }
   %body.bg-white.text-gray-900
+    / Google Tag Manager (noscript)
+    %noscript
+      %iframe{ src: "https://www.googletagmanager.com/ns.html?id=GTM-KHNRX3WS", height: "0", width: "0", style: "display:none;visibility:hidden" }
+    / End Google Tag Manager (noscript)
     / WhatsApp Floating Button - Visible on all pages
     = render 'shared/whatsapp_button'
     %header{ role: "banner" }
