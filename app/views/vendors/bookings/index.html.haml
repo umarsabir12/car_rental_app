@@ -108,10 +108,15 @@
 
               .flex.justify-between.items-center
                 %span.text-xs.text-gray-500 Total
-                - if booking.car.daily_price
-                  - total_days = (booking.end_date - booking.start_date).to_i
-                  - total_amount = booking.car.daily_price * total_days
-                  %span.text-sm.font-semibold.text-gray-900= number_to_currency(total_amount)
+                - if booking.total_amount
+                  .text-right
+                    - if booking.has_discount?
+                      %div.text-xs.text-gray-400.line-through= number_to_currency(booking.calculate_total_amount_without_discount + (booking.delivery_charge || 0))
+                      %div.text-sm.font-semibold.text-green-600.flex.items-center.gap-1.justify-end
+                        %i.fas.fa-tag.text-xs
+                        = number_to_currency(booking.total_amount)
+                    - else
+                      %span.text-sm.font-semibold.text-gray-900= number_to_currency(booking.total_amount)
                 - else
                   %span.text-sm.text-gray-400 N/A
 
@@ -157,10 +162,15 @@
                   - payment_mode_classes = {'Cash' => 'bg-yellow-100 text-yellow-700', 'Online' => 'bg-green-100 text-green-700'}
                   %span.inline-block.rounded-full.text-xs.font-semibold.px-3.py-1{class: payment_mode_classes[booking.payment_mode] || 'bg-gray-100 text-gray-700'}= booking.payment_mode
                 %td.px-6.py-4.whitespace-nowrap
-                  - if booking.car.daily_price
-                    - total_days = (booking.end_date - booking.start_date).to_i
-                    - total_amount = booking.car.daily_price * total_days
-                    %span.font-semibold.text-gray-900= number_to_currency(total_amount)
+                  - if booking.total_amount
+                    - if booking.has_discount?
+                      .flex.flex-col
+                        %span.text-xs.text-gray-400.line-through= number_to_currency(booking.calculate_total_amount_without_discount + (booking.delivery_charge || 0))
+                        %span.font-semibold.text-green-600.flex.items-center.gap-1
+                          %i.fas.fa-tag.text-xs
+                          = number_to_currency(booking.total_amount)
+                    - else
+                      %span.font-semibold.text-gray-900= number_to_currency(booking.total_amount)
                   - else
                     %span.text-gray-400 N/A
                 %td.px-6.py-4.whitespace-nowrap

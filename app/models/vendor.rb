@@ -11,6 +11,7 @@ class Vendor < ApplicationRecord
   has_many :invoices, dependent: :destroy
   has_many :invoice_items, through: :invoices
   has_one :vendor_document
+  has_many :discounts, dependent: :destroy
   has_many_attached :avatar
 
   # Normalization happens before validation
