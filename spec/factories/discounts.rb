@@ -6,12 +6,12 @@ FactoryBot.define do
     active { true }
 
     trait :vendor_specific_category do
-      category { ['Luxury'] }
+      category { [ 'Luxury' ] }
     end
 
     trait :category_only do
       vendor { nil }
-      category { ['Economy'] }
+      category { [ 'Economy' ] }
     end
 
     trait :all_categories do
