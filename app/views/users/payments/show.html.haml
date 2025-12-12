@@ -58,7 +58,10 @@
               - if @selected_period == 'weekly'
                 - full_weeks = duration_days / 7
                 - remaining_days = duration_days % 7
-                - subtotal = (full_weeks * weekly_price) + (remaining_days * daily_price)
+                - rental_subtotal = (full_weeks * weekly_price) + (remaining_days * daily_price)
+                - subtotal = rental_subtotal
+                - if @booking.has_discount?
+                  - subtotal = subtotal - (@booking.discount_amount)
 
                 .flex.justify-between.items-center.py-2.sm:py-3.border-b.border-blue-200
                   %span.text-sm.sm:text-base.text-gray-700 Weekly Rate
@@ -86,6 +89,19 @@
                       %span.font-semibold= number_to_currency(daily_price)
                     %span.text-sm.sm:text-base.font-semibold.text-blue-600= number_to_currency(remaining_days * daily_price)
 
+                .flex.justify-between.items-center.py-2.sm:py-3.border-b.border-blue-200
+                  %span.text-sm.sm:text-base.text-gray-700 Subtotal
+                  %span.text-sm.sm:text-base.font-semibold= number_to_currency(rental_subtotal)
+
+                / Discount if applicable
+                - if @booking.has_discount?
+                  .flex.justify-between.items-center.py-2.sm:py-3.border-b.border-blue-200.bg-red-50
+                    %span.text-sm.sm:text-base.text-gray-700.flex.items-center.gap-2
+                      %i.fas.fa-tag.text-red-500
+                      = "Discount (#{@booking.discount_percentage}% OFF)"
+                    %span.text-sm.sm:text-base.font-bold.text-red-600= "- #{number_to_currency(@booking.discount_amount)}"
+
+                / Delivery/Pickup Charge if selected
                 - if @booking.delivery_option.present?
                   .flex.justify-between.items-center.py-2.sm:py-3.border-b.border-blue-200
                     %span.text-sm.sm:text-base.text-gray-700
@@ -98,12 +114,21 @@
                   %span.text-sm.sm:text-base.text-green-600 Free
                 .flex.justify-between.items-center.py-3.sm:py-4
                   %span.text-base.sm:text-lg.md:text-xl.font-bold.text-gray-800 Total Amount
-                  %span.text-lg.sm:text-xl.md:text-2xl.font-bold.text-blue-600= number_to_currency(subtotal + @booking.delivery_charge)
-              
+                  - if @booking.has_discount?
+                    - original_total_with_delivery = rental_subtotal + @booking.delivery_charge
+                    .flex.flex-col.items-end
+                      %span.text-sm.text-gray-400.line-through= number_to_currency(original_total_with_delivery)
+                      %span.text-lg.sm:text-xl.md:text-2xl.font-bold.text-blue-600= number_to_currency(subtotal + @booking.delivery_charge)
+                  - else
+                    %span.text-lg.sm:text-xl.md:text-2xl.font-bold.text-blue-600= number_to_currency(subtotal + @booking.delivery_charge)
+
               - elsif @selected_period == 'monthly'
                 - full_months = duration_days / 30
                 - remaining_days = duration_days % 30
-                - subtotal = (full_months * monthly_price) + (remaining_days * daily_price)
+                - rental_subtotal = (full_months * monthly_price) + (remaining_days * daily_price)
+                - subtotal = rental_subtotal
+                - if @booking.has_discount?
+                  - subtotal = subtotal - (@booking.discount_amount)
 
                 .flex.justify-between.items-center.py-2.sm:py-3.border-b.border-blue-200
                   %span.text-sm.sm:text-base.text-gray-700 Monthly Rate
@@ -131,6 +156,17 @@
                       %span.font-semibold= number_to_currency(daily_price)
                     %span.text-sm.sm:text-base.font-semibold.text-blue-600= number_to_currency(remaining_days * daily_price)
 
+                .flex.justify-between.items-center.py-2.sm:py-3.border-b.border-blue-200
+                  %span.text-sm.sm:text-base.text-gray-700 Subtotal
+                  %span.text-sm.sm:text-base.font-semibold= number_to_currency(rental_subtotal)
+
+                - if @booking.has_discount?
+                  .flex.justify-between.items-center.py-2.sm:py-3.border-b.border-blue-200.bg-red-50
+                    %span.text-sm.sm:text-base.text-gray-700.flex.items-center.gap-2
+                      %i.fas.fa-tag.text-red-500
+                      = "Discount (#{@booking.discount_percentage}% OFF)"
+                    %span.text-sm.sm:text-base.font-bold.text-red-600= "- #{number_to_currency(@booking.discount_amount)}"
+
                 - if @booking.delivery_option.present?
                   .flex.justify-between.items-center.py-2.sm:py-3.border-b.border-blue-200
                     %span.text-sm.sm:text-base.text-gray-700
@@ -143,11 +179,20 @@
                   %span.text-sm.sm:text-base.text-green-600 Free
                 .flex.justify-between.items-center.py-3.sm:py-4
                   %span.text-base.sm:text-lg.md:text-xl.font-bold.text-gray-800 Total Amount
-                  %span.text-lg.sm:text-xl.md:text-2xl.font-bold.text-blue-600= number_to_currency(subtotal + @booking.delivery_charge)
-              
+                  - if @booking.has_discount?
+                    - original_total_with_delivery = rental_subtotal + @booking.delivery_charge
+                    .flex.flex-col.items-end
+                      %span.text-sm.text-gray-400.line-through= number_to_currency(original_total_with_delivery)
+                      %span.text-lg.sm:text-xl.md:text-2xl.font-bold.text-blue-600= number_to_currency(subtotal + @booking.delivery_charge)
+                  - else
+                    %span.text-lg.sm:text-xl.md:text-2xl.font-bold.text-blue-600= number_to_currency(subtotal + @booking.delivery_charge)
+
               - else
                 / Daily pricing (default)
-                - subtotal = duration_days * daily_price
+                - rental_subtotal = duration_days * daily_price
+                - subtotal = rental_subtotal
+                - if @booking.has_discount?
+                  - subtotal = subtotal - (@booking.discount_amount)
 
                 .flex.justify-between.items-center.py-2.sm:py-3.border-b.border-blue-200
                   %span.text-sm.sm:text-base.text-gray-700 Daily Rate
@@ -157,7 +202,14 @@
                   %span.text-sm.sm:text-base.font-semibold= duration_days
                 .flex.justify-between.items-center.py-2.sm:py-3.border-b.border-blue-200
                   %span.text-sm.sm:text-base.text-gray-700 Subtotal
-                  %span.text-sm.sm:text-base.font-semibold= number_to_currency(subtotal)
+                  %span.text-sm.sm:text-base.font-semibold= number_to_currency(rental_subtotal)
+
+                - if @booking.has_discount?
+                  .flex.justify-between.items-center.py-2.sm:py-3.border-b.border-blue-200.bg-red-50
+                    %span.text-sm.sm:text-base.text-gray-700.flex.items-center.gap-2
+                      %i.fas.fa-tag.text-red-500
+                      = "Discount (#{@booking.discount_percentage}% OFF)"
+                    %span.text-sm.sm:text-base.font-bold.text-red-600= "- #{number_to_currency(@booking.discount_amount)}"
 
                 - if @booking.delivery_option.present?
                   .flex.justify-between.items-center.py-2.sm:py-3.border-b.border-blue-200
@@ -171,7 +223,13 @@
                   %span.text-sm.sm:text-base.text-green-600 Free
                 .flex.justify-between.items-center.py-3.sm:py-4
                   %span.text-base.sm:text-lg.md:text-xl.font-bold.text-gray-800 Total Amount
-                  %span.text-lg.sm:text-xl.md:text-2xl.font-bold.text-blue-600= number_to_currency(subtotal + @booking.delivery_charge)
+                  - if @booking.has_discount?
+                    - original_total_with_delivery = rental_subtotal + @booking.delivery_charge
+                    .flex.flex-col.items-end
+                      %span.text-sm.text-gray-400.line-through= number_to_currency(original_total_with_delivery)
+                      %span.text-lg.sm:text-xl.md:text-2xl.font-bold.text-blue-600= number_to_currency(subtotal + @booking.delivery_charge)
+                  - else
+                    %span.text-lg.sm:text-xl.md:text-2xl.font-bold.text-blue-600= number_to_currency(subtotal + @booking.delivery_charge)
 
       / Payment Mode Selection - Only show if booking is not confirmed
       - unless @booking.status == 'confirmed'
@@ -332,14 +390,14 @@
         .col-amount AMOUNT
 
       .table-row
-        .col-description Daily Rental Rate
+        .col-description Rental Amount
         - period_unit = { 'weekly' => 'week', 'monthly' => 'month' }.fetch(@booking.selected_period, 'day')
         - period_base = { 'weekly' => 7.0, 'monthly' => 30.0 }.fetch(@booking.selected_period, 1.0)
         - period_count = @days.to_f / period_base
         - display_count = (period_count % 1).zero? ? period_count.to_i : period_count.round(1)
-        - rental_subtotal = @total_amount - @booking.delivery_charge
+        - rental_subtotal = @booking.calculate_total_amount_without_discount
         .col-days= pluralize(display_count, period_unit)
-        .col-rate= "AED #{number_with_precision(@car.daily_price, precision: 2)}"
+        .col-rate= "AED #{number_with_precision(rental_subtotal / period_count, precision: 2)}"
         .col-amount= "AED #{number_with_precision(rental_subtotal, precision: 2)}"
 
       - if @booking.delivery_option.present?
@@ -348,6 +406,13 @@
           .col-days 1
           .col-rate= "AED #{number_with_precision(@booking.delivery_charge, precision: 2)}"
           .col-amount= "AED #{number_with_precision(@booking.delivery_charge, precision: 2)}"
+
+      - if @booking.has_discount?
+        .table-row.discount-row
+          .col-description= "Discount (#{@booking.discount_percentage}% OFF)"
+          .col-days 1
+          .col-rate= "- AED #{number_with_precision(@booking.discount_amount, precision: 2)}"
+          .col-amount= "- AED #{number_with_precision(@booking.discount_amount, precision: 2)}"
 
       .table-total
         .total-label Total:
@@ -421,7 +486,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 15px;
+      margin-bottom: 10px;
     }
 
     .header-left {
@@ -487,14 +552,14 @@
 
     /* Bill To Section */
     .bill-to-section {
-      margin-bottom: 25px;
+      margin-bottom: 15px;
     }
 
     .bill-to-section h3 {
       font-size: 12pt;
       font-weight: bold;
       color: #666;
-      margin: 0 0 8px 0;
+      margin: 0 0 5px 0;
     }
 
     .customer-name {
@@ -503,26 +568,26 @@
     }
 
     .bill-to-section p {
-      margin: 3px 0;
-      line-height: 1.6;
+      margin: 2px 0;
+      line-height: 1.4;
     }
 
     /* Invoice Details */
     .invoice-details-section {
       display: flex;
       justify-content: space-between;
-      margin-bottom: 25px;
+      margin-bottom: 15px;
     }
 
     .invoice-details-section h3 {
       font-size: 12pt;
       font-weight: bold;
       color: #666;
-      margin: 0 0 8px 0;
+      margin: 0 0 5px 0;
     }
 
     .details-left p {
-      margin: 5px 0;
+      margin: 3px 0;
     }
 
     .details-right {
@@ -530,7 +595,7 @@
     }
 
     .details-right p {
-      margin: 5px 0;
+      margin: 3px 0;
       font-weight: normal;
     }
 
@@ -538,8 +603,8 @@
     .vehicle-info-section {
       display: flex;
       justify-content: space-between;
-      margin-bottom: 25px;
-      padding: 15px 0;
+      margin-bottom: 15px;
+      padding: 10px 0;
       border-top: 2px solid #ddd;
       border-bottom: 2px solid #ddd;
     }
@@ -549,12 +614,12 @@
       font-size: 12pt;
       font-weight: bold;
       color: #666;
-      margin: 0 0 8px 0;
+      margin: 0 0 5px 0;
     }
 
     .vehicle-left p,
     .vehicle-right p {
-      margin: 5px 0;
+      margin: 3px 0;
     }
 
     .license-plate {
@@ -568,7 +633,7 @@
     }
 
     .pickup-return {
-      margin-top: 10px;
+      margin-top: 8px;
     }
 
     .vehicle-right {
@@ -577,13 +642,13 @@
 
     /* Invoice Table */
     .invoice-table {
-      margin: 25px 0;
+      margin: 15px 0;
     }
 
     .table-header {
       display: flex;
       background-color: #f5f5f5;
-      padding: 12px 10px;
+      padding: 8px 10px;
       font-weight: bold;
       font-size: 10pt;
       border: 1px solid #ddd;
@@ -591,9 +656,15 @@
 
     .table-row {
       display: flex;
-      padding: 15px 10px;
+      padding: 8px 10px;
       border: 1px solid #ddd;
       border-top: none;
+    }
+
+    .discount-row {
+      background-color: #fee;
+      color: #c33;
+      font-weight: 600;
     }
 
     .col-description {
@@ -619,12 +690,12 @@
     .table-total {
       display: flex;
       justify-content: flex-end;
-      padding: 15px 10px;
+      padding: 10px 10px;
       background-color: #f5f5f5;
       border: 1px solid #ddd;
       border-top: 2px solid #2c5353;
       font-weight: bold;
-      font-size: 14pt;
+      font-size: 13pt;
     }
 
     .total-label {
@@ -639,17 +710,17 @@
     /* Terms Section */
     .terms-section {
       margin-top: auto;
-      font-size: 10pt;
-      line-height: 1.6;
+      font-size: 9pt;
+      line-height: 1.4;
       align-self: flex-start;
       width: 100%;
-      padding-top: 20px;
+      padding-top: 12px;
     }
 
     .terms-section h4 {
-      font-size: 11pt;
+      font-size: 10pt;
       font-weight: bold;
-      margin: 0 0 10px 0;
+      margin: 0 0 6px 0;
     }
 
     .terms-section ul {
@@ -658,16 +729,16 @@
     }
 
     .terms-section li {
-      margin: 6px 0;
+      margin: 3px 0;
     }
 
     .terms-section p {
-      margin: 8px 0;
+      margin: 5px 0;
     }
 
     .thank-you {
       font-weight: bold;
-      margin-top: 15px !important;
+      margin-top: 8px !important;
     }
   }
 

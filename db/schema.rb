@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_12_11_094653) do
+ActiveRecord::Schema[7.2].define(version: 2025_12_12_112708) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -111,6 +111,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_12_11_094653) do
     t.decimal "total_amount", precision: 10, scale: 2, default: "0.0"
     t.string "delivery_option"
     t.string "payment_status", default: "pending"
+    t.decimal "discount_percentage"
     t.index ["car_id", "created_at"], name: "index_bookings_on_car_id_and_created_at"
     t.index ["car_id"], name: "index_bookings_on_car_id"
     t.index ["created_at"], name: "index_bookings_on_created_at"
@@ -181,6 +182,16 @@ ActiveRecord::Schema[7.2].define(version: 2025_12_11_094653) do
     t.index ["stripe_price_id"], name: "index_cars_on_stripe_price_id"
     t.index ["stripe_product_id"], name: "index_cars_on_stripe_product_id"
     t.index ["vendor_id"], name: "index_cars_on_vendor_id"
+  end
+
+  create_table "discounts", force: :cascade do |t|
+    t.bigint "vendor_id"
+    t.text "category", default: [], array: true
+    t.decimal "discount_percentage"
+    t.boolean "active"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["vendor_id"], name: "index_discounts_on_vendor_id"
   end
 
   create_table "documents", force: :cascade do |t|
@@ -363,6 +374,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_12_11_094653) do
   add_foreign_key "car_features", "cars"
   add_foreign_key "car_features", "features"
   add_foreign_key "cars", "vendors"
+  add_foreign_key "discounts", "vendors"
   add_foreign_key "documents", "users"
   add_foreign_key "invoice_items", "invoices"
   add_foreign_key "invoices", "vendors"

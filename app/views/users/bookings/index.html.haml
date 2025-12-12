@@ -208,6 +208,13 @@
                               %span.font-medium Pricing:
                               %span.ml-1= "#{duration_days} days × AED #{daily_price.to_i}"
 
+                          / Discount if applicable
+                          - if booking.has_discount?
+                            %p.text-xs.sm:text-sm.text-red-600.mb-2.flex.items-center
+                              %i.fas.fa-tag.mr-1
+                              %span.font-medium= "Discount (#{booking.discount_percentage}% OFF):"
+                              %span.ml-1= "- AED #{booking.discount_amount.to_i}"
+
                           / Delivery/Pickup Charge if selected
                           - if booking.delivery_option.present?
                             %p.text-xs.sm:text-sm.text-purple-600.mb-2
@@ -215,8 +222,16 @@
                               %span.font-medium= "#{booking.delivery_option.capitalize} Charge:"
                               %span.ml-1= "AED #{booking.delivery_charge.to_i}"
 
-                          %p.text-xl.lg:text-2xl.font-bold.text-green-600
-                            = number_to_currency(total_amount + booking.delivery_charge)
+                          / Total Amount with discount display
+                          - if booking.has_discount?
+                            .flex.flex-col.items-start
+                              %p.text-sm.text-gray-400.line-through
+                                = number_to_currency(total_amount + booking.delivery_charge)
+                              %p.text-xl.lg:text-2xl.font-bold.text-green-600
+                                = number_to_currency(booking.total_amount)
+                          - else
+                            %p.text-xl.lg:text-2xl.font-bold.text-green-600
+                              = number_to_currency(total_amount + booking.delivery_charge)
 
                         / Status Pill + Button Container
                         .flex.flex-col.sm:flex-row.items-stretch.sm:items-center.gap-2.sm:gap-3
