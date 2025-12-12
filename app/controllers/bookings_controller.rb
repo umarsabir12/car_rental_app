@@ -7,6 +7,11 @@ class BookingsController < ApplicationController
     @booking.payment_processed = false
     @booking.payment_mode = "Online"
 
+    # Store discount percentage at booking time (if applicable)
+    if @booking.car.has_discount?
+      @booking.discount_percentage = @booking.car.discount_percentage
+    end
+
     if @booking.save
       redirect_to user_home_path, notice: "Booking created! Please complete your payment."
     else

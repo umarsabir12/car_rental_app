@@ -112,7 +112,15 @@
                           / Car Image with Uniform Size
                           .relative.h-48.bg-gray-100.overflow-hidden
                             = car_main_image(car, size: [400, 300])
-                            .absolute.top-3.right-3.flex.flex-row.items-center.space-x-1
+
+                            / Discount Badge - Left Side
+                            - if car.has_discount?
+                              .absolute.top-3.left-3.z-10
+                                .flex.items-center.gap-1.bg-gradient-to-r.from-red-500.to-red-600.text-white.px-3.py-1.5.rounded-full.shadow-lg
+                                  %i.fas.fa-tag.text-xs
+                                  %span.text-sm.font-bold= "#{car.discount_percentage}% OFF"
+
+                            .absolute.top-3.right-3.flex.flex-col.space-y-1
                               - status_classes = {'Available' => 'bg-green-500 text-white','Rented' => 'bg-red-500 text-white'}[car.status] || 'bg-teal-600 text-white'
                               %span.inline-block.rounded-full.text-xs.font-semibold.px-2.py-1{ class: status_classes }= car.status
 

@@ -59,6 +59,11 @@ Rails.application.routes.draw do
   namespace :admin do
     resources :dashboard, only: [ :index ]
     resources :analytics, only: [ :index ]
+    resources :discounts do
+      collection do
+        get :get_categories
+      end
+    end
     resources :email_test, only: [ :index ] do
       collection do
         post :send_test
