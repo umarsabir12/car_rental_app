@@ -1,7 +1,7 @@
 class Admin::DiscountsController < ApplicationController
   layout "admin"
   before_action :authenticate_admin!
-  before_action :set_discount, only: [:edit, :update, :destroy]
+  before_action :set_discount, only: [ :edit, :update, :destroy ]
 
   def index
     @discounts = Discount.includes(:vendor).order(created_at: :desc)
@@ -32,7 +32,7 @@ class Admin::DiscountsController < ApplicationController
     @discount = Discount.new(discount_params)
 
     if @discount.save
-      redirect_to admin_discounts_path, notice: 'Discount was successfully created.'
+      redirect_to admin_discounts_path, notice: "Discount was successfully created."
     else
       @vendors = Vendor.active.order(:company_name)
       @categories = @discount.vendor_id.present? ? get_vendor_categories(@discount.vendor_id) : Car.distinct.pluck(:category).compact.sort
@@ -47,7 +47,7 @@ class Admin::DiscountsController < ApplicationController
 
   def update
     if @discount.update(discount_params)
-      redirect_to admin_discounts_path, notice: 'Discount was successfully updated.'
+      redirect_to admin_discounts_path, notice: "Discount was successfully updated."
     else
       @vendors = Vendor.active.order(:company_name)
       @categories = @discount.vendor_id.present? ? get_vendor_categories(@discount.vendor_id) : Car.distinct.pluck(:category).compact.sort
@@ -57,7 +57,7 @@ class Admin::DiscountsController < ApplicationController
 
   def destroy
     @discount.destroy
-    redirect_to admin_discounts_path, notice: 'Discount was successfully deleted.'
+    redirect_to admin_discounts_path, notice: "Discount was successfully deleted."
   end
 
   # AJAX endpoint to get categories for a vendor

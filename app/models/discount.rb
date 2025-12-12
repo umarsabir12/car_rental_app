@@ -5,7 +5,7 @@ class Discount < ApplicationRecord
   # The category column is a text[] type in the database
 
   validates :discount_percentage, presence: true, numericality: { greater_than: 0, less_than_or_equal_to: 100 }
-  validates :active, inclusion: { in: [true, false] }
+  validates :active, inclusion: { in: [ true, false ] }
   validate :categories_exist_in_system
   validate :vendor_or_category_required
 
@@ -54,7 +54,7 @@ class Discount < ApplicationRecord
 
   def display_name
     vendor_name = applies_to_all_vendors? ? "All Vendors" : vendor.company_name
-    category_name = applies_to_all_categories? ? "All Categories" : category.join(', ')
+    category_name = applies_to_all_categories? ? "All Categories" : category.join(", ")
     "#{vendor_name} - #{category_name} (#{discount_percentage}%)"
   end
 
