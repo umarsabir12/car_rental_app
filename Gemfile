@@ -89,7 +89,7 @@ group :test do
   gem "capybara"
   gem "selenium-webdriver"
 
-  gem "shoulda-matchers", "~> 6.0"
+  gem "shoulda-matchers", "~> 7.0"
   gem "database_cleaner-active_record"
   gem "simplecov", require: false
 end
