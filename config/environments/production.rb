@@ -92,16 +92,21 @@ Rails.application.configure do
   config.log_level = ENV.fetch("RAILS_LOG_LEVEL", "info")
 
   # Use a different cache store in production.
-  config.cache_store = :redis_cache_store, {
-    url: ENV.fetch("REDIS_URL", "redis://localhost:6379/1"),
-    expires_in: 90.minutes,
-    pool_size: 5,
-    pool_timeout: 5,
-    error_handler: ->(method:, returning:, exception:) {
-      Rails.logger.error("Redis cache error: #{exception.message}")
-      Rails.logger.error(exception.backtrace.join("\n"))
+  # During asset precompilation, use null_store to avoid Redis connection issues
+  if ENV['RAILS_ENV'] == 'production' && !ENV['REDIS_URL']
+    config.cache_store = :null_store
+  else
+    config.cache_store = :redis_cache_store, {
+      url: ENV.fetch("REDIS_URL", "redis://localhost:6379/1"),
+      expires_in: 90.minutes,
+      connect_timeout: 2,
+      read_timeout: 1,
+      write_timeout: 1,
+      error_handler: ->(method:, returning:, exception:) {
+        Rails.logger.error("Redis cache error: #{exception.message}")
+      }
     }
-  }
+  end
 
   # Use a real queuing backend for Active Job (and separate queues per environment).
   # config.active_job.queue_adapter = :resque
