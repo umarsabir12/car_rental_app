@@ -95,7 +95,8 @@ Rails.application.configure do
   config.cache_store = :redis_cache_store, {
     url: ENV.fetch("REDIS_URL", "redis://localhost:6379/1"),
     expires_in: 90.minutes,
-    reconnect_attempts: 1,
+    pool_size: 5,
+    pool_timeout: 5,
     error_handler: ->(method:, returning:, exception:) {
       Rails.logger.error("Redis cache error: #{exception.message}")
       Rails.logger.error(exception.backtrace.join("\n"))
