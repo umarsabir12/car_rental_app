@@ -12,7 +12,7 @@ class Admin::BlogsController < ApplicationController
 
   def create
     @blog = Blog.new(blog_params)
-    
+
     if params[:blog][:document].present?
       begin
         file_path = params[:blog][:document].path
@@ -38,7 +38,7 @@ class Admin::BlogsController < ApplicationController
 
   def update
     @blog = Blog.find_by_slug(params[:id])
-    
+
     if params[:blog][:document].present?
       begin
         file_path = params[:blog][:document].path
@@ -55,7 +55,7 @@ class Admin::BlogsController < ApplicationController
     if filtered_params[:featured_image].blank?
       filtered_params.delete(:featured_image)
     end
-    
+
     # Handle reference_images: delete key if nil, empty, or array of empty strings
     if filtered_params[:reference_images].blank? || (filtered_params[:reference_images].is_a?(Array) && filtered_params[:reference_images].all?(&:blank?))
       filtered_params.delete(:reference_images)
