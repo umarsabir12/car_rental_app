@@ -144,6 +144,7 @@ Rails.application.routes.draw do
       end
     end
     resources :features, except: [ :show, :new ]
+    resources :blogs, only: [ :index, :new, :create, :destroy, :edit, :update ]
   end
 
   namespace :vendors do

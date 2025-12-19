@@ -137,6 +137,9 @@ GEM
       warden-jwt_auth (~> 0.10)
     diff-lcs (1.6.2)
     docile (1.4.1)
+    docx (0.10.0)
+      nokogiri (~> 1.13, >= 1.13.0)
+      rubyzip (>= 2.0, < 4)
     dotenv (3.1.8)
     dotenv-rails (3.1.8)
       dotenv (= 3.1.8)
@@ -518,6 +521,7 @@ DEPENDENCIES
   debug
   devise
   devise-jwt
+  docx
   dotenv-rails
   factory_bot_rails
   faker
