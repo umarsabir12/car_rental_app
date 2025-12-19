@@ -1,0 +1,98 @@
+<div class="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+  <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 sm:mb-8 gap-4">
+    <h1 class="text-2xl sm:text-3xl font-bold" style="color: #3A6363;">Manage Blogs</h1>
+    <%= link_to new_admin_blog_path, class: "inline-flex items-center px-4 py-2 rounded-md transition text-white text-sm sm:text-base shadow-md", style: "background-color: #3A6363;", onmouseover: "this.style.backgroundColor='#2d4d4d'", onmouseout: "this.style.backgroundColor='#3A6363'" do %>
+      <i class="fas fa-plus mr-2"></i>
+      <span>Add New Blog</span>
+    <% end %>
+  </div>
+
+  <div class="bg-white rounded-lg shadow-md overflow-hidden hidden md:block">
+    <div class="overflow-x-auto">
+      <table class="min-w-full divide-y divide-gray-200">
+        <thead style="background-color: #e8f0f0;">
+          <tr>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider" style="color: #3A6363;">Title</th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider" style="color: #3A6363;">Author</th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider" style="color: #3A6363;">Category</th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider" style="color: #3A6363;">Published At</th>
+            <th scope="col" class="px-6 py-3 text-right text-xs font-medium uppercase tracking-wider" style="color: #3A6363;">Actions</th>
+          </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-gray-200">
+          <% @blogs.each do |blog| %>
+            <tr class="transition-colors" style="transition: background-color 0.2s;" onmouseover="this.style.backgroundColor='#e8f0f0'" onmouseout="this.style.backgroundColor='white'">
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="text-sm font-medium text-gray-900"><%= blog.title %></div>
+                <div class="text-sm text-gray-500"><%= truncate(blog.slug, length: 30) %></div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="text-sm text-gray-900"><%= blog.author_name %></div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                  <%= blog.category %>
+                </span>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                <%= blog.published_at&.strftime("%b %d, %Y") || "Not Published" %>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                <%= link_to blog_path(blog), target: "_blank", class: "transition-colors mr-3", style: "color: #3A6363;", onmouseover: "this.style.color='#2d4d4d'", onmouseout: "this.style.color='#3A6363'" do %>
+                  <i class="fas fa-eye"></i> View
+                <% end %>
+                
+                <%= link_to edit_admin_blog_path(blog), class: "transition-colors mr-3 text-blue-600 hover:text-blue-900" do %>
+                  <i class="fas fa-edit"></i> Edit
+                <% end %>
+                
+                <%= button_to admin_blog_path(blog), method: :delete, form: { style: "display:inline-block;" }, class: "transition-colors text-red-600 hover:text-red-900 bg-transparent border-0 cursor-pointer", data: { turbo_confirm: "Are you sure?" } do %>
+                   <i class="fas fa-trash"></i> Delete
+                <% end %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Mobile Card View -->
+  <div class="block md:hidden space-y-4">
+    <% @blogs.each do |blog| %>
+      <div class="bg-white rounded-lg shadow-md p-4 border-l-4" style="border-color: #3A6363;">
+        <div class="flex justify-between items-start mb-3">
+          <div>
+            <h3 class="text-lg font-bold text-gray-900"><%= blog.title %></h3>
+            <p class="text-sm text-gray-600"><%= blog.category %></p>
+          </div>
+          <div class="flex space-x-2">
+             <%= link_to blog_path(blog), target: "_blank", class: "text-white px-3 py-1.5 rounded-md text-sm", style: "background-color: #3A6363;" do %>
+               <i class="fas fa-eye"></i>
+             <% end %>
+             <%= link_to edit_admin_blog_path(blog), class: "bg-blue-100 text-blue-600 px-3 py-1.5 rounded-md text-sm" do %>
+               <i class="fas fa-edit"></i>
+             <% end %>
+             <%= button_to admin_blog_path(blog), method: :delete, form: { style: "display:inline-block;" }, class: "bg-red-100 text-red-600 px-3 py-1.5 rounded-md text-sm cursor-pointer border-0", data: { turbo_confirm: "Are you sure?" } do %>
+               <i class="fas fa-trash"></i>
+             <% end %>
+          </div>
+        </div>
+        <div class="space-y-2 text-sm text-gray-700">
+           <p><strong>Author:</strong> <%= blog.author_name %></p>
+           <p><strong>Published:</strong> <%= blog.published_at&.strftime("%b %d, %Y") %></p>
+        </div>
+      </div>
+    <% end %>
+  </div>
+  
+  <% if @blogs.empty? %>
+    <div class="text-center py-12">
+      <div class="text-gray-500">
+        <i class="fas fa-newspaper text-3xl sm:text-4xl mb-4"></i>
+        <p class="text-base sm:text-lg font-medium">No blogs found</p>
+        <p class="text-xs sm:text-sm">Get started by creating a new blog.</p>
+      </div>
+    </div>
+  <% end %>
+</div>
