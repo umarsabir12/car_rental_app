@@ -57,7 +57,7 @@ if ENV["RAILS_ENV"] == "production"
   if ENV["WEB_CONCURRENCY"].to_i <= 1
     # For single worker (Basic dyno), set conservative memory limits
     before_fork do
-      require 'puma_worker_killer'
+      require "puma_worker_killer"
 
       PumaWorkerKiller.config do |config|
         config.ram = 512 # MB - match dyno size
