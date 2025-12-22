@@ -1,6 +1,7 @@
 FactoryBot.define do
   factory :blog do
-    title { Faker::Lorem.sentence }
+    sequence(:title) { |n| "Blog Post #{n}" }
+    sequence(:slug) { |n| "blog-post-#{n}" }
     content { Faker::Lorem.paragraphs(number: 3).join("\n\n") }
     category { %w[Tips News Guides Reviews].sample }
     author_name { Faker::Name.name }
