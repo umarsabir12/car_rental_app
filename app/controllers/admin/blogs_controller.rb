@@ -56,10 +56,13 @@ class Admin::BlogsController < ApplicationController
       filtered_params.delete(:featured_image)
     end
 
-    # Handle reference_images: delete key if nil, empty, or array of empty strings
-    if filtered_params[:reference_images].blank? || (filtered_params[:reference_images].is_a?(Array) && filtered_params[:reference_images].all?(&:blank?))
-      filtered_params.delete(:reference_images)
+    # Handle reference_images: Append new ones, don't replace existing.
+    if filtered_params[:reference_images].present? && !(filtered_params[:reference_images].is_a?(Array) && filtered_params[:reference_images].all?(&:blank?))
+      new_images = filtered_params[:reference_images].reject(&:blank?)
+      @blog.reference_images.attach(new_images)
     end
+    # Always remove from params so simple update doesn't trigger replacement
+    filtered_params.delete(:reference_images)
 
     if @blog.update(filtered_params)
       redirect_to admin_blogs_path, notice: "Blog updated successfully."

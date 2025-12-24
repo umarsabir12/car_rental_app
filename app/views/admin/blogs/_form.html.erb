@@ -68,11 +68,10 @@
 
         <div>
            <%= f.label :reference_images, "Reference Images / Attachments", class: "block text-sm font-medium text-gray-700 mb-2" %>
-           <%= f.file_field :reference_images, multiple: true, class: "block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-gray-200 file:text-gray-700 hover:file:bg-gray-300" %>
+           <%= f.file_field :reference_images, multiple: true, class: "block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-gray-200 file:text-gray-700 hover:file:bg-gray-300", data: { existing_count: @blog.reference_images.count } %>
            <p class="mt-1 text-xs text-gray-500">Referenced as {{resource_1}}, {{resource_2}}...</p>
            <% if @blog.reference_images.attached? %>
-              <div class="mt-2">
-                 <p class="text-xs font-semibold mb-1">Current References:</p>
+                  <p class="text-xs font-semibold mb-1">Current References:</p>
                  <div class="flex flex-wrap gap-2">
                     <% @blog.reference_images.each_with_index do |img, idx| %>
                        <span class="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-gray-100 text-gray-800">
@@ -82,6 +81,47 @@
                  </div>
               </div>
            <% end %>
+           
+           <!-- Client-side Preview -->
+           <div id="reference-images-preview" class="mt-2 hidden"></div>
+
+           <script>
+             const fileInput = document.getElementById('blog_reference_images');
+             const dataTransfer = new DataTransfer();
+             const container = document.getElementById('reference-images-preview');
+             
+             // Get the count of existing images to offset the new index
+             const existingCount = parseInt(fileInput.getAttribute('data-existing-count') || "0");
+
+             fileInput.addEventListener('change', function(e) {
+               // Add new files to the DataTransfer object
+               if (this.files) {
+                 Array.from(this.files).forEach(file => {
+                   // Check for duplicates to avoid adding the same file twice (optional but good UX)
+                   let exists = Array.from(dataTransfer.files).some(f => f.name === file.name && f.size === file.size);
+                   if (!exists) {
+                     dataTransfer.items.add(file);
+                   }
+                 });
+               }
+
+               // Update the input's files property to include all accumulated files
+               this.files = dataTransfer.files;
+
+               // Render Preview
+               container.classList.remove('hidden');
+               container.classList.add('flex', 'flex-wrap', 'gap-2');
+               container.innerHTML = '<p class="text-xs font-semibold mb-1 w-full text-green-700">New Uploads Preview:</p>';
+               
+               Array.from(dataTransfer.files).forEach((file, index) => {
+                 const badge = document.createElement('span');
+                 badge.className = 'inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-green-100 text-green-800 border border-green-200';
+                 // Index starts at existingCount + 1
+                 badge.textContent = `{{resource_${existingCount + index + 1}}}: ${file.name}`;
+                 container.appendChild(badge);
+               });
+             });
+           </script>
         </div>
       </div>
     </div>
