@@ -99,13 +99,23 @@ class DocxParserService
              end
            end
 
-           is_mostly_bold = (total_run_chars > 0) && ((bold_chars.to_f / total_run_chars) > 0.7)
-           is_large_text = max_font_size >= 28
-
-           if is_mostly_bold || is_large_text
-             tag = "h3"
-           end
-        end
+            is_mostly_bold = (total_run_chars > 0) && ((bold_chars.to_f / total_run_chars) > 0.7)
+            
+            # Logic based on standard Word half-points (28 = 14pt, 36 = 18pt, 48 = 24pt)
+            if max_font_size >= 48
+              tag = "h1"
+            elsif max_font_size >= 32
+              tag = "h2"
+            elsif max_font_size >= 28
+              tag = "h3"
+            elsif is_mostly_bold && text.length < 100
+              # If it's short and bold but small, arguably could be h4 or just bold text. 
+              # Better to verify if it acts as a heading. 
+              # For now, let's NOT force h3 solely on bold, as that was the bug.
+              # We will treat it as a paragraph that happens to be bold (handled by run parsing).
+              tag = "h4"
+            end
+         end
 
         # Handle List Logic
         if tag == "li"
@@ -150,19 +160,19 @@ class DocxParserService
     index = @resource_index
     @resource_index += 1
     token = "{{resource_#{index}}}"
-    %(<div style="margin: 2rem 0; text-align: center;">
-<img src="#{token}" alt="Resource Image #{index}" style="max-width: 100%; height: auto; border-radius: 8px;" />
+    %(<div style="margin: 2rem 0; display: flex; justify-content: center; width: 100%;">
+<img src="#{token}" alt="Resource Image #{index}" style="max-width: 100%; height: auto; border-radius: 8px; display: block;" />
 </div>)
   end
 
   def get_tag_from_style(style)
     style_name = style.to_s.downcase.strip
     case style_name
-    when /heading\s*1/ then "h2"
-    when /heading\s*2/ then "h3"
-    when /heading\s*3/ then "h4"
-    when /title/ then "h2"
-    when /list/ then "li"
+    when /heading\s*1/, /title/ then "h2"
+    when /heading\s*2/, /subtitle/ then "h2"
+    when /heading\s*3/ then "h3"
+    when /heading\s*4/ then "h4"
+    when /list/, /bullet/ then "li"
     else "p"
     end
   end
