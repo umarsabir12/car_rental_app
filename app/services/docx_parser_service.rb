@@ -100,7 +100,7 @@ class DocxParserService
            end
 
             is_mostly_bold = (total_run_chars > 0) && ((bold_chars.to_f / total_run_chars) > 0.7)
-            
+
             # Logic based on standard Word half-points (28 = 14pt, 36 = 18pt, 48 = 24pt)
             if max_font_size >= 48
               tag = "h1"
@@ -109,13 +109,13 @@ class DocxParserService
             elsif max_font_size >= 28
               tag = "h3"
             elsif is_mostly_bold && text.length < 100
-              # If it's short and bold but small, arguably could be h4 or just bold text. 
-              # Better to verify if it acts as a heading. 
+              # If it's short and bold but small, arguably could be h4 or just bold text.
+              # Better to verify if it acts as a heading.
               # For now, let's NOT force h3 solely on bold, as that was the bug.
               # We will treat it as a paragraph that happens to be bold (handled by run parsing).
               tag = "h4"
             end
-         end
+        end
 
         # Handle List Logic
         if tag == "li"
