@@ -27,16 +27,16 @@ SitemapGenerator::Sitemap.create do
   #     add article_path(article), :lastmod => article.updated_at
   #   end
 
-  add cars_path, priority: 0.8, changefreq: 'daily'
+  add cars_path, priority: 0.8, changefreq: "daily"
   Car.find_each do |car|
     add car_path(car), lastmod: car.updated_at
   end
 
-  add blogs_path, priority: 0.7, changefreq: 'weekly'
+  add blogs_path, priority: 0.7, changefreq: "weekly"
   Blog.published.find_each do |blog|
     add blog_path(blog), lastmod: blog.updated_at
   end
 
-  add '/terms_of_use'
-  add '/list-your-car-rental-marketplace', priority: 0.6
+  add "/terms_of_use"
+  add "/list-your-car-rental-marketplace", priority: 0.6
 end
