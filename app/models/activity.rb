@@ -29,6 +29,7 @@ class Activity < ApplicationRecord
     car_document_rejected
     vendor_document_approved
     vendor_document_rejected
+    vendor_profile_updated
   ].freeze
 
   validates :action, inclusion: { in: ACTIONS }
