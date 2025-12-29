@@ -26,7 +26,7 @@ RSpec.describe Vendor, type: :model do
     context 'emirates_id' do
       it { should allow_value('784199012345678').for(:emirates_id) }
       it { should_not allow_value('123').for(:emirates_id) }
-      
+
       it 'validates expiry date is in future' do
         vendor = build(:vendor, emirates_id_expires_on: Date.yesterday)
         expect(vendor).not_to be_valid
@@ -43,7 +43,7 @@ RSpec.describe Vendor, type: :model do
         expect {
           vendor.save
         }.to change(Activity, :count).by(1)
-        
+
         activity = Activity.last
         expect(activity.action).to eq('vendor_registration')
         expect(activity.vendor).to eq(vendor)
@@ -51,7 +51,7 @@ RSpec.describe Vendor, type: :model do
 
       it 'logs profile update when company name changes' do
         vendor.save
-        
+
         expect {
           vendor.update(company_name: 'New Company Name')
         }.to change(Activity, :count).by(1)
@@ -93,13 +93,13 @@ RSpec.describe Vendor, type: :model do
       # Vendor model has `validate :emirates_id_expiry_in_future`.
       # So we can't easily create an expired one unless we use `save(validate: false)` or manipulate time.
       # Let's try `save(validate: false)` for the setup.
-      
+
       it 'returns vendors with expired emirates id' do
         expired_eid_vendor.update_attribute(:emirates_id_expires_on, 1.day.ago)
-        
+
         # We need another one with valid ID
         valid_eid_vendor = create(:vendor, :with_valid_emirates_id)
-        
+
         expect(Vendor.with_expired_emirates_id).to include(expired_eid_vendor)
         expect(Vendor.with_expired_emirates_id).not_to include(valid_eid_vendor)
       end
@@ -125,7 +125,7 @@ RSpec.describe Vendor, type: :model do
         expect(vendor.display_name).to eq('John Doe')
       end
     end
-    
+
     describe '#active_for_authentication?' do
       it 'returns true for active vendors' do
         vendor.is_active = true
@@ -141,7 +141,7 @@ RSpec.describe Vendor, type: :model do
     describe '#inactive_message' do
       it 'returns standard message for active vendors' do
         vendor.is_active = true
-        expect(vendor.inactive_message).to eq(:inactive) 
+        expect(vendor.inactive_message).to eq(:inactive)
       end
 
       it 'returns account_deactivated for inactive vendors' do
@@ -191,8 +191,8 @@ RSpec.describe Vendor, type: :model do
     describe '#normalize_whatsapp_number' do
       it 'formats number to E164 before validation' do
         vendor.whatsapp_number = '0501234567' # Local UAE format
-        vendor.valid? 
-        # Phonelib might need default country or +prefix. 
+        vendor.valid?
+        # Phonelib might need default country or +prefix.
         # If default country is not set, 050.. might be invalid.
         # But app seems to handle "050-123-4567" for users.
         # Let's try with explicit international format without plus
@@ -285,12 +285,12 @@ RSpec.describe Vendor, type: :model do
         Vendor.from_omniauth(auth)
       }.not_to change(Vendor, :count)
     end
-    
+
     it 'splits name if first/last missing' do
       auth.info.first_name = nil
       auth.info.last_name = nil
       auth.info.name = "Split Name"
-      
+
       vendor = Vendor.from_omniauth(auth)
       expect(vendor.first_name).to eq('Split')
       expect(vendor.last_name).to eq('Name')

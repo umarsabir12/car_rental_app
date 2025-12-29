@@ -98,3 +98,6 @@ group :test do
   gem "database_cleaner-active_record"
   gem "simplecov", require: false
 end
+
+gem "sitemap_generator"
+gem "whenever", require: false
