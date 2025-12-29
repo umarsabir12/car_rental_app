@@ -37,24 +37,32 @@ class CarRentalController < ApplicationController
       { name: "Toyota", image_url: "https://cdn.worldvectorlogo.com/logos/toyota-6.svg" }
     ]
 
-    # Testimonials data
-    @testimonials = [
-      {
-        author: "Sarah Johnson",
-        role: "Business Traveler",
-        quote: "Excellent service and great cars. Made my business trip much more comfortable!"
-      },
-      {
-        author: "Mike Chen",
-        role: "Tourist",
-        quote: "Easy booking process and the car was in perfect condition. Highly recommended!"
-      },
-      {
-        author: "Emma Davis",
-        role: "Local Resident",
-        quote: "Best car rental experience I have had. Will definitely use again."
-      }
-    ]
+    # Fetch Google reviews (with fallback to static testimonials)
+    @testimonials = GoogleReviewsService.fetch_reviews
+
+    # Fallback to static testimonials if Google reviews are unavailable
+    if @testimonials.blank?
+      @testimonials = [
+        {
+          author_name: "Sarah Johnson",
+          rating: 5,
+          text: "Excellent service and great cars. Made my business trip much more comfortable!",
+          relative_time_description: "a month ago"
+        },
+        {
+          author_name: "Mike Chen",
+          rating: 5,
+          text: "Easy booking process and the car was in perfect condition. Highly recommended!",
+          relative_time_description: "2 months ago"
+        },
+        {
+          author_name: "Emma Davis",
+          rating: 5,
+          text: "Best car rental experience I have had. Will definitely use again.",
+          relative_time_description: "3 weeks ago"
+        }
+      ]
+    end
 
     # Stats data
     @stats = [

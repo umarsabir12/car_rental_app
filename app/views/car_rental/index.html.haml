@@ -206,14 +206,24 @@
         - (@testimonials || []).each do |t|
           %figure.bg-white.rounded-2xl.shadow-sm.border.border-gray-100.p-6.flex.flex-col.justify-between.hover:shadow-md.transition
             %div
+              .flex.items-center.justify-between.mb-3
+                .flex.items-center.gap-1.text-yellow-400
+                  - t[:rating].times do
+                    %i.fas.fa-star.text-sm
+                  - (5 - t[:rating]).times do
+                    %i.far.fa-star.text-sm.text-gray-300
+                - if t[:relative_time_description]
+                  .text-xs.text-gray-500= t[:relative_time_description]
               %div{class: 'text-3xl mb-2', style: 'color: #3a6363'} "
-              %blockquote.text-gray-700.text-sm.leading-relaxed= t[:quote]
+              %blockquote.text-gray-700.text-sm.leading-relaxed= t[:text]
             %figcaption.mt-4.flex.items-center.gap-3
-              %div{class: 'w-10 h-10 rounded-full flex items-center justify-center text-white font-semibold', style: 'background-color: #3a6363'}
-                %span.text-sm= t[:author].to_s.first
+              - if t[:profile_photo_url]
+                %img.w-10.h-10.rounded-full{src: t[:profile_photo_url], alt: t[:author_name], loading: 'lazy'}
+              - else
+                %div{class: 'w-10 h-10 rounded-full flex items-center justify-center text-white font-semibold', style: 'background-color: #3a6363'}
+                  %span.text-sm= t[:author_name].to_s.first
               %div
-                %div.text-sm.font-semibold.text-gray-900= t[:author]
-                %div.text-xs.text-gray-500= t[:role]
+                %div.text-sm.font-semibold.text-gray-900= t[:author_name]
 
   / Why You Should Use Section
   %section.py-14.bg-gray-50
