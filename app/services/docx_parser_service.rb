@@ -268,7 +268,7 @@ class DocxParserService
          max_font_size = size_val if size_val > max_font_size
        end
      end
-     [total_run_chars, bold_chars, max_font_size]
+     [ total_run_chars, bold_chars, max_font_size ]
   end
 
   def parse_runs(runs)
