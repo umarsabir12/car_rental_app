@@ -1,4 +1,6 @@
 require "docx"
+require "zip"
+require "nokogiri"
 
 class DocxParserService
   # Styles extracted from sample_string.txt
@@ -13,6 +15,8 @@ class DocxParserService
 
   def initialize(file_path)
     @file_path = file_path
+    @relationships = {}
+    parse_relationships
   end
 
   def convert_to_html
@@ -56,8 +60,8 @@ class DocxParserService
           tag = "li"
         end
 
-        # Deep Search: Get all Runs
-        all_runs = node.xpath(".//w:r")
+        # Deep Search: Get all children (runs and hyperlinks) to preserve order
+        child_nodes = node.xpath("w:r | w:hyperlink")
 
         # Check Paragraph-level Bold (applies to all runs if not overridden)
         para_bold = false
@@ -73,29 +77,16 @@ class DocxParserService
            bold_chars = 0
            max_font_size = 0
 
-           all_runs.each do |r_node|
-             r_text = r_node.xpath(".//w:t").text
-             next if r_text.empty?
-
-             total_run_chars += r_text.length
-
-             # Check Run Bold
-             is_bold_run = para_bold
-             bold_node = r_node.xpath(".//w:rPr/w:b").first
-             if bold_node
-               val = bold_node["w:val"]
-               is_bold_run = true unless val == "0" || val == "false"
-             end
-
-             if is_bold_run
-               bold_chars += r_text.length
-             end
-
-             # Check Font Size
-             size_node = r_node.xpath(".//w:rPr/w:sz").first
-             if size_node
-               size_val = size_node["w:val"].to_i
-               max_font_size = size_val if size_val > max_font_size
+           # Analyze children for styling clues
+           child_nodes.each do |child|
+             if child.name == "r"
+               process_run_for_stats(child, para_bold, total_run_chars, bold_chars, max_font_size)
+             elsif child.name == "hyperlink"
+               child.xpath(".//w:r").each do |r_node|
+                 total_run_chars, bold_chars, max_font_size = process_run_for_stats(
+                   r_node, para_bold, total_run_chars, bold_chars, max_font_size
+                 )
+               end
              end
            end
 
@@ -133,7 +124,7 @@ class DocxParserService
         next if text.empty?
 
         # Parse content
-        content = parse_run_nodes(all_runs, para_bold)
+        content = parse_mixed_nodes(child_nodes, doc, para_bold)
 
         style = STYLES[tag.to_sym]
         if style
@@ -165,6 +156,23 @@ class DocxParserService
 </div>)
   end
 
+  def parse_relationships
+    Zip::File.open(@file_path) do |zip_file|
+      # Relationships for the main document are usually in word/_rels/document.xml.rels
+      entry = zip_file.find_entry("word/_rels/document.xml.rels")
+      return unless entry
+
+      xml = Nokogiri::XML(entry.get_input_stream.read)
+      xml.xpath("//xmlns:Relationship").each do |rel|
+        id = rel["Id"]
+        target = rel["Target"]
+        @relationships[id] = target if id && target
+      end
+    end
+  rescue => e
+    Rails.logger.error "DocxParserService: Error parsing relationships: #{e.message}"
+  end
+
   def get_tag_from_style(style)
     style_name = style.to_s.downcase.strip
     case style_name
@@ -177,42 +185,90 @@ class DocxParserService
     end
   end
 
-  # Updated to take pure XML nodes + paragraph level bold
-  def parse_run_nodes(run_nodes, para_bold = false)
+  # New method to handle both runs and hyperlinks
+  def parse_mixed_nodes(nodes, doc, para_bold = false)
     html_content = ""
-    run_nodes.each do |r_node|
-      text = r_node.xpath(".//w:t").text
-      next if text.empty?
+    nodes.each do |node|
+      if node.name == "hyperlink"
+        # Extract URL
+        rel_id = node["r:id"]
+        # doc.relationships is a hash of id => relationship object
+        # relationship object has .target for the URL
+        url = "#"
+        if rel_id && @relationships[rel_id]
+          url = @relationships[rel_id]
+        end
 
-      formatted_text = text.gsub("<", "&lt;").gsub(">", "&gt;")
-
-      # Check Bold
-      is_bold = para_bold
-      bold_node = r_node.xpath(".//w:rPr/w:b").first
-      if bold_node
-        val = bold_node["w:val"]
-        is_bold = true unless val == "0" || val == "false"
+        # Parse inner runs of the hyperlink
+        inner_content = parse_mixed_nodes(node.xpath("w:r"), doc, para_bold)
+        html_content += "<a href=\"#{url}\" target=\"_blank\" style=\"color: #3A6363; text-decoration: underline;\">#{inner_content}</a>"
+      else
+        # It's a standard run
+        html_content += process_single_run(node, para_bold)
       end
-
-      # Check Italic
-      is_italic = false
-      italic_node = r_node.xpath(".//w:rPr/w:i").first
-      if italic_node
-        val = italic_node["w:val"]
-        is_italic = true unless val == "0" || val == "false"
-      end
-
-      if is_italic
-        formatted_text = "<em>#{formatted_text}</em>"
-      end
-
-      if is_bold
-        formatted_text = "<strong>#{formatted_text}</strong>"
-      end
-
-      html_content += formatted_text
     end
     html_content
+  end
+
+  def process_single_run(r_node, para_bold)
+    text = r_node.xpath(".//w:t").text
+    return "" if text.empty?
+
+    formatted_text = text.gsub("<", "&lt;").gsub(">", "&gt;")
+
+    # Check Bold
+    is_bold = para_bold
+    bold_node = r_node.xpath(".//w:rPr/w:b").first
+    if bold_node
+      val = bold_node["w:val"]
+      is_bold = true unless val == "0" || val == "false"
+    end
+
+    # Check Italic
+    is_italic = false
+    italic_node = r_node.xpath(".//w:rPr/w:i").first
+    if italic_node
+      val = italic_node["w:val"]
+      is_italic = true unless val == "0" || val == "false"
+    end
+
+    if is_italic
+      formatted_text = "<em>#{formatted_text}</em>"
+    end
+
+    if is_bold
+      formatted_text = "<strong>#{formatted_text}</strong>"
+    end
+
+    formatted_text
+  end
+
+  # Helper to accumulate stats for heading detection
+  def process_run_for_stats(r_node, para_bold, total_run_chars, bold_chars, max_font_size)
+     r_text = r_node.xpath(".//w:t").text
+     unless r_text.empty?
+       total_run_chars += r_text.length
+
+       # Check Run Bold
+       is_bold_run = para_bold
+       bold_node = r_node.xpath(".//w:rPr/w:b").first
+       if bold_node
+         val = bold_node["w:val"]
+         is_bold_run = true unless val == "0" || val == "false"
+       end
+
+       if is_bold_run
+         bold_chars += r_text.length
+       end
+
+       # Check Font Size
+       size_node = r_node.xpath(".//w:rPr/w:sz").first
+       if size_node
+         size_val = size_node["w:val"].to_i
+         max_font_size = size_val if size_val > max_font_size
+       end
+     end
+     [ total_run_chars, bold_chars, max_font_size ]
   end
 
   def parse_runs(runs)
