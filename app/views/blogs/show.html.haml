@@ -1,5 +1,6 @@
 - content_for :title, @blog.meta_title
 - content_for :description, @blog.meta_description
+- content_for :canonical, blog_url(@blog)
 - content_for :head do
   %meta{property: "og:title", content: @blog.title}
   %meta{property: "og:description", content: @blog.meta_description}
