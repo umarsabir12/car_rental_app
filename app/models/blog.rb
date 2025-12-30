@@ -10,7 +10,7 @@ class Blog < ApplicationRecord
   }
   validate :slug_format_requirements
 
-  scope :published, -> { where("published_at <= ?", Time.current) }
+  scope :published, -> { where("published_at <= ?", (Time.current + 4.hours)) }
 
   def to_param
     slug
