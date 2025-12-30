@@ -1,5 +1,6 @@
 - content_for :title, "Rent #{@car.full_name} in Dubai | Wheels on Rent"
 - content_for :description, "Rent #{@car.full_name} in Dubai starting from AED #{@car.daily_price}/day.}"
+- content_for :canonical, car_url(@car)
 - min_days = ['Luxury', 'Sports', 'Convertible'].include?(@car.category) ? 1 : 7
 
 - content_for :head do
