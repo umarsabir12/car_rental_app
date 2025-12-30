@@ -12,7 +12,7 @@
       <table class="min-w-full divide-y divide-gray-200">
         <thead style="background-color: #e8f0f0;">
           <tr>
-            <th scope="col" class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider" style="color: #3A6363;">Title</th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider w-1/3" style="color: #3A6363;">Title</th>
             <th scope="col" class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider" style="color: #3A6363;">Author</th>
             <th scope="col" class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider" style="color: #3A6363;">Category</th>
             <th scope="col" class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider" style="color: #3A6363;">Published At</th>
@@ -22,8 +22,8 @@
         <tbody class="bg-white divide-y divide-gray-200">
           <% @blogs.each do |blog| %>
             <tr class="transition-colors" style="transition: background-color 0.2s;" onmouseover="this.style.backgroundColor='#e8f0f0'" onmouseout="this.style.backgroundColor='white'">
-              <td class="px-6 py-4 whitespace-nowrap">
-                <div class="text-sm font-medium text-gray-900"><%= blog.title %></div>
+              <td class="px-6 py-4 whitespace-nowrap w-1/3 max-w-0">
+                <div class="text-sm font-medium text-gray-900 truncate" title="<%= blog.title %>"><%= blog.title %></div>
                 <div class="text-sm text-gray-500"><%= truncate(blog.slug, length: 30) %></div>
               </td>
               <td class="px-6 py-4 whitespace-nowrap">
