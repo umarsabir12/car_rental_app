@@ -6,6 +6,11 @@ class Admin::FeaturedCarsController < ApplicationController
     # Fetch all cars, ordered by featured status (featured first) then by ID
     @cars = Car.order(featured: :desc, id: :desc)
 
+    # Vendor Filter
+    if params[:vendor_id].present?
+      @cars = @cars.where(vendor_id: params[:vendor_id])
+    end
+
     # Simple search/filter
     if params[:query].present?
       q = params[:query].downcase

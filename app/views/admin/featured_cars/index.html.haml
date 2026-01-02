@@ -3,9 +3,12 @@
     %h1.text-2xl.font-bold.text-gray-900 Featured Cars Management
     
     / Search Form
-    = form_tag admin_featured_cars_path, method: :get, class: "flex gap-2" do
-      = text_field_tag :query, params[:query], placeholder: "Search brand or model...", class: "rounded-lg border-gray-300 shadow-sm focus:border-teal-500 focus:ring-teal-500"
-      = submit_tag "Search", class: "px-4 py-2 bg-teal-600 text-white rounded-lg hover:bg-teal-700 cursor-pointer"
+    = form_tag admin_featured_cars_path, method: :get, class: "flex gap-2 items-center" do
+      = select_tag :vendor_id, options_from_collection_for_select(Vendor.active.order(:company_name), :id, :display_name, params[:vendor_id]), prompt: "All Vendors", class: "rounded-lg border-gray-300 shadow-md focus:border-teal-500 focus:ring-teal-500 py-2"
+      = text_field_tag :query, params[:query], placeholder: "Search brand or model...", class: "rounded-lg border-gray-300 shadow-md focus:border-teal-500 focus:ring-teal-500 py-2"
+      = submit_tag "Search", class: "px-4 py-2 bg-teal-600 text-white rounded-lg hover:bg-teal-700 cursor-pointer shadow-md"
+      - if params[:query].present? || params[:vendor_id].present?
+        = link_to "Clear Filters", admin_featured_cars_path, class: "px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200"
 
   .overflow-x-auto
     %table.min-w-full.divide-y.divide-gray-200
