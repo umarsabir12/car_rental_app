@@ -6,6 +6,7 @@ class DocxParserService
   # Styles extracted from sample_string.txt
   STYLES = {
     p: "margin-bottom: 1.5rem; line-height: 1.8; color: #333; font-size: 1.125rem;",
+    h1: "font-size: 2.25rem; color: #3A6363; margin-top: 2.5rem; margin-bottom: 1.5rem; font-weight: 800; line-height: 1.2;",
     h2: "font-size: 1.875rem; color: #3A6363; margin-top: 2rem; margin-bottom: 1.5rem; font-weight: 700; line-height: 1.2;",
     h3: "font-size: 1.5rem; color: #3A6363; margin-top: 2rem; margin-bottom: 1rem; font-weight: 700;",
     h4: "font-size: 1.25rem; color: #3A6363; margin-top: 1.5rem; margin-bottom: 0.75rem; font-weight: 700;",
@@ -63,19 +64,34 @@ class DocxParserService
         # Deep Search: Get all children (runs and hyperlinks) to preserve order
         child_nodes = node.xpath("w:r | w:hyperlink")
 
-        # Check Paragraph-level Bold (applies to all runs if not overridden)
+        # Check Paragraph-level Bold and Size
         para_bold = false
         p_bold_node = node.xpath(".//w:pPr/w:b").first
+        # Also check for bold in pPr > rPr
+        unless p_bold_node
+          p_bold_node = node.xpath(".//w:pPr/w:rPr/w:b").first
+        end
+
         if p_bold_node
            val = p_bold_node["w:val"]
            para_bold = true unless val == "0" || val == "false"
         end
 
+        # Check Paragraph-level Font Size (default for the paragraph)
+        para_size = 0
+        p_size_node = node.xpath(".//w:pPr/w:rPr/w:sz").first
+        if p_size_node
+          para_size = p_size_node["w:val"].to_i
+        end
+
+        # Logging for debug
+        Rails.logger.info "DocxParser: Text='#{text[0..30]}...' Style='#{p.style}' TagFromStyle='#{tag}' ParaSize=#{para_size}"
+
         # Implicit Heading Detection
         if tag == "p" && text.length > 0 && text.length < 200
            total_run_chars = 0
            bold_chars = 0
-           max_font_size = 0
+           max_font_size = para_size # Start with paragraph default size
 
            # Analyze children for styling clues
            child_nodes.each do |child|
@@ -176,7 +192,7 @@ class DocxParserService
   def get_tag_from_style(style)
     style_name = style.to_s.downcase.strip
     case style_name
-    when /heading\s*1/, /title/ then "h2"
+    when /heading\s*1/, /^title$/ then "h1"
     when /heading\s*2/, /subtitle/ then "h2"
     when /heading\s*3/ then "h3"
     when /heading\s*4/ then "h4"
