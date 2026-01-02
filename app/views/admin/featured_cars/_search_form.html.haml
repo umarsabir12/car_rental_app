@@ -1,0 +1,7 @@
+= form_tag admin_featured_cars_path, method: :get, class: "flex gap-2 items-center", id: "search_filter_form", data: { controller: "admin-filter", admin_filter_target: "form", turbo_stream: "true" } do
+  = select_tag :vendor_id, options_from_collection_for_select(Vendor.active.order(:company_name), :id, :display_name, params[:vendor_id]), prompt: "All Vendors", class: "rounded-lg border-gray-300 shadow-md focus:border-teal-500 focus:ring-teal-500 py-2", data: { action: "change->admin-filter#submit" }
+  = text_field_tag :query, params[:query], placeholder: "Search brand or model...", class: "rounded-lg border-gray-300 shadow-md focus:border-teal-500 focus:ring-teal-500 py-2", data: { action: "input->admin-filter#submit" }
+  = submit_tag "Search", class: "px-4 py-2 bg-teal-600 text-white rounded-lg hover:bg-teal-700 cursor-pointer shadow-md"
+  
+  - if params[:query].present? || params[:vendor_id].present?
+    = link_to "Clear Filters", admin_featured_cars_path, class: "px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200", data: { turbo_stream: true }
