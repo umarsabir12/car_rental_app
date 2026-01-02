@@ -123,14 +123,14 @@ class CarRentalController < ApplicationController
                           .select("cars.*, COUNT(bookings.id) as total_bookings")
                           .group("cars.id")
                           .order("total_bookings DESC, cars.created_at DESC")
-    
-    # Needs to be formatted similarly to category cars if we want to use the same loop in view, 
-    # but the view logic filters by category name/slug. 
+
+    # Needs to be formatted similarly to category cars if we want to use the same loop in view,
+    # but the view logic filters by category name/slug.
     # So we can hack it by appending a 'virtual' category or handling it in the view.
     # A cleaner approach for the view loop is to make sure these cars match the 'with_driver' slug check.
     # Since 'with_driver' isn't a category column value, we need to adjust the view or this array.
     # simpler: just add them to @category_cars and we update the view logic to filter correctly.
-    
+
     @category_cars += cars_with_driver
 
     @company_features = [

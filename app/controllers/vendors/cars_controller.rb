@@ -5,8 +5,8 @@ class Vendors::CarsController < ApplicationController
 
   def index
     @cars = current_vendor.cars.includes(:features)
-    
-    if params[:filter] == 'with_driver'
+
+    if params[:filter] == "with_driver"
       @cars = @cars.where(with_driver: true)
     end
   end
