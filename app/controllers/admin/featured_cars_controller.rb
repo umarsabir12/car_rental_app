@@ -40,7 +40,7 @@ class Admin::FeaturedCarsController < ApplicationController
       respond_to do |format|
         format.json { render json: { success: false, errors: @car.errors.full_messages }, status: :unprocessable_entity }
         format.html { redirect_to admin_featured_cars_path, alert: "Failed to update status." }
-        format.turbo_stream { render turbo_stream: turbo_stream.replace(dom_id(@car, :featured_status), partial: 'admin/shared/flash_messages') } # Optional error handling
+        format.turbo_stream { render turbo_stream: turbo_stream.replace(dom_id(@car, :featured_status), partial: "admin/shared/flash_messages") } # Optional error handling
       end
     end
   end
