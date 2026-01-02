@@ -5,6 +5,10 @@ class Vendors::CarsController < ApplicationController
 
   def index
     @cars = current_vendor.cars.includes(:features)
+    
+    if params[:filter] == 'with_driver'
+      @cars = @cars.where(with_driver: true)
+    end
   end
 
   def show
@@ -90,7 +94,7 @@ class Vendors::CarsController < ApplicationController
     # Handle feature associations
     update_car_features if params[:car][:feature_ids].present?
 
-    if @car.update(car_params.except(:mulkiya, :feature_ids))
+    if @car.update!(car_params.except(:mulkiya, :feature_ids))
       # Attach/replace mulkiya if provided
       if params[:car][:mulkiya].present?
         if @car.car_document.present?
@@ -168,7 +172,7 @@ class Vendors::CarsController < ApplicationController
       :model, :brand, :category, :color, :year, :daily_price, :weekly_price, :monthly_price, :status, :description,
       :transmission, :fuel_type, :seats, :engine_size,
       :air_conditioning, :gps, :sunroof, :bluetooth, :daily_milleage, :weekly_milleage, :monthly_milleage, :featured,
-      :main_image_url, :insurance_policy, :additional_mileage_charge, :mulkiya,
+      :main_image_url, :insurance_policy, :additional_mileage_charge, :with_driver, :mulkiya,
       images: [], feature_ids: []
     )
   end

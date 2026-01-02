@@ -103,7 +103,8 @@ class CarRentalController < ApplicationController
       { name: "Economy", slug: "Economy", description: "Enjoy budget-friendly car rentals with seasonal discounts from some of the best car rental Dubai companies." },
       { name: "Luxury", slug: "Luxury", description: "Experience the pinnacle of automotive excellence with our premium luxury vehicles, featuring top-tier comfort, advanced technology, and prestigious brands." },
       { name: "SUV", slug: "SUV", description: "From spacious 7-seaters to the latest 5-seater sports utility vehicles, rent an SUV for city drives or comfortable long hauls with ample seating and luggage space." },
-      { name: "Sports", slug: "Sports", description: "Feel the thrill of high-performance sports cars with powerful engines, sleek designs, and exceptional handling for an unforgettable driving experience in Dubai." }
+      { name: "Sports", slug: "Sports", description: "Feel the thrill of high-performance sports cars with powerful engines, sleek designs, and exceptional handling for an unforgettable driving experience in Dubai." },
+      { name: "Cars with Driver", slug: "with-driver", description: "Sit back and relax while our professional chauffeurs take you to your destination in comfort and style. Perfect for business trips, events, or stress-free sightseeing." }
     ]
 
     @category_cars = [ "SUV", "Luxury", "Sports", "Economy" ].flat_map do |category|
@@ -114,6 +115,23 @@ class CarRentalController < ApplicationController
          .group("cars.id")
          .order("total_bookings DESC, cars.created_at DESC")
     end
+
+    # Fetch cars with driver
+    cars_with_driver = Car.with_approved_mulkiya
+                          .where(with_driver: true)
+                          .left_joins(:bookings)
+                          .select("cars.*, COUNT(bookings.id) as total_bookings")
+                          .group("cars.id")
+                          .order("total_bookings DESC, cars.created_at DESC")
+    
+    # Needs to be formatted similarly to category cars if we want to use the same loop in view, 
+    # but the view logic filters by category name/slug. 
+    # So we can hack it by appending a 'virtual' category or handling it in the view.
+    # A cleaner approach for the view loop is to make sure these cars match the 'with_driver' slug check.
+    # Since 'with_driver' isn't a category column value, we need to adjust the view or this array.
+    # simpler: just add them to @category_cars and we update the view logic to filter correctly.
+    
+    @category_cars += cars_with_driver
 
     @company_features = [
       { title: "Luxury and Premium Cars", description: "Enjoy Dubai in style with our luxury car rentals, including BMW 7 Series, Mercedes S-Class, and Audi A8. Perfect for business meetings, VIP events, or exploring Dubai’s skyline with elegance." },

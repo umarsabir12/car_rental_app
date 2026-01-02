@@ -119,7 +119,12 @@ class CarsController < ApplicationController
   end
 
   def normalize_filter_params
-    @category = params[:category] == "all-categories" ? nil : find_actual_category(params[:category])
+    if params[:category] == "with-driver"
+      @with_driver = true
+      @category = nil
+    else
+      @category = params[:category] == "all-categories" ? nil : find_actual_category(params[:category])
+    end
     @brand = params[:brand] == "all-brands" ? nil : find_actual_brand(params[:brand])
     @model = find_actual_model(params[:model])
   end
@@ -152,7 +157,11 @@ class CarsController < ApplicationController
   end
 
   def apply_filters(cars)
-    cars = cars.where(category: @category) if @category.present?
+    if @with_driver
+      cars = cars.where(with_driver: true)
+    elsif @category.present?
+      cars = cars.where(category: @category)
+    end
     cars = Car.filter_by_brand(cars, @brand) if @brand.present?
     cars = cars.where("LOWER(model) = ?", @model.downcase) if @model.present?
     cars
