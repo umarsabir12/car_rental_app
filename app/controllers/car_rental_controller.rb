@@ -17,17 +17,8 @@ class CarRentalController < ApplicationController
     @car_brands = Car.distinct.pluck(:brand).compact.map { |b| [ b.titleize, b ] }
     @car_models = Car.distinct.pluck(:model).compact.map { |m| [ m.titleize, m ] }
 
-    # Popular cars data
-    @featured_cars = Car.order(bookings_count: :desc).limit(3).map do |car|
-      {
-        id: car.id,
-        name: car.full_name,
-        car_type: car.category,
-        image_url: url_for(car.images.first),
-        daily_price: car.daily_price,
-        features: car.active_features
-      }
-    end
+    # Featured cars data (manually selected by admin)
+    @featured_cars = Car.featured.limit(10)
 
     # Brands data
     @brands = [
@@ -100,6 +91,7 @@ class CarRentalController < ApplicationController
     @brand_logos = Car.brand_logos
 
     @categories_to_display = [
+      { name: "Featured Collection", slug: "featured", description: "Handpicked premium vehicles for your journey. Experience the best of Dubai with our top-rated cars." },
       { name: "Economy", slug: "Economy", description: "Enjoy budget-friendly car rentals with seasonal discounts from some of the best car rental Dubai companies." },
       { name: "Luxury", slug: "Luxury", description: "Experience the pinnacle of automotive excellence with our premium luxury vehicles, featuring top-tier comfort, advanced technology, and prestigious brands." },
       { name: "SUV", slug: "SUV", description: "From spacious 7-seaters to the latest 5-seater sports utility vehicles, rent an SUV for city drives or comfortable long hauls with ample seating and luggage space." },

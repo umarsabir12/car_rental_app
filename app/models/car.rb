@@ -24,6 +24,7 @@ class Car < ApplicationRecord
   after_update :log_car_updated, if: :saved_change_to_brand? || :saved_change_to_model? || :saved_change_to_daily_price?
   before_destroy :log_car_deleted, :purge_attachments
 
+  scope :featured, -> { where(featured: true) }
   scope :available, -> { where(status: "available") }
   scope :with_approved_mulkiya, -> {
     joins(:car_document).where(car_documents: { document_status: "approved" })
