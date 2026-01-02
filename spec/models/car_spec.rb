@@ -46,6 +46,16 @@ RSpec.describe Car, type: :model do
         expect(Car.with_approved_mulkiya).not_to include(car_without_document)
       end
     end
+
+    describe '.featured' do
+      let!(:featured_car) { create(:car, featured: true) }
+      let!(:regular_car) { create(:car, featured: false) }
+
+      it 'returns only featured cars' do
+        expect(Car.featured).to include(featured_car)
+        expect(Car.featured).not_to include(regular_car)
+      end
+    end
   end
 
   describe '#full_name' do

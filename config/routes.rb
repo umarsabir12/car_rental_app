@@ -143,6 +143,7 @@ Rails.application.routes.draw do
         post :reject
       end
     end
+    resources :featured_cars, only: [:index, :update]
     resources :features, except: [ :show, :new ]
     resources :blogs, only: [ :index, :new, :create, :destroy, :edit, :update ]
   end

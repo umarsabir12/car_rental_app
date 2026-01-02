@@ -30,6 +30,12 @@
                 %span.inline-block.rounded-full.text-xs.font-semibold.px-2.py-1.bg-blue-600.text-white.text-center{ title: "Available with Driver" }
                   %i.fas.fa-user-tie.text-xs
             
+            - if car.featured?
+              .absolute.top-3.left-3.z-20
+                %span.inline-flex.items-center.px-2.py-1.rounded-full.text-xs.font-bold.bg-yellow-400.text-gray-900.shadow-md
+                  %i.fas.fa-star.mr-1.text-xs
+                  Featured
+            
           .p-6.flex-1.flex.flex-col
             %div.flex.items-center.justify-between.mb-2
               %span.text-lg.font-bold.text-gray-900= car.brand
