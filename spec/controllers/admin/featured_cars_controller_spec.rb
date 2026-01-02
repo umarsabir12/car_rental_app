@@ -15,7 +15,7 @@ RSpec.describe Admin::FeaturedCarsController, type: :controller do
     it 'assigns cars ordered by featured status' do
       featured_car = create(:car, featured: true)
       get :index
-      expect(assigns(:cars)).to eq([featured_car, car].sort_by { |c| [c.featured ? 0 : 1, -c.id] })
+      expect(assigns(:cars)).to eq([ featured_car, car ].sort_by { |c| [ c.featured ? 0 : 1, -c.id ] })
     end
   end
 

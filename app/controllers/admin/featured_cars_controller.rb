@@ -5,7 +5,7 @@ class Admin::FeaturedCarsController < ApplicationController
   def index
     # Fetch all cars, ordered by featured status (featured first) then by ID
     @cars = Car.order(featured: :desc, id: :desc)
-    
+
     # Simple search/filter
     if params[:query].present?
       q = params[:query].downcase
@@ -18,7 +18,7 @@ class Admin::FeaturedCarsController < ApplicationController
 
   def update
     @car = Car.friendly.find(params[:id])
-    
+
     @car.featured = params.dig(:car, :featured)
     if @car.save(validate: false)
       respond_to do |format|
