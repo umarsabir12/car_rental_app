@@ -1,0 +1,44 @@
+.overflow-x-auto{id: "featured_cars_results"}
+  %table.min-w-full.divide-y.divide-gray-200
+    %thead.bg-gray-50
+      %tr
+        %th.px-6.py-3.text-left.text-xs.font-medium.text-gray-500.uppercase.tracking-wider Car Info
+        %th.px-6.py-3.text-left.text-xs.font-medium.text-gray-500.uppercase.tracking-wider Vendor
+        %th.px-6.py-3.text-left.text-xs.font-medium.text-gray-500.uppercase.tracking-wider Status
+        %th.px-6.py-3.text-left.text-xs.font-medium.text-gray-500.uppercase.tracking-wider Featured
+
+    %tbody.bg-white.divide-y.divide-gray-200
+      - @cars.each do |car|
+        %tr
+          %td.px-6.py-4.whitespace-nowrap
+            .flex.items-center
+              .flex-shrink-0.h-10.w-10
+                - if car.images.attached?
+                  = image_tag car.images.first, class: "h-10 w-10 rounded-full object-cover"
+                - else
+                  .h-10.w-10.rounded-full.bg-gray-200.flex.items-center.justify-center
+                    %i.fas.fa-car.text-gray-400
+              .ml-4
+                .text-sm.font-medium.text-gray-900= car.full_name
+                .text-sm.text-gray-500= car.year
+          
+          %td.px-6.py-4.whitespace-nowrap
+            .text-sm.text-gray-900= car.vendor&.company_name || "N/A"
+          
+          %td.px-6.py-4.whitespace-nowrap
+            %span.px-2.inline-flex.text-xs.leading-5.font-semibold.rounded-full{class: car.status == 'available' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}
+              = car.status
+          
+          %td.px-6.py-4.whitespace-nowrap
+            / Toggle Switch Form
+            / Toggle Switch Form
+            = form_with model: [:admin, car], url: admin_featured_car_path(car), method: :patch, class: "flex items-center" do |f|
+              %label.relative.inline-flex.items-center.cursor-pointer
+                = f.check_box :featured, class: "sr-only peer", onchange: "this.form.requestSubmit()"
+                %div{class: "w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-teal-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-teal-600"}
+                %span.ml-3.text-sm.font-medium.text-gray-900{id: dom_id(car, :featured_status)}
+                  = car.featured? ? "Featured" : "Not Featured"
+
+- if defined?(Pagy) && @pagy.pages > 1
+  .mt-4.flex.justify-center
+    != pagy_nav(@pagy)
