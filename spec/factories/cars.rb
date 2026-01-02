@@ -51,5 +51,9 @@ FactoryBot.define do
       brand { 'Rolls Royce' }
       daily_price { rand(800..2000) }
     end
+
+    trait :with_driver do
+      with_driver { true }
+    end
   end
 end

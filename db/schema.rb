@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_12_11_094653) do
+ActiveRecord::Schema[7.2].define(version: 2026_01_02_114701) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -111,6 +111,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_12_11_094653) do
     t.decimal "total_amount", precision: 10, scale: 2, default: "0.0"
     t.string "delivery_option"
     t.string "payment_status", default: "pending"
+    t.decimal "discount_percentage"
     t.index ["car_id", "created_at"], name: "index_bookings_on_car_id_and_created_at"
     t.index ["car_id"], name: "index_bookings_on_car_id"
     t.index ["created_at"], name: "index_bookings_on_created_at"
@@ -171,6 +172,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_12_11_094653) do
     t.integer "additional_mileage_charge", default: 0
     t.integer "bookings_count", default: 0, null: false
     t.string "slug"
+    t.boolean "with_driver"
     t.index ["brand"], name: "index_cars_on_brand"
     t.index ["category"], name: "index_cars_on_category"
     t.index ["created_at"], name: "index_cars_on_created_at"
@@ -181,6 +183,16 @@ ActiveRecord::Schema[7.2].define(version: 2025_12_11_094653) do
     t.index ["stripe_price_id"], name: "index_cars_on_stripe_price_id"
     t.index ["stripe_product_id"], name: "index_cars_on_stripe_product_id"
     t.index ["vendor_id"], name: "index_cars_on_vendor_id"
+  end
+
+  create_table "discounts", force: :cascade do |t|
+    t.bigint "vendor_id"
+    t.text "category", default: [], array: true
+    t.decimal "discount_percentage"
+    t.boolean "active"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["vendor_id"], name: "index_discounts_on_vendor_id"
   end
 
   create_table "documents", force: :cascade do |t|
@@ -363,6 +375,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_12_11_094653) do
   add_foreign_key "car_features", "cars"
   add_foreign_key "car_features", "features"
   add_foreign_key "cars", "vendors"
+  add_foreign_key "discounts", "vendors"
   add_foreign_key "documents", "users"
   add_foreign_key "invoice_items", "invoices"
   add_foreign_key "invoices", "vendors"

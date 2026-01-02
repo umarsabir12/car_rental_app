@@ -79,7 +79,11 @@
         / Cars Carousel - Show 4 cards at a time
         .car-carousel.mt-8
           / Get cars for this category
-          - category_cars = (@category_cars || []).select { |c| c[:category]&.include?(category[:slug]) }
+          - if category[:slug] == 'with-driver'
+            - category_cars = (@category_cars || []).select { |c| c.with_driver? }.uniq
+          - else
+            - category_cars = (@category_cars || []).select { |c| c[:category]&.include?(category[:slug]) }
+          
           - category_cars = category_cars.presence || []
           
           - if category_cars.any?
@@ -104,9 +108,14 @@
                           / Car Image with Uniform Size
                           .relative.h-48.bg-gray-100.overflow-hidden
                             = car_main_image(car, size: [400, 300])
-                            .absolute.top-3.right-3.flex.flex-col.space-y-1
+                            .absolute.top-3.right-3.flex.flex-row.items-center.space-x-1
                               - status_classes = {'Available' => 'bg-green-500 text-white','Rented' => 'bg-red-500 text-white'}[car.status] || 'bg-teal-600 text-white'
                               %span.inline-block.rounded-full.text-xs.font-semibold.px-2.py-1{ class: status_classes }= car.status
+
+                            / Driver Icon
+                            - if car.with_driver?
+                              .absolute.top-3.left-3.bg-blue-600.text-white.rounded-full.p-1.5.shadow-md{ title: "Available with Driver" }
+                                %i.fas.fa-user-tie.text-sm
               
                           .p-6.flex.flex-col.flex-1
                             %div.flex.items-center.justify-between.mb-2

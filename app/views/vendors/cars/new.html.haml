@@ -148,15 +148,15 @@
           %i.fas.fa-info-circle.text-2xl.sm:text-3xl.mb-2.sm:mb-3
           %p.text-sm.sm:text-base No premium features available. Contact admin to add features.
 
-      / Featured Car Checkbox
+      / With Driver Checkbox
       .field.space-y-1.sm:space-y-2.mt-3.sm:mt-4
-        .flex.items-center.p-3.sm:p-4.bg-yellow-50.rounded-lg.border-2.border-yellow-200
-          = f.check_box :featured, class: 'h-4 w-4 sm:h-5 sm:w-5 border-gray-300 rounded focus:ring-2', style: 'accent-color:#3A6363'
-          = f.label :featured, class: 'ml-2 sm:ml-3 block text-xs sm:text-sm font-medium text-gray-700 cursor-pointer' do
+        .flex.items-center.p-3.sm:p-4.bg-blue-50.rounded-lg.border-2.border-blue-200
+          = f.check_box :with_driver, class: 'h-4 w-4 sm:h-5 sm:w-5 border-gray-300 rounded focus:ring-2', style: 'accent-color:#3A6363'
+          = f.label :with_driver, class: 'ml-2 sm:ml-3 block text-xs sm:text-sm font-medium text-gray-700 cursor-pointer' do
             .flex.items-center.gap-1.sm:gap-2
-              %i.fas.fa-star.text-yellow-500.text-sm.sm:text-base
-              %span Featured Car
-              %span.text-xs.text-gray-500 (Highlighted on homepage)
+              %i.fas.fa-user-tie.text-blue-500.text-sm.sm:text-base
+              %span With Driver
+              %span.text-xs.text-gray-500 (Available with chauffeur)
 
       / Insurance Section
       %h2.text-base.sm:text-lg.font-bold.mb-3.sm:mb-4.mt-6.sm:mt-8{style: 'color: #3a6363'} Insurance

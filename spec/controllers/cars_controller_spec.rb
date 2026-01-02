@@ -39,6 +39,17 @@ RSpec.describe CarsController, type: :controller do
       get :index
       expect(assigns(:car_brands)).to be_an(Array)
     end
+
+    context 'when filtering by with-driver' do
+      let!(:driver_car) { create(:car, :with_approved_document, :with_driver) }
+      let!(:normal_car) { create(:car, :with_approved_document, with_driver: false) }
+
+      it 'returns only cars with driver' do
+        get :index, params: { category: 'with-driver' }
+        expect(assigns(:cars)).to include(driver_car)
+        expect(assigns(:cars)).not_to include(normal_car)
+      end
+    end
   end
 
   describe 'GET #show' do

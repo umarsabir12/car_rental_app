@@ -22,6 +22,17 @@ RSpec.describe Vendors::CarsController, type: :controller do
         expect(assigns(:cars)).to include(vendor_car1, vendor_car2)
         expect(assigns(:cars)).not_to include(other_car)
       end
+
+      context 'with filter param' do
+        let!(:driver_car) { create(:car, vendor: vendor, with_driver: true) }
+        let!(:normal_car) { create(:car, vendor: vendor, with_driver: false) }
+
+        it 'filters by with_driver' do
+          get :index, params: { filter: 'with_driver' }
+          expect(assigns(:cars)).to include(driver_car)
+          expect(assigns(:cars)).not_to include(normal_car)
+        end
+      end
     end
 
     context 'when vendor is not authenticated' do
