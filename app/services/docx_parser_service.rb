@@ -54,10 +54,15 @@ class DocxParserService
         text = p.text.strip
 
         # Identify Tag via Style or XML properties
-        tag = get_tag_from_style(p.style)
+        style_id = p.style
+        if style_id.to_s.strip.empty? || style_id.to_s.downcase == "normal"
+          s_node = node.xpath(".//w:pPr/w:pStyle").first
+          style_id = s_node["w:val"] if s_node
+        end
+        tag = get_tag_from_style(style_id)
 
         # Robust List Detection
-        if node.xpath(".//w:pPr/w:numPr").any?
+        if node.xpath(".//w:pPr/w:numPr").any? && tag == "p"
           tag = "li"
         end
 
@@ -77,18 +82,22 @@ class DocxParserService
            para_bold = true unless val == "0" || val == "false"
         end
 
-        # Check Paragraph-level Font Size (default for the paragraph)
+        # Check Paragraph-level Font Size (check both standard and complex script sizes)
         para_size = 0
         p_size_node = node.xpath(".//w:pPr/w:rPr/w:sz").first
+        p_size_cs_node = node.xpath(".//w:pPr/w:rPr/w:szCs").first
+        
         if p_size_node
           para_size = p_size_node["w:val"].to_i
+        elsif p_size_cs_node
+          para_size = p_size_cs_node["w:val"].to_i
         end
 
         # Logging for debug
         Rails.logger.info "DocxParser: Text='#{text[0..30]}...' Style='#{p.style}' TagFromStyle='#{tag}' ParaSize=#{para_size}"
 
         # Implicit Heading Detection
-        if tag == "p" && text.length > 0 && text.length < 200
+        if tag == "p" && text.length > 0
            total_run_chars = 0
            bold_chars = 0
            max_font_size = para_size # Start with paragraph default size
@@ -96,7 +105,7 @@ class DocxParserService
            # Analyze children for styling clues
            child_nodes.each do |child|
              if child.name == "r"
-               process_run_for_stats(child, para_bold, total_run_chars, bold_chars, max_font_size)
+               total_run_chars, bold_chars, max_font_size = process_run_for_stats(child, para_bold, total_run_chars, bold_chars, max_font_size)
              elsif child.name == "hyperlink"
                child.xpath(".//w:r").each do |r_node|
                  total_run_chars, bold_chars, max_font_size = process_run_for_stats(
@@ -106,21 +115,15 @@ class DocxParserService
              end
            end
 
-            is_mostly_bold = (total_run_chars > 0) && ((bold_chars.to_f / total_run_chars) > 0.7)
 
-            # Logic based on standard Word half-points (28 = 14pt, 36 = 18pt, 48 = 24pt)
-            if max_font_size >= 48
+
+            # Logic based on standard Word half-points (28 = 14pt, 32 = 16pt, 40 = 20pt)
+            if max_font_size >= 40
               tag = "h1"
             elsif max_font_size >= 32
               tag = "h2"
             elsif max_font_size >= 28
               tag = "h3"
-            elsif is_mostly_bold && text.length < 100
-              # If it's short and bold but small, arguably could be h4 or just bold text.
-              # Better to verify if it acts as a heading.
-              # For now, let's NOT force h3 solely on bold, as that was the bug.
-              # We will treat it as a paragraph that happens to be bold (handled by run parsing).
-              tag = "h4"
             end
         end
 
@@ -277,12 +280,18 @@ class DocxParserService
          bold_chars += r_text.length
        end
 
-       # Check Font Size
+       # Check Font Size (standard and complex script)
        size_node = r_node.xpath(".//w:rPr/w:sz").first
+       size_cs_node = r_node.xpath(".//w:rPr/w:szCs").first
+       
+       val_to_use = 0
        if size_node
-         size_val = size_node["w:val"].to_i
-         max_font_size = size_val if size_val > max_font_size
+         val_to_use = size_node["w:val"].to_i
+       elsif size_cs_node
+         val_to_use = size_cs_node["w:val"].to_i
        end
+
+       max_font_size = val_to_use if val_to_use > max_font_size
      end
      [ total_run_chars, bold_chars, max_font_size ]
   end
