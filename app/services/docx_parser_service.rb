@@ -86,7 +86,7 @@ class DocxParserService
         para_size = 0
         p_size_node = node.xpath(".//w:pPr/w:rPr/w:sz").first
         p_size_cs_node = node.xpath(".//w:pPr/w:rPr/w:szCs").first
-        
+
         if p_size_node
           para_size = p_size_node["w:val"].to_i
         elsif p_size_cs_node
@@ -283,7 +283,7 @@ class DocxParserService
        # Check Font Size (standard and complex script)
        size_node = r_node.xpath(".//w:rPr/w:sz").first
        size_cs_node = r_node.xpath(".//w:rPr/w:szCs").first
-       
+
        val_to_use = 0
        if size_node
          val_to_use = size_node["w:val"].to_i
