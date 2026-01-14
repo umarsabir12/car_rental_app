@@ -100,10 +100,15 @@
             %span.text-gray-900= "#{(@booking.end_date - @booking.start_date).to_i} days"
           .flex.justify-between.py-2.border-b.border-gray-100
             %span.font-medium.text-gray-600 Total Amount
-            - if @booking.car.daily_price
-              - total_days = (@booking.end_date - @booking.start_date).to_i
-              - total_amount = @booking.car.daily_price * total_days
-              %span.font-semibold.text-lg.text-blue-600= number_to_currency(total_amount)
+            - if @booking.total_amount
+              - if @booking.has_discount?
+                .flex.flex-col.items-end
+                  %span.text-sm.text-gray-400.line-through= number_to_currency(@booking.calculate_total_amount_without_discount + (@booking.delivery_charge || 0))
+                  %span.font-semibold.text-lg.text-green-600.flex.items-center.gap-1
+                    %i.fas.fa-tag.text-sm
+                    = number_to_currency(@booking.total_amount)
+              - else
+                %span.font-semibold.text-lg.text-blue-600= number_to_currency(@booking.total_amount)
             - else
               %span.text-gray-400 N/A
           .flex.justify-between.py-2.border-b.border-gray-100
@@ -137,18 +142,38 @@
           .flex.justify-between.items-center.py-2.border-b.border-gray-100
             %span.font-medium.text-gray-600 Last Updated
             %span.text-gray-900= @booking.updated_at.strftime('%b %d, %Y')
-          - if @booking.car.daily_price
-            - total_days = (@booking.end_date - @booking.start_date).to_i
-            - total_amount = @booking.car.daily_price * total_days
+          - if @booking.total_amount
+            - original_amount = @booking.calculate_total_amount_without_discount
             .flex.justify-between.items-center.py-2.border-b.border-gray-100
-              %span.font-medium.text-gray-600 Daily Rate
-              %span.text-gray-900= number_to_currency(@booking.car.daily_price)
+              %span.font-medium.text-gray-600 Rental Period
+              %span.text-gray-900= @booking.selected_period&.titleize || 'Daily'
             .flex.justify-between.items-center.py-2.border-b.border-gray-100
-              %span.font-medium.text-gray-600 Days
-              %span.text-gray-900= total_days
+              %span.font-medium.text-gray-600 Duration
+              %span.text-gray-900= "#{(@booking.end_date - @booking.start_date).to_i} days"
+            .flex.justify-between.items-center.py-2.border-b.border-gray-100
+              %span.font-medium.text-gray-600 Subtotal
+              %span.text-gray-900= number_to_currency(original_amount)
+
+            - if @booking.has_discount?
+              .flex.justify-between.items-center.py-2.border-b.border-gray-100.bg-red-50
+                %span.font-medium.text-gray-600.flex.items-center.gap-2
+                  %i.fas.fa-tag.text-red-500
+                  = "Discount (#{@booking.discount_percentage}% OFF)"
+                %span.font-bold.text-red-600= "- #{number_to_currency(@booking.discount_amount)}"
+
+            - if @booking.delivery_charge_applicable?
+              .flex.justify-between.items-center.py-2.border-b.border-gray-100
+                %span.font-medium.text-gray-600= "#{@booking.delivery_option&.titleize} Charge"
+                %span.text-gray-900= number_to_currency(@booking.delivery_charge)
+
             .flex.justify-between.items-center.py-2
               %span.font-bold.text-gray-900 Total
-              %span.font-bold.text-lg.text-blue-600= number_to_currency(total_amount)
+              - if @booking.has_discount?
+                .flex.flex-col.items-end
+                  %span.text-sm.text-gray-400.line-through= number_to_currency(original_amount + (@booking.delivery_charge || 0))
+                  %span.font-bold.text-lg.text-blue-600= number_to_currency(@booking.total_amount)
+              - else
+                %span.font-bold.text-lg.text-blue-600= number_to_currency(@booking.total_amount)
 
       / Status Update Card
       .bg-white.rounded-xl.shadow-lg.p-6

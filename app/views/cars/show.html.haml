@@ -99,20 +99,27 @@
                   - @car.images.each_with_index do |image, index|
                     .swiper-slide.flex.items-center.justify-center{ style: 'cursor: zoom-in', data: { index: index, url: url_for(image) } }
                       %img.w-full.h-auto.mx-auto{ src: url_for(image), alt: "#{@car.brand} #{@car.model} - Image #{index + 1}", style: 'filter: drop-shadow(0 10px 30px rgba(0,0,0,0.2)); max-height: 600px; object-fit: contain;' }
-                
+
                 / Navigation Buttons - Enhanced styling
                 .swiper-button-prev.bg-white.bg-opacity-80.rounded-full.shadow-lg{ style: 'width: 50px; height: 50px; color: #3a6363' }
                 .swiper-button-next.bg-white.bg-opacity-80.rounded-full.shadow-lg{ style: 'width: 50px; height: 50px; color: #3a6363' }
                 .swiper-pagination{ style: 'bottom: 20px' }
-              
+
+              / Discount Badge - Top Left
+              - if @car.has_discount?
+                .absolute.top-6.left-6.z-20
+                  .flex.items-center.gap-2.bg-gradient-to-r.from-red-500.to-red-600.text-white.px-4.py-2.rounded-full.shadow-lg
+                    %i.fas.fa-tag.text-sm
+                    %span.text-base.font-bold= "#{@car.discount_percentage}% OFF"
+
               / Image Counter - Enhanced styling
               .absolute.top-6.right-6.bg-black.bg-opacity-70.text-white.px-4.py-2.rounded-full.text-sm.font-semibold.shadow-lg
                 %span.current-slide 1
                 %span.mx-1 /
                 %span.total-slides= @car.images.count
-              
+
               / Zoom Icon Indicator
-              .absolute.top-6.left-6.bg-black.bg-opacity-70.text-white.px-4.py-2.rounded-full.text-sm.font-semibold.shadow-lg.flex.items-center.gap-2
+              .absolute.bottom-6.left-6.bg-black.bg-opacity-70.text-white.px-4.py-2.rounded-full.text-sm.font-semibold.shadow-lg.flex.items-center.gap-2
                 %i.fas.fa-search-plus
                 %span Click to zoom
               
@@ -193,7 +200,7 @@
             - extra_charge = @car.respond_to?(:additional_mileage_charge) && @car.additional_mileage_charge || 1
 
             / Daily Card
-            .cursor-pointer.border.rounded-xl.p-4.text-center.transition.shadow-sm.hover:shadow{ 
+            .cursor-pointer.border.rounded-xl.p-4.text-center.transition.shadow-sm.hover:shadow{
               "data-action" => "click->pricing-selector#select",
               "data-pricing-selector-target" => "card",
               "data-price" => daily_price,
@@ -201,14 +208,19 @@
               "data-mileage" => daily_mileage
             }
               %div.font-medium.uppercase.text-gray-500.mb-1 Daily
-              %div.font-bold{style: 'color: #3a6363'} AED
-              %div.font-extrabold{style: 'color: #3a6363'}= daily_price
+              - if @car.has_discount?
+                %div.text-xs.text-gray-400.line-through AED #{daily_price}
+                %div.font-bold{style: 'color: #3a6363'} AED
+                %div.font-extrabold.text-red-600= @car.discounted_price(daily_price).round(2)
+              - else
+                %div.font-bold{style: 'color: #3a6363'} AED
+                %div.font-extrabold{style: 'color: #3a6363'}= daily_price
               %div.text-xs.text-gray-500.mt-1 /day
               %div.mt-2.text-xs.text-gray-600 Includes
               %div.text-sm.font-medium= "#{daily_mileage} km"
 
             / Weekly Card
-            .cursor-pointer.border.rounded-xl.p-4.text-center.transition.shadow-sm.hover:shadow{ 
+            .cursor-pointer.border.rounded-xl.p-4.text-center.transition.shadow-sm.hover:shadow{
               "data-action" => "click->pricing-selector#select",
               "data-pricing-selector-target" => "card",
               "data-price" => weekly_price,
@@ -216,14 +228,19 @@
               "data-mileage" => weekly_mileage
             }
               %div.font-medium.uppercase.text-gray-500.mb-1 Weekly
-              %div.font-bold{style: 'color: #3a6363'} AED
-              %div.font-extrabold{style: 'color: #3a6363'}= weekly_price
+              - if @car.has_discount?
+                %div.text-xs.text-gray-400.line-through AED #{weekly_price}
+                %div.font-bold{style: 'color: #3a6363'} AED
+                %div.font-extrabold.text-red-600= @car.discounted_price(weekly_price).round(2)
+              - else
+                %div.font-bold{style: 'color: #3a6363'} AED
+                %div.font-extrabold{style: 'color: #3a6363'}= weekly_price
               %div.text-xs.text-gray-500.mt-1 /week
               %div.mt-2.text-xs.text-gray-600 Includes
               %div.text-sm.font-medium= "#{weekly_mileage} km"
 
             / Monthly Card
-            .cursor-pointer.border.rounded-xl.pt-4.text-center.transition.shadow-sm.hover:shadow{ 
+            .cursor-pointer.border.rounded-xl.p-4.text-center.transition.shadow-sm.hover:shadow{
               "data-action" => "click->pricing-selector#select",
               "data-pricing-selector-target" => "card",
               "data-price" => monthly_price,
@@ -231,8 +248,13 @@
               "data-mileage" => monthly_mileage
             }
               %div.font-medium.uppercase.text-gray-500.mb-1 Monthly
-              %div.font-bold{style: 'color: #3a6363'} AED
-              %div.font-extrabold{style: 'color: #3a6363'}= monthly_price
+              - if @car.has_discount?
+                %div.text-xs.text-gray-400.line-through AED #{monthly_price}
+                %div.font-bold{style: 'color: #3a6363'} AED
+                %div.font-extrabold.text-red-600= @car.discounted_price(monthly_price).round(2)
+              - else
+                %div.font-bold{style: 'color: #3a6363'} AED
+                %div.font-extrabold{style: 'color: #3a6363'}= monthly_price
               %div.text-xs.text-gray-500.mt-1 /month
               %div.mt-2.text-xs.text-gray-600 Includes
               %div.text-sm.font-medium= "#{monthly_mileage} km"

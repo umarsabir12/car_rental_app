@@ -42,6 +42,34 @@ class Car < ApplicationRecord
     end
   end
 
+  # Get applicable discount for this car
+  def applicable_discount
+    @applicable_discount ||= Discount.applicable_for_car(self)
+  end
+
+  # Check if car has an active discount
+  def has_discount?
+    applicable_discount.present?
+  end
+
+  # Get discount percentage for display
+  def discount_percentage
+    applicable_discount&.discount_percentage || 0
+  end
+
+  # Calculate discounted price
+  def discounted_price(original_price)
+    return original_price unless has_discount?
+
+    discount_amount = (original_price * discount_percentage / 100.0)
+    original_price - discount_amount
+  end
+
+  # Get discounted daily price
+  def discounted_daily_price
+    discounted_price(daily_price)
+  end
+
   # Returns true if the car is available for the entire period starting at start_date
   # period_type: 'daily' | 'weekly' | 'monthly'
   def available_for_period?(start_date, period_type)

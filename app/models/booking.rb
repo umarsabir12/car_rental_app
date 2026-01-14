@@ -36,6 +36,7 @@ class Booking < ApplicationRecord
     duration_days = (end_date - start_date).to_i
     daily_price = car.daily_price.to_f
 
+    # Calculate base amount using original prices (selected_price stores original price)
     base_amount = case selected_period
     when "weekly"
                     weekly_price = selected_price.to_f
@@ -53,8 +54,64 @@ class Booking < ApplicationRecord
                     duration_days * selected_price.to_f
     end
 
+    # Apply discount if stored in booking (uses stored discount_percentage)
+    if has_discount?
+      discount_amount = base_amount * (discount_percentage / 100.0)
+      base_amount = base_amount - discount_amount
+    end
+
     # Add delivery or pickup charge if applicable
     base_amount += delivery_charge if delivery_charge_applicable?
+
+    base_amount
+  end
+
+  # Get discount information for this booking
+  def applicable_discount
+    @applicable_discount ||= car&.applicable_discount
+  end
+
+  def has_discount?
+    # Use stored discount_percentage if available, otherwise check car's current discount
+    self[:discount_percentage].present? && self[:discount_percentage] > 0
+  end
+
+  def discount_percentage
+    # Use stored discount_percentage (preserves discount even if removed from car later)
+    self[:discount_percentage] || 0
+  end
+
+  def discount_amount
+    return 0 unless has_discount?
+
+    original_amount = calculate_total_amount_without_discount
+    original_amount * (discount_percentage / 100.0)
+  end
+
+  def calculate_total_amount_without_discount
+    return 0 unless car && start_date && end_date
+
+    duration_days = (end_date - start_date).to_i
+    daily_price = car.daily_price.to_f
+
+    # Get original prices from car (not selected_price which may be discounted)
+    weekly_price = car.weekly_price.to_f
+    monthly_price = car.monthly_price.to_f
+
+    base_amount = case selected_period
+    when "weekly"
+                    full_weeks = duration_days / 7
+                    remaining_days = duration_days % 7
+                    (full_weeks * weekly_price) + (remaining_days * daily_price)
+
+    when "monthly"
+                    full_months = duration_days / 30
+                    remaining_days = duration_days % 30
+                    (full_months * monthly_price) + (remaining_days * daily_price)
+
+    else # daily
+                    duration_days * daily_price
+    end
 
     base_amount
   end

@@ -20,21 +20,32 @@
         = link_to car_path(car) do
           .relative.h-48.bg-gray-100.overflow-hidden
             = car_main_image(car, size: [400, 300])
-            
-            / Status and Driver Badges
+
+            / Badges Container - Left Side (Stacked & Compact)
+            / Badges Container - Left Side (Stacked & Compact)
+            .absolute.top-2.left-2.z-10.flex.flex-col.gap-2.items-start
+              / Featured Badge
+              - if car.featured?
+                %span{class: "flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-yellow-400 text-gray-900 shadow-sm"}
+                  %i{class: "fas fa-star mr-1 text-[10px]"}
+                  Featured
+
+              / Discount Badge
+              - if car.has_discount?
+                .flex{class: "items-center gap-1 bg-gradient-to-r from-red-500 to-red-600 text-white px-2 py-0.5 rounded-full shadow-sm"}
+                  %i{class: "fas fa-tag text-[10px]"}
+                  %span{class: "text-[10px] font-bold"}= "#{car.discount_percentage}% OFF"
+
+              / Driver Badge
+              - if car.with_driver?
+                .flex{class: "items-center gap-1 bg-blue-600 text-white px-2 py-0.5 rounded-full shadow-sm"}
+                  %i{class: "fas fa-user-tie text-[10px]"}
+                  %span{class: "text-[10px] font-bold"} With Driver
+
+            / Status Badge - Right Side
             .absolute.top-3.right-3.flex.flex-row.items-center.space-x-1
               - status_classes = {'Available' => 'bg-green-500 text-white','Rented' => 'bg-red-500 text-white'}[car.status] || 'bg-teal-600 text-white'
               %span.inline-block.rounded-full.text-xs.font-semibold.px-2.py-1{ class: status_classes }= car.status
-
-              - if car.with_driver?
-                %span.inline-block.rounded-full.text-xs.font-semibold.px-2.py-1.bg-blue-600.text-white.text-center{ title: "Available with Driver" }
-                  %i.fas.fa-user-tie.text-xs
-            
-            - if car.featured?
-              .absolute.top-3.left-3.z-20
-                %span.inline-flex.items-center.px-2.py-1.rounded-full.text-xs.font-bold.bg-yellow-400.text-gray-900.shadow-md
-                  %i.fas.fa-star.mr-1.text-xs
-                  Featured
             
           .p-6.flex-1.flex.flex-col
             %div.flex.items-center.justify-between.mb-2
@@ -47,7 +58,13 @@
                 %span.text-gray-500.ml-2 •
                 %span.text-gray-500= car.category.capitalize
             %div.flex.items-center.justify-between.mb-4
-              %span.text-2xl.font-bold{style: 'color: #3a6363'}= car.daily_price ? number_to_currency(car.daily_price) : 'N/A'
+              %div
+                - if car.has_discount?
+                  .flex.flex-col
+                    %span.text-lg.text-gray-400.line-through= number_to_currency(car.daily_price)
+                    %span.text-2xl.font-bold.text-red-600= number_to_currency(car.discounted_daily_price)
+                - else
+                  %span.text-2xl.font-bold{style: 'color: #3a6363'}= car.daily_price ? number_to_currency(car.daily_price) : 'N/A'
               %span.text-sm.text-gray-500 /day
  
   / SEO Content Section
