@@ -113,30 +113,34 @@
                           .relative.h-48.bg-gray-100.overflow-hidden
                             = car_main_image(car, size: [400, 300])
 
-                            / Discount Badge - Left Side
-                            - if car.has_discount?
-                              .absolute.top-3.left-3.z-10
-                                .flex.items-center.gap-1.bg-gradient-to-r.from-red-500.to-red-600.text-white.px-3.py-1.5.rounded-full.shadow-lg
-                                  %i.fas.fa-tag.text-xs
-                                  %span.text-sm.font-bold= "#{car.discount_percentage}% OFF"
+                            / Badges Container - Left Side (Stacked & Compact)
+                            .absolute.top-2.left-2.z-10.flex.flex-col.gap-1.items-start
+                              / Featured Badge
+                              - if car.featured?
+                                %span{class: "inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-yellow-400 text-gray-900 shadow-sm"}
+                                  %i{class: "fas fa-star mr-1 text-[10px]"}
+                                  Featured
+
+                              / Discount Badge
+                              - if car.has_discount?
+                                .flex{class: "items-center gap-1 bg-gradient-to-r from-red-500 to-red-600 text-white px-2 py-0.5 rounded-full shadow-sm"}
+                                  %i{class: "fas fa-tag text-[10px]"}
+                                  %span{class: "text-[10px] font-bold"}= "#{car.discount_percentage}% OFF"
+
+                              / Driver Badge
+                              - if car.with_driver?
+                                .flex{class: "items-center gap-1 bg-blue-600 text-white px-2 py-0.5 rounded-full shadow-sm"}
+                                  %i{class: "fas fa-user-tie text-[10px]"}
+                                  %span{class: "text-[10px] font-bold"} With Driver
+
 
                             .absolute.top-3.right-3.flex.flex-col.space-y-1
                               - status_classes = {'Available' => 'bg-green-500 text-white','Rented' => 'bg-red-500 text-white'}[car.status] || 'bg-teal-600 text-white'
                               %span.inline-block.rounded-full.text-xs.font-semibold.px-2.py-1{ class: status_classes }= car.status
-
-                            / Featured Badge (New)
-                            - if car.featured?
-                              .absolute.top-3.left-3.z-20
-                                %span.inline-flex.items-center.px-2.py-1.rounded-full.text-xs.font-bold.bg-yellow-400.text-gray-900.shadow-md
-                                  %i.fas.fa-star.mr-1.text-xs
-                                  Featured
-
-                            / Driver Icon
-                            - if car.with_driver?
-                              .absolute.top-3.left-10.bg-blue-600.text-white.rounded-full.p-1.5.shadow-md.z-20{ title: "Available with Driver", class: car.featured? ? 'ml-16' : '' }
-                                %i.fas.fa-user-tie.text-sm
               
                           .p-6.flex.flex-col.flex-1
+
+
                             %div.flex.items-center.justify-between.mb-2
                               %span.text-lg.font-bold.text-gray-900= car.brand
                               %span.text-sm.text-gray-500= car.year
@@ -147,7 +151,13 @@
                                 %span.text-gray-500.ml-2 •
                                 %span.text-gray-500= car.category.capitalize
                             %div.flex.items-center.justify-between
-                              %span.text-2xl.font-bold{style: 'color: #3a6363'}= car.daily_price ? number_to_currency(car.daily_price) : 'N/A'
+                              %div
+                                - if car.has_discount?
+                                  .flex.flex-col
+                                    %span.text-lg.text-gray-400.line-through= number_to_currency(car.daily_price)
+                                    %span.text-2xl.font-bold.text-red-600= number_to_currency(car.discounted_daily_price)
+                                - else
+                                  %span.text-2xl.font-bold{style: 'color: #3a6363'}= car.daily_price ? number_to_currency(car.daily_price) : 'N/A'
                               %span.text-sm.text-gray-500 /day
           - else
             .text-center.py-12
