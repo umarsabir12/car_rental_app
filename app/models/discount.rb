@@ -23,10 +23,10 @@ class Discount < ApplicationRecord
     # 1. Vendor-specific discount for specific category
     # 2. Category-based discount (all vendors)
     # 3. Vendor-specific discount for all categories (applies even if car has no category)
-    
+
     # Check if "With Driver" applies
     category_check = car.with_driver? ? "(? = ANY(category) OR 'With Driver' = ANY(category) OR category = '{}' OR category IS NULL)" : "(? = ANY(category) OR category = '{}' OR category IS NULL)"
-    
+
     active
       .where("(vendor_id = ? OR vendor_id IS NULL) AND #{category_check}", car.vendor_id, car.category)
       .order(
@@ -75,7 +75,7 @@ class Discount < ApplicationRecord
   def categories_exist_in_system
     return if category.blank? || category.empty?
 
-    available_categories = (Car.distinct.pluck(:category).compact + ["With Driver"]).uniq
+    available_categories = (Car.distinct.pluck(:category).compact + [ "With Driver" ]).uniq
     invalid_categories = category - available_categories
 
     if invalid_categories.any?
