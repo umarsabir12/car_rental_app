@@ -24,7 +24,7 @@ RSpec.describe Vendors::CarsController, type: :controller do
       end
 
       context 'with filter param' do
-        let!(:driver_car) { create(:car, vendor: vendor, with_driver: true) }
+        let!(:driver_car) { create(:car, :with_driver, vendor: vendor) }
         let!(:normal_car) { create(:car, vendor: vendor, with_driver: false) }
 
         it 'filters by with_driver' do

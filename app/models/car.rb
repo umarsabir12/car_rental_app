@@ -14,6 +14,13 @@ class Car < ApplicationRecord
   validate :images_presence_on_create, on: :create
   validates :insurance_policy, presence: true
 
+  # With Driver validations
+  with_options if: :with_driver? do |car|
+    car.validates :five_hours_charge, presence: true, numericality: { greater_than: 0 }
+    car.validates :ten_hours_charge, presence: true, numericality: { greater_than: 0 }
+    car.validates :luggage_capacity, presence: true, numericality: { greater_than_or_equal_to: 0 }
+  end
+
   FEATURE_COLUMNS = %w[air_conditioning gps sunroof bluetooth].freeze
 
   def active_features
@@ -59,15 +66,26 @@ class Car < ApplicationRecord
 
   # Calculate discounted price
   def discounted_price(original_price)
-    return original_price unless has_discount?
+    return 0.0 unless original_price.present? && original_price.to_f > 0
+    return original_price.to_f unless has_discount?
 
-    discount_amount = (original_price * discount_percentage / 100.0)
-    original_price - discount_amount
+    discount_amount = (original_price.to_f * discount_percentage / 100.0)
+    original_price.to_f - discount_amount
   end
 
   # Get discounted daily price
   def discounted_daily_price
     discounted_price(daily_price)
+  end
+
+  # Get discounted 5h charge
+  def discounted_five_hours_charge
+    discounted_price(five_hours_charge)
+  end
+
+  # Get discounted 10h charge
+  def discounted_ten_hours_charge
+    discounted_price(ten_hours_charge)
   end
 
   # Returns true if the car is available for the entire period starting at start_date

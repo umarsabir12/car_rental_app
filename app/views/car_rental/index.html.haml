@@ -143,22 +143,35 @@
 
                             %div.flex.items-center.justify-between.mb-2
                               %span.text-lg.font-bold.text-gray-900= car.brand
-                              %span.text-sm.text-gray-500= car.year
+                              - unless car.with_driver?
+                                %span.text-sm.text-gray-500= car.year
                             %div.text-xl.font-semibold.text-gray-900.mb-2= car.model
                             %div.text-gray-700.mb-3
                               = car.color
-                              - if car.category.present?
+                              - if car.with_driver?
+                                %span.text-gray-500.ml-2 •
+                                %span.text-gray-500= "#{car.seats || 5} Seats"
+                                %span.text-gray-500.ml-2 •
+                                %span.text-gray-500= "#{car.luggage_capacity || 0} Bags"
+                              - elsif car.category.present?
                                 %span.text-gray-500.ml-2 •
                                 %span.text-gray-500= car.category.capitalize
                             %div.flex.items-center.justify-between
-                              %div
-                                - if car.has_discount?
+                              %div.h-14.flex.flex-col.justify-end
+                                - if car.with_driver?
+                                  - if car.has_discount?
+                                    .flex.flex-col
+                                      %span.text-lg.text-gray-400.line-through= "AED #{car.five_hours_charge}"
+                                      %span.text-2xl.font-bold.text-red-600= "AED #{car.discounted_five_hours_charge.round(2)}"
+                                  - else
+                                    %span.text-2xl.font-bold{style: 'color: #3a6363'}= car.five_hours_charge ? "AED #{car.five_hours_charge}" : 'AED 0'
+                                - elsif car.has_discount?
                                   .flex.flex-col
                                     %span.text-lg.text-gray-400.line-through= number_to_currency(car.daily_price)
                                     %span.text-2xl.font-bold.text-red-600= number_to_currency(car.discounted_daily_price)
                                 - else
                                   %span.text-2xl.font-bold{style: 'color: #3a6363'}= car.daily_price ? number_to_currency(car.daily_price) : 'N/A'
-                              %span.text-sm.text-gray-500 /day
+                              %span.text-sm.text-gray-500= car.with_driver? ? "/5h Service" : "/day"
           - else
             .text-center.py-12
               %p.text-gray-500.text-lg No cars available in this category at the moment.

@@ -17,20 +17,24 @@ class Discount < ApplicationRecord
 
   # Find applicable discount for a specific car
   def self.applicable_for_car(car)
-    return nil unless car&.category
+    return nil unless car
 
     # Priority order:
     # 1. Vendor-specific discount for specific category
     # 2. Category-based discount (all vendors)
-    # 3. Vendor-specific discount for all categories
+    # 3. Vendor-specific discount for all categories (applies even if car has no category)
+    
+    # Check if "With Driver" applies
+    category_check = car.with_driver? ? "(? = ANY(category) OR 'With Driver' = ANY(category) OR category = '{}' OR category IS NULL)" : "(? = ANY(category) OR category = '{}' OR category IS NULL)"
+    
     active
-      .where("(vendor_id = ? OR vendor_id IS NULL) AND (? = ANY(category) OR category = '{}' OR category IS NULL)", car.vendor_id, car.category)
+      .where("(vendor_id = ? OR vendor_id IS NULL) AND #{category_check}", car.vendor_id, car.category)
       .order(
         Arel.sql(
           sanitize_sql_array([
             "CASE
-              WHEN vendor_id = ? AND ? = ANY(category) THEN 1
-              WHEN vendor_id IS NULL AND ? = ANY(category) THEN 2
+              WHEN vendor_id = ? AND (? = ANY(category)#{car.with_driver? ? " OR 'With Driver' = ANY(category)" : ""}) THEN 1
+              WHEN vendor_id IS NULL AND (? = ANY(category)#{car.with_driver? ? " OR 'With Driver' = ANY(category)" : ""}) THEN 2
               WHEN vendor_id = ? AND (category = '{}' OR category IS NULL) THEN 3
               ELSE 4
             END,
@@ -71,7 +75,7 @@ class Discount < ApplicationRecord
   def categories_exist_in_system
     return if category.blank? || category.empty?
 
-    available_categories = Car.distinct.pluck(:category).compact
+    available_categories = (Car.distinct.pluck(:category).compact + ["With Driver"]).uniq
     invalid_categories = category - available_categories
 
     if invalid_categories.any?
