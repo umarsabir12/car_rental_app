@@ -25,7 +25,7 @@ class Admin::DiscountsController < ApplicationController
   def new
     @discount = Discount.new
     @vendors = Vendor.active.order(:company_name)
-    @categories = Car.distinct.pluck(:category).compact.sort
+    @categories = (Car.distinct.pluck(:category).compact.reject(&:blank?) + [ "With Driver" ]).uniq.sort
   end
 
   def create
@@ -35,14 +35,14 @@ class Admin::DiscountsController < ApplicationController
       redirect_to admin_discounts_path, notice: "Discount was successfully created."
     else
       @vendors = Vendor.active.order(:company_name)
-      @categories = @discount.vendor_id.present? ? get_vendor_categories(@discount.vendor_id) : Car.distinct.pluck(:category).compact.sort
+      @categories = @discount.vendor_id.present? ? get_vendor_categories(@discount.vendor_id) : (Car.distinct.pluck(:category).compact.reject(&:blank?) + [ "With Driver" ]).uniq.sort
       render :new, status: :unprocessable_entity
     end
   end
 
   def edit
     @vendors = Vendor.active.order(:company_name)
-    @categories = @discount.vendor_id.present? ? get_vendor_categories(@discount.vendor_id) : Car.distinct.pluck(:category).compact.sort
+    @categories = @discount.vendor_id.present? ? get_vendor_categories(@discount.vendor_id) : (Car.distinct.pluck(:category).compact.reject(&:blank?) + [ "With Driver" ]).uniq.sort
   end
 
   def update
@@ -50,7 +50,7 @@ class Admin::DiscountsController < ApplicationController
       redirect_to admin_discounts_path, notice: "Discount was successfully updated."
     else
       @vendors = Vendor.active.order(:company_name)
-      @categories = @discount.vendor_id.present? ? get_vendor_categories(@discount.vendor_id) : Car.distinct.pluck(:category).compact.sort
+      @categories = @discount.vendor_id.present? ? get_vendor_categories(@discount.vendor_id) : (Car.distinct.pluck(:category).compact.reject(&:blank?) + [ "With Driver" ]).uniq.sort
       render :edit, status: :unprocessable_entity
     end
   end
@@ -85,6 +85,9 @@ class Admin::DiscountsController < ApplicationController
        .distinct
        .pluck(:category)
        .compact
+       .reject(&:blank?)
+       .push("With Driver")
+       .uniq
        .sort
   end
 end

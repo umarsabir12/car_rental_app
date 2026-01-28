@@ -104,6 +104,20 @@ RSpec.describe Discount, type: :model do
       end
     end
 
+    context 'with "With Driver" discount' do
+      let!(:with_driver_car) { create(:car, vendor: vendor, category: 'Luxury', with_driver: true, five_hours_charge: 500, ten_hours_charge: 900, luggage_capacity: 2) }
+      let!(:discount) { create(:discount, vendor: vendor, category: [ 'With Driver' ], discount_percentage: 20, active: true) }
+
+      it 'returns the discount when car has driver' do
+        expect(Discount.applicable_for_car(with_driver_car)).to eq(discount)
+      end
+
+      it 'does not return the discount when car does not have driver' do
+        regular_car = create(:car, vendor: vendor, category: 'Luxury', with_driver: false)
+        expect(Discount.applicable_for_car(regular_car)).not_to eq(discount)
+      end
+    end
+
     context 'with category-only discount (all vendors)' do
       let!(:discount) { create(:discount, vendor_id: nil, category: [ 'Luxury' ], discount_percentage: 15, active: true) }
 

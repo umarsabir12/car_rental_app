@@ -90,14 +90,14 @@
       / Left Column - Images (2/3 width)
       .lg:col-span-2
         / Main Image Gallery - Enhanced
-        .bg-white.rounded-xl.shadow-sm.overflow-hidden.mb-6
+        .bg-white.rounded-xl.shadow-sm.overflow-hidden.mb-6{ data: { controller: "gallery" } }
           - if @car.images.attached? && @car.images.any?
             .relative
               / Main Image Container - Enhanced with larger size and fills width
-              .swiper-container.relative{ style: 'min-height: 400px; max-height: 600px; background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)' }
+              .swiper-container.relative{ style: 'min-height: 400px; max-height: 600px; background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)', data: { gallery_target: "container" } }
                 .swiper-wrapper
                   - @car.images.each_with_index do |image, index|
-                    .swiper-slide.flex.items-center.justify-center{ style: 'cursor: zoom-in', data: { index: index, url: url_for(image) } }
+                    .swiper-slide.flex.items-center.justify-center{ style: 'cursor: zoom-in', data: { action: "click->gallery#openLightbox", url: url_for(image), index: index } }
                       %img.w-full.h-auto.mx-auto{ src: url_for(image), alt: "#{@car.brand} #{@car.model} - Image #{index + 1}", style: 'filter: drop-shadow(0 10px 30px rgba(0,0,0,0.2)); max-height: 600px; object-fit: contain;' }
 
                 / Navigation Buttons - Enhanced styling
@@ -114,7 +114,7 @@
 
               / Image Counter - Enhanced styling
               .absolute.top-6.right-6.bg-black.bg-opacity-70.text-white.px-4.py-2.rounded-full.text-sm.font-semibold.shadow-lg
-                %span.current-slide 1
+                %span.current-slide{ data: { gallery_target: "counter" } } 1
                 %span.mx-1 /
                 %span.total-slides= @car.images.count
 
@@ -130,7 +130,7 @@
                     %img.thumbnail-image.rounded-lg.cursor-pointer.border-3.transition-all.duration-300.hover:scale-105.hover:shadow-xl{ 
                       src: url_for(image), 
                       alt: "Thumbnail #{index + 1}",
-                      "data-slide-index": index,
+                      data: { action: "click->gallery#selectThumbnail", slide_index: index, gallery_target: "thumbnail" },
                       class: index == 0 ? "border-blue-600 shadow-lg" : "border-gray-300 hover:border-blue-400",
                       style: 'width: 100px; height: 70px; object-fit: cover;'
                     }
@@ -188,87 +188,126 @@
               %i.fas.fa-phone.text-lg
               %span Call
 
-        / Pricing Card - Three-tier selector
+        / Pricing Card
         .bg-white.rounded-xl.shadow-sm.p-6.mb-6{ "data-controller" => "pricing-selector" }
-          .grid.grid-cols-1.sm:grid-cols-3.gap-3.mb-4
-            - daily_price = @car.respond_to?(:daily_price) && @car.daily_price || 0
-            - weekly_price = @car.respond_to?(:weekly_price) && @car.weekly_price || 0
-            - monthly_price = @car.respond_to?(:monthly_price) && @car.monthly_price || 0
-            - daily_mileage = @car.respond_to?(:daily_mileage) && @car.daily_mileage || @car.try(:daily_milleage) || 200
-            - weekly_mileage = @car.respond_to?(:weekly_mileage) && @car.weekly_mileage || 1400
-            - monthly_mileage = @car.respond_to?(:monthly_mileage) && @car.monthly_mileage || 6000
-            - extra_charge = @car.respond_to?(:additional_mileage_charge) && @car.additional_mileage_charge || 1
+          - if @car.with_driver?
+            .grid.grid-cols-2.gap-4.mb-4
+              / 5 Hours Card
+              .cursor-pointer.border.rounded-xl.p-4.text-center.transition.shadow-sm.hover:shadow{
+                "data-action" => "click->pricing-selector#select",
+                "data-pricing-selector-target" => "card",
+                "data-price" => @car.five_hours_charge,
+                "data-period" => "5 Hours",
+                "data-mileage" => "N/A"
+              }
+                %div.font-medium.uppercase.text-gray-500.mb-1 5 Hours
+                - if @car.has_discount?
+                  %div.text-xs.text-gray-400.line-through AED #{@car.five_hours_charge}
+                  %div.font-bold{style: 'color: #3a6363'} AED
+                  %div.font-extrabold.text-red-600= @car.discounted_five_hours_charge.round(2)
+                - else
+                  %div.font-bold{style: 'color: #3a6363'} AED
+                  %div.font-extrabold{style: 'color: #3a6363'}= @car.five_hours_charge
+                %div.text-xs.text-gray-500.mt-1 Service
 
-            / Daily Card
-            .cursor-pointer.border.rounded-xl.p-4.text-center.transition.shadow-sm.hover:shadow{
-              "data-action" => "click->pricing-selector#select",
-              "data-pricing-selector-target" => "card",
-              "data-price" => daily_price,
-              "data-period" => "daily",
-              "data-mileage" => daily_mileage
-            }
-              %div.font-medium.uppercase.text-gray-500.mb-1 Daily
-              - if @car.has_discount?
-                %div.text-xs.text-gray-400.line-through AED #{daily_price}
-                %div.font-bold{style: 'color: #3a6363'} AED
-                %div.font-extrabold.text-red-600= @car.discounted_price(daily_price).round(2)
-              - else
-                %div.font-bold{style: 'color: #3a6363'} AED
-                %div.font-extrabold{style: 'color: #3a6363'}= daily_price
-              %div.text-xs.text-gray-500.mt-1 /day
-              %div.mt-2.text-xs.text-gray-600 Includes
-              %div.text-sm.font-medium= "#{daily_mileage} km"
+              / 10 Hours Card
+              .cursor-pointer.border.rounded-xl.p-4.text-center.transition.shadow-sm.hover:shadow{
+                "data-action" => "click->pricing-selector#select",
+                "data-pricing-selector-target" => "card",
+                "data-price" => @car.ten_hours_charge,
+                "data-period" => "10 Hours",
+                "data-mileage" => "N/A"
+              }
+                %div.font-medium.uppercase.text-gray-500.mb-1 10 Hours
+                - if @car.has_discount?
+                  %div.text-xs.text-gray-400.line-through AED #{@car.ten_hours_charge}
+                  %div.font-bold{style: 'color: #3a6363'} AED
+                  %div.font-extrabold.text-red-600= @car.discounted_ten_hours_charge.round(2)
+                - else
+                  %div.font-bold{style: 'color: #3a6363'} AED
+                  %div.font-extrabold{style: 'color: #3a6363'}= @car.ten_hours_charge
+                %div.text-xs.text-gray-500.mt-1 Service
+          - else
+            .grid.grid-cols-1.sm:grid-cols-3.gap-3.mb-4
+              - daily_price = @car.respond_to?(:daily_price) && @car.daily_price || 0
+              - weekly_price = @car.respond_to?(:weekly_price) && @car.weekly_price || 0
+              - monthly_price = @car.respond_to?(:monthly_price) && @car.monthly_price || 0
+              - daily_mileage = @car.respond_to?(:daily_mileage) && @car.daily_mileage || @car.try(:daily_milleage) || 200
+              - weekly_mileage = @car.respond_to?(:weekly_mileage) && @car.weekly_mileage || 1400
+              - monthly_mileage = @car.respond_to?(:monthly_mileage) && @car.monthly_mileage || 6000
+              - extra_charge = @car.respond_to?(:additional_mileage_charge) && @car.additional_mileage_charge || 1
 
-            / Weekly Card
-            .cursor-pointer.border.rounded-xl.p-4.text-center.transition.shadow-sm.hover:shadow{
-              "data-action" => "click->pricing-selector#select",
-              "data-pricing-selector-target" => "card",
-              "data-price" => weekly_price,
-              "data-period" => "weekly",
-              "data-mileage" => weekly_mileage
-            }
-              %div.font-medium.uppercase.text-gray-500.mb-1 Weekly
-              - if @car.has_discount?
-                %div.text-xs.text-gray-400.line-through AED #{weekly_price}
-                %div.font-bold{style: 'color: #3a6363'} AED
-                %div.font-extrabold.text-red-600= @car.discounted_price(weekly_price).round(2)
-              - else
-                %div.font-bold{style: 'color: #3a6363'} AED
-                %div.font-extrabold{style: 'color: #3a6363'}= weekly_price
-              %div.text-xs.text-gray-500.mt-1 /week
-              %div.mt-2.text-xs.text-gray-600 Includes
-              %div.text-sm.font-medium= "#{weekly_mileage} km"
+              / Daily Card
+              .cursor-pointer.border.rounded-xl.p-4.text-center.transition.shadow-sm.hover:shadow{
+                "data-action" => "click->pricing-selector#select",
+                "data-pricing-selector-target" => "card",
+                "data-price" => daily_price,
+                "data-period" => "daily",
+                "data-mileage" => daily_mileage
+              }
+                %div.font-medium.uppercase.text-gray-500.mb-1 Daily
+                - if @car.has_discount?
+                  %div.text-xs.text-gray-400.line-through AED #{daily_price}
+                  %div.font-bold{style: 'color: #3a6363'} AED
+                  %div.font-extrabold.text-red-600= @car.discounted_price(daily_price).round(2)
+                - else
+                  %div.font-bold{style: 'color: #3a6363'} AED
+                  %div.font-extrabold{style: 'color: #3a6363'}= daily_price
+                %div.text-xs.text-gray-500.mt-1 /day
+                %div.mt-2.text-xs.text-gray-600 Includes
+                %div.text-sm.font-medium= "#{daily_mileage} km"
 
-            / Monthly Card
-            .cursor-pointer.border.rounded-xl.p-4.text-center.transition.shadow-sm.hover:shadow{
-              "data-action" => "click->pricing-selector#select",
-              "data-pricing-selector-target" => "card",
-              "data-price" => monthly_price,
-              "data-period" => "monthly",
-              "data-mileage" => monthly_mileage
-            }
-              %div.font-medium.uppercase.text-gray-500.mb-1 Monthly
-              - if @car.has_discount?
-                %div.text-xs.text-gray-400.line-through AED #{monthly_price}
-                %div.font-bold{style: 'color: #3a6363'} AED
-                %div.font-extrabold.text-red-600= @car.discounted_price(monthly_price).round(2)
-              - else
-                %div.font-bold{style: 'color: #3a6363'} AED
-                %div.font-extrabold{style: 'color: #3a6363'}= monthly_price
-              %div.text-xs.text-gray-500.mt-1 /month
-              %div.mt-2.text-xs.text-gray-600 Includes
-              %div.text-sm.font-medium= "#{monthly_mileage} km"
+              / Weekly Card
+              .cursor-pointer.border.rounded-xl.p-4.text-center.transition.shadow-sm.hover:shadow{
+                "data-action" => "click->pricing-selector#select",
+                "data-pricing-selector-target" => "card",
+                "data-price" => weekly_price,
+                "data-period" => "weekly",
+                "data-mileage" => weekly_mileage
+              }
+                %div.font-medium.uppercase.text-gray-500.mb-1 Weekly
+                - if @car.has_discount?
+                  %div.text-xs.text-gray-400.line-through AED #{weekly_price}
+                  %div.font-bold{style: 'color: #3a6363'} AED
+                  %div.font-extrabold.text-red-600= @car.discounted_price(weekly_price).round(2)
+                - else
+                  %div.font-bold{style: 'color: #3a6363'} AED
+                  %div.font-extrabold{style: 'color: #3a6363'}= weekly_price
+                %div.text-xs.text-gray-500.mt-1 /week
+                %div.mt-2.text-xs.text-gray-600 Includes
+                %div.text-sm.font-medium= "#{weekly_mileage} km"
+
+              / Monthly Card
+              .cursor-pointer.border.rounded-xl.p-4.text-center.transition.shadow-sm.hover:shadow{
+                "data-action" => "click->pricing-selector#select",
+                "data-pricing-selector-target" => "card",
+                "data-price" => monthly_price,
+                "data-period" => "monthly",
+                "data-mileage" => monthly_mileage
+              }
+                %div.font-medium.uppercase.text-gray-500.mb-1 Monthly
+                - if @car.has_discount?
+                  %div.text-xs.text-gray-400.line-through AED #{monthly_price}
+                  %div.font-bold{style: 'color: #3a6363'} AED
+                  %div.font-extrabold.text-red-600= @car.discounted_price(monthly_price).round(2)
+                - else
+                  %div.font-bold{style: 'color: #3a6363'} AED
+                  %div.font-extrabold{style: 'color: #3a6363'}= monthly_price
+                %div.text-xs.text-gray-500.mt-1 /month
+                %div.mt-2.text-xs.text-gray-600 Includes
+                %div.text-sm.font-medium= "#{monthly_mileage} km"
 
           / Mileage and charge info
-          .space-y-3.text-sm
-            .flex.justify-between
-              %span Additional mileage charge
-              %span{ id: "additionalMileageText", "data-pricing-selector-target" => "additionalCharge" }= "AED #{extra_charge} /km"
+          - unless @car.with_driver?
+            .space-y-3.text-sm
+              .flex.justify-between
+                %span Additional mileage charge
+                %span{ id: "additionalMileageText", "data-pricing-selector-target" => "additionalCharge" }= "AED #{extra_charge} /km"
 
           / Hidden inputs for booking submission
-          = hidden_field_tag :selected_period, "daily", id: "selectedPeriodInput", "data-pricing-selector-target" => "selectedPeriod"
-          = hidden_field_tag :selected_price, daily_price, id: "selectedPriceInput", "data-pricing-selector-target" => "selectedPrice"
-          = hidden_field_tag :selected_mileage_limit, daily_mileage, id: "selectedMileageInput", "data-pricing-selector-target" => "selectedMileage"
+          = hidden_field_tag :selected_period, @car.with_driver? ? "5 Hours" : "daily", id: "selectedPeriodInput", "data-pricing-selector-target" => "selectedPeriod"
+          = hidden_field_tag :selected_price, @car.with_driver? ? @car.five_hours_charge : daily_price, id: "selectedPriceInput", "data-pricing-selector-target" => "selectedPrice"
+          = hidden_field_tag :selected_mileage_limit, @car.with_driver? ? "0" : daily_mileage, id: "selectedMileageInput", "data-pricing-selector-target" => "selectedMileage"
 
           .border-t.pt-4.mt-4
             %button.w-full.py-3.px-4.rounded-lg.text-white.font-semibold{"data-bs-toggle" => "modal", "data-bs-target" => "#bookingModal", style: 'background-color: #3a6363'}
@@ -280,17 +319,19 @@
       %h2.text-2xl.font-bold.mb-6{style: 'color: #2d4f4f'} CAR OVERVIEW
       
       .grid.grid-cols-2.md:grid-cols-3.lg:grid-cols-4.gap-6
-        .flex.items-center.space-x-3
-          %i.fas.fa-car.text-gray-400.w-5
-          .div
-            %span.text-sm.text-gray-500 Body Type
-            %p.font-medium= @car.category || 'Sedan'
+        - unless @car.with_driver?
+          .flex.items-center.space-x-3
+            %i.fas.fa-car.text-gray-400.w-5
+            .div
+              %span.text-sm.text-gray-500 Body Type
+              %p.font-medium= @car.category || 'Sedan'
         
-        .flex.items-center.space-x-3
-          %i.fas.fa-calendar.text-gray-400.w-5
-          .div
-            %span.text-sm.text-gray-500 Model
-            %p.font-medium= @car.year || '2021'
+        - unless @car.with_driver?
+          .flex.items-center.space-x-3
+            %i.fas.fa-calendar.text-gray-400.w-5
+            .div
+              %span.text-sm.text-gray-500 Model
+              %p.font-medium= @car.year || '2021'
         
         .flex.items-center.space-x-3
           %i.fas.fa-palette.text-gray-400.w-5
@@ -298,29 +339,39 @@
             %span.text-sm.text-gray-500 Colour
             %p.font-medium= @car.color || 'Black'
         
-        .flex.items-center.space-x-3
-          %i.fas.fa-gas-pump.text-gray-400.w-5
-          .div
-            %span.text-sm.text-gray-500 Fuel
-            %p.font-medium= @car.fuel_type || 'Petrol'
+        - unless @car.with_driver?
+          .flex.items-center.space-x-3
+            %i.fas.fa-gas-pump.text-gray-400.w-5
+            .div
+              %span.text-sm.text-gray-500 Fuel
+              %p.font-medium= @car.fuel_type || 'Petrol'
         
-        .flex.items-center.space-x-3
-          %i.fas.fa-cogs.text-gray-400.w-5
-          .div
-            %span.text-sm.text-gray-500 Transmission
-            %p.font-medium= @car.transmission || 'Auto'
+        - unless @car.with_driver?
+          .flex.items-center.space-x-3
+            %i.fas.fa-cogs.text-gray-400.w-5
+            .div
+              %span.text-sm.text-gray-500 Transmission
+              %p.font-medium= @car.transmission || 'Auto'
         
         .flex.items-center.space-x-3
           %i.fas.fa-users.text-gray-400.w-5
           .div
             %span.text-sm.text-gray-500 Seating Capacity
             %p.font-medium= "#{@car.seats || 5} passengers"
+
+        - if @car.with_driver?
+          .flex.items-center.space-x-3
+            %i.fas.fa-suitcase.text-gray-400.w-5
+            .div
+              %span.text-sm.text-gray-500 Luggage Capacity
+              %p.font-medium= "#{@car.luggage_capacity || 0} Bags"
         
-        .flex.items-center.space-x-3
-          %i.fas.fa-engine.text-gray-400.w-5
-          .div
-            %span.text-sm.text-gray-500 Engine CC
-            %p.font-medium= @car.engine_size || '2.0L'
+        - unless @car.with_driver?
+          .flex.items-center.space-x-3
+            %i.fas.fa-engine.text-gray-400.w-5
+            .div
+              %span.text-sm.text-gray-500 Engine CC
+              %p.font-medium= @car.engine_size || '2.0L'
 
         - if @car.with_driver?
           .flex.items-center.space-x-3
@@ -486,7 +537,7 @@
 / Booking Modal
 #bookingModal.modal.fade{"aria-hidden" => "true", "aria-labelledby" => "bookingModalLabel", tabindex: "-1", "data-controller" => "modal"}
   .modal-dialog.modal-dialog-centered.mt-16
-    .modal-content.rounded-2xl.shadow-xl.border{style: 'border-color: #cfe5e5'}
+    .modal-content.rounded-2xl.shadow-xl.border{style: 'border-color: #cfe5e5', data: { controller: "booking-flow", booking_flow_car_id_value: @car.id, booking_flow_with_driver_value: @car.with_driver?.to_s }}
       .modal-header.flex.items-center.justify-between.px-6.py-4
         %h5#bookingModalLabel.modal-title.text-xl.font-bold{style: 'color: #2d4f4f'} Book This Car
         %button.text-gray-400.hover:text-gray-600.transition{"aria-label" => "Close", "data-bs-dismiss" => "modal", type: "button"}
@@ -495,11 +546,12 @@
       .modal-body.bg-white.px-6.py-4
         .mb-4
           %label.block.text-sm.font-medium.mb-1{style: 'color: #2d4f4f'} Pickup Date
-          = text_field_tag :start_date, nil, required: true, class: "w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 flatpickr", autocomplete: "off", id: "startDateInput", style: "--tw-ring-color:#3a6363"
+          = text_field_tag :start_date, nil, required: true, class: "w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 flatpickr", autocomplete: "off", id: "startDateInput", style: "--tw-ring-color:#3a6363", data: { booking_flow_target: "startInput" }
 
-        .mb-4
-          %label.block.text-sm.font-medium.mb-1{style: 'color: #2d4f4f'} Return Date
-          = text_field_tag :end_date, nil, required: true, class: "w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 flatpickr", autocomplete: "off", id: "endDateInput", style: "--tw-ring-color:#3a6363"
+        - unless @car.with_driver?
+          .mb-4
+            %label.block.text-sm.font-medium.mb-1{style: 'color: #2d4f4f'} Return Date
+            = text_field_tag :end_date, nil, required: true, class: "w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 flatpickr", autocomplete: "off", id: "endDateInput", style: "--tw-ring-color:#3a6363", data: { booking_flow_target: "endInput" }
 
         .mb-4
           %label.block.text-sm.font-medium.mb-2{style: 'color: #2d4f4f'} Service Option (Optional)
@@ -528,24 +580,24 @@
       .modal-footer.flex.justify-end.gap-4.px-6.py-4
         %button.bg-gray-200.text-gray-700.font-semibold.px-5.py-2.rounded-lg.hover:bg-gray-300.transition{ "data-bs-dismiss" => "modal", type: "button" } Close
         - if user_signed_in?
-          %button.text-white.font-semibold.px-6.py-2.rounded-lg.shadow-md.transition.hover:shadow-lg{ type: "button", id: "createBookingBtn", style: "background-color: #3a6363; cursor: pointer;" } Create Booking
+          %button.text-white.font-semibold.px-6.py-2.rounded-lg.shadow-md.transition.hover:shadow-lg{ type: "button", id: "createBookingBtn", style: "background-color: #3a6363; cursor: pointer;", data: { action: "click->booking-flow#submit", booking_flow_target: "submitBtn" } } Create Booking
         - else
-          %button.text-white.font-semibold.px-6.py-2.rounded-lg.shadow-md.transition.hover:shadow-lg{ type: "button", id: "continueToLoginLink", disabled: true, style: "pointer-events: none; opacity: 0.5; background-color: #3a6363; cursor: not-allowed;" } Continue to Sign In
+          %button.text-white.font-semibold.px-6.py-2.rounded-lg.shadow-md.transition.hover:shadow-lg{ type: "button", id: "continueToLoginLink", disabled: true, style: "pointer-events: none; opacity: 0.5; background-color: #3a6363; cursor: not-allowed;", data: { action: "click->booking-flow#submit", booking_flow_target: "submitBtn" } } Continue to Sign In
 
 / Right-side Drawer for policy info
-#policyDrawer.fixed.top-0.right-0.h-full.w-96.bg-white.shadow-2xl.transform.translate-x-full.transition-transform.duration-300.z-50{ 'aria-hidden' => 'true' }
+#policyDrawer.fixed.top-0.right-0.h-full.w-96.bg-white.shadow-2xl.transform.translate-x-full.transition-transform.duration-300.z-50{ 'aria-hidden' => 'true', data: { controller: "policy", policy_insurance_value: @car.insurance_policy, policy_target: "drawer" } }
   .flex.items-center.justify-between.px-5.py-4.border-b
-    %h5#policyDrawerTitle.text-lg.font-bold{style: 'color:#2d4f4f'} Policy Details
-    %button#closePolicyDrawer.text-gray-400.hover:text-gray-600{ type: 'button', 'aria-label' => 'Close' }
+    %h5#policyDrawerTitle.text-lg.font-bold{style: 'color:#2d4f4f', data: { policy_target: "title" }} Policy Details
+    %button#closePolicyDrawer.text-gray-400.hover:text-gray-600{ type: 'button', 'aria-label' => 'Close', data: { action: "click->policy#close" } }
       %i.fas.fa-times
   .p-5.overflow-y-auto.h-full
-    #policyDrawerContent.text-gray-700
+    #policyDrawerContent.text-gray-700{ data: { policy_target: "content" } }
       / Content populated by JavaScript
 
-/ Lightbox Modal for Full-Screen Image View
-#lightboxModal.fixed.inset-0.bg-black.bg-opacity-95.z-50.hidden.flex.items-center.justify-center{ style: 'backdrop-filter: blur(10px)' }
+/ Lightbox Modal for Full-Screen Image View - Connected to Gallery Controller (Parent should have controller)
+#lightboxModal.fixed.inset-0.bg-black.bg-opacity-95.z-50.hidden.flex.items-center.justify-center{ style: 'backdrop-filter: blur(10px)', data: { gallery_target: "lightbox" } }
   / Close Button
-  %button#closeLightbox.absolute.top-6.right-6.text-white.text-4xl.hover:text-gray-300.transition.z-10{ type: 'button' }
+  %button#closeLightbox.absolute.top-6.right-6.text-white.text-4xl.hover:text-gray-300.transition.z-10{ type: 'button', data: { action: "click->gallery#closeLightbox" } }
     %i.fas.fa-times
   
   / Navigation Buttons
@@ -556,430 +608,8 @@
   
   / Main Image
   .relative.w-full.h-full.flex.items-center.justify-center.p-8
-    %img#lightboxImage.max-h-full.max-w-full.object-contain{ src: '', alt: 'Full size image' }
+    %img#lightboxImage.max-h-full.max-w-full.object-contain{ src: '', alt: 'Full size image', data: { gallery_target: "lightboxImage" } }
   
   / Image Counter
   .absolute.bottom-6.text-white.px-6.py-3.rounded-full.text-lg.font-semibold{ style: 'left: 50%; transform: translateX(-50%); background-color: rgba(255, 255, 255, 0.2)' }
     %span#lightboxCounter 1 / 1
-
-:javascript
-  // Flag to prevent multiple initializations
-  window.carShowPageInitialized = window.carShowPageInitialized || false;
-
-  // Main initialization function
-  function initializeCarShowPage() {
-    // Only initialize once per page load
-    if (window.carShowPageInitialized) {
-      return;
-    }
-    window.carShowPageInitialized = true;
-
-    // Booking Modal Logic
-    const continueBtn = document.getElementById("continueToLoginLink");
-    let createBookingBtn = document.getElementById("createBookingBtn");
-    const startInput = document.getElementById("startDateInput");
-    const endInput = document.getElementById("endDateInput");
-
-    // Function to check if both dates are selected and update button states
-    function updateButtonStates() {
-      // Get both buttons fresh each time
-      const createBtn = document.getElementById("createBookingBtn");
-      const continueBtn = document.getElementById("continueToLoginLink");
-
-      if (startInput && endInput) {
-        const startValue = startInput.value.trim();
-        const endValue = endInput.value.trim();
-
-        if (startValue && endValue) {
-          // Both dates selected - ENABLE buttons
-          [createBtn, continueBtn].forEach(btn => {
-            if (btn) {
-              btn.removeAttribute('disabled');
-              btn.style.pointerEvents = 'auto';
-              btn.style.opacity = '1';
-              btn.style.cursor = 'pointer';
-            }
-          });
-        } else {
-          // Missing a date - DISABLE buttons
-          [createBtn, continueBtn].forEach(btn => {
-            if (btn) {
-              btn.setAttribute('disabled', 'disabled');
-              btn.style.pointerEvents = 'none';
-              btn.style.opacity = '0.5';
-              btn.style.cursor = 'not-allowed';
-            }
-          });
-        }
-      }
-    }
-
-    // Attach listeners to both date inputs
-    if (startInput) {
-      startInput.addEventListener('change', updateButtonStates);
-      startInput.addEventListener('input', updateButtonStates);
-      startInput.addEventListener('blur', updateButtonStates);
-    }
-
-    if (endInput) {
-      endInput.addEventListener('change', updateButtonStates);
-      endInput.addEventListener('input', updateButtonStates);
-      endInput.addEventListener('blur', updateButtonStates);
-    }
-
-    // Initial state - buttons should be disabled
-    updateButtonStates();
-
-    // Delivery Option Cards Selection
-    const deliveryOptionCards = document.querySelectorAll('.delivery-option-card');
-    const deliveryRadios = document.querySelectorAll('input[name="delivery_option"]');
-
-    deliveryOptionCards.forEach(card => {
-      card.addEventListener('click', function() {
-        const option = this.getAttribute('data-option');
-        const radio = document.getElementById(option + 'Option');
-        if (radio) {
-          radio.checked = true;
-          // Update card styling
-          deliveryOptionCards.forEach(c => {
-            c.style.borderColor = '#ccc';
-            c.style.backgroundColor = 'transparent';
-          });
-          this.style.borderColor = '#3a6363';
-          this.style.backgroundColor = '#e8f0f0';
-        }
-      });
-    });
-
-    // Continue to Login button
-    if (continueBtn) {
-      continueBtn.addEventListener("click", function (e) {
-        if (!startInput?.value || !endInput?.value) {
-          e.preventDefault();
-          alert("Please select both start and end dates.");
-          return;
-        }
-        e.preventDefault();
-        const carId = "#{@car.id}";
-        const startDate = startInput.value;
-        const endDate = endInput.value;
-        const selectedPeriod = document.getElementById("selectedPeriodInput")?.value || "daily";
-        const selectedPrice = document.getElementById("selectedPriceInput")?.value || "0";
-        const selectedMileage = document.getElementById("selectedMileageInput")?.value || "0";
-        const deliveryOption = document.querySelector('input[name="delivery_option"]:checked')?.value || "";
-        const queryParams = new URLSearchParams({
-          car_id: carId,
-          start_date: startDate,
-          end_date: endDate,
-          selected_period: selectedPeriod,
-          selected_price: selectedPrice,
-          selected_mileage_limit: selectedMileage,
-          delivery_option: deliveryOption
-        });
-        window.location.href = "/users/sign_in?" + queryParams.toString();
-      });
-    }
-
-    // Create Booking
-    if (createBookingBtn) {
-      // Clone the button to remove old listeners
-      const newCreateBookingBtn = createBookingBtn.cloneNode(true);
-      createBookingBtn.parentNode.replaceChild(newCreateBookingBtn, createBookingBtn);
-      
-      // Update the reference to point to the new button
-      createBookingBtn = newCreateBookingBtn;
-
-      console.log('Button cloned and ready');
-
-      newCreateBookingBtn.addEventListener("click", function (e) {
-        e.preventDefault();
-
-        if (!startInput?.value || !endInput?.value) {
-          alert("Please select both start and end dates.");
-          return;
-        }
-
-        // Disable button to prevent multiple clicks
-        newCreateBookingBtn.disabled = true;
-        newCreateBookingBtn.style.pointerEvents = "none !important";
-        newCreateBookingBtn.style.opacity = "0.5 !important";
-        newCreateBookingBtn.style.cursor = "not-allowed";
-        const originalText = newCreateBookingBtn.textContent;
-        newCreateBookingBtn.textContent = "Creating...";
-
-        const formData = new FormData();
-        formData.append('booking[car_id]', "#{@car.id}");
-        formData.append('booking[start_date]', startInput.value);
-        formData.append('booking[end_date]', endInput.value);
-        formData.append('booking[selected_period]', document.getElementById("selectedPeriodInput")?.value || 'daily');
-        formData.append('booking[selected_price]', document.getElementById("selectedPriceInput")?.value || '0');
-        formData.append('booking[selected_mileage_limit]', document.getElementById("selectedMileageInput")?.value || '0');
-        const deliveryOption = document.querySelector('input[name="delivery_option"]:checked')?.value || "";
-        if (deliveryOption) {
-          formData.append('booking[delivery_option]', deliveryOption);
-        }
-
-        fetch('/bookings', {
-          method: 'POST',
-          body: formData,
-          headers: {
-            'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-          }
-        })
-        .then(response => {
-          if (response.redirected) {
-            window.location.href = response.url;
-          } else if (response.ok) {
-            return response.text();
-          } else {
-            throw new Error('Booking creation failed');
-          }
-        })
-        .catch(error => {
-          console.error('Error:', error);
-          alert('There was an error creating your booking. Please check your dates and try again.');
-          // Re-enable button on error
-          newCreateBookingBtn.disabled = false;
-          newCreateBookingBtn.style.pointerEvents = "auto !important";
-          newCreateBookingBtn.style.opacity = "1 !important";
-          newCreateBookingBtn.style.cursor = "pointer";
-          newCreateBookingBtn.textContent = originalText;
-        });
-      });
-    }
-
-    // Policy Drawer Logic
-    const insurancePolicy = #{@car.insurance_policy.present? ? @car.insurance_policy.to_json : '"No Insurance Provided"'.html_safe};
-    
-    const policyContent = {
-      mileage: {
-        title: 'Mileage Policy',
-        content: 'Most rentals come with a daily mileage limit (200-250 km per day). Exceeding this limit will result in additional charges of AED 0.50 per extra kilometer. Some rental companies also offer unlimited mileage or extra mileage packages.'
-      },
-      fuel: {
-        title: 'Fuel Policy',
-        content: 'The vehicle will be provided with a full tank of fuel. You are required to return the vehicle with the same fuel level. If returned with less fuel, you will be charged for refueling at current market rates plus a service fee.'
-      },
-      rental: {
-        title: 'Rental Policy',
-        content: "Renters must be at least 21 years old. UAE residents need a valid UAE driving license, and tourists must provide an International Driving Permit. Any traffic fines incurred during the rental period are the renter's responsibility. Vehicles should be returned to the original pickup location unless alternative arrangements have been approved in advance."
-      },
-      insurance: {
-        title: 'Insurance Policy',
-        content: insurancePolicy
-      }
-    };
-
-    function openPolicyDrawer(title, content) {
-      const drawer = document.getElementById('policyDrawer');
-      const titleEl = document.getElementById('policyDrawerTitle');
-      const contentEl = document.getElementById('policyDrawerContent');
-      if (!drawer || !titleEl || !contentEl) return;
-      titleEl.textContent = title;
-      contentEl.innerHTML = '<p>' + content + '</p>';
-      drawer.setAttribute('aria-hidden', 'false');
-      drawer.classList.remove('translate-x-full');
-    }
-
-    function closePolicyDrawer() {
-      const drawer = document.getElementById('policyDrawer');
-      if (!drawer) return;
-      drawer.setAttribute('aria-hidden', 'true');
-      drawer.classList.add('translate-x-full');
-    }
-
-    const closeBtn = document.getElementById('closePolicyDrawer');
-    if (closeBtn) {
-      closeBtn.addEventListener('click', closePolicyDrawer);
-    }
-
-    document.querySelectorAll('[data-policy]').forEach(button => {
-      button.addEventListener('click', function(e) {
-        const policyType = this.getAttribute('data-policy');
-        const policy = policyContent[policyType];
-        if (!policy) return;
-        e.preventDefault();
-        openPolicyDrawer(policy.title, policy.content);
-      });
-    });
-
-    // Show More Features Logic
-    const showMoreBtn = document.getElementById('showMoreFeaturesBtn');
-    const btnText = document.getElementById('btnText');
-    const btnIcon = document.getElementById('btnIcon');
-    let isExpanded = false;
-    
-    if (showMoreBtn) {
-      showMoreBtn.addEventListener('click', function() {
-        const allFeatures = document.querySelectorAll('.feature-item');
-        
-        if (!isExpanded) {
-          allFeatures.forEach(function(feature) {
-            feature.classList.remove('hidden');
-          });
-          btnText.textContent = 'Show Less Features';
-          btnIcon.classList.remove('fa-chevron-down');
-          btnIcon.classList.add('fa-chevron-up');
-          isExpanded = true;
-        } else {
-          allFeatures.forEach(function(feature) {
-            if (parseInt(feature.getAttribute('data-index')) >= 12) {
-              feature.classList.add('hidden');
-            }
-          });
-          btnText.textContent = 'Show More Features';
-          btnIcon.classList.remove('fa-chevron-up');
-          btnIcon.classList.add('fa-chevron-down');
-          isExpanded = false;
-          
-          document.querySelector('#featuresGrid')?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-        }
-      });
-    }
-
-    // Enhanced Swiper initialization with Lightbox
-    if (window.Swiper) {
-      const existingSwiperContainer = document.querySelector('.swiper-container');
-      if (existingSwiperContainer && existingSwiperContainer.swiper) {
-        existingSwiperContainer.swiper.destroy(true, true);
-      }
-
-      const swiper = new Swiper('.swiper-container', {
-        loop: true,
-        navigation: {
-          nextEl: '.swiper-button-next',
-          prevEl: '.swiper-button-prev',
-        },
-        pagination: {
-          el: '.swiper-pagination',
-          clickable: true,
-          dynamicBullets: true,
-        },
-        slidesPerView: 1,
-        spaceBetween: 0,
-        centeredSlides: true,
-        speed: 600,
-        effect: 'fade',
-        fadeEffect: {
-          crossFade: true
-        },
-        keyboard: {
-          enabled: true,
-        },
-        on: {
-          slideChange: function() {
-            const currentSlide = document.querySelector('.current-slide');
-            if (currentSlide) {
-              currentSlide.textContent = this.realIndex + 1;
-            }
-            updateThumbnailActiveState(this.realIndex);
-          }
-        }
-      });
-
-      // Lightbox functionality
-      const lightboxModal = document.getElementById('lightboxModal');
-      const lightboxImage = document.getElementById('lightboxImage');
-      const lightboxCounter = document.getElementById('lightboxCounter');
-      const closeLightbox = document.getElementById('closeLightbox');
-      const lightboxPrev = document.getElementById('lightboxPrev');
-      const lightboxNext = document.getElementById('lightboxNext');
-      
-      let currentLightboxIndex = 0;
-      const totalImages = document.querySelectorAll('.swiper-slide').length;
-
-      document.querySelectorAll('.swiper-slide').forEach((slide, index) => {
-        slide.addEventListener('click', function() {
-          currentLightboxIndex = index;
-          openLightbox(index);
-        });
-      });
-
-      function openLightbox(index) {
-        const slide = document.querySelectorAll('.swiper-slide')[index];
-        const imageUrl = slide.getAttribute('data-url');
-        
-        if (lightboxImage && lightboxModal && imageUrl) {
-          lightboxImage.src = imageUrl;
-          lightboxCounter.textContent = `${index + 1} / ${totalImages}`;
-          lightboxModal.classList.remove('hidden');
-          document.body.style.overflow = 'hidden';
-        }
-      }
-
-      function closeLightboxModal() {
-        if (lightboxModal) {
-          lightboxModal.classList.add('hidden');
-          document.body.style.overflow = '';
-        }
-      }
-
-      function navigateLightbox(direction) {
-        currentLightboxIndex = direction === 'next' 
-          ? (currentLightboxIndex + 1) % totalImages 
-          : (currentLightboxIndex - 1 + totalImages) % totalImages;
-        openLightbox(currentLightboxIndex);
-      }
-
-      if (closeLightbox) {
-        closeLightbox.addEventListener('click', closeLightboxModal);
-      }
-      if (lightboxPrev) {
-        lightboxPrev.addEventListener('click', () => navigateLightbox('prev'));
-      }
-      if (lightboxNext) {
-        lightboxNext.addEventListener('click', () => navigateLightbox('next'));
-      }
-
-      document.addEventListener('keydown', function(e) {
-        if (lightboxModal && !lightboxModal.classList.contains('hidden')) {
-          if (e.key === 'Escape') closeLightboxModal();
-          if (e.key === 'ArrowLeft') navigateLightbox('prev');
-          if (e.key === 'ArrowRight') navigateLightbox('next');
-        }
-        if (e.key === 'Escape') closePolicyDrawer();
-      });
-
-      if (lightboxModal) {
-        lightboxModal.addEventListener('click', function(e) {
-          if (e.target === lightboxModal) closeLightboxModal();
-        });
-      }
-
-      function updateThumbnailActiveState(activeIndex) {
-        const thumbnails = document.querySelectorAll('.thumbnail-image');
-        thumbnails.forEach((thumb, index) => {
-          if (index === activeIndex) {
-            thumb.classList.remove('border-gray-300');
-            thumb.classList.add('border-blue-600', 'shadow-lg', 'scale-105');
-          } else {
-            thumb.classList.add('border-gray-300');
-            thumb.classList.remove('border-blue-600', 'shadow-lg', 'scale-105');
-          }
-        });
-
-        const activeThumbnail = thumbnails[activeIndex];
-        if (activeThumbnail) {
-          activeThumbnail.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
-        }
-      }
-
-      const thumbnails = document.querySelectorAll('.thumbnail-image');
-      thumbnails.forEach((thumbnail) => {
-        thumbnail.addEventListener('click', function() {
-          const slideIndex = parseInt(this.getAttribute('data-slide-index'));
-          swiper.slideToLoop(slideIndex);
-          updateThumbnailActiveState(slideIndex);
-        });
-      });
-
-      updateThumbnailActiveState(0);
-    }
-  }
-
-  document.addEventListener('turbo:before-cache', function() {
-    window.carShowPageInitialized = false;
-  });
-
-  document.addEventListener('DOMContentLoaded', initializeCarShowPage);
-  document.addEventListener('turbo:load', initializeCarShowPage);

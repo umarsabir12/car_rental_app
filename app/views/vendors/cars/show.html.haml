@@ -27,14 +27,28 @@
             %span.text-lg.text-gray-600= @car.color
             %span.text-lg.text-gray-600= @car.category.presence || '—'
           .flex.items-center.gap-4
-            - status_classes = {'available' => 'bg-green-100 text-green-700', 'rented' => 'bg-red-100 text-red-700', 'maintenance' => 'bg-yellow-100 text-yellow-700'}
-            %span.inline-block.rounded-full.text-sm.font-semibold.px-4.py-2{class: status_classes[@car.status] || 'bg-blue-100 text-blue-700'}= @car.status.titleize
-            %span.text-2xl.font-bold{style: 'color: #3a6363'}= @car.daily_price ? number_to_currency(@car.daily_price) : 'N/A'
-            %span.text-gray-500   /day
-            %span.text-2xl.font-bold{style: 'color: #3a6363'}= @car.weekly_price ? number_to_currency(@car.weekly_price) : 'N/A'
-            %span.text-gray-500 /week
-            %span.text-2xl.font-bold{style: 'color: #3a6363'}= @car.monthly_price ? number_to_currency(@car.monthly_price) : 'N/A'
-            %span.text-gray-500 /month
+            - if @car.with_driver?
+              - if @car.has_discount?
+                %span.text-2xl.font-bold.text-gray-400.line-through= @car.five_hours_charge ? number_to_currency(@car.five_hours_charge) : 'N/A'
+                %span.text-2xl.font-bold.text-red-600= number_to_currency(@car.discounted_five_hours_charge)
+                %span.text-gray-500 /5h
+                %span.text-2xl.font-bold.text-gray-400.line-through= @car.ten_hours_charge ? number_to_currency(@car.ten_hours_charge) : 'N/A'
+                %span.text-2xl.font-bold.text-red-600= number_to_currency(@car.discounted_ten_hours_charge)
+                %span.text-gray-500 /10h
+              - else
+                %span.text-2xl.font-bold{style: 'color: #3a6363'}= @car.five_hours_charge ? number_to_currency(@car.five_hours_charge) : 'N/A'
+                %span.text-gray-500 /5h
+                %span.text-2xl.font-bold{style: 'color: #3a6363'}= @car.ten_hours_charge ? number_to_currency(@car.ten_hours_charge) : 'N/A'
+                %span.text-gray-500 /10h
+            - else
+              - status_classes = {'available' => 'bg-green-100 text-green-700', 'rented' => 'bg-red-100 text-red-700', 'maintenance' => 'bg-yellow-100 text-yellow-700'}
+              %span.inline-block.rounded-full.text-sm.font-semibold.px-4.py-2{class: status_classes[@car.status] || 'bg-blue-100 text-blue-700'}= @car.status.titleize
+              %span.text-2xl.font-bold{style: 'color: #3a6363'}= @car.daily_price ? number_to_currency(@car.daily_price) : 'N/A'
+              %span.text-gray-500   /day
+              %span.text-2xl.font-bold{style: 'color: #3a6363'}= @car.weekly_price ? number_to_currency(@car.weekly_price) : 'N/A'
+              %span.text-gray-500 /week
+              %span.text-2xl.font-bold{style: 'color: #3a6363'}= @car.monthly_price ? number_to_currency(@car.monthly_price) : 'N/A'
+              %span.text-gray-500 /month
         .flex.gap-3
           = link_to vendors_edit_car_path(@car), class: 'text-white font-semibold px-6 py-3 rounded-lg transition flex items-center gap-2', style: 'background-color:#3a6363' do
             %i.fas.fa-edit
@@ -95,27 +109,47 @@
           .flex.justify-between.py-2.border-b.border-gray-100
             %span.font-medium.text-gray-600 Brand
             %span.text-gray-900= @car.brand
-          .flex.justify-between.py-2.border-b.border-gray-100
-            %span.font-medium.text-gray-600 Year
-            %span.text-gray-900= @car.year
+          - unless @car.with_driver?
+            .flex.justify-between.py-2.border-b.border-gray-100
+              %span.font-medium.text-gray-600 Year
+              %span.text-gray-900= @car.year
           .flex.justify-between.py-2.border-b.border-gray-100
             %span.font-medium.text-gray-600 Color
             %span.text-gray-900= @car.color
-          .flex.justify-between.py-2.border-b.border-gray-100
-            %span.font-medium.text-gray-600 Category
-            %span.text-gray-900= @car.category.presence || '—'
-          .flex.justify-between.py-2.border-b.border-gray-100
-            %span.font-medium.text-gray-600 Daily Price
-            %span.text-gray-900= @car.daily_price ? number_to_currency(@car.daily_price) : 'N/A'
-          .flex.justify-between.py-2.border-b.border-gray-100
-            %span.font-medium.text-gray-600 Weekly Price
-            %span.text-gray-900= @car.weekly_price ? number_to_currency(@car.weekly_price) : 'N/A'
-          .flex.justify-between.py-2.border-b.border-gray-100
-            %span.font-medium.text-gray-600 Monthly Price
-            %span.text-gray-900= @car.monthly_price ? number_to_currency(@car.monthly_price) : 'N/A'
-          .flex.justify-between.py-2.border-b.border-gray-100
-            %span.font-medium.text-gray-600 Additional Mileage Charge
-            %span.text-gray-900= @car.additional_mileage_charge ? number_to_currency(@car.additional_mileage_charge) : 'N/A'
+          - unless @car.with_driver?
+            .flex.justify-between.py-2.border-b.border-gray-100
+              %span.font-medium.text-gray-600 Category
+              %span.text-gray-900= @car.category.presence || '—'
+          - if @car.with_driver?
+            .flex.justify-between.py-2.border-b.border-gray-100
+              %span.font-medium.text-gray-600 5 Hours Charge
+              - if @car.has_discount?
+                .flex.flex-col.items-end
+                  %span.text-gray-400.line-through= number_to_currency(@car.five_hours_charge)
+                  %span.text-green-600.font-bold= number_to_currency(@car.discounted_five_hours_charge)
+              - else
+                %span.text-gray-900= @car.five_hours_charge ? number_to_currency(@car.five_hours_charge) : 'N/A'
+            .flex.justify-between.py-2.border-b.border-gray-100
+              %span.font-medium.text-gray-600 10 Hours Charge
+              - if @car.has_discount?
+                .flex.flex-col.items-end
+                  %span.text-gray-400.line-through= number_to_currency(@car.ten_hours_charge)
+                  %span.text-green-600.font-bold= number_to_currency(@car.discounted_ten_hours_charge)
+              - else
+                %span.text-gray-900= @car.ten_hours_charge ? number_to_currency(@car.ten_hours_charge) : 'N/A'
+          - else
+            .flex.justify-between.py-2.border-b.border-gray-100
+              %span.font-medium.text-gray-600 Daily Price
+              %span.text-gray-900= @car.daily_price ? number_to_currency(@car.daily_price) : 'N/A'
+            .flex.justify-between.py-2.border-b.border-gray-100
+              %span.font-medium.text-gray-600 Weekly Price
+              %span.text-gray-900= @car.weekly_price ? number_to_currency(@car.weekly_price) : 'N/A'
+            .flex.justify-between.py-2.border-b.border-gray-100
+              %span.font-medium.text-gray-600 Monthly Price
+              %span.text-gray-900= @car.monthly_price ? number_to_currency(@car.monthly_price) : 'N/A'
+            .flex.justify-between.py-2.border-b.border-gray-100
+              %span.font-medium.text-gray-600 Additional Mileage Charge
+              %span.text-gray-900= @car.additional_mileage_charge ? number_to_currency(@car.additional_mileage_charge) : 'N/A'
 
       / Specifications Card
       .bg-white.rounded-xl.shadow-lg.p-6
@@ -287,41 +321,52 @@
     .bg-white.rounded-xl.shadow-lg.p-8
       %h2.text-2xl.font-bold.mb-6{style: 'color: #2d4f4f'} Car Overview
       .grid.grid-cols-2.md:grid-cols-3.lg:grid-cols-4.gap-6
-        .flex.items-center.space-x-3
-          %i.fas.fa-car.text-gray-400.w-5
-          .div
-            %span.text-sm.text-gray-500 Body Type
-            %p.font-medium= @car.category || 'Sedan'
-        .flex.items-center.space-x-3
-          %i.fas.fa-calendar.text-gray-400.w-5
-          .div
-            %span.text-sm.text-gray-500 Model
-            %p.font-medium= @car.year || '2021'
+        - unless @car.with_driver?
+          .flex.items-center.space-x-3
+            %i.fas.fa-car.text-gray-400.w-5
+            .div
+              %span.text-sm.text-gray-500 Body Type
+              %p.font-medium= @car.category || 'Sedan'
+        - unless @car.with_driver?
+          .flex.items-center.space-x-3
+            %i.fas.fa-calendar.text-gray-400.w-5
+            .div
+              %span.text-sm.text-gray-500 Model
+              %p.font-medium= @car.year || '2021'
         .flex.items-center.space-x-3
           %i.fas.fa-palette.text-gray-400.w-5
           .div
             %span.text-sm.text-gray-500 Colour
             %p.font-medium= @car.color || 'Black'
-        .flex.items-center.space-x-3
-          %i.fas.fa-gas-pump.text-gray-400.w-5
-          .div
-            %span.text-sm.text-gray-500 Fuel
-            %p.font-medium= @car.fuel_type || 'Petrol'
-        .flex.items-center.space-x-3
-          %i.fas.fa-cogs.text-gray-400.w-5
-          .div
-            %span.text-sm.text-gray-500 Transmission
-            %p.font-medium= @car.transmission || 'Auto'
+        - unless @car.with_driver?
+          .flex.items-center.space-x-3
+            %i.fas.fa-gas-pump.text-gray-400.w-5
+            .div
+              %span.text-sm.text-gray-500 Fuel
+              %p.font-medium= @car.fuel_type || 'Petrol'
+        - unless @car.with_driver?
+          .flex.items-center.space-x-3
+            %i.fas.fa-cogs.text-gray-400.w-5
+            .div
+              %span.text-sm.text-gray-500 Transmission
+              %p.font-medium= @car.transmission || 'Auto'
         .flex.items-center.space-x-3
           %i.fas.fa-users.text-gray-400.w-5
           .div
             %span.text-sm.text-gray-500 Seating Capacity
             %p.font-medium= "#{@car.seats || 5} passengers"
-        .flex.items-center.space-x-3
-          %i.fas.fa-engine.text-gray-400.w-5
-          .div
-            %span.text-sm.text-gray-500 Engine CC
-            %p.font-medium= @car.engine_size || '2.0L'
+        - if @car.with_driver?
+          .flex.items-center.space-x-3
+            %i.fas.fa-suitcase.text-gray-400.w-5
+            .div
+              %span.text-sm.text-gray-500 Luggage Capacity
+              %p.font-medium= "#{@car.luggage_capacity || 0} Bags"
+        - unless @car.with_driver?
+          .flex.items-center.space-x-3
+            %i.fas.fa-engine.text-gray-400.w-5
+            .div
+              %span.text-sm.text-gray-500 Engine CC
+              %p.font-medium= @car.engine_size || '2.0L'
 
         - if @car.with_driver?
           .flex.items-center.space-x-3

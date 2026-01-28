@@ -54,6 +54,9 @@ FactoryBot.define do
 
     trait :with_driver do
       with_driver { true }
+      five_hours_charge { 500 }
+      ten_hours_charge { 800 }
+      luggage_capacity { 2 }
     end
   end
 end

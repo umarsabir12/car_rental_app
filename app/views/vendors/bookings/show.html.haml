@@ -76,8 +76,12 @@
             %span.font-medium.text-gray-600 Category
             %span.text-gray-900= @booking.car.category.presence || 'N/A'
           .flex.justify-between.py-2.border-b.border-gray-100
-            %span.font-medium.text-gray-600 Daily Rate
-            %span.text-gray-900= @booking.car.daily_price ? number_to_currency(@booking.car.daily_price) : 'N/A'
+            %span.font-medium.text-gray-600= @booking.car.with_driver? ? "Base Service Rate" : "Daily Rate"
+            %span.text-gray-900
+              - if @booking.car.with_driver?
+                = "#{@booking.car.five_hours_charge}/5h • #{@booking.car.ten_hours_charge}/10h"
+              - else
+                = @booking.car.daily_price ? number_to_currency(@booking.car.daily_price) : 'N/A'
           .flex.justify-between.py-2.border-b.border-gray-100
             %span.font-medium.text-gray-600 Car Status
             - car_status_classes = {'available' => 'bg-green-100 text-green-700', 'rented' => 'bg-red-100 text-red-700', 'maintenance' => 'bg-yellow-100 text-yellow-700'}

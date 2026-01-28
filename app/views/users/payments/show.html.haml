@@ -187,6 +187,50 @@
                   - else
                     %span.text-lg.sm:text-xl.md:text-2xl.font-bold.text-blue-600= number_to_currency(subtotal + @booking.delivery_charge)
 
+              - elsif ['5 Hours', '10 Hours'].include?(@selected_period)
+                - rental_subtotal = @booking.selected_price.to_f
+                - subtotal = rental_subtotal
+                - if @booking.has_discount?
+                  - subtotal = subtotal - (@booking.discount_amount)
+
+                .flex.justify-between.items-center.py-2.sm:py-3.border-b.border-blue-200
+                  %span.text-sm.sm:text-base.text-gray-700 Service
+                  %span.text-sm.sm:text-base.font-semibold= @selected_period
+                .flex.justify-between.items-center.py-2.sm:py-3.border-b.border-blue-200
+                  %span.text-sm.sm:text-base.text-gray-700 Rate
+                  %span.text-sm.sm:text-base.font-semibold= number_to_currency(rental_subtotal)
+                
+                .flex.justify-between.items-center.py-2.sm:py-3.border-b.border-blue-200
+                  %span.text-sm.sm:text-base.text-gray-700 Subtotal
+                  %span.text-sm.sm:text-base.font-semibold= number_to_currency(rental_subtotal)
+
+                - if @booking.has_discount?
+                  .flex.justify-between.items-center.py-2.sm:py-3.border-b.border-blue-200.bg-red-50
+                    %span.text-sm.sm:text-base.text-gray-700.flex.items-center.gap-2
+                      %i.fas.fa-tag.text-red-500
+                      = "Discount (#{@booking.discount_percentage}% OFF)"
+                    %span.text-sm.sm:text-base.font-bold.text-red-600= "- #{number_to_currency(@booking.discount_amount)}"
+
+                - if @booking.delivery_option.present?
+                  .flex.justify-between.items-center.py-2.sm:py-3.border-b.border-blue-200
+                    %span.text-sm.sm:text-base.text-gray-700
+                      = @booking.delivery_option.capitalize
+                      Charge
+                    %span.text-sm.sm:text-base.font-semibold.text-purple-600= number_to_currency(@booking.delivery_charge)
+
+                .flex.justify-between.items-center.py-2.sm:py-3.border-b.border-blue-200
+                  %span.text-sm.sm:text-base.text-gray-700 Tax
+                  %span.text-sm.sm:text-base.text-green-600 Free
+                .flex.justify-between.items-center.py-3.sm:py-4
+                  %span.text-base.sm:text-lg.md:text-xl.font-bold.text-gray-800 Total Amount
+                  - if @booking.has_discount?
+                    - original_total_with_delivery = rental_subtotal + @booking.delivery_charge
+                    .flex.flex-col.items-end
+                      %span.text-sm.text-gray-400.line-through= number_to_currency(original_total_with_delivery)
+                      %span.text-lg.sm:text-xl.md:text-2xl.font-bold.text-blue-600= number_to_currency(subtotal + @booking.delivery_charge)
+                  - else
+                    %span.text-lg.sm:text-xl.md:text-2xl.font-bold.text-blue-600= number_to_currency(subtotal + @booking.delivery_charge)
+
               - else
                 / Daily pricing (default)
                 - rental_subtotal = duration_days * daily_price
@@ -390,15 +434,22 @@
         .col-amount AMOUNT
 
       .table-row
+      .table-row
         .col-description Rental Amount
-        - period_unit = { 'weekly' => 'week', 'monthly' => 'month' }.fetch(@booking.selected_period, 'day')
-        - period_base = { 'weekly' => 7.0, 'monthly' => 30.0 }.fetch(@booking.selected_period, 1.0)
-        - period_count = @days.to_f / period_base
-        - display_count = (period_count % 1).zero? ? period_count.to_i : period_count.round(1)
-        - rental_subtotal = @booking.calculate_total_amount_without_discount
-        .col-days= pluralize(display_count, period_unit)
-        .col-rate= "AED #{number_with_precision(rental_subtotal / period_count, precision: 2)}"
-        .col-amount= "AED #{number_with_precision(rental_subtotal, precision: 2)}"
+        - if ['5 Hours', '10 Hours'].include?(@booking.selected_period)
+          - rental_subtotal = @booking.selected_price.to_f
+          .col-days 1 Service
+          .col-rate= "AED #{number_with_precision(rental_subtotal, precision: 2)}"
+          .col-amount= "AED #{number_with_precision(rental_subtotal, precision: 2)}"
+        - else
+          - period_unit = { 'weekly' => 'week', 'monthly' => 'month' }.fetch(@booking.selected_period, 'day')
+          - period_base = { 'weekly' => 7.0, 'monthly' => 30.0 }.fetch(@booking.selected_period, 1.0)
+          - period_count = @days.to_f / period_base
+          - display_count = (period_count % 1).zero? ? period_count.to_i : period_count.round(1)
+          - rental_subtotal = @booking.calculate_total_amount_without_discount
+          .col-days= pluralize(display_count, period_unit)
+          .col-rate= "AED #{number_with_precision(rental_subtotal / period_count, precision: 2)}"
+          .col-amount= "AED #{number_with_precision(rental_subtotal, precision: 2)}"
 
       - if @booking.delivery_option.present?
         .table-row

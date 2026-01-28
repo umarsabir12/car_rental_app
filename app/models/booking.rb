@@ -50,6 +50,9 @@ class Booking < ApplicationRecord
                     remaining_days = duration_days % 30
                     (full_months * monthly_price) + (remaining_days * daily_price)
 
+    when "5 Hours", "10 Hours"
+                    selected_price.to_f
+
     else # daily
                     duration_days * selected_price.to_f
     end
@@ -108,6 +111,12 @@ class Booking < ApplicationRecord
                     full_months = duration_days / 30
                     remaining_days = duration_days % 30
                     (full_months * monthly_price) + (remaining_days * daily_price)
+
+    when "5 Hours"
+                    car.five_hours_charge.to_f
+
+    when "10 Hours"
+                    car.ten_hours_charge.to_f
 
     else # daily
                     duration_days * daily_price

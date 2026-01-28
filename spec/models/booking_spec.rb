@@ -247,6 +247,32 @@ RSpec.describe Booking, type: :model do
       end
     end
 
+    context 'when selected_period is 5 hours (With Driver)' do
+      let(:chauffeur_car) { create(:car, with_driver: true, five_hours_charge: 500, ten_hours_charge: 900, luggage_capacity: 2) }
+
+      it 'calculates total based on fixed 5 hours charge' do
+        booking = build(:booking, car: chauffeur_car,
+                        start_date: Date.today,
+                        end_date: Date.today,
+                        selected_period: '5 Hours',
+                        selected_price: chauffeur_car.five_hours_charge)
+        expect(booking.calculate_total_amount).to eq(500)
+      end
+    end
+
+    context 'when selected_period is 10 hours (With Driver)' do
+      let(:chauffeur_car) { create(:car, with_driver: true, five_hours_charge: 500, ten_hours_charge: 900, luggage_capacity: 2) }
+
+      it 'calculates total based on fixed 10 hours charge' do
+        booking = build(:booking, car: chauffeur_car,
+                        start_date: Date.today,
+                        end_date: Date.today,
+                        selected_period: '10 Hours',
+                        selected_price: chauffeur_car.ten_hours_charge)
+        expect(booking.calculate_total_amount).to eq(900)
+      end
+    end
+
     it 'returns 0 if car is not present' do
       booking = build(:booking, car: nil)
       expect(booking.calculate_total_amount).to eq(0)
