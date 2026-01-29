@@ -184,7 +184,7 @@
         %p Upload additional images to add to your car. You can upload up to 5 images total.
 
       / Mulkiya Section
-      %h2.text-lg.font-bold.mb-4.mt-8{style: 'color:#2d4f4f'} Mulkiya (PDF or Image)
+      %h2.text-lg.font-bold.mb-4.mt-8.standard-only-field{style: 'color:#2d4f4f'} Mulkiya (PDF or Image)
       - if @car.car_document.present? && @car.car_document.mulkiya.attached?
         .mb-3
           .flex.items-center.gap-3
@@ -192,7 +192,7 @@
             %span.text-gray-700 Current file:
             = link_to (@car.car_document.mulkiya.filename.to_s), url_for(@car.car_document.mulkiya), target: '_blank', class: 'underline', style: 'color:#3A6363'
 
-      .flex.gap-6.mb-6
+      .flex.gap-6.mb-6.standard-only-field
         .relative.group
           %div.flex.items-center.justify-center.w-32.h-24.rounded-xl.shadow.border-2.border-dashed.transition-all.duration-200{id: 'plus-card-mulkiya-edit', style: 'border-color:#3A6363; background-color:#eff5f5'}
             %i.fas.fa-plus.text-3xl{id: 'plus-icon-mulkiya-edit', style: 'color:#3A6363'}

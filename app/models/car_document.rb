@@ -2,7 +2,7 @@ class CarDocument < ApplicationRecord
   has_one_attached :mulkiya
   belongs_to :car
 
-  validates :mulkiya, presence: { message: "is required for all cars" }
+  validates :mulkiya, presence: { message: "is required for all cars" }, unless: :car_with_driver?
 
   enum document_status: {
     pending: 0,
@@ -10,7 +10,7 @@ class CarDocument < ApplicationRecord
     rejected: 2
   }
 
-  validate :mulkiya_presence_on_create, on: :create
+  validate :mulkiya_presence_on_create, on: :create, unless: :car_with_driver?
   validate :mulkiya_content_type
   before_destroy :purge_attachment
 
@@ -24,6 +24,10 @@ class CarDocument < ApplicationRecord
     if new_record? && !mulkiya.attached?
       errors.add(:mulkiya, "must be uploaded before creating the car")
     end
+  end
+
+  def car_with_driver?
+    car&.with_driver == true
   end
 
   def mulkiya_content_type

@@ -219,7 +219,7 @@
         %p.text-red-600.font-medium At least one image is required. Upload up to 5 high-quality images of your car. First image will be used as the main display image.
 
       / Mulkiya Section
-      %h2.text-base.sm:text-lg.font-bold.text-blue-800.mb-3.sm:mb-4.mt-6.sm:mt-8 Mulkiya (PDF or Image) *
+      %h2.text-base.sm:text-lg.font-bold.text-blue-800.mb-3.sm:mb-4.mt-6.sm:mt-8.standard-only-field Mulkiya (PDF or Image) *
       - if @car.errors[:mulkiya].any?
         .mb-3.sm:mb-4.p-3.sm:p-4.bg-red-50.border.border-red-200.rounded-lg
           %p.text-red-600.text-xs.sm:text-sm.font-medium= @car.errors[:mulkiya].join(', ')
@@ -227,7 +227,7 @@
       .mb-2.text-xs.sm:text-sm.text-gray-600
         %p Upload the vehicle ownership card or PDF. Only one file is required.
 
-      .flex.flex-wrap.gap-3.sm:gap-4.md:gap-6.mb-4.sm:mb-6
+      .flex.flex-wrap.gap-3.sm:gap-4.md:gap-6.mb-4.sm:mb-6.standard-only-field
         .relative.group
           %div.flex.items-center.justify-center.w-24.h-20.sm:w-28.sm:h-22.md:w-32.md:h-24.bg-red-50.rounded-lg.sm:rounded-xl.shadow.border-2.border-dashed.border-red-400.group-hover:border-blue-500.transition-all.duration-200{id: 'plus-card-mulkiya'}
             %i.fas.fa-plus.text-xl.sm:text-2xl.md:text-3xl.text-blue-400{id: 'plus-icon-mulkiya'}

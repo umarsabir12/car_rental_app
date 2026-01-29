@@ -34,7 +34,10 @@ class Car < ApplicationRecord
   scope :featured, -> { where(featured: true) }
   scope :available, -> { where(status: "available") }
   scope :with_approved_mulkiya, -> {
-    joins(:car_document).where(car_documents: { document_status: "approved" })
+    left_joins(:car_document).where(
+      "cars.with_driver = ? OR car_documents.document_status = ?",
+      true, 1
+    )
   }
 
   def full_name

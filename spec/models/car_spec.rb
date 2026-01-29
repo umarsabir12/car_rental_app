@@ -40,10 +40,27 @@ RSpec.describe Car, type: :model do
     describe '.with_approved_mulkiya' do
       let!(:car_with_approved) { create(:car, :with_approved_document) }
       let!(:car_without_document) { create(:car) }
+      let!(:with_driver_car) { create(:car, :with_driver) }
+      let!(:with_driver_car_with_pending_doc) do
+        car = create(:car, :with_driver)
+        create(:car_document, :pending, car: car)
+        car
+      end
 
-      it 'returns only cars with approved car documents' do
+      it 'returns cars with approved car documents' do
         expect(Car.with_approved_mulkiya).to include(car_with_approved)
+      end
+
+      it 'does not return standard cars without approved documents' do
         expect(Car.with_approved_mulkiya).not_to include(car_without_document)
+      end
+
+      it 'returns with-driver cars without any documents' do
+        expect(Car.with_approved_mulkiya).to include(with_driver_car)
+      end
+
+      it 'returns with-driver cars even with pending documents' do
+        expect(Car.with_approved_mulkiya).to include(with_driver_car_with_pending_doc)
       end
     end
 
