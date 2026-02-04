@@ -546,12 +546,12 @@
       .modal-body.bg-white.px-6.py-4
         .mb-4
           %label.block.text-sm.font-medium.mb-1{style: 'color: #2d4f4f'} Pickup Date
-          = text_field_tag :start_date, nil, required: true, class: "w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 flatpickr", autocomplete: "off", id: "startDateInput", style: "--tw-ring-color:#3a6363", data: { booking_flow_target: "startInput" }
+          = text_field_tag :start_date, nil, required: true, class: "w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 flatpickr", autocomplete: "off", id: "startDateInput", style: "--tw-ring-color:#3a6363", data: { booking_flow_target: "startInput", action: "input->booking-flow#validateForm change->booking-flow#validateForm" }
 
         - unless @car.with_driver?
           .mb-4
             %label.block.text-sm.font-medium.mb-1{style: 'color: #2d4f4f'} Return Date
-            = text_field_tag :end_date, nil, required: true, class: "w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 flatpickr", autocomplete: "off", id: "endDateInput", style: "--tw-ring-color:#3a6363", data: { booking_flow_target: "endInput" }
+            = text_field_tag :end_date, nil, required: true, class: "w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 flatpickr", autocomplete: "off", id: "endDateInput", style: "--tw-ring-color:#3a6363", data: { booking_flow_target: "endInput", action: "input->booking-flow#validateForm change->booking-flow#validateForm" }
 
         .mb-4
           %label.block.text-sm.font-medium.mb-2{style: 'color: #2d4f4f'} Service Option (Optional)
