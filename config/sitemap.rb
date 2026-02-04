@@ -1,5 +1,6 @@
 # Set the host name for URL creation
 SitemapGenerator::Sitemap.default_host = "https://www.wheelsonrent.ae/"
+SitemapGenerator::Sitemap.compress = true
 # Disable search engine pinging as Google deprecated the API
 SitemapGenerator::Sitemap.search_engines = {}
 
