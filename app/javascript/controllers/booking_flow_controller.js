@@ -3,8 +3,36 @@ import { Controller } from "@hotwired/stimulus"
 export default class extends Controller {
   static targets = ["submitBtn", "startInput", "endInput"]
   static values = {
-    carId: String,
     withDriver: Boolean
+  }
+
+  connect() {
+    this.validateForm()
+  }
+
+  validateForm() {
+    const startValue = this.startInputTarget.value
+    const endValue = this.hasEndInputTarget ? this.endInputTarget.value : null
+
+    let isValid = false
+    if (this.withDriverValue) {
+      isValid = !!startValue
+    } else {
+      isValid = !!startValue && !!endValue
+    }
+
+    if (this.hasSubmitBtnTarget) {
+      this.submitBtnTarget.disabled = !isValid
+      if (isValid) {
+        this.submitBtnTarget.style.pointerEvents = "auto"
+        this.submitBtnTarget.style.opacity = "1"
+        this.submitBtnTarget.style.cursor = "pointer"
+      } else {
+        this.submitBtnTarget.style.pointerEvents = "none"
+        this.submitBtnTarget.style.opacity = "0.5"
+        this.submitBtnTarget.style.cursor = "not-allowed"
+      }
+    }
   }
 
   submit(event) {
