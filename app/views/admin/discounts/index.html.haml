@@ -45,7 +45,7 @@
           .flex.justify-between.items-center.py-2.border-b.border-gray-100
             %span.text-xs.font-medium.text-gray-500 Discount
             %span.text-sm.text-gray-900.font-bold
-              = "#{discount.discount_percentage}%"
+              = "#{discount.discount_percentage.round}%"
 
           .flex.justify-between.items-center.py-2
             %span.text-xs.font-medium.text-gray-500 Status
@@ -83,7 +83,7 @@
                         = cat
               %td.px-6.py-4.whitespace-nowrap.text-sm.text-gray-900
                 %span.font-bold.text-lg{style: "color: #3A6363;"}
-                  = "#{discount.discount_percentage}%"
+                  = "#{discount.discount_percentage.round}%"
               %td.px-6.py-4.whitespace-nowrap
                 - status = discount.active? ? 'Active' : 'Inactive'
                 %span.inline-flex.items-center.px-2.5.py-0.5.rounded-full.text-xs.font-medium{class: status == 'Active' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}

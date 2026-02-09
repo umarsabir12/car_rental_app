@@ -81,7 +81,7 @@ class Booking < ApplicationRecord
 
   def discount_percentage
     # Use stored discount_percentage (preserves discount even if removed from car later)
-    self[:discount_percentage] || 0
+    (self[:discount_percentage] || 0).round
   end
 
   def discount_amount

@@ -59,7 +59,7 @@ class Discount < ApplicationRecord
   def display_name
     vendor_name = applies_to_all_vendors? ? "All Vendors" : vendor.company_name
     category_name = applies_to_all_categories? ? "All Categories" : category.join(", ")
-    "#{vendor_name} - #{category_name} (#{discount_percentage}%)"
+    "#{vendor_name} - #{category_name} (#{discount_percentage.round}%)"
   end
 
   def category_list
