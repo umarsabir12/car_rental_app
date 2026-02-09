@@ -204,19 +204,19 @@ RSpec.describe Discount, type: :model do
       vendor = create(:vendor, company_name: 'Test Vendor')
       create(:car, vendor: vendor, category: 'Luxury')
       discount = build(:discount, vendor: vendor, category: [ 'Luxury' ], discount_percentage: 20)
-      expect(discount.display_name).to eq('Test Vendor - Luxury (20.0%)')
+      expect(discount.display_name).to eq('Test Vendor - Luxury (20%)')
     end
 
     it 'shows "All Vendors" when vendor is nil' do
       create(:car, category: 'Economy')
       discount = build(:discount, vendor_id: nil, category: [ 'Economy' ], discount_percentage: 15)
-      expect(discount.display_name).to eq('All Vendors - Economy (15.0%)')
+      expect(discount.display_name).to eq('All Vendors - Economy (15%)')
     end
 
     it 'shows "All Categories" when category is empty' do
       vendor = create(:vendor, company_name: 'Test Vendor')
       discount = build(:discount, vendor: vendor, category: [], discount_percentage: 10)
-      expect(discount.display_name).to eq('Test Vendor - All Categories (10.0%)')
+      expect(discount.display_name).to eq('Test Vendor - All Categories (10%)')
     end
   end
 

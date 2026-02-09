@@ -64,7 +64,7 @@ class Car < ApplicationRecord
 
   # Get discount percentage for display
   def discount_percentage
-    applicable_discount&.discount_percentage || 0
+    (applicable_discount&.discount_percentage || 0).round
   end
 
   # Calculate discounted price
