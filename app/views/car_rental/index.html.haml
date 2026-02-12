@@ -156,7 +156,7 @@
                               - elsif car.category.present?
                                 %span.text-gray-500.ml-2 •
                                 %span.text-gray-500= car.category.capitalize
-                            %div.flex.items-center.justify-between
+                            %div.flex.items-baseline.justify-between
                               %div.h-14.flex.flex-col.justify-end
                                 - if car.with_driver?
                                   - if car.has_discount?
