@@ -175,7 +175,7 @@ class Car < ApplicationRecord
 
     # We need to filter based on effective monthly price (after discount)
     # and exclude "with driver" cars as requested.
-    matching_ids = scope.where(with_driver: [false, nil]).select do |car|
+    matching_ids = scope.where(with_driver: [ false, nil ]).select do |car|
       effective_price = car.discounted_monthly_price
       effective_price >= min && effective_price < max
     end.map(&:id)
