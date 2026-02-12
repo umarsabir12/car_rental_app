@@ -2,7 +2,7 @@
 %section.-mt-14.py-4.relative.z-10
   .max-w-7xl.mx-auto.px-4.sm:px-6.lg:px-8
     %div{class: 'bg-white/95 backdrop-blur rounded-2xl shadow-xl border border-gray-100 p-4 sm:p-6'}
-      = form_with url: (@cars_path || cars_path), method: :get, local: true, class: "grid grid-cols-1 md:grid-cols-5 gap-4 items-end", id: "car_filters" do |f|
+      = form_with url: (@cars_path || cars_path), method: :get, local: true, class: "grid grid-cols-1 md:grid-cols-6 gap-4 items-end", id: "car_filters" do |f|
         .flex.flex-col.relative
           = f.label :search, "Search", class: "text-xs font-semibold text-gray-700 mb-1"
           = f.text_field :search, placeholder: "Brand, Model, Year...", class: "block w-full px-4 py-2 border border-gray-200 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:border-teal-600 focus:ring-teal-600 bg-white text-gray-700", id: "search_input", autocomplete: "off"
@@ -22,7 +22,11 @@
           = f.label :model, "Model", class: "text-xs font-semibold text-gray-700 mb-1"
           = f.select :model, options_for_select([["All Models", ""]] + (@car_models || []), params[:model]), {}, class: "block w-full px-4 py-2 border border-gray-200 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:border-teal-600 focus:ring-teal-600 bg-white text-gray-700 filter-select", data: { filter: "model" }
 
-        = f.submit "Search", class: "text-white font-bold px-6 py-2 rounded-lg shadow transition w-full", style: "background-color: #3a6363"
+        .flex.flex-col
+          = f.label :monthly_price, "Price Range (monthly)", class: "text-xs font-semibold text-gray-700 mb-1"
+          = f.select :monthly_price, options_for_select([["All Prices", ""]] + (@monthly_price_slabs || []), params[:monthly_price]), {}, class: "block w-full px-4 py-2 border border-gray-200 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:border-teal-600 focus:ring-teal-600 bg-white text-gray-700 filter-select", data: { filter: "monthly_price" }
+
+        = f.submit "Search", name: nil, class: "text-white font-bold px-6 py-2 rounded-lg shadow transition w-full", style: "background-color: #3a6363"
 
 :javascript
   // Improved initialization with search functionality and better error handling
@@ -84,6 +88,11 @@
             normalizedValue: opt.value.toLowerCase()
           })),
           model: Array.from(modelSelect.options).map(opt => ({ 
+            value: opt.value, 
+            text: opt.text,
+            normalizedValue: opt.value.toLowerCase()
+          })),
+          monthly_price: Array.from(document.querySelector('[data-filter="monthly_price"]').options).map(opt => ({ 
             value: opt.value, 
             text: opt.text,
             normalizedValue: opt.value.toLowerCase()
@@ -183,6 +192,7 @@
           params.append('category', category || '');
           params.append('brand', brand || '');
           params.append('model', model || '');
+          params.append('monthly_price', document.querySelector('[data-filter="monthly_price"]').value || '');
 
           // Fetch filtered options
           fetch(`${filterEndpoint}?${params.toString()}`)

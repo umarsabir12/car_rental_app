@@ -1,4 +1,4 @@
-- if params[:category].present? || params[:model].present? || params[:brand].present?
+- if params[:category].present? || params[:model].present? || params[:brand].present? || params[:monthly_price].present?
   .mb-6.p-4.rounded-lg.border{style: 'background-color: #f0f6f6; border-color: #cfe5e5'}
     .flex.items-center.justify-between.flex-wrap.gap-4
       .flex.items-center.gap-2.flex-wrap
@@ -22,5 +22,9 @@
           - if params[:model].present?
             %span.inline-block.px-3.py-1.rounded-full.text-xs.font-semibold.text-white{style: 'background-color: #3a6363'}
               = "Model: #{params[:model].capitalize}"
+
+          - if params[:monthly_price].present?
+            %span.inline-block.px-3.py-1.rounded-full.text-xs.font-semibold.text-white{style: 'background-color: #3a6363'}
+              = "Monthly Price: #{params[:monthly_price]}"
 
       = link_to 'Clear All Filters', cars_path, class: 'text-sm font-semibold underline transition-all duration-300', style: 'color: #3a6363'
