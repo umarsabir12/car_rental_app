@@ -48,26 +48,40 @@ RSpec.describe "Cars Monthly Price Filter", type: :request do
 
 
     it "filters cars by simple monthly price range" do
-      get cars_path, params: { monthly_price: "1000-1100" }
+      get cars_path, params: { monthly_price: "1000-1500" }
       expect(response).to have_http_status(:moved_permanently)
       follow_redirect!
 
       expect(response).to have_http_status(:success)
       expect(response.body).to include(car_path(car_standard))
-      expect(response.body).not_to include(car_path(car_expensive))
-      expect(response.body).not_to include(car_path(car_discounted))
     end
 
     it "filters cars by discounted monthly price range" do
-      # 1500 * 0.9 = 1350, so it should fall in 1300-1400
-      get cars_path, params: { monthly_price: "1300-1400" }
+      # 1500 * 0.9 = 1350, so it should fall in 1000-1500
+      get cars_path, params: { monthly_price: "1000-1500" }
       expect(response).to have_http_status(:moved_permanently)
       follow_redirect!
 
       expect(response).to have_http_status(:success)
       expect(response.body).to include(car_path(car_discounted))
+      expect(response.body).to include(car_path(car_standard))
+    end
+
+    it "filters cars in the 15000+ range" do
+      car_super_expensive = create(:car, :with_approved_document,
+        vendor: vendor,
+        monthly_price: 20000,
+        brand: 'Ferrari',
+        model: 'SF90'
+      )
+
+      get cars_path, params: { monthly_price: "15000-plus" }
+      expect(response).to have_http_status(:moved_permanently)
+      follow_redirect!
+
+      expect(response).to have_http_status(:success)
+      expect(response.body).to include(car_path(car_super_expensive))
       expect(response.body).not_to include(car_path(car_standard))
-      expect(response.body).not_to include(car_path(car_expensive))
     end
 
     it "shows all cars when no filter is applied" do
@@ -88,7 +102,7 @@ RSpec.describe "Cars Monthly Price Filter", type: :request do
         model: 'Sprinter'
       )
 
-      get cars_path, params: { monthly_price: "1000-1100" }
+      get cars_path, params: { monthly_price: "1000-1500" }
       expect(response).to have_http_status(:moved_permanently)
       follow_redirect!
 
@@ -98,27 +112,27 @@ RSpec.describe "Cars Monthly Price Filter", type: :request do
     end
 
     it "redirects to pretty URL for monthly_price" do
-      # When monthly_price is provided, it redirects to /cars/all-categories/all-brands/all-models/1000-1100
-      get cars_path, params: { monthly_price: "1000-1100" }
+      # When monthly_price is provided, it redirects to /cars/all-categories/all-brands/all-models/1000-1500
+      get cars_path, params: { monthly_price: "1000-1500" }
 
       expect(response).to have_http_status(:moved_permanently)
-      expect(response.location).to include("/cars/all-categories/all-brands/all-models/1000-1100")
+      expect(response.location).to include("/cars/all-categories/all-brands/all-models/1000-1500")
     end
 
     it "preserves monthly_price in pretty URL when other filters exist" do
-      get cars_path, params: { category: 'luxury', monthly_price: "2000-2100" }
+      get cars_path, params: { category: 'luxury', monthly_price: "2000-2500" }
 
       expect(response).to have_http_status(:moved_permanently)
-      expect(response.location).to include("/cars/luxury/all-brands/all-models/2000-2100")
+      expect(response.location).to include("/cars/luxury/all-brands/all-models/2000-2500")
     end
 
     it "removes empty query parameters and commit during redirection" do
       # When search is empty and commit is present (default form submission)
-      get cars_path, params: { monthly_price: "1000-1100", search: "", commit: "Search" }
+      get cars_path, params: { monthly_price: "1000-1500", search: "", commit: "Search" }
 
       expect(response).to have_http_status(:moved_permanently)
       # Should NOT contain ?search= or commit=
-      expect(response.location).to eq("http://www.example.com/cars/all-categories/all-brands/all-models/1000-1100")
+      expect(response.location).to eq("http://www.example.com/cars/all-categories/all-brands/all-models/1000-1500")
     end
 
     it "handles invalid ranges gracefully" do

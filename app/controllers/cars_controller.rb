@@ -179,13 +179,19 @@ class CarsController < ApplicationController
 
     slabs = []
     # Start from the floor of the minimum price (e.g., 1055 -> 1000)
-    current = (min_price / 100).floor * 100
+    # But since slabs are 500, we use 500 as floor
+    current = (min_price / 500).floor * 500
 
-    while current <= max_price
-      next_limit = current + 100
+    while current < [ max_price, 15000 ].min
+      next_limit = current + 500
       slabs << [ "#{current} - #{next_limit}", "#{current}-#{next_limit}" ]
       current = next_limit
     end
+
+    if max_price >= 15000
+      slabs << [ "15000 and above", "15000-plus" ]
+    end
+
     slabs
   end
 

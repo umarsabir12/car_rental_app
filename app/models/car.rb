@@ -164,7 +164,13 @@ class Car < ApplicationRecord
   def self.filter_by_monthly_price(scope, range_string)
     return scope if range_string.blank?
 
-    min, max = range_string.split("-").map(&:to_i)
+    if range_string.include?("-plus")
+      min = range_string.split("-").first.to_i
+      max = Float::INFINITY
+    else
+      min, max = range_string.split("-").map(&:to_i)
+    end
+
     return scope unless min && max
 
     # We need to filter based on effective monthly price (after discount)
