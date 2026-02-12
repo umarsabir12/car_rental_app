@@ -81,6 +81,11 @@ class Car < ApplicationRecord
     discounted_price(daily_price)
   end
 
+  # Get discounted monthly price
+  def discounted_monthly_price
+    discounted_price(monthly_price)
+  end
+
   # Get discounted 5h charge
   def discounted_five_hours_charge
     discounted_price(five_hours_charge)
@@ -154,6 +159,34 @@ class Car < ApplicationRecord
     else
       scope.where("lower(brand) LIKE ?", "%#{s}%")
     end
+  end
+
+  def self.filter_by_monthly_price(scope, range_string)
+    return scope if range_string.blank?
+
+    min, max = range_string.split("-").map(&:to_i)
+    return scope unless min && max
+
+    # We need to filter based on effective monthly price (after discount)
+    # and exclude "with driver" cars as requested.
+    matching_ids = scope.where(with_driver: [ false, nil ]).select do |car|
+      effective_price = car.discounted_monthly_price
+      effective_price >= min && effective_price < max
+    end.map(&:id)
+
+    scope.where(id: matching_ids)
+  end
+
+  def self.max_effective_monthly_price
+    # Note: This scans all relevant cars to find the max effective price.
+    # We exclude "with driver" cars as requested.
+    with_approved_mulkiya.where(with_driver: [ false, nil ]).map(&:discounted_monthly_price).compact.max || 0
+  end
+
+  def self.min_effective_monthly_price
+    # Note: This scans all relevant cars to find the min effective price.
+    # We exclude "with driver" cars as requested.
+    with_approved_mulkiya.where(with_driver: [ false, nil ]).map(&:discounted_monthly_price).compact.min || 0
   end
 
   # Generate slug from multiple fields

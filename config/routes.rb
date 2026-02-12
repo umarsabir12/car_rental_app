@@ -200,6 +200,7 @@ Rails.application.routes.draw do
   get "cars/:category", to: "cars#index", as: :cars_by_category
   get "cars/:category/:brand", to: "cars#index", as: :cars_by_category_brand
   get "cars/:category/:brand/:model", to: "cars#index", as: :cars_by_all_filters
+  get "cars/:category/:brand/:model/:monthly_price", to: "cars#index", as: :cars_with_price
   get "car/:id", to: "cars#show", as: :car
 
   resources :bookings, only: [ :new, :create ]
