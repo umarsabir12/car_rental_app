@@ -164,12 +164,18 @@ class Car < ApplicationRecord
   def self.filter_by_monthly_price(scope, range_string)
     return scope if range_string.blank?
 
-    min, max = range_string.split("-").map(&:to_i)
+    if range_string.include?("-plus")
+      min = range_string.split("-").first.to_i
+      max = Float::INFINITY
+    else
+      min, max = range_string.split("-").map(&:to_i)
+    end
+
     return scope unless min && max
 
     # We need to filter based on effective monthly price (after discount)
     # and exclude "with driver" cars as requested.
-    matching_ids = scope.where(with_driver: [ false, nil ]).select do |car|
+    matching_ids = scope.where(with_driver: [false, nil]).select do |car|
       effective_price = car.discounted_monthly_price
       effective_price >= min && effective_price < max
     end.map(&:id)
