@@ -535,23 +535,24 @@
         %p &copy; #{Time.current.year} WheelsOnRent. All rights reserved.
 
 / Booking Modal
-#bookingModal.modal.fade{"aria-hidden" => "true", "aria-labelledby" => "bookingModalLabel", tabindex: "-1", "data-controller" => "modal"}
+#bookingModal.modal.fade{"aria-hidden" => "true", "aria-labelledby" => "bookingModalLabel", tabindex: "-1", "data-controller" => "modal booking", "data-booking-car-id-value" => @car.id, "data-booking-with-driver-value" => @car.with_driver?.to_s}
   .modal-dialog.modal-dialog-centered.mt-16
-    .modal-content.rounded-2xl.shadow-xl.border{style: 'border-color: #cfe5e5', data: { controller: "booking-flow", booking_flow_car_id_value: @car.id, booking_flow_with_driver_value: @car.with_driver?.to_s }}
+    .modal-content.rounded-2xl.shadow-xl.border{style: 'border-color: #cfe5e5'}
       .modal-header.flex.items-center.justify-between.px-6.py-4
         %h5#bookingModalLabel.modal-title.text-xl.font-bold{style: 'color: #2d4f4f'} Book This Car
         %button.text-gray-400.hover:text-gray-600.transition{"aria-label" => "Close", "data-bs-dismiss" => "modal", type: "button"}
           %i.fas.fa-times
 
       .modal-body.bg-white.px-6.py-4
+        %input{ type: "hidden", id: "bookingCarIdInput", value: @car.id, data: { "booking-target" => "carIdInput" } }
         .mb-4
           %label.block.text-sm.font-medium.mb-1{style: 'color: #2d4f4f'} Pickup Date
-          = text_field_tag :start_date, nil, required: true, class: "w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 flatpickr", autocomplete: "off", id: "startDateInput", style: "--tw-ring-color:#3a6363", data: { booking_flow_target: "startInput", action: "input->booking-flow#validateForm change->booking-flow#validateForm" }
+          = text_field_tag :start_date, nil, required: true, class: "w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 flatpickr", autocomplete: "off", id: "startDateInput", style: "--tw-ring-color:#3a6363", data: { booking_target: "startInput", action: "input->booking#validateForm change->booking#validateForm" }
 
         - unless @car.with_driver?
           .mb-4
             %label.block.text-sm.font-medium.mb-1{style: 'color: #2d4f4f'} Return Date
-            = text_field_tag :end_date, nil, required: true, class: "w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 flatpickr", autocomplete: "off", id: "endDateInput", style: "--tw-ring-color:#3a6363", data: { booking_flow_target: "endInput", action: "input->booking-flow#validateForm change->booking-flow#validateForm" }
+            = text_field_tag :end_date, nil, required: true, class: "w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 flatpickr", autocomplete: "off", id: "endDateInput", style: "--tw-ring-color:#3a6363", data: { booking_target: "endInput", action: "input->booking#validateForm change->booking#validateForm" }
 
         .mb-4
           %label.block.text-sm.font-medium.mb-2{style: 'color: #2d4f4f'} Service Option (Optional)
@@ -580,9 +581,9 @@
       .modal-footer.flex.justify-end.gap-4.px-6.py-4
         %button.bg-gray-200.text-gray-700.font-semibold.px-5.py-2.rounded-lg.hover:bg-gray-300.transition{ "data-bs-dismiss" => "modal", type: "button" } Close
         - if user_signed_in?
-          %button.text-white.font-semibold.px-6.py-2.rounded-lg.shadow-md.transition.hover:shadow-lg{ type: "button", id: "createBookingBtn", style: "background-color: #3a6363; cursor: pointer;", data: { action: "click->booking-flow#submit", booking_flow_target: "submitBtn" } } Create Booking
+          %button.text-white.font-semibold.px-6.py-2.rounded-lg.shadow-md.transition.hover:shadow-lg{ type: "button", id: "createBookingBtn", style: "background-color: #3a6363; cursor: pointer;", data: { action: "click->booking#submit", booking_target: "submitBtn" } } Create Booking
         - else
-          %button.text-white.font-semibold.px-6.py-2.rounded-lg.shadow-md.transition.hover:shadow-lg{ type: "button", id: "continueToLoginLink", disabled: true, style: "pointer-events: none; opacity: 0.5; background-color: #3a6363; cursor: not-allowed;", data: { action: "click->booking-flow#submit", booking_flow_target: "submitBtn" } } Continue to Sign In
+          %button.text-white.font-semibold.px-6.py-2.rounded-lg.shadow-md.transition.hover:shadow-lg{ type: "button", id: "continueToLoginLink", disabled: true, style: "pointer-events: none; opacity: 0.5; background-color: #3a6363; cursor: not-allowed;", data: { action: "click->booking#submit", booking_target: "submitBtn" } } Continue to Sign In
 
 / Right-side Drawer for policy info
 #policyDrawer.fixed.top-0.right-0.h-full.w-96.bg-white.shadow-2xl.transform.translate-x-full.transition-transform.duration-300.z-50{ 'aria-hidden' => 'true', data: { controller: "policy", policy_insurance_value: @car.insurance_policy, policy_target: "drawer" } }
