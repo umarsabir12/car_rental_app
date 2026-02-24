@@ -37,9 +37,9 @@ RSpec.describe BookingsController, type: :controller do
           expect(Booking.last.payment_processed).to be false
         end
 
-        it 'redirects to user_home_path' do
+        it 'redirects to thank_you_bookings_path' do
           post :create, params: valid_params
-          expect(response).to redirect_to(user_home_path)
+          expect(response).to redirect_to(thank_you_bookings_path)
         end
 
         it 'sets a success notice' do
@@ -82,6 +82,29 @@ RSpec.describe BookingsController, type: :controller do
     context 'when user is not authenticated' do
       it 'redirects to sign in page' do
         post :create, params: { booking: { car_id: car.id } }
+        expect(response).to redirect_to(new_user_session_path)
+      end
+    end
+  end
+
+  describe 'GET #thank_you' do
+    context 'when user is authenticated' do
+      before { sign_in_user(user) }
+
+      it 'returns http success' do
+        get :thank_you
+        expect(response).to have_http_status(:success)
+      end
+
+      it 'renders the thank_you template' do
+        get :thank_you
+        expect(response).to render_template(:thank_you)
+      end
+    end
+
+    context 'when user is not authenticated' do
+      it 'redirects to sign in' do
+        get :thank_you
         expect(response).to redirect_to(new_user_session_path)
       end
     end
