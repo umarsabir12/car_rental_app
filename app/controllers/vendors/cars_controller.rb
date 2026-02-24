@@ -40,10 +40,8 @@ class Vendors::CarsController < ApplicationController
 
     # Attach mulkiya before save so validations pass
     if params[:car][:mulkiya].present?
-      @car.car_document = CarDocument.new
+      @car.build_car_document(document_status: :pending)
       @car.car_document.mulkiya.attach(params[:car][:mulkiya])
-      @car.car_document.document_status = :pending
-      @car.car_document.save
     end
 
     if @car.save
@@ -54,7 +52,7 @@ class Vendors::CarsController < ApplicationController
         @car.feature_ids = (@car.feature_ids + feature_ids).uniq
       end
 
-      redirect_to vendors_car_path(@car), notice: "Car was successfully created."
+      redirect_to vendors_car_thank_you_path, notice: "Car was successfully created."
     else
       load_premium_features
       flash.now[:alert] = "Please fix the following errors:\n#{@car.errors.full_messages.join(', ')}"
@@ -121,6 +119,9 @@ class Vendors::CarsController < ApplicationController
   def destroy
     @car.destroy
     redirect_to vendors_cars_path, notice: "Car was successfully deleted."
+  end
+
+  def thank_you
   end
 
   def remove_image

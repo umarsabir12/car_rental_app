@@ -56,4 +56,49 @@ RSpec.describe Vendors::CarsController, type: :controller do
       expect(assigns(:car)).to eq(car)
     end
   end
+
+  describe 'POST #create' do
+    before { sign_in_vendor(vendor) }
+
+    context 'with valid parameters' do
+      let(:valid_params) do
+        {
+          car: {
+            brand: 'Toyota',
+            model: 'Camry',
+            category: 'Economy',
+            daily_price: 100,
+            insurance_policy: 'Full Coverage',
+            images: [ fixture_file_upload('test_image.jpg', 'image/jpeg') ],
+            mulkiya: fixture_file_upload('test_image.jpg', 'image/jpeg')
+          }
+        }
+      end
+
+      it 'creates a new car' do
+        expect {
+          post :create, params: valid_params
+        }.to change(Car, :count).by(1)
+      end
+
+      it 'redirects to vendors_car_thank_you_path' do
+        post :create, params: valid_params
+        expect(response).to redirect_to(vendors_car_thank_you_path)
+      end
+    end
+  end
+
+  describe 'GET #thank_you' do
+    before { sign_in_vendor(vendor) }
+
+    it 'returns http success' do
+      get :thank_you
+      expect(response).to have_http_status(:success)
+    end
+
+    it 'renders the thank_you template' do
+      get :thank_you
+      expect(response).to render_template(:thank_you)
+    end
+  end
 end
