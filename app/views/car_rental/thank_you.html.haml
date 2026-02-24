@@ -1,0 +1,151 @@
+%div#thank-you-page.min-h-screen.bg-white.flex.items-center.justify-center.relative.overflow-hidden
+  / Canvas for background particles
+  %canvas#particleCanvas.absolute.inset-0.pointer-events-none
+
+  / Animated Geometric Accents
+  .absolute.top-0.left-0.w-full.h-64.opacity-10.pointer-events-none
+    %svg.w-full.h-full{viewBox: "0 0 1000 100", preserveAspectRatio: "none"}
+      %path{d: "M0,0 L1000,0 L1000,100 L0,100 Z", fill: "#3a6363"}
+        %animate{attributeName: "d", dur: "10s", repeatCount: "indefinite", values: "M0,0 L1000,0 L1000,100 L0,100 Z; M0,0 L1000,0 L1000,40 L0,100 Z; M0,0 L1000,0 L1000,100 L0,100 Z"}
+
+  .absolute.bottom-0.left-0.w-full.h-64.opacity-10.pointer-events-none.rotate-180
+    %svg.w-full.h-full{viewBox: "0 0 1000 100", preserveAspectRatio: "none"}
+      %path{d: "M0,0 L1000,0 L1000,100 L0,100 Z", fill: "#3a6363"}
+        %animate{attributeName: "d", dur: "12s", repeatCount: "indefinite", values: "M0,0 L1000,0 L1000,100 L0,100 Z; M0,0 L1000,0 L1000,30 L0,80 Z; M0,0 L1000,0 L1000,100 L0,100 Z"}
+
+  / Main Content Container with Glassmorphism
+  %div{class: "max-w-4xl w-full mx-4 p-12 rounded-[3rem] relative z-10 text-center animate-reveal backdrop-blur-sm bg-white/80 border border-gray-100 shadow-2xl"}
+    / Success Icon Animation
+    .mb-12.flex.justify-center
+      .relative
+        .w-32.h-32.rounded-full.bg-emerald-50.flex.items-center.justify-center.animate-success-pulse
+          %svg.w-16.h-16.text-emerald-500{fill: "none", stroke: "currentColor", "stroke-width": "3", viewBox: "0 0 24 24"}
+            %path.success-path{d: "M5 13l4 4L19 7", "stroke-dasharray": "100", "stroke-dashoffset": "100"}
+              %animate{attributeName: "stroke-dashoffset", from: "100", to: "0", dur: "0.8s", begin: "0.5s", fill: "freeze"}
+
+    / Logo Section
+    .flex.items-center.justify-center.mb-8.space-x-4
+      %div{class: "relative w-16 h-16 rounded-2xl p-0.5 rotate-3 hover:rotate-0 transition-transform duration-500", style: "background: linear-gradient(135deg, #3a6363, #2d4d4d)"}
+        .w-full.h-full.rounded-2xl.bg-white.flex.items-center.justify-center.overflow-hidden.p-2
+          %img{src: asset_path('new_logo.png'), alt: 'WheelsOnRent', class: 'w-full h-full object-contain'}
+      %span.text-3xl.font-black.tracking-tight.text-gray-900 WheelsOnRent
+
+    / "Thank You" with Gradient and Shadow
+    %h1{class: "text-7xl md:text-[9rem] font-black tracking-tighter italic mb-8 animate-text-float bg-clip-text text-transparent bg-gradient-to-br from-[#3a6363] to-[#1a2e2e]", style: "filter: drop-shadow(0 10px 20px rgba(58, 99, 99, 0.2));"}
+      Thank You
+
+    / Dynamic Message
+    .space-y-6.mb-12
+      - if @type == 'vendor'
+        %p.text-2xl.md:text-3xl.text-gray-700.font-medium.leading-tight
+          Your premium listing is now live!
+        %p.text-lg.text-gray-500.max-w-2xl.mx-auto
+          Our administrators will perform a final quality check. You can start managing your car details and track earnings from your specialized dashboard.
+        
+        .mt-12
+          = link_to vendors_dashboard_path, class: "group relative inline-flex items-center px-12 py-6 rounded-2xl text-white font-black text-xl transition-all duration-500 hover:pr-16 active:scale-95 shadow-2xl overflow-hidden", style: "background: linear-gradient(135deg, #3a6363, #2d4d4d)" do
+            %span.relative.z-10 Access Vendor Portal
+            %i.fas.fa-arrow-right.absolute.right-6.opacity-0.group-hover:opacity-100.group-hover:right-8.transition-all.duration-500
+            %div{class: "absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-500"}
+      
+      - else
+        %p.text-2xl.md:text-3xl.text-gray-700.font-medium.leading-tight
+          Your road adventure begins soon.
+        %p.text-lg.text-gray-500.max-w-2xl.mx-auto
+          Your booking has been secured. A confirmation email with all details has been sent to your inbox. You can manage your upcoming trips anytime.
+        
+        .mt-12
+          = link_to users_bookings_path, class: "group relative inline-flex items-center px-12 py-6 rounded-2xl text-white font-black text-xl transition-all duration-500 hover:pr-16 active:scale-95 shadow-2xl overflow-hidden", style: "background: linear-gradient(135deg, #3a6363, #2d4d4d)" do
+            %span.relative.z-10 Track My Journey
+            %i.fas.fa-calendar-alt.absolute.right-6.opacity-0.group-hover:opacity-100.group-hover:right-8.transition-all.duration-500
+            %div{class: "absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-500"}
+
+    / Support Footer
+    .pt-8.border-t.border-gray-100
+      %p.text-sm.text-gray-400
+        Need assistance? 
+        %a{href: "mailto:support@wheelsonrent.ae", class: "text-[#3a6363] font-bold hover:underline"} Contact Support
+
+:css
+  @keyframes reveal {
+    from { opacity: 0; transform: translateY(40px) scale(0.95); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+  }
+  @keyframes text-float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+  }
+  @keyframes success-pulse {
+    0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4); }
+    70% { box-shadow: 0 0 0 20px rgba(16, 185, 129, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+  }
+  .animate-reveal { animation: reveal 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+  .animate-text-float { animation: text-float 4s ease-in-out infinite; }
+  .animate-success-pulse { animation: success-pulse 2s infinite; }
+
+:javascript
+  (function() {
+    const canvas = document.getElementById('particleCanvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    let particles = [];
+    
+    function resize() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    
+    window.addEventListener('resize', resize);
+    resize();
+    
+    class Particle {
+      constructor() {
+        this.init();
+      }
+      init() {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
+        this.size = Math.random() * 3 + 1;
+        this.speedX = (Math.random() - 0.5) * 0.5;
+        this.speedY = (Math.random() - 0.5) * 0.5;
+        this.opacity = Math.random() * 0.3;
+      }
+      update() {
+        this.x += this.speedX;
+        this.y += this.speedY;
+        if (this.x < 0) this.x = canvas.width;
+        if (this.x > canvas.width) this.x = 0;
+        if (this.y < 0) this.y = canvas.height;
+        if (this.y > canvas.height) this.y = 0;
+      }
+      draw() {
+        ctx.fillStyle = `rgba(58, 99, 99, ${this.opacity})`;
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+    
+    for (let i = 0; i < 60; i++) particles.push(new Particle());
+    
+    function animate() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      particles.forEach(p => {
+        p.update();
+        p.draw();
+      });
+      requestAnimationFrame(animate);
+    }
+    animate();
+
+    // Parallax effect
+    document.addEventListener('mousemove', (e) => {
+      const x = (e.clientX - window.innerWidth / 2) / 100;
+      const y = (e.clientY - window.innerHeight / 2) / 100;
+      const container = document.querySelector('.animate-reveal');
+      if (container) {
+        container.style.transform = `translate(${x}px, ${y}px)`;
+      }
+    });
+  })();

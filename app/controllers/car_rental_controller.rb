@@ -164,6 +164,8 @@ class CarRentalController < ApplicationController
     ]
   end
 
-  def terms
+
+  def thank_you
+    @type = params[:type] # 'vendor' or 'customer'
   end
 end

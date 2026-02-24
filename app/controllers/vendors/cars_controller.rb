@@ -54,7 +54,7 @@ class Vendors::CarsController < ApplicationController
         @car.feature_ids = (@car.feature_ids + feature_ids).uniq
       end
 
-      redirect_to vendors_car_path(@car), notice: "Car was successfully created."
+      redirect_to thank_you_path(type: "vendor"), notice: "Car was successfully created."
     else
       load_premium_features
       flash.now[:alert] = "Please fix the following errors:\n#{@car.errors.full_messages.join(', ')}"

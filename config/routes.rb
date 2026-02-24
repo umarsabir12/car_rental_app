@@ -220,6 +220,8 @@ Rails.application.routes.draw do
 
   get "/terms_of_use", to: "car_rental#terms"
 
+  get "/thank-you", to: "car_rental#thank_you", as: :thank_you
+
   get ":slug", to: "blogs#show", as: :blog
 
   root "car_rental#index"
