@@ -24,7 +24,7 @@
                 - status_classes = {'Available' => 'bg-green-500 text-white','Rented' => 'bg-red-500 text-white'}[car.status] || 'bg-teal-600 text-white'
                 %span.inline-block.rounded-full.text-xs.font-semibold.px-2.py-1{ class: status_classes }= car.status
                 
-                - if car.with_driver?
+                - if car.with_driver? || car.category == 'Limousine'
                   %span.inline-block.rounded-full.text-xs.font-semibold.px-2.py-1.bg-blue-600.text-white.text-center{ title: "Available with Driver" }
                     %i.fas.fa-user-tie.text-xs
 
@@ -44,8 +44,17 @@
                 - if car.category.present?
                   %span.text-gray-500.ml-2 •
                   %span.text-gray-500= car.category.capitalize
-              %div.flex.items-center.justify-between.mb-4
-                %span.text-2xl.font-bold{style: 'color: #3a6363'}= car.daily_price ? number_to_currency(car.daily_price) : 'N/A'
-                %span.text-sm.text-gray-500 /day
+              %div.flex.flex-col.mb-4
+                - if car.with_driver? || car.category == 'Limousine'
+                  %div.flex.items-center.justify-between
+                    %span.text-lg.font-bold{style: 'color: #3a6363'}= car.five_hours_charge ? "AED #{car.five_hours_charge}" : 'N/A'
+                    %span.text-xs.text-gray-500 / 5 Hours
+                  %div.flex.items-center.justify-between
+                    %span.text-lg.font-bold{style: 'color: #3a6363'}= car.ten_hours_charge ? "AED #{car.ten_hours_charge}" : 'N/A'
+                    %span.text-xs.text-gray-500 / 10 Hours
+                - else
+                  %div.flex.items-center.justify-between
+                    %span.text-2xl.font-bold{style: 'color: #3a6363'}= car.daily_price ? number_to_currency(car.daily_price) : 'N/A'
+                    %span.text-sm.text-gray-500 /day
   - else
     %p.text-gray-500.mt-4 You have not added any cars yet. 

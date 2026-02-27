@@ -31,7 +31,7 @@ class Vendors::CarsController < ApplicationController
     end
 
     # Ensure mulkiya is provided
-    if params[:car][:mulkiya].blank? && params[:car][:with_driver] != "1"
+    if params[:car][:mulkiya].blank? && params[:car][:with_driver] != "1" && params[:car][:category] != "Limousine"
       @car.errors.add(:mulkiya, "Mulkiya document is required")
       load_premium_features
       render :new

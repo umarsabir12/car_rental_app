@@ -15,7 +15,7 @@ class Car < ApplicationRecord
   validates :insurance_policy, presence: true
 
   # With Driver validations
-  with_options if: :with_driver? do |car|
+  with_options if: -> { with_driver? || category == "Limousine" } do |car|
     car.validates :five_hours_charge, presence: true, numericality: { greater_than: 0 }
     car.validates :ten_hours_charge, presence: true, numericality: { greater_than: 0 }
     car.validates :luggage_capacity, presence: true, numericality: { greater_than_or_equal_to: 0 }
