@@ -46,7 +46,7 @@ class Car < ApplicationRecord
 
   def booking_status
     if bookings.any?
-      bookings.exists?([ "start_date <= ? AND end_date >= ?", Date.today, Date.today ]) ? "rented" : "available"
+      bookings.exists?([ "start_date <= ? AND end_date >= ?", Date.current, Date.current ]) ? "rented" : "available"
     else
       "available"
     end

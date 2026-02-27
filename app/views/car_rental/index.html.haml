@@ -74,7 +74,8 @@
               = category[:description]
           
           - unless category[:slug] == 'featured'
-            = link_to cars_path(category: category[:slug]), class: 'inline-flex items-center rounded-full font-semibold px-6 py-2.5 shadow-sm hover:shadow-md transition whitespace-nowrap text-sm md:text-base', style: 'background-color: #3a6363; color: white;' do
+            - link_path = category[:with_driver] ? cars_path(with_driver: true) : cars_path(category: category[:slug])
+            = link_to link_path, class: 'inline-flex items-center rounded-full font-semibold px-6 py-2.5 shadow-sm hover:shadow-md transition whitespace-nowrap text-sm md:text-base', style: 'background-color: #3a6363; color: white;' do
               View More
               %i.fas.fa-arrow-right.ml-2
 

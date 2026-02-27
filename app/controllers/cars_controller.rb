@@ -33,11 +33,12 @@ class CarsController < ApplicationController
     category = params[:category].presence
     brand = params[:brand].presence
     model = params[:model].presence
+    with_driver = session[:with_driver] == true
 
     # Get available options for each filter independently
-    filtered_categories = get_filtered_categories(brand, model)
-    filtered_brands = get_filtered_brands(category, model)
-    filtered_models = get_filtered_models(category, brand)
+    filtered_categories = get_filtered_categories(brand, model, with_driver)
+    filtered_brands = get_filtered_brands(category, model, with_driver)
+    filtered_models = get_filtered_models(category, brand, with_driver)
 
     render json: {
       filtered_brands: filtered_brands,
@@ -102,34 +103,45 @@ class CarsController < ApplicationController
 
   private
 
-  def get_filtered_categories(brand, model)
+  def get_filtered_categories(brand, model, with_driver = false)
     query = Car.with_approved_mulkiya
     query = query.where(brand: brand) if brand.present?
     query = query.where("LOWER(model) = ?", model.downcase) if model.present?
+    query = query.where(with_driver: true) if with_driver
     query.distinct.pluck(:category).compact.sort
   end
 
-  def get_filtered_brands(category, model)
+  def get_filtered_brands(category, model, with_driver = false)
     query = Car.with_approved_mulkiya
     query = query.where(category: category) if category.present?
     query = query.where("LOWER(model) = ?", model.downcase) if model.present?
+    query = query.where(with_driver: true) if with_driver
     query.distinct.pluck(:brand).compact.sort
   end
 
-  def get_filtered_models(category, brand)
+  def get_filtered_models(category, brand, with_driver = false)
     query = Car.with_approved_mulkiya
     query = query.where(category: category) if category.present?
     query = query.where(brand: brand) if brand.present?
+    query = query.where(with_driver: true) if with_driver
     query.distinct.pluck(:model).compact.sort
   end
 
   def normalize_filter_params
     if params[:category] == "with-driver"
-      @with_driver = true
-      @category = nil
-    else
-      @category = params[:category] == "all-categories" ? nil : find_actual_category(params[:category])
+      session[:with_driver] = true
+      redirect_to cars_path, status: :moved_permanently and return
     end
+
+    if params[:with_driver].present?
+      session[:with_driver] = params[:with_driver].to_s == "true"
+      # Clear the param from URL and redirect to a clean version
+      clean_params = request.query_parameters.except(:with_driver)
+      redirect_to url_for(clean_params.merge(only_path: true)) and return
+    end
+
+    @with_driver = session[:with_driver] == true
+    @category = params[:category] == "all-categories" ? nil : find_actual_category(params[:category])
     @brand = params[:brand] == "all-brands" ? nil : find_actual_brand(params[:brand])
     @model = params[:model] == "all-models" ? nil : find_actual_model(params[:model])
     @monthly_price = params[:monthly_price]
@@ -163,11 +175,8 @@ class CarsController < ApplicationController
   end
 
   def apply_filters(cars)
-    if @with_driver
-      cars = cars.where(with_driver: true)
-    elsif @category.present?
-      cars = cars.where(category: @category)
-    end
+    cars = cars.where(with_driver: true) if @with_driver
+    cars = cars.where(category: @category) if @category.present?
     cars = Car.filter_by_brand(cars, @brand) if @brand.present?
     cars = cars.where("LOWER(model) = ?", @model.downcase) if @model.present?
     cars = Car.filter_by_monthly_price(cars, params[:monthly_price] || @monthly_price) if (params[:monthly_price] || @monthly_price).present?
