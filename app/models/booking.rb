@@ -23,7 +23,7 @@ class Booking < ApplicationRecord
 
   # payment_processed is a boolean attribute (deprecated - use payment_status)
 
-  scope :active, -> { where("start_date > ?", Date.today) }
+  scope :active, -> { where("start_date > ?", Date.current) }
   scope :paid, -> { where(payment_status: "paid") }
   scope :unpaid, -> { where(payment_status: %w[pending unpaid]) }
 

@@ -14,7 +14,7 @@
         
         / Rent A Car Dropdown - Available for guests and signed-in users only (not vendors)
         - unless vendor_signed_in?
-          = link_to cars_path(category: 'with-driver'), class: 'text-gray-700 font-medium transition navbar-link hover:text-gray-900' do
+          = link_to cars_path(with_driver: true), class: 'text-gray-700 font-medium transition navbar-link hover:text-gray-900' do
             Car With Driver
           
           .relative
@@ -26,7 +26,7 @@
               .py-2
                 .border-b.border-gray-100
                 - AppConstants::CAR_CATEGORIES.each do |category, cat|
-                  = link_to cars_path(category: category), class: "flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 transition-all duration-150" do
+                  = link_to cars_path(category: category, with_driver: false), class: "flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 transition-all duration-150" do
                     %i{class: "fas fa-car mr-3 w-4", style: 'color: #3a6363'}
                     = category
                   
@@ -193,7 +193,7 @@
         = link_to 'Home', root_path, class: 'block px-3 py-2 text-white hover:bg-gray-50 font-medium transition rounded-md navbar-link'
         
         
-        = link_to cars_path(category: 'with-driver'), class: 'block px-3 py-2 text-gray-700 hover:bg-gray-50 font-medium transition rounded-md navbar-link' do
+        = link_to cars_path(with_driver: true), class: 'block px-3 py-2 text-gray-700 hover:bg-gray-50 font-medium transition rounded-md navbar-link' do
           Car With Driver
 
         / Mobile Rent A Car Dropdown
@@ -205,7 +205,7 @@
           #mobile-rent-car-menu.hidden.mt-2.pl-4.space-y-1
             .border-b.border-gray-100.my-1
             - AppConstants::CAR_CATEGORIES.each do |category, cat|
-              = link_to cars_path(category: category), class: 'flex items-center px-3 py-2 text-sm text-gray-600 hover:bg-gray-50 transition rounded-md' do
+              = link_to cars_path(category: category, with_driver: false), class: 'flex items-center px-3 py-2 text-sm text-gray-600 hover:bg-gray-50 transition rounded-md' do
                 %i{class: 'fas fa-car mr-2 w-4', style: 'color: #3a6363'}
                 = category
 
