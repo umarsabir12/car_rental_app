@@ -184,7 +184,7 @@
             = link_to admin_whatsapp_link("Hi, I'm interested in renting #{@car.brand} #{@car.model} #{@car.year}"), target: '_blank', class: 'flex-1 bg-green-500 hover:bg-green-600 text-white py-3 px-4 rounded-lg text-sm font-semibold transition-all duration-200 shadow-md hover:shadow-lg text-center flex items-center justify-center gap-2' do
               %i.fab.fa-whatsapp.text-lg
               %span WhatsApp
-            = link_to "tel:#{AppConstants::ADMIN_WHATSAPP_NUMBER}", class: 'flex-1 bg-blue-500 hover:bg-blue-600 text-white py-3 px-4 rounded-lg text-sm font-semibold transition-all duration-200 shadow-md hover:shadow-lg text-center flex items-center justify-center gap-2' do
+            = link_to admin_whatsapp_link("Hi, I want to call you regarding renting #{@car.brand} #{@car.model} #{@car.year}"), target: '_blank', class: 'flex-1 bg-blue-500 hover:bg-blue-600 text-white py-3 px-4 rounded-lg text-sm font-semibold transition-all duration-200 shadow-md hover:shadow-lg text-center flex items-center justify-center gap-2' do
               %i.fas.fa-phone.text-lg
               %span Call
 
