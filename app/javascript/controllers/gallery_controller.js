@@ -1,7 +1,10 @@
+console.log("Gallery controller file evaluation BASE START");
 import { Controller } from "@hotwired/stimulus"
 
+console.log("Gallery controller file evaluation start");
+
 export default class extends Controller {
-    static targets = ["container", "lightbox", "lightboxImage", "counter", "thumbnail"]
+    static targets = ["container", "lightbox", "lightboxImage", "counter", "thumbnail", "lightboxCounter"]
 
     connect() {
         this.initializeSwiper()
@@ -27,8 +30,9 @@ export default class extends Controller {
             effect: 'fade',
             on: {
                 slideChange: () => {
-                    const currentSlide = document.querySelector('.current-slide')
-                    if (currentSlide) currentSlide.textContent = this.swiper.realIndex + 1
+                    if (this.hasCounterTarget) {
+                        this.counterTarget.textContent = this.swiper.realIndex + 1
+                    }
                     this.updateThumbnails(this.swiper.realIndex)
                 }
             }
@@ -37,9 +41,9 @@ export default class extends Controller {
 
     openLightbox(event) {
         const url = event.currentTarget.dataset.url
-        const index = parseInt(event.currentTarget.dataset.swiperSlideIndex || 0)
+        const index = parseInt(event.currentTarget.dataset.swiperSlideIndex || event.currentTarget.dataset.index || 0)
 
-        if (this.hasLightboxImageTarget) {
+        if (this.hasLightboxImageTarget && this.hasLightboxTarget) {
             this.lightboxImageTarget.src = url
             this.lightboxTarget.classList.remove('hidden')
             document.body.style.overflow = 'hidden'
@@ -48,14 +52,16 @@ export default class extends Controller {
     }
 
     closeLightbox() {
-        this.lightboxTarget.classList.add('hidden')
-        document.body.style.overflow = ''
+        if (this.hasLightboxTarget) {
+            this.lightboxTarget.classList.add('hidden')
+            document.body.style.overflow = ''
+        }
     }
 
     updateLightboxCounter(current) {
-        if (this.hasCounterTarget) {
-            const total = this.thumbnailTargets.length
-            this.counterTarget.textContent = `${current} / ${total}`
+        const total = this.thumbnailTargets.length
+        if (this.hasLightboxCounterTarget) {
+            this.lightboxCounterTarget.textContent = `${current} / ${total}`
         }
     }
 
