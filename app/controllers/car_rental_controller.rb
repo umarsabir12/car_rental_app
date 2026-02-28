@@ -14,8 +14,8 @@ class CarRentalController < ApplicationController
     ]
 
     @car_categories = AppConstants::CAR_CATEGORIES
-    @car_brands = Car.distinct.pluck(:brand).compact.map { |b| [ b.titleize, b ] }
-    @car_models = Car.distinct.pluck(:model).compact.map { |m| [ m.titleize, m ] }
+    @car_brands = normalize_filter_values(Car.distinct.pluck(:brand).compact).map { |b| [ b, b ] }
+    @car_models = normalize_filter_values(Car.distinct.pluck(:model).compact).map { |m| [ m, m ] }
 
     # Featured cars data (manually selected by admin)
     @featured_cars = Car.featured.limit(10)

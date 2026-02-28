@@ -27,4 +27,15 @@ class ApplicationController < ActionController::Base
       user_home_path
     end
   end
+
+  private
+
+  def normalize_filter_values(values)
+    values.compact
+          .map(&:strip)
+          .reject(&:blank?)
+          .group_by(&:downcase)
+          .map { |_, group| group.max_by { |v| v.scan(/[A-Z]/).size } }
+          .sort
+  end
 end
