@@ -4,9 +4,9 @@ class CarsController < ApplicationController
 
   def index
     # Prepare filter options for initial page load
-    @car_categories = Car.distinct.pluck(:category).compact.map { |c| c.strip.titleize }.uniq.sort
-    @car_brands = Car.distinct.pluck(:brand).compact.map { |b| b.strip.titleize }.uniq.sort
-    @car_models = Car.distinct.pluck(:model).compact.map { |m| m.strip.titleize }.uniq.sort
+    @car_categories = normalize_filter_values(Car.distinct.pluck(:category))
+    @car_brands = normalize_filter_values(Car.distinct.pluck(:brand))
+    @car_models = normalize_filter_values(Car.distinct.pluck(:model))
 
     # Only show cars with approved mulkiya documents
     @cars = Car.with_approved_mulkiya.includes(:vendor)
@@ -108,7 +108,7 @@ class CarsController < ApplicationController
     query = query.where(brand: brand) if brand.present?
     query = query.where("LOWER(model) = ?", model.downcase) if model.present?
     query = query.where(with_driver: true) if with_driver
-    query.distinct.pluck(:category).compact.map { |c| c.strip.titleize }.uniq.sort
+    normalize_filter_values(query.distinct.pluck(:category))
   end
 
   def get_filtered_brands(category, model, with_driver = false)
@@ -116,7 +116,7 @@ class CarsController < ApplicationController
     query = query.where(category: category) if category.present?
     query = query.where("LOWER(model) = ?", model.downcase) if model.present?
     query = query.where(with_driver: true) if with_driver
-    query.distinct.pluck(:brand).compact.map { |b| b.strip.titleize }.uniq.sort
+    normalize_filter_values(query.distinct.pluck(:brand))
   end
 
   def get_filtered_models(category, brand, with_driver = false)
@@ -124,7 +124,7 @@ class CarsController < ApplicationController
     query = query.where(category: category) if category.present?
     query = query.where(brand: brand) if brand.present?
     query = query.where(with_driver: true) if with_driver
-    query.distinct.pluck(:model).compact.map { |m| m.strip.titleize }.uniq.sort
+    normalize_filter_values(query.distinct.pluck(:model))
   end
 
   def normalize_filter_params
