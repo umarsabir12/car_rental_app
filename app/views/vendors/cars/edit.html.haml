@@ -14,7 +14,7 @@
               %span Is this a "Car with Driver" service?
               %span.text-xs.font-normal.text-gray-500.italic (Selecting this will show only driver-specific fields)
 
-      .field.space-y-2.mb-6.standard-only-field
+      .field.space-y-2.mb-6
         = f.label :category, 'Category', class: 'block text-sm font-medium text-gray-700'
         = f.select :category, options_for_select(AppConstants::CAR_CATEGORIES, @car.category), { prompt: 'Select category' }, { class: 'w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 transition', style: '--tw-ring-color:#3A6363', id: 'car_category_select_edit' }
 
@@ -533,12 +533,7 @@
 
       standardOnlyFields.forEach(field => {
         if (isWithDriver) {
-          // Exception: Don't hide the category field container if it's a Limousine
-          if (isLimousine && field.contains(categorySelect)) {
-            field.classList.remove('hidden');
-          } else {
-            field.classList.add('hidden');
-          }
+          field.classList.add('hidden');
 
           const inputs = field.querySelectorAll('input[required], select[required], textarea[required]');
           inputs.forEach(input => {
