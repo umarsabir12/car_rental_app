@@ -128,20 +128,9 @@ class CarsController < ApplicationController
   end
 
   def normalize_filter_params
-    if params[:category] == "with-driver"
-      session[:with_driver] = true
-      redirect_to cars_path, status: :moved_permanently and return
-    end
+    @with_driver = params[:with_driver].to_s == "true" || params[:category] == "with-driver"
 
-    if params[:with_driver].present?
-      session[:with_driver] = params[:with_driver].to_s == "true"
-      # Clear the param from URL and redirect to a clean version
-      clean_params = request.query_parameters.except(:with_driver)
-      redirect_to url_for(clean_params.merge(only_path: true)) and return
-    end
-
-    @with_driver = session[:with_driver] == true
-    @category = params[:category] == "all-categories" ? nil : find_actual_category(params[:category])
+    @category = params[:category] == "all-categories" || params[:category] == "with-driver" ? nil : find_actual_category(params[:category])
     @brand = params[:brand] == "all-brands" ? nil : find_actual_brand(params[:brand])
     @model = params[:model] == "all-models" ? nil : find_actual_model(params[:model])
     @monthly_price = params[:monthly_price]
@@ -209,8 +198,9 @@ class CarsController < ApplicationController
     brand = request.query_parameters[:brand]
     model = request.query_parameters[:model]
     monthly_price = request.query_parameters[:monthly_price]
+    with_driver = request.query_parameters[:with_driver]
 
-    if category.present? || brand.present? || model.present? || monthly_price.present?
+    if (category.present? && category != "with-driver") || brand.present? || model.present? || monthly_price.present?
       # Calculate remaining parameters to keep them in the URL, but exclude blanks and 'commit'
       remaining_params = request.query_parameters
         .except(:category, :brand, :model, :monthly_price, :commit)
@@ -245,7 +235,7 @@ class CarsController < ApplicationController
     elsif brand.present?
       parts << (category.present? ? category.parameterize : "all-categories")
       parts << brand.parameterize
-    elsif category.present?
+    elsif category.present? && category != "with-driver"
       parts << category.parameterize
     end
 
