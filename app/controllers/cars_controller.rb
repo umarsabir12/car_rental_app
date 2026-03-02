@@ -129,7 +129,7 @@ class CarsController < ApplicationController
 
   def normalize_filter_params
     @with_driver = params[:with_driver].to_s == "true" || params[:category] == "with-driver"
-    
+
     @category = params[:category] == "all-categories" || params[:category] == "with-driver" ? nil : find_actual_category(params[:category])
     @brand = params[:brand] == "all-brands" ? nil : find_actual_brand(params[:brand])
     @model = params[:model] == "all-models" ? nil : find_actual_model(params[:model])

@@ -59,7 +59,7 @@ RSpec.describe CarsController, type: :controller do
       it 'does not persist with_driver when param is removed' do
         get :index, params: { with_driver: 'true' }
         expect(assigns(:cars)).to include(driver_car)
-        
+
         get :index
         expect(assigns(:cars)).to include(normal_car)
       end
