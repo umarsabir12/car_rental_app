@@ -44,17 +44,24 @@ RSpec.describe CarsController, type: :controller do
       let!(:driver_car) { create(:car, :with_approved_document, :with_driver) }
       let!(:normal_car) { create(:car, :with_approved_document, with_driver: false) }
 
-      it 'sets session and redirects when with_driver param is passed' do
+      it 'returns only cars with driver when with_driver param is true' do
         get :index, params: { with_driver: 'true' }
-        expect(session[:with_driver]).to be true
-        expect(response).to redirect_to(cars_path)
-      end
-
-      it 'returns only cars with driver when session is set' do
-        session[:with_driver] = true
-        get :index
         expect(assigns(:cars)).to include(driver_car)
         expect(assigns(:cars)).not_to include(normal_car)
+      end
+
+      it 'returns only cars with driver when category is with-driver' do
+        get :index, params: { category: 'with-driver' }
+        expect(assigns(:cars)).to include(driver_car)
+        expect(assigns(:cars)).not_to include(normal_car)
+      end
+
+      it 'does not persist with_driver when param is removed' do
+        get :index, params: { with_driver: 'true' }
+        expect(assigns(:cars)).to include(driver_car)
+        
+        get :index
+        expect(assigns(:cars)).to include(normal_car)
       end
     end
   end

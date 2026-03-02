@@ -186,12 +186,14 @@
           const category = categorySelect.value || '';
           const brand = brandSelect.value || '';
           const model = modelSelect.value || '';
+          const monthlyPrice = document.querySelector('[data-filter="monthly_price"]').value || '';
 
           // Build query params
           const params = new URLSearchParams();
-          params.append('category', category || '');
-          params.append('model', model || '');
-          params.append('monthly_price', document.querySelector('[data-filter="monthly_price"]').value || '');
+          params.append('category', category);
+          params.append('brand', brand);
+          params.append('model', model);
+          params.append('monthly_price', monthlyPrice);
 
           // Fetch filtered options
           fetch(`${filterEndpoint}?${params.toString()}`)
