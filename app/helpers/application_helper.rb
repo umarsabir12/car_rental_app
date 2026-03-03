@@ -88,6 +88,31 @@ module ApplicationHelper
     message ? "#{base_url}?text=#{ERB::Util.url_encode(message)}" : base_url
   end
 
+  # Default calling app link generator
+  def admin_call_link
+    return nil if AppConstants::ADMIN_WHATSAPP_NUMBER.blank?
+    "tel:#{AppConstants::ADMIN_WHATSAPP_NUMBER.delete(' ')}"
+  end
+
+  def with_driver_whatsapp_booking_link(car)
+    return nil unless car && whatsapp_e164
+    
+    url = car_url(car)
+    prices = if car.has_discount?
+      "• 5 Hours: AED #{car.discounted_five_hours_charge.round(2)} (was AED #{car.five_hours_charge})\n• 10 Hours: AED #{car.discounted_ten_hours_charge.round(2)} (was AED #{car.ten_hours_charge})"
+    else
+      "• 5 Hours: AED #{car.five_hours_charge}\n• 10 Hours: AED #{car.ten_hours_charge}"
+    end
+
+    message = "Hi, I'm interested in booking a car with driver:\n\n" \
+              "*Car:* #{car.full_name}\n" \
+              "*Prices:*\n#{prices}\n\n" \
+              "*Vechicle Link:* #{url}\n\n" \
+              "Please let me know the availability."
+              
+    admin_whatsapp_link(message)
+  end
+
   private
 
   def safe_car_placeholder
