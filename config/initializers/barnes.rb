@@ -1,1 +1,1 @@
-Barnes.start if ENV['DYNO']
+Barnes.start if ENV["DYNO"]
