@@ -96,7 +96,7 @@ module ApplicationHelper
 
   def with_driver_whatsapp_booking_link(car)
     return nil unless car && whatsapp_e164
-    
+
     url = car_url(car)
     prices = if car.has_discount?
       "• 5 Hours: AED #{car.discounted_five_hours_charge.round(2)} (was AED #{car.five_hours_charge})\n• 10 Hours: AED #{car.discounted_ten_hours_charge.round(2)} (was AED #{car.ten_hours_charge})"
@@ -109,7 +109,7 @@ module ApplicationHelper
               "*Prices:*\n#{prices}\n\n" \
               "*Vechicle Link:* #{url}\n\n" \
               "Please let me know the availability."
-              
+
     admin_whatsapp_link(message)
   end
 
