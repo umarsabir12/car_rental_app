@@ -213,8 +213,11 @@ Rails.application.routes.draw do
     end
   end
 
-  get "list-your-car-rental-marketplace", to: "vendor_requests#new", as: :new_vendor_request
-  post "list-your-car-rental-marketplace", to: "vendor_requests#create", as: :vendor_requests
+  resources :vendor_requests, path: "list-your-car-rental-marketplace", only: [ :new, :create ] do
+    collection do
+      get :thank_you
+    end
+  end
   # resource :user, only: [:show, :edit, :update] do
   #   patch :update_nationality
   # end
