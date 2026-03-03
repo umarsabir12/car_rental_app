@@ -1,9 +1,27 @@
-- content_for :title, "Rent #{@car.full_name} in Dubai | Wheels on Rent"
-- content_for :description, "Rent #{@car.full_name} in Dubai starting from AED #{@car.daily_price}/day.}"
+- title = "Rent #{@car.full_name} in Dubai | Wheels on Rent"
+- description = @car.with_driver? ? "Rent #{@car.full_name} with driver in Dubai starting from AED #{@car.five_hours_charge}/5 hours." :   "Rent #{@car.full_name} in Dubai starting from AED #{@car.daily_price}/day.}"
+- content_for :title, title
+- content_for :description, description
 - content_for :canonical, car_url(@car)
 - min_days = ['Luxury', 'Sports', 'Convertible'].include?(@car.category) ? 1 : 7
 
 - content_for :head do
+  %meta{property: "og:title", content: title}
+  %meta{property: "og:description", content: description}
+  %meta{property: "og:type", content: "website"}
+  %meta{property: "og:url", content: car_url(@car)}
+  - if @car.images.attached? && @car.images.any?
+    - social_image = @car.images.first.variant(resize_to_fill: [1200, 630], format: :jpg, saver: { quality: 90 }) rescue nil
+    - if social_image
+      %meta{property: "og:image", content: rails_representation_url(social_image, host: request.base_url)}
+      %meta{property: "og:image:width", content: "1200"}
+      %meta{property: "og:image:height", content: "630"}
+      %meta{property: "og:image:type", content: "image/jpeg"}
+      %meta{itemprop: "image", content: rails_representation_url(social_image, host: request.base_url)}
+      %meta{name: "twitter:image", content: rails_representation_url(social_image, host: request.base_url)}
+  %meta{name: "twitter:card", content: "summary_large_image"}
+  %meta{name: "twitter:title", content: title}
+  %meta{name: "twitter:description", content: description}
   %meta{ name: "booked-dates", content: @booked_dates.to_json, "data-turbo-track" => "reload" }
   :css
     /* Car show page specific navbar styling */
