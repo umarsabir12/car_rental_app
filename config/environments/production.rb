@@ -93,7 +93,7 @@ Rails.application.configure do
 
   # Use a different cache store in production.
   # Use memory store instead of Redis to avoid connection pool issues
-  config.cache_store = :memory_store, { size: 64.megabytes }
+  config.cache_store = :memory_store, { size: 32.megabytes }
 
   # Use a real queuing backend for Active Job (and separate queues per environment).
   # config.active_job.queue_adapter = :resque
