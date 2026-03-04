@@ -1,3 +1,5 @@
+require "puma_worker_killer" if ENV["RAILS_ENV"] == "production"
+
 # Puma configuration for Heroku Standard-1X dyno (512MB)
 # 1 worker × 2 threads = safe memory footprint
 
@@ -27,19 +29,11 @@ if ENV["RAILS_ENV"] == "production"
   # Preload app before forking workers — reduces per-worker memory via copy-on-write
   preload_app!
 
-  # Disconnect DB connections before forking to avoid sharing connections across workers
   before_fork do
     ActiveRecord::Base.connection_pool.disconnect! if defined?(ActiveRecord)
-  end
 
-  # Re-establish DB connections after each worker boots
-  on_worker_boot do
-    ActiveRecord::Base.establish_connection if defined?(ActiveRecord)
-  end
-
-  # PumaWorkerKiller - Restart workers when they exceed a memory limit
-  # This prevents indefinite memory growth that leads to R14 errors
-  before_fork do
+    # PumaWorkerKiller - Restart workers when they exceed a memory limit
+    # This prevents indefinite memory growth that leads to R14 errors
     PumaWorkerKiller.config do |config|
       config.ram           = 400 # mb (leaving safe overhead for 512MB dyno)
       config.frequency     = 30  # seconds
@@ -48,5 +42,10 @@ if ENV["RAILS_ENV"] == "production"
       config.reaper_status_logs = true # logging helps diagnose if restarts are happening
     end
     PumaWorkerKiller.start
+  end
+
+  # Re-establish DB connections after each worker boots
+  on_worker_boot do
+    ActiveRecord::Base.establish_connection if defined?(ActiveRecord)
   end
 end
