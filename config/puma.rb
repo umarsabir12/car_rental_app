@@ -36,4 +36,17 @@ if ENV["RAILS_ENV"] == "production"
   on_worker_boot do
     ActiveRecord::Base.establish_connection if defined?(ActiveRecord)
   end
+
+  # PumaWorkerKiller - Restart workers when they exceed a memory limit
+  # This prevents indefinite memory growth that leads to R14 errors
+  before_fork do
+    PumaWorkerKiller.config do |config|
+      config.ram           = 400 # mb (leaving safe overhead for 512MB dyno)
+      config.frequency     = 30  # seconds
+      config.percent_usage = 0.95
+      config.rolling_restart_frequency = 12 * 3600 # 12 hours
+      config.reaper_status_logs = true # logging helps diagnose if restarts are happening
+    end
+    PumaWorkerKiller.start
+  end
 end
