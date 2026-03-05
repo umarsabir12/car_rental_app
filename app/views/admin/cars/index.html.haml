@@ -36,19 +36,34 @@
         .flex.justify-between.items-start.mb-3
           %div
             %h3.text-lg.font-bold.text-gray-900
-              = car.brand
-              = car.model
+              - if car.category == 'Limousine'
+                = car.brand
+              - else
+                = "#{car.brand} #{car.model}"
             %p.text-sm.text-gray-600
-              = car.year
-              |
-              = car.color
+              - if car.category == 'Limousine'
+                Limousine
+              - else
+                = "#{car.year} | #{car.color}"
           = link_to admin_car_path(car), class: 'text-white px-3 py-1.5 rounded-md text-sm', style: 'background-color: #3A6363;' do
             %i.fas.fa-eye
 
         .space-y-2
           .flex.justify-between.items-center.py-2.border-b.border-gray-100
-            %span.text-xs.font-medium.text-gray-500 Daily Price
-            %span.text-sm.font-semibold{style: "color: #3A6363;"}= car.daily_price ? number_to_currency(car.daily_price) : 'N/A'
+            %span.text-xs.font-medium.text-gray-500
+              - if car.category == 'Limousine'
+                Hourly Price
+              - else
+                Daily Price
+            %span.text-sm.font-semibold{style: "color: #3A6363;"}
+              - if car.category == 'Limousine'
+                - if car.has_discount?
+                  %span.text-xs.text-gray-400.line-through= "AED #{car.hourly_price}"
+                  %span.text-sm.font-bold.text-red-600= "AED #{car.discounted_hourly_price.round(2)}"
+                - else
+                  = "AED #{car.hourly_price}"
+              - else
+                = car.daily_price ? number_to_currency(car.daily_price) : 'N/A'
 
           .flex.justify-between.items-center.py-2.border-b.border-gray-100
             %span.text-xs.font-medium.text-gray-500 Status
@@ -77,22 +92,33 @@
       %table.min-w-full.divide-y.divide-gray-200
         %thead{style: "background-color: #e8f0f0;"}
           %tr
-            %th.px-6.py-3.text-left.text-xs.font-medium.uppercase.tracking-wider{style: "color: #3A6363;"} Brand
-            %th.px-6.py-3.text-left.text-xs.font-medium.uppercase.tracking-wider{style: "color: #3A6363;"} Model
-            %th.px-6.py-3.text-left.text-xs.font-medium.uppercase.tracking-wider{style: "color: #3A6363;"} Year
-            %th.px-6.py-3.text-left.text-xs.font-medium.uppercase.tracking-wider{style: "color: #3A6363;"} Color
-            %th.px-6.py-3.text-left.text-xs.font-medium.uppercase.tracking-wider{style: "color: #3A6363;"} Daily Price
+            %th.px-6.py-3.text-left.text-xs.font-medium.uppercase.tracking-wider{style: "color: #3A6363;"} Brand / Details
+            %th.px-6.py-3.text-left.text-xs.font-medium.uppercase.tracking-wider{style: "color: #3A6363;"} Price
             %th.px-6.py-3.text-left.text-xs.font-medium.uppercase.tracking-wider{style: "color: #3A6363;"} Status
             %th.px-6.py-3.text-left.text-xs.font-medium.uppercase.tracking-wider{style: "color: #3A6363;"} Vendor
             %th.px-6.py-3.text-left.text-xs.font-medium.uppercase.tracking-wider{style: "color: #3A6363;"} Actions
         %tbody.bg-white.divide-y.divide-gray-200
           - @cars.each do |car|
             %tr.transition-colors{style: "transition: background-color 0.2s;", onmouseover: "this.style.backgroundColor='#e8f0f0'", onmouseout: "this.style.backgroundColor='white'"}
-              %td.px-6.py-4.whitespace-nowrap.text-sm.font-medium.text-gray-900= car.brand
-              %td.px-6.py-4.whitespace-nowrap.text-sm.text-gray-900= car.model
-              %td.px-6.py-4.whitespace-nowrap.text-sm.text-gray-900= car.year
-              %td.px-6.py-4.whitespace-nowrap.text-sm.text-gray-900= car.color
-              %td.px-6.py-4.whitespace-nowrap.text-sm.font-medium.text-gray-900= car.daily_price ? number_to_currency(car.daily_price) : 'N/A'
+              %td.px-6.py-4.whitespace-nowrap.text-sm.font-medium.text-gray-900
+                - if car.category == 'Limousine'
+                  = car.brand
+                - else
+                  = "#{car.brand} #{car.model}"
+                %div.text-xs.text-gray-500
+                  - if car.category == 'Limousine'
+                    Limousine
+                  - else
+                    = "#{car.year} | #{car.color}"
+              %td.px-6.py-4.whitespace-nowrap.text-sm.font-medium.text-gray-900
+                - if car.category == 'Limousine'
+                  - if car.has_discount?
+                    %span.text-xs.text-gray-400.line-through= "AED #{car.hourly_price}"
+                    %span.text-sm.font-bold.text-red-600= "AED #{car.discounted_hourly_price.round(2)}/hr"
+                  - else
+                    = "AED #{car.hourly_price}/hr"
+                - else
+                  = car.daily_price ? number_to_currency(car.daily_price) : 'N/A'
               %td.px-6.py-4.whitespace-nowrap
                 - document_status = car.car_document&.document_status
                 - if document_status == 'approved'

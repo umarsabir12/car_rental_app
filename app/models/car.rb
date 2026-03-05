@@ -16,9 +16,10 @@ class Car < ApplicationRecord
 
   # With Driver validations
   with_options if: -> { with_driver? || category == "Limousine" } do |car|
-    car.validates :five_hours_charge, presence: true, numericality: { greater_than: 0 }
-    car.validates :ten_hours_charge, presence: true, numericality: { greater_than: 0 }
-    car.validates :luggage_capacity, presence: true, numericality: { greater_than_or_equal_to: 0 }
+    car.validates :five_hours_charge, presence: true, numericality: { greater_than: 0 }, unless: -> { category == "Limousine" }
+    car.validates :ten_hours_charge, presence: true, numericality: { greater_than: 0 }, unless: -> { category == "Limousine" }
+    car.validates :hourly_price, presence: true, numericality: { greater_than: 0 }, if: -> { category == "Limousine" }
+    car.validates :luggage_capacity, presence: true, numericality: { greater_than_or_equal_to: 0 }, unless: -> { category == "Limousine" }
   end
 
   FEATURE_COLUMNS = %w[air_conditioning gps sunroof bluetooth].freeze
@@ -28,6 +29,7 @@ class Car < ApplicationRecord
   end
 
   after_create :log_car_added, :create_common_features
+  before_save :ensure_limousine_with_driver
   after_update :log_car_updated, if: :saved_change_to_brand? || :saved_change_to_model? || :saved_change_to_daily_price?
   before_destroy :log_car_deleted, :purge_attachments
 
@@ -94,6 +96,11 @@ class Car < ApplicationRecord
   # Get discounted 10h charge
   def discounted_ten_hours_charge
     discounted_price(ten_hours_charge)
+  end
+
+  # Get discounted hourly price
+  def discounted_hourly_price
+    discounted_price(hourly_price)
   end
 
   # Returns true if the car is available for the entire period starting at start_date
@@ -304,5 +311,9 @@ class Car < ApplicationRecord
 
   def purge_attachments
     images.purge if images.attached?
+  end
+
+  def ensure_limousine_with_driver
+    self.with_driver = true if category == "Limousine"
   end
 end

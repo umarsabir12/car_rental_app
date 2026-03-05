@@ -25,17 +25,17 @@
           = f.label :brand, 'Brand *', class: 'block text-sm font-medium text-gray-700'
           = f.text_field :brand, required: true, class: 'w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 transition', style: '--tw-ring-color:#3A6363', placeholder: 'e.g., Toyota'
 
-        .field.space-y-2
+        .field.space-y-2.hide-for-limousine
           = f.label :model, 'Model *', class: 'block text-sm font-medium text-gray-700'
-          = f.text_field :model, required: true, class: 'w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 transition', style: '--tw-ring-color:#3A6363', placeholder: 'e.g., Camry'
+          = f.text_field :model, required: true, class: 'w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 transition', style: '--tw-ring-color:#3A6363', placeholder: 'e.g., Camry', id: 'car_model_field'
 
-        .field.space-y-2
+        .field.space-y-2.hide-for-limousine
           = f.label :color, 'Color *', class: 'block text-sm font-medium text-gray-700'
-          = f.text_field :color, required: true, class: 'w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 transition', style: '--tw-ring-color:#3A6363', placeholder: 'e.g., White'
+          = f.text_field :color, required: true, class: 'w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 transition', style: '--tw-ring-color:#3A6363', placeholder: 'e.g., White', id: 'car_color_field'
 
-        .field.space-y-2.standard-only-field
+        .field.space-y-2.standard-only-field.hide-for-limousine
           = f.label :year, 'Year *', class: 'block text-sm font-medium text-gray-700'
-          = f.number_field :year, required: true, min: 1900, max: Date.current.year + 1, class: 'w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 transition', style: '--tw-ring-color:#3A6363', placeholder: 'e.g., 2023'
+          = f.number_field :year, required: true, min: 1900, max: Date.current.year + 1, class: 'w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 transition', style: '--tw-ring-color:#3A6363', placeholder: 'e.g., 2023', id: 'car_year_field'
 
         / With Driver Specific Charges
         .field.space-y-2.with-driver-only-field.hidden
@@ -46,7 +46,7 @@
           = f.label :ten_hours_charge, '10 Hours Charge (AED) *', class: 'block text-sm font-medium text-gray-700'
           = f.number_field :ten_hours_charge, step: 1, min: 0, class: 'w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 transition', style: '--tw-ring-color:#3A6363', placeholder: 'e.g., 450'
 
-        .field.space-y-2.standard-only-field
+        .field.space-y-2.standard-only-field.hide-for-limousine
           = f.label :daily_price, 'Daily Price (AED) *', class: 'block text-sm font-medium text-gray-700'
           = f.number_field :daily_price, required: true, step: 0.01, min: 0, class: 'w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 transition', style: '--tw-ring-color:#3A6363', placeholder: 'e.g., 50.00'
 
@@ -58,14 +58,19 @@
           = f.label :monthly_price, 'Monthly Price (AED)', class: 'block text-sm font-medium text-gray-700'
           = f.number_field :monthly_price, step: 0.01, min: 0, class: 'w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 transition', style: '--tw-ring-color:#3A6363', placeholder: 'e.g., 1200.00'
 
-        .field.space-y-2.standard-only-field
+        .field.space-y-2.standard-only-field.hide-for-limousine
           = f.label :status, 'Status *', class: 'block text-sm font-medium text-gray-700'
-          = f.select :status, options_for_select([['Available', 'available'], ['Rented', 'rented'], ['Maintenance', 'maintenance']], @car.status), { prompt: 'Select status' }, { required: true, class: 'w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 transition', style: '--tw-ring-color:#3A6363' }
+          = f.select :status, options_for_select([['Available', 'available'], ['Rented', 'rented'], ['Maintenance', 'maintenance']], @car.status), { prompt: 'Select status' }, { required: true, class: 'w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 transition', style: '--tw-ring-color:#3A6363', id: 'car_status_field' }
+
+        / Limousine Hourly Price
+        .field.space-y-2.limousine-only-field.hidden
+          = f.label :hourly_price, 'Per Hour Price for Dubai (AED) *', class: 'block text-sm font-medium text-gray-700'
+          = f.number_field :hourly_price, step: 1, min: 0, class: 'w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 transition', style: '--tw-ring-color:#3A6363', placeholder: 'e.g., 150', id: 'car_hourly_price_field'
 
 
 
       / Specifications Section
-      %h2.text-lg.font-bold.mb-4.mt-8{style: 'color:#2d4f4f'} Specifications
+      %h2.text-lg.font-bold.mb-4.mt-8.hide-for-limousine{style: 'color:#2d4f4f'} Specifications
       .grid.grid-cols-1.md:grid-cols-2.gap-6
         .field.space-y-2.standard-only-field
           = f.label :transmission, 'Transmission', class: 'block text-sm font-medium text-gray-700'
@@ -75,7 +80,7 @@
           = f.label :fuel_type, 'Fuel Type', class: 'block text-sm font-medium text-gray-700'
           = f.select :fuel_type, options_for_select([['Petrol', 'Petrol'], ['Diesel', 'Diesel'], ['Electric', 'Electric'], ['Hybrid', 'Hybrid'], ['Plug-in Hybrid', 'Plug-in Hybrid']], @car.fuel_type), { prompt: 'Select fuel type' }, { class: 'w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition' }
 
-        .field.space-y-2
+        .field.space-y-2.hide-for-limousine
           = f.label :seats, 'Number of Seats', class: 'block text-sm font-medium text-gray-700'
           = f.number_field :seats, min: 1, max: 15, class: 'w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 transition', style: '--tw-ring-color:#3A6363', placeholder: 'e.g., 5'
 
@@ -136,7 +141,7 @@
             %p No premium features available. Contact admin to add features.
 
       / Insurance Section
-      #insurance-section-edit.standard-only-field
+      #insurance-section-edit.standard-only-field.hide-for-limousine
         %h2.text-lg.font-bold.mb-4.mt-8{style: 'color:#2d4f4f'} Insurance
         .field.space-y-2
           %div.flex.items-center.justify-between.mb-2
@@ -186,7 +191,7 @@
         %p Upload additional images to add to your car. You can upload up to 5 images total.
 
       / Mulkiya Section
-      %h2.text-lg.font-bold.mb-4.mt-8.standard-only-field{style: 'color:#2d4f4f'} Mulkiya (PDF or Image)
+      %h2.text-lg.font-bold.mb-4.mt-8.standard-only-field.hide-for-limousine{style: 'color:#2d4f4f'} Mulkiya (PDF or Image)
       - if @car.car_document.present? && @car.car_document.mulkiya.attached?
         .mb-3
           .flex.items-center.gap-3
@@ -406,6 +411,20 @@
 
   // Initialize image upload functionality
   function initializeImageUploads() {
+    const form = document.getElementById('car-edit-form');
+    if (form) {
+      form.addEventListener('submit', function(e) {
+        // FAILSAFE: Remove 'required' from any hidden element before submission
+        const allRequired = form.querySelectorAll('[required]');
+        allRequired.forEach(input => {
+          if (input.offsetWidth === 0 && input.offsetHeight === 0) {
+            input.removeAttribute('required');
+            input.required = false;
+          }
+        });
+      });
+    }
+
     for (let i = 0; i < 5; i++) {
       const fileInput = document.getElementById('car_image_' + i);
       const previewImg = document.getElementById('preview-img-' + i);
@@ -521,58 +540,112 @@
 
     function updateFormVisibility() {
       const isLimousine = categorySelect && categorySelect.value === 'Limousine';
+      const isWithDriver = toggle.checked || isLimousine;
       
       // If Limousine is selected, force with_driver toggle to be checked
       if (isLimousine) {
         toggle.checked = true;
       }
 
-      const isWithDriver = toggle.checked;
       const standardOnlyFields = document.querySelectorAll('.standard-only-field');
       const withDriverOnlyFields = document.querySelectorAll('.with-driver-only-field');
+      const limousineOnlyFields = document.querySelectorAll('.limousine-only-field');
+      const hideForLimousineFields = document.querySelectorAll('.hide-for-limousine');
 
-      standardOnlyFields.forEach(field => {
-        if (isWithDriver) {
+      // Reset
+      standardOnlyFields.forEach(f => f.classList.remove('hidden'));
+      withDriverOnlyFields.forEach(f => f.classList.add('hidden'));
+      limousineOnlyFields.forEach(f => f.classList.add('hidden'));
+      hideForLimousineFields.forEach(f => f.classList.remove('hidden'));
+
+      if (isLimousine) {
+        hideForLimousineFields.forEach(field => {
           field.classList.add('hidden');
-
-          const inputs = field.querySelectorAll('input[required], select[required], textarea[required]');
+          const inputs = field.querySelectorAll('input, select, textarea');
           inputs.forEach(input => {
-            input.dataset.wasRequired = 'true';
+            if (input.required) input.dataset.wasRequired = 'true';
             input.required = false;
           });
-          
-          // Defaults for hidden required fields
+
+          // Default values for Limousine
           const yearInput = field.querySelector('input[name="car[year]"]');
           if (yearInput && !yearInput.value) yearInput.value = new Date().getFullYear();
+          
+          const modelInput = field.querySelector('input[name="car[model]"]');
+          if (modelInput && !modelInput.value) modelInput.value = 'Limousine';
+          
+          const colorInput = field.querySelector('input[name="car[color]"]');
+          if (colorInput && !colorInput.value) colorInput.value = 'N/A';
           
           const statusSelect = field.querySelector('select[name="car[status]"]');
           if (statusSelect && !statusSelect.value) statusSelect.value = 'available';
           
           const insuranceTextarea = field.querySelector('textarea[name="car[insurance_policy]"]');
-          if (insuranceTextarea && !insuranceTextarea.value) insuranceTextarea.value = 'Included as per standard terms';
+          if (insuranceTextarea && !insuranceTextarea.value) insuranceTextarea.value = 'Included for Limousine';
           
           const dailyPriceInput = field.querySelector('input[name="car[daily_price]"]');
           if (dailyPriceInput && !dailyPriceInput.value) dailyPriceInput.value = '0';
-        } else {
-          field.classList.remove('hidden');
-          const inputs = field.querySelectorAll('[data-was-required="true"]');
-          inputs.forEach(input => {
-            input.required = true;
-          });
-        }
-      });
+        });
 
-      withDriverOnlyFields.forEach(field => {
-        if (isWithDriver) {
+        // Also clean up required for standardOnlyFields that are hidden for Limousine
+        standardOnlyFields.forEach(field => {
+          if (!field.classList.contains('limousine-only-field')) {
+            field.classList.add('hidden');
+            const inputs = field.querySelectorAll('input, select, textarea');
+            inputs.forEach(input => {
+              if (input.required) input.dataset.wasRequired = 'true';
+              input.required = false;
+            });
+          }
+        });
+
+        limousineOnlyFields.forEach(field => {
+          field.classList.remove('hidden');
+          const inputs = field.querySelectorAll('input');
+          inputs.forEach(input => {
+            if (input.dataset.wasRequired === 'true') input.required = true;
+            else if (input.id === 'car_hourly_price_field') input.required = true;
+          });
+        });
+
+        withDriverOnlyFields.forEach(f => {
+          f.classList.add('hidden');
+          f.querySelectorAll('input').forEach(i => i.required = false);
+        });
+
+      } else if (isWithDriver) {
+        standardOnlyFields.forEach(field => {
+          field.classList.add('hidden');
+          const inputs = field.querySelectorAll('input, select, textarea');
+          inputs.forEach(input => {
+            if (input.required || input.dataset.wasRequired === 'true') {
+              input.dataset.wasRequired = 'true';
+              input.required = false;
+            }
+          });
+        });
+
+        withDriverOnlyFields.forEach(field => {
           field.classList.remove('hidden');
           const inputs = field.querySelectorAll('input');
           inputs.forEach(input => input.required = true);
-        } else {
-          field.classList.add('hidden');
-          const inputs = field.querySelectorAll('input');
-          inputs.forEach(input => input.required = false);
-        }
-      });
+        });
+
+        limousineOnlyFields.forEach(f => {
+          f.classList.add('hidden');
+          f.querySelectorAll('input').forEach(i => i.required = false);
+        });
+      } else {
+        standardOnlyFields.forEach(field => {
+          field.classList.remove('hidden');
+          const inputs = field.querySelectorAll('input, select, textarea');
+          inputs.forEach(input => {
+            if (input.dataset.wasRequired === 'true') input.required = true;
+          });
+        });
+        withDriverOnlyFields.forEach(field => field.classList.add('hidden'));
+        limousineOnlyFields.forEach(field => field.classList.add('hidden'));
+      }
     }
 
     toggle.addEventListener('change', updateFormVisibility);

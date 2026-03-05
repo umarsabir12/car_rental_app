@@ -49,23 +49,39 @@
             
           .p-6.flex-1.flex.flex-col
             %div.flex.items-center.justify-between.mb-2
-              %span.text-lg.font-bold.text-gray-900= car.brand
-              - unless car.with_driver?
+              %h3.text-lg.font-bold.text-gray-900.group-hover:text-blue-600.transition-colors
+                - if car.category == 'Limousine'
+                  = car.brand
+                - else
+                  = "#{car.brand} #{car.model}"
+              - unless car.category == 'Limousine'
                 %span.text-sm.text-gray-500= car.year
-            %div.text-xl.font-semibold.text-gray-900.mb-2= car.model
-            %div.text-gray-700.mb-3
-              = car.color
-              - if car.with_driver?
-                %span.text-gray-500.ml-2 •
-                %span.text-gray-500= "#{car.seats || 5} Seats"
-                %span.text-gray-500.ml-2 •
-                %span.text-gray-500= "#{car.luggage_capacity || 0} Bags"
-              - elsif car.category.present?
-                %span.text-gray-500.ml-2 •
-                %span.text-gray-500= car.category.capitalize
+            
+            - if car.category == 'Limousine'
+              %div.text-gray-700.mb-3
+                %span.text-gray-500 Limousine
+            - else
+              %div.text-gray-700.mb-3
+                = car.color
+                - if car.with_driver?
+                  %span.text-gray-500.ml-2 •
+                  %span.text-gray-500= "#{car.seats || 5} Seats"
+                  %span.text-gray-500.ml-2 •
+                  %span.text-gray-500= "#{car.luggage_capacity || 0} Bags"
+                - elsif car.category.present?
+                  %span.text-gray-500.ml-2 •
+                  %span.text-gray-500= car.category.capitalize
+
             %div.flex.items-baseline.justify-between.mb-4
               %div.h-14.flex.flex-col.justify-end
-                - if car.with_driver?
+                - if car.category == 'Limousine'
+                  - if car.has_discount?
+                    .flex.flex-col
+                      %span.text-lg.text-gray-400.line-through= "AED #{car.hourly_price}"
+                      %span.text-2xl.font-bold.text-red-600= "AED #{car.discounted_hourly_price.round(2)}"
+                  - else
+                    %span.text-2xl.font-bold{style: 'color: #3a6363'}= "AED #{car.hourly_price}"
+                - elsif car.with_driver?
                   - if car.has_discount?
                     .flex.flex-col
                       %span.text-lg.text-gray-400.line-through= "AED #{car.five_hours_charge}"
@@ -78,7 +94,13 @@
                     %span.text-2xl.font-bold.text-red-600= number_to_currency(car.discounted_daily_price)
                 - else
                   %span.text-2xl.font-bold{style: 'color: #3a6363'}= car.daily_price ? number_to_currency(car.daily_price) : 'N/A'
-              %span.text-sm.text-gray-500= car.with_driver? ? "/5h Service" : "/day"
+              %span.text-sm.text-gray-500
+                - if car.category == 'Limousine'
+                  \/hr
+                - elsif car.with_driver?
+                  \/5h Service
+                - else
+                  \/day
  
   / SEO Content Section
   - if params[:category].present? && params[:category] != 'all-categories'
