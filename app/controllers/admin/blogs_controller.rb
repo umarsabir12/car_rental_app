@@ -25,10 +25,19 @@ class Admin::BlogsController < ApplicationController
       end
     end
 
-    if @blog.save
-      redirect_to admin_blogs_path, notice: "Blog created successfully."
-    else
-      render :new
+    respond_to do |format|
+      if @blog.save
+        format.html { redirect_to admin_blogs_path, notice: "Blog created successfully." }
+      else
+        flash.now[:alert] = "Error: #{@blog.errors.full_messages.to_sentence}"
+        format.html { render :new, status: :unprocessable_entity }
+        format.turbo_stream do
+          render turbo_stream: [
+            turbo_stream.replace("form-errors", partial: "shared/form_errors", locals: { object: @blog }),
+            turbo_stream.replace("flash-container", partial: "shared/flash_messages")
+          ]
+        end
+      end
     end
   end
 
@@ -64,10 +73,19 @@ class Admin::BlogsController < ApplicationController
     # Always remove from params so simple update doesn't trigger replacement
     filtered_params.delete(:reference_images)
 
-    if @blog.update(filtered_params)
-      redirect_to admin_blogs_path, notice: "Blog updated successfully."
-    else
-      render :edit
+    respond_to do |format|
+      if @blog.update(filtered_params)
+        format.html { redirect_to admin_blogs_path, notice: "Blog updated successfully." }
+      else
+        flash.now[:alert] = "Error: #{@blog.errors.full_messages.to_sentence}"
+        format.html { render :edit, status: :unprocessable_entity }
+        format.turbo_stream do
+          render turbo_stream: [
+            turbo_stream.replace("form-errors", partial: "shared/form_errors", locals: { object: @blog }),
+            turbo_stream.replace("flash-container", partial: "shared/flash_messages")
+          ]
+        end
+      end
     end
   end
 

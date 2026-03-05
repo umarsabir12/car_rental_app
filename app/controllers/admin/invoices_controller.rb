@@ -19,10 +19,19 @@ class Admin::InvoicesController < ApplicationController
   def create
     @invoice = @vendor.invoices.build(invoice_params)
 
-    if @invoice.save!
-      redirect_to admin_vendor_path(@vendor), notice: "Invoice was successfully created."
-    else
-      render :new, status: :unprocessable_entity
+    respond_to do |format|
+      if @invoice.save
+        format.html { redirect_to admin_vendor_path(@vendor), notice: "Invoice was successfully created." }
+      else
+        flash.now[:alert] = "Error: #{@invoice.errors.full_messages.to_sentence}"
+        format.html { render :new, status: :unprocessable_entity }
+        format.turbo_stream do
+          render turbo_stream: [
+            turbo_stream.replace("form-errors", partial: "shared/form_errors", locals: { object: @invoice }),
+            turbo_stream.replace("flash-container", partial: "shared/flash_messages")
+          ]
+        end
+      end
     end
   end
 
@@ -30,10 +39,19 @@ class Admin::InvoicesController < ApplicationController
   end
 
   def update
-    if @invoice.update!(invoice_params.merge(payment_status: "pending"))
-      redirect_to admin_invoice_path(@invoice), notice: "Invoice was successfully updated."
-    else
-      render :edit, status: :unprocessable_entity
+    respond_to do |format|
+      if @invoice.update(invoice_params.merge(payment_status: "pending"))
+        format.html { redirect_to admin_invoice_path(@invoice), notice: "Invoice was successfully updated." }
+      else
+        flash.now[:alert] = "Error: #{@invoice.errors.full_messages.to_sentence}"
+        format.html { render :edit, status: :unprocessable_entity }
+        format.turbo_stream do
+          render turbo_stream: [
+            turbo_stream.replace("form-errors", partial: "shared/form_errors", locals: { object: @invoice }),
+            turbo_stream.replace("flash-container", partial: "shared/flash_messages")
+          ]
+        end
+      end
     end
   end
 
@@ -44,10 +62,14 @@ class Admin::InvoicesController < ApplicationController
   end
 
   def mark_as_paid
-    if @invoice.mark_as_paid!
-      redirect_to admin_invoice_path(@invoice), notice: "Invoice marked as paid."
-    else
-      redirect_to admin_invoice_path(@invoice), alert: "Could not update invoice."
+    respond_to do |format|
+      if @invoice.mark_as_paid!
+        format.html { redirect_to admin_invoice_path(@invoice), notice: "Invoice marked as paid." }
+        format.turbo_stream { redirect_to admin_invoice_path(@invoice), notice: "Invoice marked as paid." }
+      else
+        format.html { redirect_to admin_invoice_path(@invoice), alert: "Could not update invoice." }
+        format.turbo_stream { redirect_to admin_invoice_path(@invoice), alert: "Could not update invoice." }
+      end
     end
   end
 

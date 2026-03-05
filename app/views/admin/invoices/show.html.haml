@@ -296,7 +296,8 @@
 
       / Modal Body
       .p-4.sm:p-6
-        = form_with(model: [:admin, @invoice], url: admin_invoice_path(@invoice), method: :patch, local: true, html: { class: 'space-y-4 sm:space-y-6' }) do |f|
+        = form_with(model: [:admin, @invoice], url: admin_invoice_path(@invoice), method: :patch, html: { class: 'space-y-4 sm:space-y-6' }) do |f|
+          = render 'shared/form_errors', object: @invoice
           / Payment Status
           .space-y-1
             = f.label :payment_status, 'Payment Status', class: 'block text-sm font-medium text-gray-700'

@@ -30,8 +30,8 @@ class VendorsController < ApplicationController
 
       redirect_to vendor_path(@vendor), notice: "Profile was successfully updated."
     else
-      flash.now[:alert] = "Failed to update profile. Please check the errors below."
-      render :edit
+      flash.now[:alert] = "Please fix the following errors"
+      render :edit, status: :unprocessable_entity
     end
   end
 

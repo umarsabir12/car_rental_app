@@ -91,6 +91,7 @@
     %header{ role: "banner" }
       = render 'layouts/navbar'
     %main{ role: "main" }
+      = render 'shared/flash_messages'
       = yield
     %footer{ role: "contentinfo" }
       - if content_for?(:footer)
