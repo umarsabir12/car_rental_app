@@ -29,7 +29,7 @@ class Vendors::CarsController < ApplicationController
       flash.now[:alert] = "Error: #{@car.errors.full_messages.to_sentence}"
       respond_to do |format|
         format.html { render :new, status: :unprocessable_entity }
-        format.turbo_stream { render turbo_stream: [turbo_stream.replace('form-errors', partial: 'shared/form_errors', locals: { object: @car }), turbo_stream.replace('flash-container', partial: 'shared/flash_messages')] }
+        format.turbo_stream { render turbo_stream: [ turbo_stream.replace("form-errors", partial: "shared/form_errors", locals: { object: @car }), turbo_stream.replace("flash-container", partial: "shared/flash_messages") ] }
       end
       return
     end
@@ -41,7 +41,7 @@ class Vendors::CarsController < ApplicationController
       flash.now[:alert] = "Error: #{@car.errors.full_messages.to_sentence}"
       respond_to do |format|
         format.html { render :new, status: :unprocessable_entity }
-        format.turbo_stream { render turbo_stream: [turbo_stream.replace('form-errors', partial: 'shared/form_errors', locals: { object: @car }), turbo_stream.replace('flash-container', partial: 'shared/flash_messages')] }
+        format.turbo_stream { render turbo_stream: [ turbo_stream.replace("form-errors", partial: "shared/form_errors", locals: { object: @car }), turbo_stream.replace("flash-container", partial: "shared/flash_messages") ] }
       end
       return
     end
@@ -68,8 +68,8 @@ class Vendors::CarsController < ApplicationController
         format.html { render :new, status: :unprocessable_entity }
         format.turbo_stream do
           render turbo_stream: [
-            turbo_stream.replace('form-errors', partial: 'shared/form_errors', locals: { object: @car }),
-            turbo_stream.replace('flash-container', partial: 'shared/flash_messages')
+            turbo_stream.replace("form-errors", partial: "shared/form_errors", locals: { object: @car }),
+            turbo_stream.replace("flash-container", partial: "shared/flash_messages")
           ]
         end
       end
@@ -133,8 +133,8 @@ class Vendors::CarsController < ApplicationController
         format.html { render :edit, status: :unprocessable_entity }
         format.turbo_stream do
           render turbo_stream: [
-            turbo_stream.replace('form-errors', partial: 'shared/form_errors', locals: { object: @car }),
-            turbo_stream.replace('flash-container', partial: 'shared/flash_messages')
+            turbo_stream.replace("form-errors", partial: "shared/form_errors", locals: { object: @car }),
+            turbo_stream.replace("flash-container", partial: "shared/flash_messages")
           ]
         end
       end

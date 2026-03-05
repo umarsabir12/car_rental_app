@@ -37,13 +37,13 @@ class Admin::DiscountsController < ApplicationController
       else
         @vendors = Vendor.active.order(:company_name)
         @categories = @discount.vendor_id.present? ? get_vendor_categories(@discount.vendor_id) : (Car.distinct.pluck(:category).compact.reject(&:blank?) + [ "With Driver" ]).uniq.sort
-        
+
         flash.now[:alert] = "Error: #{@discount.errors.full_messages.to_sentence}"
         format.html { render :new, status: :unprocessable_entity }
         format.turbo_stream do
           render turbo_stream: [
-            turbo_stream.replace('form-errors', partial: 'shared/form_errors', locals: { object: @discount }),
-            turbo_stream.replace('flash-container', partial: 'shared/flash_messages')
+            turbo_stream.replace("form-errors", partial: "shared/form_errors", locals: { object: @discount }),
+            turbo_stream.replace("flash-container", partial: "shared/flash_messages")
           ]
         end
       end
@@ -62,13 +62,13 @@ class Admin::DiscountsController < ApplicationController
       else
         @vendors = Vendor.active.order(:company_name)
         @categories = @discount.vendor_id.present? ? get_vendor_categories(@discount.vendor_id) : (Car.distinct.pluck(:category).compact.reject(&:blank?) + [ "With Driver" ]).uniq.sort
-        
+
         flash.now[:alert] = "Error: #{@discount.errors.full_messages.to_sentence}"
         format.html { render :edit, status: :unprocessable_entity }
         format.turbo_stream do
           render turbo_stream: [
-            turbo_stream.replace('form-errors', partial: 'shared/form_errors', locals: { object: @discount }),
-            turbo_stream.replace('flash-container', partial: 'shared/flash_messages')
+            turbo_stream.replace("form-errors", partial: "shared/form_errors", locals: { object: @discount }),
+            turbo_stream.replace("flash-container", partial: "shared/flash_messages")
           ]
         end
       end

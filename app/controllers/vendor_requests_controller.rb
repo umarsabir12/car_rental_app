@@ -11,16 +11,16 @@ class VendorRequestsController < ApplicationController
     respond_to do |format|
       if @vendor_request.save
         VendorMailer.request_email(@vendor_request.id).deliver_now
-        format.html { redirect_to thank_you_vendor_requests_path, notice: 'Registration request submitted successfully! We will contact you soon.' }
+        format.html { redirect_to thank_you_vendor_requests_path, notice: "Registration request submitted successfully! We will contact you soon." }
       else
         error_message = "Error: #{@vendor_request.errors.full_messages.to_sentence}"
         flash.now[:alert] = error_message
-        
+
         format.html { render :new, status: :unprocessable_entity }
         format.turbo_stream do
           render turbo_stream: [
-            turbo_stream.replace('form-errors', partial: 'shared/form_errors', locals: { object: @vendor_request }),
-            turbo_stream.replace('flash-container', partial: 'shared/flash_messages')
+            turbo_stream.replace("form-errors", partial: "shared/form_errors", locals: { object: @vendor_request }),
+            turbo_stream.replace("flash-container", partial: "shared/flash_messages")
           ]
         end
       end

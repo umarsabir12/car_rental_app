@@ -12,7 +12,7 @@ RSpec.describe 'Error Handling and Flash Messages', type: :system do
     it 'displays success notice after successful car creation' do
       login_as(vendor, scope: :vendor)
       visit vendors_new_car_path
-      
+
       fill_in 'car[brand]', with: 'Toyota'
       fill_in 'car[model]', with: 'Camry'
       fill_in 'car[color]', with: 'White'
@@ -20,13 +20,13 @@ RSpec.describe 'Error Handling and Flash Messages', type: :system do
       fill_in 'car[daily_price]', with: '200'
       fill_in 'car[insurance_policy]', with: 'Valid insurance policy for testing purposes.'
       select 'Luxury', from: 'car_category_select'
-      
+
       # Attach images and mulkiya
       attach_file 'car_image_0', Rails.root.join('spec/fixtures/files/test_image.jpg'), visible: false
       attach_file 'car_mulkiya', Rails.root.join('spec/fixtures/files/test_document.pdf'), visible: false
-      
+
       click_button 'Add Car'
-      
+
       expect(page).to have_content('Car was successfully created.')
       expect(page).to have_css('.bg-teal-50', visible: false)
     end
@@ -61,10 +61,10 @@ RSpec.describe 'Error Handling and Flash Messages', type: :system do
     it 'shows field-level errors when editing profile' do
       login_as(user, scope: :user)
       visit edit_user_path(user)
-      
+
       fill_in 'user[first_name]', with: ''
       click_button 'Update Profile'
-      
+
       expect(page).to have_content('Error:')
       expect(page).to have_content("First name can't be blank")
     end
@@ -72,13 +72,13 @@ RSpec.describe 'Error Handling and Flash Messages', type: :system do
 
   describe 'Admin Flash Messages' do
     let(:admin) { create(:admin) }
-    
+
     it 'displays flash messages in admin layout' do
       login_as(admin, scope: :admin)
       visit admin_settings_path
-      
+
       click_link 'Clear Cache'
-      
+
       within('body') do
         expect(page).to have_content('Cache cleared successfully!')
       end

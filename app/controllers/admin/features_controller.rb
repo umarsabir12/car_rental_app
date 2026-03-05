@@ -19,8 +19,8 @@ class Admin::FeaturesController < ApplicationController
         format.html { render :index, status: :unprocessable_entity }
         format.turbo_stream do
           render turbo_stream: [
-            turbo_stream.replace('form-errors', partial: 'shared/form_errors', locals: { object: @feature }),
-            turbo_stream.replace('flash-container', partial: 'shared/flash_messages')
+            turbo_stream.replace("form-errors", partial: "shared/form_errors", locals: { object: @feature }),
+            turbo_stream.replace("flash-container", partial: "shared/flash_messages")
           ]
         end
       end
@@ -41,8 +41,8 @@ class Admin::FeaturesController < ApplicationController
         format.html { render :edit, status: :unprocessable_entity }
         format.turbo_stream do
           render turbo_stream: [
-            turbo_stream.replace('form-errors', partial: 'shared/form_errors', locals: { object: @feature }),
-            turbo_stream.replace('flash-container', partial: 'shared/flash_messages')
+            turbo_stream.replace("form-errors", partial: "shared/form_errors", locals: { object: @feature }),
+            turbo_stream.replace("flash-container", partial: "shared/flash_messages")
           ]
         end
       end
