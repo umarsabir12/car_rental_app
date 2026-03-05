@@ -88,7 +88,10 @@
     .max-w-7xl.mx-auto.px-4.sm:px-6.lg:px-8
       .flex.items-center.justify-between
         %h1.text-2xl.font-bold{style: 'color: #3a6363'}
-          = "#{@car.brand} #{@car.model} #{@car.year} in Dubai"
+          - if @car.category == 'Limousine'
+            = "#{@car.brand} in Dubai"
+          - else
+            = "#{@car.brand} #{@car.model} #{@car.year} in Dubai"
           - if @car.featured?
             %span.inline-flex.items-center.px-2.py-1.rounded-full.text-xs.font-bold.bg-yellow-100.text-yellow-800.ml-2.align-middle
               %i.fas.fa-star.mr-1
@@ -206,9 +209,19 @@
               %i.fas.fa-phone.text-lg
               %span Call
 
-        / Pricing Card
         .bg-white.rounded-xl.shadow-sm.p-6.mb-6{ "data-controller" => "pricing-selector" }
-          - if @car.with_driver?
+          - if @car.category == 'Limousine'
+            .grid.grid-cols-1.gap-4.mb-4
+              .border.rounded-xl.p-6.flex.flex-col.items-center.text-center.transition.shadow-sm.bg-blue-50.border-blue-200
+                %div.font-medium.uppercase.text-gray-500.mb-1 Per Hour Price
+                - if @car.has_discount?
+                  %div.font-bold.text-gray-400.line-through AED #{@car.hourly_price}
+                  %div.font-extrabold.text-red-600{style: 'font-size: 2rem;'}= @car.discounted_hourly_price.round(2)
+                - else
+                  %div.font-bold{style: 'color: #3a6363'} AED
+                  %div.font-extrabold{style: 'color: #3a6363; font-size: 2rem;'}= @car.hourly_price
+                %div.text-xs.text-gray-500.mt-2 Full Service Included
+          - elsif @car.with_driver?
             .grid.grid-cols-2.gap-4.mb-4
               / 5 Hours Card
               .cursor-pointer.border.rounded-xl.p-4.flex.flex-col.items-center.text-center.transition.shadow-sm.hover:shadow{
@@ -323,9 +336,9 @@
                 %span{ id: "additionalMileageText", "data-pricing-selector-target" => "additionalCharge" }= "AED #{extra_charge} /km"
 
           / Hidden inputs for booking submission
-          = hidden_field_tag :selected_period, @car.with_driver? ? "5 Hours" : "daily", id: "selectedPeriodInput", "data-pricing-selector-target" => "selectedPeriod"
-          = hidden_field_tag :selected_price, @car.with_driver? ? @car.five_hours_charge : daily_price, id: "selectedPriceInput", "data-pricing-selector-target" => "selectedPrice"
-          = hidden_field_tag :selected_mileage_limit, @car.with_driver? ? "0" : daily_mileage, id: "selectedMileageInput", "data-pricing-selector-target" => "selectedMileage"
+          = hidden_field_tag :selected_period, @car.category == 'Limousine' ? "hourly" : (@car.with_driver? ? "5 Hours" : "daily"), id: "selectedPeriodInput", "data-pricing-selector-target" => "selectedPeriod"
+          = hidden_field_tag :selected_price, @car.category == 'Limousine' ? @car.discounted_hourly_price : (@car.with_driver? ? @car.five_hours_charge : daily_price), id: "selectedPriceInput", "data-pricing-selector-target" => "selectedPrice"
+          = hidden_field_tag :selected_mileage_limit, (@car.category == 'Limousine' || @car.with_driver?) ? "0" : daily_mileage, id: "selectedMileageInput", "data-pricing-selector-target" => "selectedMileage"
 
           .border-t.pt-4.mt-4
             - if @car.with_driver?
@@ -336,74 +349,75 @@
               %button.w-full.py-3.px-4.rounded-lg.text-white.font-semibold{"data-bs-toggle" => "modal", "data-bs-target" => "#bookingModal", style: 'background-color: #3a6363'}
                 Book Now
 
-  / Car Overview Section
-  .max-w-7xl.mx-auto.px-4.sm:px-6.lg:px-8.pb-8
-    .bg-white.rounded-xl.shadow-sm.p-8
-      %h2.text-2xl.font-bold.mb-6{style: 'color: #2d4f4f'} CAR OVERVIEW
-      
-      .grid.grid-cols-2.md:grid-cols-3.lg:grid-cols-4.gap-6
-        - unless @car.with_driver?
+  - unless @car.category == 'Limousine'
+    / Car Overview Section
+    .max-w-7xl.mx-auto.px-4.sm:px-6.lg:px-8.pb-8
+      .bg-white.rounded-xl.shadow-sm.p-8
+        %h2.text-2xl.font-bold.mb-6{style: 'color: #2d4f4f'} CAR OVERVIEW
+        
+        .grid.grid-cols-2.md:grid-cols-3.lg:grid-cols-4.gap-6
+          - unless @car.with_driver?
+            .flex.items-center.space-x-3
+              %i.fas.fa-car.text-gray-400.w-5
+              .div
+                %span.text-sm.text-gray-500 Body Type
+                %p.font-medium= @car.category || 'Sedan'
+          
+          - unless @car.with_driver?
+            .flex.items-center.space-x-3
+              %i.fas.fa-calendar.text-gray-400.w-5
+              .div
+                %span.text-sm.text-gray-500 Model
+                %p.font-medium= @car.year || '2021'
+          
           .flex.items-center.space-x-3
-            %i.fas.fa-car.text-gray-400.w-5
+            %i.fas.fa-palette.text-gray-400.w-5
             .div
-              %span.text-sm.text-gray-500 Body Type
-              %p.font-medium= @car.category || 'Sedan'
-        
-        - unless @car.with_driver?
+              %span.text-sm.text-gray-500 Colour
+              %p.font-medium= @car.color || 'Black'
+          
+          - unless @car.with_driver?
+            .flex.items-center.space-x-3
+              %i.fas.fa-gas-pump.text-gray-400.w-5
+              .div
+                %span.text-sm.text-gray-500 Fuel
+                %p.font-medium= @car.fuel_type || 'Petrol'
+          
+          - unless @car.with_driver?
+            .flex.items-center.space-x-3
+              %i.fas.fa-cogs.text-gray-400.w-5
+              .div
+                %span.text-sm.text-gray-500 Transmission
+                %p.font-medium= @car.transmission || 'Auto'
+          
           .flex.items-center.space-x-3
-            %i.fas.fa-calendar.text-gray-400.w-5
+            %i.fas.fa-users.text-gray-400.w-5
             .div
-              %span.text-sm.text-gray-500 Model
-              %p.font-medium= @car.year || '2021'
-        
-        .flex.items-center.space-x-3
-          %i.fas.fa-palette.text-gray-400.w-5
-          .div
-            %span.text-sm.text-gray-500 Colour
-            %p.font-medium= @car.color || 'Black'
-        
-        - unless @car.with_driver?
-          .flex.items-center.space-x-3
-            %i.fas.fa-gas-pump.text-gray-400.w-5
-            .div
-              %span.text-sm.text-gray-500 Fuel
-              %p.font-medium= @car.fuel_type || 'Petrol'
-        
-        - unless @car.with_driver?
-          .flex.items-center.space-x-3
-            %i.fas.fa-cogs.text-gray-400.w-5
-            .div
-              %span.text-sm.text-gray-500 Transmission
-              %p.font-medium= @car.transmission || 'Auto'
-        
-        .flex.items-center.space-x-3
-          %i.fas.fa-users.text-gray-400.w-5
-          .div
-            %span.text-sm.text-gray-500 Seating Capacity
-            %p.font-medium= "#{@car.seats || 5} passengers"
+              %span.text-sm.text-gray-500 Seating Capacity
+              %p.font-medium= "#{@car.seats || 5} passengers"
 
-        - if @car.with_driver?
-          .flex.items-center.space-x-3
-            %i.fas.fa-suitcase.text-gray-400.w-5
-            .div
-              %span.text-sm.text-gray-500 Luggage Capacity
-              %p.font-medium= "#{@car.luggage_capacity || 0} Bags"
-        
-        - unless @car.with_driver?
-          .flex.items-center.space-x-3
-            %i.fas.fa-engine.text-gray-400.w-5
-            .div
-              %span.text-sm.text-gray-500 Engine CC
-              %p.font-medium= @car.engine_size || '2.0L'
+          - if @car.with_driver?
+            .flex.items-center.space-x-3
+              %i.fas.fa-suitcase.text-gray-400.w-5
+              .div
+                %span.text-sm.text-gray-500 Luggage Capacity
+                %p.font-medium= "#{@car.luggage_capacity || 0} Bags"
+          
+          - unless @car.with_driver?
+            .flex.items-center.space-x-3
+              %i.fas.fa-engine.text-gray-400.w-5
+              .div
+                %span.text-sm.text-gray-500 Engine CC
+                %p.font-medium= @car.engine_size || '2.0L'
 
-        - if @car.with_driver?
-          .flex.items-center.space-x-3
-            %i.fas.fa-user-tie.text-gray-400.w-5
-            .div
-              %span.text-sm.text-gray-500 Service Type
-              %p.font-medium.text-blue-600 With Driver Available
+          - if @car.with_driver?
+            .flex.items-center.space-x-3
+              %i.fas.fa-user-tie.text-gray-400.w-5
+              .div
+                %span.text-sm.text-gray-500 Service Type
+                %p.font-medium.text-blue-600 With Driver Available
 
-  - unless @car.with_driver?
+  - unless @car.category == 'Limousine' || @car.with_driver?
     / Features & Specs Section
     .max-w-7xl.mx-auto.px-4.sm:px-6.lg:px-8.pb-8
       .bg-white.rounded-xl.shadow-sm.p-8

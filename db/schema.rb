@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_01_28_092926) do
+ActiveRecord::Schema[7.2].define(version: 2026_03_04_113837) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -176,6 +176,7 @@ ActiveRecord::Schema[7.2].define(version: 2026_01_28_092926) do
     t.integer "five_hours_charge"
     t.integer "ten_hours_charge"
     t.integer "luggage_capacity"
+    t.integer "hourly_price"
     t.index ["brand"], name: "index_cars_on_brand"
     t.index ["category"], name: "index_cars_on_category"
     t.index ["created_at"], name: "index_cars_on_created_at"

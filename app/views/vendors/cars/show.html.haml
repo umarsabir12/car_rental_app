@@ -27,7 +27,15 @@
             %span.text-lg.text-gray-600= @car.color
             %span.text-lg.text-gray-600= @car.category.presence || '—'
           .flex.items-center.gap-4
-            - if @car.with_driver?
+            - if @car.category == 'Limousine'
+              - if @car.has_discount?
+                %span.text-2xl.font-bold.text-gray-400.line-through= @car.hourly_price ? number_to_currency(@car.hourly_price) : 'N/A'
+                %span.text-2xl.font-bold.text-red-600= number_to_currency(@car.discounted_hourly_price)
+                %span.text-gray-500 /hr
+              - else
+                %span.text-2xl.font-bold{style: 'color: #3a6363'}= @car.hourly_price ? number_to_currency(@car.hourly_price) : 'N/A'
+                %span.text-gray-500 /hr
+            - elsif @car.with_driver?
               - if @car.has_discount?
                 %span.text-2xl.font-bold.text-gray-400.line-through= @car.five_hours_charge ? number_to_currency(@car.five_hours_charge) : 'N/A'
                 %span.text-2xl.font-bold.text-red-600= number_to_currency(@car.discounted_five_hours_charge)
@@ -67,11 +75,12 @@
           %h3.font-semibold.text-gray-900 Rental Terms
         .p-6
           .grid.grid-cols-1.sm:grid-cols-2.gap-x-10.gap-y-5.place-items-center.text-center
-            .flex.items-center.justify-center.gap-3
-              %i.fas.fa-tachometer-alt.text-xl.text-gray-700
-              %span.text-gray-800 Mileage Policy
-              %button.text-gray-400.hover:text-gray-600{ "data-policy" => "mileage" }
-                %i.fas.fa-info-circle
+            - unless @car.category == 'Limousine'
+              .flex.items-center.justify-center.gap-3
+                %i.fas.fa-tachometer-alt.text-xl.text-gray-700
+                %span.text-gray-800 Mileage Policy
+                %button.text-gray-400.hover:text-gray-600{ "data-policy" => "mileage" }
+                  %i.fas.fa-info-circle
             .flex.items-center.justify-center.gap-3
               %i.fas.fa-gas-pump.text-xl.text-gray-700
               %span.text-gray-800 Fuel Policy
@@ -89,13 +98,14 @@
                 %i.fas.fa-info-circle
 
       / Minimum Rental Duration Info
-      .bg-white.rounded-xl.shadow-lg.mb-6
-        .p-6
-          .flex.flex-col.sm:flex-row.items-center.justify-center.gap-6.text-center
-            .flex.items-center.gap-3
-              %span.inline-flex.items-center.justify-center.w-6.h-6.rounded-full.bg-green-500.text-white
-                %i.fas.fa-check.text-xs
-              %span.text-gray-800= "Minimum #{min_days} days rental"
+      - unless @car.category == 'Limousine'
+        .bg-white.rounded-xl.shadow-lg.mb-6
+          .p-6
+            .flex.flex-col.sm:flex-row.items-center.justify-center.gap-6.text-center
+              .flex.items-center.gap-3
+                %span.inline-flex.items-center.justify-center.w-6.h-6.rounded-full.bg-green-500.text-white
+                  %i.fas.fa-check.text-xs
+                %span.text-gray-800= "Minimum #{min_days} days rental"
 
       / Basic Information Card
       .bg-white.rounded-xl.shadow-lg.p-6
@@ -120,7 +130,16 @@
             .flex.justify-between.py-2.border-b.border-gray-100
               %span.font-medium.text-gray-600 Category
               %span.text-gray-900= @car.category.presence || '—'
-          - if @car.with_driver?
+          - if @car.category == 'Limousine'
+            .flex.justify-between.py-2.border-b.border-gray-100
+              %span.font-medium.text-gray-600 Hourly Price
+              - if @car.has_discount?
+                .flex.flex-col.items-end
+                  %span.text-gray-400.line-through= number_to_currency(@car.hourly_price)
+                  %span.text-green-600.font-bold= number_to_currency(@car.discounted_hourly_price)
+              - else
+                %span.text-gray-900= @car.hourly_price ? number_to_currency(@car.hourly_price) : 'N/A'
+          - elsif @car.with_driver?
             .flex.justify-between.py-2.border-b.border-gray-100
               %span.font-medium.text-gray-600 5 Hours Charge
               - if @car.has_discount?
@@ -166,15 +185,16 @@
           .flex.justify-between.py-2.border-b.border-gray-100
             %span.font-medium.text-gray-600 Seats
             %span.text-gray-900= @car.seats.presence || '—'
-          .flex.justify-between.py-2.border-b.border-gray-100
-            %span.font-medium.text-gray-600 Daily Mileage
-            %span.text-gray-900= @car.daily_milleage.presence || '—'
-          .flex.justify-between.py-2.border-b.border-gray-100
-            %span.font-medium.text-gray-600 Weekly Mileage
-            %span.text-gray-900= @car.weekly_milleage.presence || '—'
-          .flex.justify-between.py-2.border-b.border-gray-100
-            %span.font-medium.text-gray-600 Monthly Mileage
-            %span.text-gray-900= @car.monthly_milleage.presence || '—'
+          - unless @car.category == 'Limousine'
+            .flex.justify-between.py-2.border-b.border-gray-100
+              %span.font-medium.text-gray-600 Daily Mileage
+              %span.text-gray-900= @car.daily_milleage.presence || '—'
+            .flex.justify-between.py-2.border-b.border-gray-100
+              %span.font-medium.text-gray-600 Weekly Mileage
+              %span.text-gray-900= @car.weekly_milleage.presence || '—'
+            .flex.justify-between.py-2.border-b.border-gray-100
+              %span.font-medium.text-gray-600 Monthly Mileage
+              %span.text-gray-900= @car.monthly_milleage.presence || '—'
           .flex.justify-between.py-2.border-b.border-gray-100
             %span.font-medium.text-gray-600 Engine Size
             %span.text-gray-900= @car.engine_size.presence || '—'
@@ -191,6 +211,11 @@
                   %i.fas.fa-user-tie.mr-3.text-blue-500
                   %span.text-gray-700.font-medium With Driver Service
                   %span.ml-1.text-xs.text-blue-600 ⭐
+              - if @car.category == 'Limousine'
+                .flex.items-center.feature-item.bg-teal-50.p-2.rounded-lg.border.border-teal-100{class: '', 'data-index': -2}
+                  %i.fas.fa-star.mr-3.text-teal-500
+                  %span.text-gray-700.font-medium Limousine Service
+                  %span.ml-1.text-xs.text-teal-600 ⭐
 
               - @car.features.each_with_index do |feature, index|
                 .flex.items-center.feature-item{class: index >= 12 ? 'hidden' : '', 'data-index': index}
@@ -355,7 +380,7 @@
           .div
             %span.text-sm.text-gray-500 Seating Capacity
             %p.font-medium= "#{@car.seats || 5} passengers"
-        - if @car.with_driver?
+        - if @car.with_driver? && @car.category != 'Limousine'
           .flex.items-center.space-x-3
             %i.fas.fa-suitcase.text-gray-400.w-5
             .div
@@ -368,7 +393,13 @@
               %span.text-sm.text-gray-500 Engine CC
               %p.font-medium= @car.engine_size || '2.0L'
 
-        - if @car.with_driver?
+        - if @car.category == 'Limousine'
+          .flex.items-center.space-x-3
+            %i.fas.fa-star.text-gray-400.w-5
+            .div
+              %span.text-sm.text-gray-500 Service Type
+              %p.font-medium.text-teal-600 Limousine Available
+        - elsif @car.with_driver?
           .flex.items-center.space-x-3
             %i.fas.fa-user-tie.text-gray-400.w-5
             .div
@@ -376,38 +407,39 @@
               %p.font-medium.text-blue-600 With Driver Available
 
   / Required Document Section
-  .mt-8
-    .mx-auto
-      .bg-white.rounded-2xl.shadow-lg.p-8
+  - unless @car.category == 'Limousine'
+    .mt-8
+      .mx-auto
+        .bg-white.rounded-2xl.shadow-lg.p-8
 
-        / Required Documents Section
-        .mb-8
-          .text-xl.font-bold.text-gray-800.mb-4 ✅ Required Documents
-          %ul.text-gray-700.text-left.max-w-2xl.mx-10.list-disc.pl-6.space-y-2
-            %li
-              %strong Tourists / Non-Residents:
-              | Passport copy, home country license, International Driving Permit (if required), Visa Copy.
-            %li
-              %strong Residents:
-              | Emirates ID, UAE driving license.
-            %li
-              %strong GCC Nationals:
-              | GCC ID or Passport, GCC driving license.
+          / Required Documents Section
+          .mb-8
+            .text-xl.font-bold.text-gray-800.mb-4 ✅ Required Documents
+            %ul.text-gray-700.text-left.max-w-2xl.mx-10.list-disc.pl-6.space-y-2
+              %li
+                %strong Tourists / Non-Residents:
+                | Passport copy, home country license, International Driving Permit (if required), Visa Copy.
+              %li
+                %strong Residents:
+                | Emirates ID, UAE driving license.
+              %li
+                %strong GCC Nationals:
+                | GCC ID or Passport, GCC driving license.
 
-        / Before Delivery Section
-        .mb-8
-          .text-xl.font-bold.text-gray-800.mb-4 ✅ Before Delivery
-          %ul.text-gray-700.text-left.max-w-2xl.mx-10.list-disc.pl-6.space-y-2
-            %li Customers must present the receipt received during booking with Wheelsonrent at the time of car collection.
-            %li Collect payment receipt.
-            %li Collect a copy of the rental agreement.
+          / Before Delivery Section
+          .mb-8
+            .text-xl.font-bold.text-gray-800.mb-4 ✅ Before Delivery
+            %ul.text-gray-700.text-left.max-w-2xl.mx-10.list-disc.pl-6.space-y-2
+              %li Customers must present the receipt received during booking with Wheelsonrent at the time of car collection.
+              %li Collect payment receipt.
+              %li Collect a copy of the rental agreement.
 
-        / Note Section
-        .mb-8
-          .text-xl.font-bold.text-gray-800.mb-4 ⚠️ Note
-          %ul.text-gray-700.text-left.max-w-2xl.mx-10.list-disc.pl-6.space-y-2
-            %li Wheelsonrent platform only displays cars and manages reservations.
-            %li Wheelsonrent bears no responsibility for rental payments made between the customer and the car rental company.
+          / Note Section
+          .mb-8
+            .text-xl.font-bold.text-gray-800.mb-4 ⚠️ Note
+            %ul.text-gray-700.text-left.max-w-2xl.mx-10.list-disc.pl-6.space-y-2
+              %li Wheelsonrent platform only displays cars and manages reservations.
+              %li Wheelsonrent bears no responsibility for rental payments made between the customer and the car rental company.
 
   / Bookings Section
   .mt-8

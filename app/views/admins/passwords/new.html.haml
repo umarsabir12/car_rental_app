@@ -1,10 +1,56 @@
-%h2 Forgot your password?
-= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :post }) do |f|
-  = render "admin_users/shared/error_messages", resource: resource
-  .field
-    = f.label :email
-    %br/
-    = f.email_field :email, autofocus: true, autocomplete: "email"
-  .actions
-    = f.submit "Send me reset password instructions"
-= render "admin_users/shared/links"
+.container.mx-auto.px-4.py-8.mt-10
+  .max-w-md.mx-auto
+    / Header
+    .text-center.mb-8
+      %i{class: 'fas fa-shield-alt text-4xl mb-4', style: 'color: #3a6363'}
+      %h1.text-3xl.font-bold.text-gray-900 Admin Recovery
+      %p.text-gray-600.mt-2 Enter your administrative email to receive reset instructions.
+
+    / Flash Messages
+    - if flash[:notice]
+      .mb-6.p-4.rounded-lg.border{style: 'background-color: #f0f9f0; border-color: #3a6363; color: #166534'}
+        .flex.items-center
+          %i.fas.fa-check-circle.mr-2{style: 'color: #3a6363'}
+          %span= flash[:notice]
+    - if flash[:alert]
+      .mb-6.p-4.bg-red-50.border.border-red-200.rounded-lg.text-red-800
+        .flex.items-center
+          %i.fas.fa-exclamation-circle.text-red-600.mr-2
+          %span= flash[:alert]
+
+    / Password Reset Form
+    .bg-white.rounded-xl.shadow-lg.p-8.overflow-hidden
+      = form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :post, id: 'password-reset-form' }) do |f|
+        .space-y-6
+          .field.space-y-2
+            = f.label :email, class: 'block text-sm font-medium text-gray-700'
+            = f.email_field :email, 
+                autocomplete: 'email',
+                class: 'w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none transition duration-200',
+                style: 'focus:ring-2 focus:ring-opacity-50',
+                placeholder: 'admin@email.com',
+                id: 'reset-email',
+                onfocus: "this.style.borderColor='#3a6363'; this.style.boxShadow='0 0 0 3px rgba(58, 99, 99, 0.1)'",
+                onblur: "this.style.borderColor='#d1d5db'; this.style.boxShadow='none'"
+            - if resource.errors[:email].any?
+              %p.text-red-600.text-sm.mt-1= resource.errors[:email].join(', ')
+
+          .field
+            = f.submit 'Send Reset Instructions', 
+                class: 'w-full text-white font-medium py-3 px-4 rounded-lg transition duration-200 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-opacity-50',
+                style: 'background-color: #3a6363; hover:background-color: #2d4f4f',
+                id: 'reset-submit'
+
+      / Additional Links
+      .mt-8.text-center.space-y-4
+        = link_to 'Back to Admin Login', new_session_path(resource_name), 
+            class: 'font-medium transition-colors hover:underline block',
+            style: 'color: #3a6363'
+
+    / Help Section
+    .mt-8.rounded-xl.p-6{style: 'background-color: #f0f9f9'}
+      %h3.text-lg.font-semibold.mb-3.flex.items-center{style: 'color: #2d4f4f'}
+        %i.fas.fa-info-circle.mr-2
+        Admin Support
+      %p.text-sm.mb-3{style: 'color: #3a6363'}
+        If you are unable to reset your password using this form, please contact the system administrator directly.

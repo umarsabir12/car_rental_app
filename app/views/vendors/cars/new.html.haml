@@ -61,17 +61,17 @@
           = f.label :brand, 'Brand *', class: 'block text-xs sm:text-sm font-medium text-gray-700'
           = f.text_field :brand, required: true, class: 'w-full px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition', placeholder: 'e.g., Toyota'
 
-        .field.space-y-1.sm:space-y-2
+        .field.space-y-1.sm:space-y-2.hide-for-limousine
           = f.label :model, 'Model *', class: 'block text-xs sm:text-sm font-medium text-gray-700'
-          = f.text_field :model, required: true, class: 'w-full px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition', placeholder: 'e.g., Camry'
+          = f.text_field :model, required: true, class: 'w-full px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition', placeholder: 'e.g., Camry', id: 'car_model_field'
 
-        .field.space-y-1.sm:space-y-2
+        .field.space-y-1.sm:space-y-2.hide-for-limousine
           = f.label :color, 'Color *', class: 'block text-xs sm:text-sm font-medium text-gray-700'
-          = f.text_field :color, required: true, class: 'w-full px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition', placeholder: 'e.g., White'
+          = f.text_field :color, required: true, class: 'w-full px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition', placeholder: 'e.g., White', id: 'car_color_field'
 
-        .field.space-y-1.sm:space-y-2.standard-only-field
+        .field.space-y-1.sm:space-y-2.standard-only-field.hide-for-limousine
           = f.label :year, 'Year *', class: 'block text-xs sm:text-sm font-medium text-gray-700'
-          = f.number_field :year, required: true, min: 1900, max: Date.current.year + 1, class: 'w-full px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition', placeholder: 'e.g., 2023'
+          = f.number_field :year, required: true, min: 1900, max: Date.current.year + 1, class: 'w-full px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition', placeholder: 'e.g., 2023', id: 'car_year_field'
 
         / With Driver Specific Charges
         .field.space-y-1.sm:space-y-2.with-driver-only-field.hidden
@@ -82,7 +82,7 @@
           = f.label :ten_hours_charge, '10 Hours Charge (AED) *', class: 'block text-xs sm:text-sm font-medium text-gray-700'
           = f.number_field :ten_hours_charge, step: 1, min: 0, class: 'w-full px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition', placeholder: 'e.g., 450'
 
-        .field.space-y-1.sm:space-y-2.standard-only-field
+        .field.space-y-1.sm:space-y-2.standard-only-field.hide-for-limousine
           = f.label :daily_price, 'Daily Price (AED) *', class: 'block text-xs sm:text-sm font-medium text-gray-700'
           = f.number_field :daily_price, required: true, step: 1, min: 0, class: 'w-full px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition', placeholder: 'e.g., 50.00'
 
@@ -98,14 +98,19 @@
           = f.label :additional_mileage_charge, 'Additional Mileage Charge (AED)', class: 'block text-xs sm:text-sm font-medium text-gray-700'
           = f.number_field :additional_mileage_charge, step: 0.01, min: 0, class: 'w-full px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition', placeholder: 'e.g., 1.00'
 
-        .field.space-y-1.sm:space-y-2.standard-only-field
+        .field.space-y-1.sm:space-y-2.standard-only-field.hide-for-limousine
           = f.label :status, 'Status *', class: 'block text-xs sm:text-sm font-medium text-gray-700'
-          = f.select :status, options_for_select([['Available', 'available'], ['Rented', 'rented'], ['Maintenance', 'maintenance']], @car.status), { prompt: 'Select status' }, { required: true, class: 'w-full px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition' }
+          = f.select :status, options_for_select([['Available', 'available'], ['Rented', 'rented'], ['Maintenance', 'maintenance']], @car.status), { prompt: 'Select status' }, { required: true, class: 'w-full px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition', id: 'car_status_field' }
+
+        / Limousine Hourly Price
+        .field.space-y-1.sm:space-y-2.limousine-only-field.hidden
+          = f.label :hourly_price, 'Per Hour Price for Dubai (AED) *', class: 'block text-xs sm:text-sm font-medium text-gray-700'
+          = f.number_field :hourly_price, step: 1, min: 0, class: 'w-full px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition', placeholder: 'e.g., 150', id: 'car_hourly_price_field'
 
 
 
       / Specifications Section
-      %h2.text-base.sm:text-lg.font-bold.mb-3.sm:mb-4.mt-6.sm:mt-8{style: 'color: #3a6363'} Specifications
+      %h2.text-base.sm:text-lg.font-bold.mb-3.sm:mb-4.mt-6.sm:mt-8.hide-for-limousine{style: 'color: #3a6363'} Specifications
       .grid.grid-cols-1.md:grid-cols-2.gap-4.sm:gap-6
         .field.space-y-1.sm:space-y-2.standard-only-field
           = f.label :transmission, 'Transmission', class: 'block text-xs sm:text-sm font-medium text-gray-700'
@@ -115,7 +120,7 @@
           = f.label :fuel_type, 'Fuel Type', class: 'block text-xs sm:text-sm font-medium text-gray-700'
           = f.select :fuel_type, options_for_select([['Petrol', 'Petrol'], ['Diesel', 'Diesel'], ['Electric', 'Electric'], ['Hybrid', 'Hybrid'], ['Plug-in Hybrid', 'Plug-in Hybrid']], @car.fuel_type), { prompt: 'Select fuel type' }, { class: 'w-full px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition' }
 
-        .field.space-y-1.sm:space-y-2
+        .field.space-y-1.sm:space-y-2.hide-for-limousine
           = f.label :seats, 'Number of Seats', class: 'block text-xs sm:text-sm font-medium text-gray-700'
           = f.number_field :seats, min: 1, max: 15, class: 'w-full px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition', placeholder: 'e.g., 5'
 
@@ -175,7 +180,7 @@
             %p.text-sm.sm:text-base No premium features available. Contact admin to add features.
 
       / Insurance Section
-      #insurance-section.standard-only-field
+      #insurance-section.standard-only-field.hide-for-limousine
         %h2.text-base.sm:text-lg.font-bold.mb-3.sm:mb-4.mt-6.sm:mt-8{style: 'color: #3a6363'} Insurance
         .field.space-y-1.sm:space-y-2
           %div.flex.items-center.justify-between.mb-1.sm:mb-2
@@ -221,7 +226,7 @@
         %p.text-red-600.font-medium At least one image is required. Upload up to 5 high-quality images of your car. First image will be used as the main display image.
 
       / Mulkiya Section
-      %h2.text-base.sm:text-lg.font-bold.text-blue-800.mb-3.sm:mb-4.mt-6.sm:mt-8.standard-only-field Mulkiya (PDF or Image) *
+      %h2.text-base.sm:text-lg.font-bold.text-blue-800.mb-3.sm:mb-4.mt-6.sm:mt-8.standard-only-field.hide-for-limousine Mulkiya (PDF or Image) *
       - if @car.errors[:mulkiya].any?
         .mb-3.sm:mb-4.p-3.sm:p-4.bg-red-50.border.border-red-200.rounded-lg
           %p.text-red-600.text-xs.sm:text-sm.font-medium= @car.errors[:mulkiya].join(', ')
@@ -415,8 +420,17 @@
     }
     
     // Form validation - only apply to car creation form
-    if (form && form.id === 'car-creation-form') {
+    if (form) {
       form.addEventListener('submit', function(e) {
+        // FAILSAFE: Remove 'required' from any hidden element before submission
+        const allRequired = form.querySelectorAll('[required]');
+        allRequired.forEach(input => {
+          if (input.offsetWidth === 0 && input.offsetHeight === 0) {
+            input.removeAttribute('required');
+            input.required = false;
+          }
+        });
+
         checkImageSelection();
         if (!hasImage) {
           e.preventDefault();
@@ -546,64 +560,147 @@
 
     function updateFormVisibility() {
       const isLimousine = categorySelect && categorySelect.value === 'Limousine';
-      
+      const isWithDriver = toggle.checked || isLimousine;
+
       // If Limousine is selected, force with_driver toggle to be checked
       if (isLimousine) {
         toggle.checked = true;
       }
 
-      const isWithDriver = toggle.checked;
       const standardOnlyFields = document.querySelectorAll('.standard-only-field');
       const withDriverOnlyFields = document.querySelectorAll('.with-driver-only-field');
+      const limousineOnlyFields = document.querySelectorAll('.limousine-only-field');
+      const hideForLimousineFields = document.querySelectorAll('.hide-for-limousine');
 
-      standardOnlyFields.forEach(field => {
-        // If it's a Limousine, we show the category field even if it's in standard-only grid
-        // but wait, standard-only-field class is applied to the wrapper.
-        // Let's ensure the category field itself remains visible or is handled.
-        
-        if (isWithDriver) {
+      // Reset all visibility
+      standardOnlyFields.forEach(f => f.classList.remove('hidden'));
+      withDriverOnlyFields.forEach(f => f.classList.add('hidden'));
+      limousineOnlyFields.forEach(f => f.classList.add('hidden'));
+      hideForLimousineFields.forEach(f => f.classList.remove('hidden'));
+
+      if (isLimousine) {
+        // Limousine logic
+        hideForLimousineFields.forEach(field => {
           field.classList.add('hidden');
-
-          // Remove required attribute to allow submission
-          const inputs = field.querySelectorAll('input[required], select[required], textarea[required]');
+          const inputs = field.querySelectorAll('input, select, textarea');
           inputs.forEach(input => {
-            input.dataset.wasRequired = 'true';
+            if (input.required || input.hasAttribute('required')) input.dataset.wasRequired = 'true';
             input.required = false;
+            input.removeAttribute('required');
           });
           
-          // Set default values for hidden required fields to pass model validations
+          // Set default values for hidden required fields
           const yearInput = field.querySelector('input[name="car[year]"]');
           if (yearInput && !yearInput.value) yearInput.value = new Date().getFullYear();
+          
+          const modelInput = field.querySelector('input[name="car[model]"]');
+          if (modelInput && !modelInput.value) modelInput.value = 'Limousine';
+          
+          const colorInput = field.querySelector('input[name="car[color]"]');
+          if (colorInput && !colorInput.value) colorInput.value = 'N/A';
           
           const statusSelect = field.querySelector('select[name="car[status]"]');
           if (statusSelect && !statusSelect.value) statusSelect.value = 'available';
           
           const insuranceTextarea = field.querySelector('textarea[name="car[insurance_policy]"]');
-          if (insuranceTextarea && !insuranceTextarea.value) insuranceTextarea.value = 'Included as per standard terms';
+          if (insuranceTextarea && !insuranceTextarea.value) insuranceTextarea.value = 'Included for Limousine';
           
           const dailyPriceInput = field.querySelector('input[name="car[daily_price]"]');
           if (dailyPriceInput && !dailyPriceInput.value) dailyPriceInput.value = '0';
-        } else {
+        });
+
+        // Also clean up required for standardOnlyFields that are hidden for Limousine
+        standardOnlyFields.forEach(field => {
+          if (!field.classList.contains('limousine-only-field')) {
+            field.classList.add('hidden');
+            const inputs = field.querySelectorAll('input, select, textarea');
+            inputs.forEach(input => {
+              if (input.required || input.hasAttribute('required')) input.dataset.wasRequired = 'true';
+              input.required = false;
+              input.removeAttribute('required');
+            });
+          }
+        });
+        
+        limousineOnlyFields.forEach(field => {
           field.classList.remove('hidden');
-          // Restore required attribute
-          const inputs = field.querySelectorAll('[data-was-required="true"]');
+          const inputs = field.querySelectorAll('input');
+          inputs.forEach(input => {
+            if (input.dataset.wasRequired === 'true') {
+              input.required = true;
+              input.setAttribute('required', 'required');
+            } else if (input.id === 'car_hourly_price_field') {
+              input.required = true;
+              input.setAttribute('required', 'required');
+            }
+          });
+        });
+
+        withDriverOnlyFields.forEach(f => {
+          f.classList.add('hidden');
+          f.querySelectorAll('input').forEach(i => {
+            i.required = false;
+            i.removeAttribute('required');
+          });
+        });
+
+      } else if (isWithDriver) {
+        // Standard With Driver logic
+        standardOnlyFields.forEach(field => {
+          field.classList.add('hidden');
+          const inputs = field.querySelectorAll('input, select, textarea');
+          inputs.forEach(input => {
+            if (input.required || input.hasAttribute('required') || input.dataset.wasRequired === 'true') {
+              input.dataset.wasRequired = 'true';
+              input.required = false;
+              input.removeAttribute('required');
+            }
+          });
+        });
+
+        withDriverOnlyFields.forEach(field => {
+          field.classList.remove('hidden');
+          const inputs = field.querySelectorAll('input');
           inputs.forEach(input => {
             input.required = true;
+            input.setAttribute('required', 'required');
           });
-        }
-      });
-
-      withDriverOnlyFields.forEach(field => {
-        if (isWithDriver) {
+        });
+        
+        limousineOnlyFields.forEach(f => {
+          f.classList.add('hidden');
+          f.querySelectorAll('input').forEach(i => {
+            i.required = false;
+            i.removeAttribute('required');
+          });
+        });
+      } else {
+        // Standard No Driver logic
+        standardOnlyFields.forEach(field => {
           field.classList.remove('hidden');
-          const inputs = field.querySelectorAll('input');
-          inputs.forEach(input => input.required = true);
-        } else {
+          const inputs = field.querySelectorAll('input, select, textarea');
+          inputs.forEach(input => {
+            if (input.dataset.wasRequired === 'true') {
+              input.required = true;
+              input.setAttribute('required', 'required');
+            }
+          });
+        });
+        withDriverOnlyFields.forEach(field => {
           field.classList.add('hidden');
-          const inputs = field.querySelectorAll('input');
-          inputs.forEach(input => input.required = false);
-        }
-      });
+          field.querySelectorAll('input').forEach(i => {
+            i.required = false;
+            i.removeAttribute('required');
+          });
+        });
+        limousineOnlyFields.forEach(field => {
+          field.classList.add('hidden');
+          field.querySelectorAll('input').forEach(i => {
+            i.required = false;
+            i.removeAttribute('required');
+          });
+        });
+      }
     }
 
     toggle.addEventListener('change', updateFormVisibility);

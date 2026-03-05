@@ -44,7 +44,7 @@ class Vendors::CarsController < ApplicationController
       @car.car_document.mulkiya.attach(params[:car][:mulkiya])
     end
 
-    if @car.save
+    if @car.save!
 
       # Assign selected premium features
       if params[:car][:feature_ids].present?
@@ -174,7 +174,7 @@ class Vendors::CarsController < ApplicationController
       :transmission, :fuel_type, :seats, :engine_size,
       :air_conditioning, :gps, :sunroof, :bluetooth, :daily_milleage, :weekly_milleage, :monthly_milleage, :featured,
       :main_image_url, :insurance_policy, :additional_mileage_charge, :with_driver, :mulkiya,
-      :five_hours_charge, :ten_hours_charge, :luggage_capacity,
+      :five_hours_charge, :ten_hours_charge, :luggage_capacity, :hourly_price,
       images: [], feature_ids: []
     )
   end
