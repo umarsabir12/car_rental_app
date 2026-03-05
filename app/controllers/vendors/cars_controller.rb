@@ -26,7 +26,11 @@ class Vendors::CarsController < ApplicationController
     if params[:car][:images].blank? || params[:car][:images].all?(&:blank?)
       @car.errors.add(:images, "At least one image is required")
       load_premium_features
-      render :new
+      flash.now[:alert] = "Error: #{@car.errors.full_messages.to_sentence}"
+      respond_to do |format|
+        format.html { render :new, status: :unprocessable_entity }
+        format.turbo_stream { render turbo_stream: [turbo_stream.replace('form-errors', partial: 'shared/form_errors', locals: { object: @car }), turbo_stream.replace('flash-container', partial: 'shared/flash_messages')] }
+      end
       return
     end
 
@@ -34,7 +38,11 @@ class Vendors::CarsController < ApplicationController
     if params[:car][:mulkiya].blank? && params[:car][:with_driver] != "1" && params[:car][:category] != "Limousine"
       @car.errors.add(:mulkiya, "Mulkiya document is required")
       load_premium_features
-      render :new
+      flash.now[:alert] = "Error: #{@car.errors.full_messages.to_sentence}"
+      respond_to do |format|
+        format.html { render :new, status: :unprocessable_entity }
+        format.turbo_stream { render turbo_stream: [turbo_stream.replace('form-errors', partial: 'shared/form_errors', locals: { object: @car }), turbo_stream.replace('flash-container', partial: 'shared/flash_messages')] }
+      end
       return
     end
 
@@ -44,19 +52,27 @@ class Vendors::CarsController < ApplicationController
       @car.car_document.mulkiya.attach(params[:car][:mulkiya])
     end
 
-    if @car.save!
+    respond_to do |format|
+      if @car.save
 
-      # Assign selected premium features
-      if params[:car][:feature_ids].present?
-        feature_ids = params[:car][:feature_ids].reject(&:blank?).map(&:to_i)
-        @car.feature_ids = (@car.feature_ids + feature_ids).uniq
+        # Assign selected premium features
+        if params[:car][:feature_ids].present?
+          feature_ids = params[:car][:feature_ids].reject(&:blank?).map(&:to_i)
+          @car.feature_ids = (@car.feature_ids + feature_ids).uniq
+        end
+
+        format.html { redirect_to vendors_car_thank_you_path, notice: "Car was successfully created." }
+      else
+        load_premium_features
+        flash.now[:alert] = "Error: #{@car.errors.full_messages.to_sentence}"
+        format.html { render :new, status: :unprocessable_entity }
+        format.turbo_stream do
+          render turbo_stream: [
+            turbo_stream.replace('form-errors', partial: 'shared/form_errors', locals: { object: @car }),
+            turbo_stream.replace('flash-container', partial: 'shared/flash_messages')
+          ]
+        end
       end
-
-      redirect_to vendors_car_thank_you_path, notice: "Car was successfully created."
-    else
-      load_premium_features
-      flash.now[:alert] = "Please fix the following errors:\n#{@car.errors.full_messages.join(', ')}"
-      render :new
     end
   end
 
@@ -92,27 +108,36 @@ class Vendors::CarsController < ApplicationController
     # Handle feature associations
     update_car_features if params[:car][:feature_ids].present?
 
-    if @car.update!(car_params.except(:mulkiya, :feature_ids))
-      # Attach/replace mulkiya if provided
-      if params[:car][:mulkiya].present?
-        if @car.car_document.present?
-          @car.car_document.mulkiya.purge if @car.car_document.mulkiya.attached?
-          @car.car_document.mulkiya.attach(params[:car][:mulkiya])
-          @car.car_document.document_status = :pending
-          @car.car_document.save!
-        else
-          car_document = CarDocument.new
-          car_document.mulkiya.attach(params[:car][:mulkiya])
-          car_document.document_status = :pending
-          car_document.car = @car
-          car_document.save!
+    respond_to do |format|
+      if @car.update(car_params.except(:mulkiya, :feature_ids))
+        # Attach/replace mulkiya if provided
+        if params[:car][:mulkiya].present?
+          if @car.car_document.present?
+            @car.car_document.mulkiya.purge if @car.car_document.mulkiya.attached?
+            @car.car_document.mulkiya.attach(params[:car][:mulkiya])
+            @car.car_document.document_status = :pending
+            @car.car_document.save!
+          else
+            car_document = CarDocument.new
+            car_document.mulkiya.attach(params[:car][:mulkiya])
+            car_document.document_status = :pending
+            car_document.car = @car
+            car_document.save!
+          end
+        end
+
+        format.html { redirect_to vendors_car_path(@car), notice: "Car was successfully updated." }
+      else
+        load_premium_features
+        flash.now[:alert] = "Error: #{@car.errors.full_messages.to_sentence}"
+        format.html { render :edit, status: :unprocessable_entity }
+        format.turbo_stream do
+          render turbo_stream: [
+            turbo_stream.replace('form-errors', partial: 'shared/form_errors', locals: { object: @car }),
+            turbo_stream.replace('flash-container', partial: 'shared/flash_messages')
+          ]
         end
       end
-
-      redirect_to vendors_car_path(@car), notice: "Car was successfully updated."
-    else
-      load_premium_features
-      render :edit
     end
   end
 

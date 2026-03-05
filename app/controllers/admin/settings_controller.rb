@@ -25,27 +25,38 @@ class Admin::SettingsController < ApplicationController
   def update
     # In a real application, you would save these to a database
     # For now, we'll just show a success message
-    redirect_to admin_settings_path, notice: "Settings updated successfully!"
+    respond_to do |format|
+      format.html { redirect_to admin_settings_path, notice: "Settings updated successfully!" }
+      format.turbo_stream { redirect_to admin_settings_path, notice: "Settings updated successfully!" }
+    end
   end
 
   def test_webhook
-    begin
-      # Test webhook connectivity
-      response = Net::HTTP.get_response(URI("https://api.stripe.com/v1/webhook_endpoints"))
-      if response.code == "200"
-        redirect_to admin_settings_path, notice: "Webhook connection test successful!"
-      else
-        redirect_to admin_settings_path, alert: "Webhook connection test failed!"
+    respond_to do |format|
+      begin
+        # Test webhook connectivity
+        response = Net::HTTP.get_response(URI("https://api.stripe.com/v1/webhook_endpoints"))
+        if response.code == "200"
+          format.html { redirect_to admin_settings_path, notice: "Webhook connection test successful!" }
+          format.turbo_stream { redirect_to admin_settings_path, notice: "Webhook connection test successful!" }
+        else
+          format.html { redirect_to admin_settings_path, alert: "Webhook connection test failed!" }
+          format.turbo_stream { redirect_to admin_settings_path, alert: "Webhook connection test failed!" }
+        end
+      rescue => e
+        format.html { redirect_to admin_settings_path, alert: "Webhook test error: #{e.message}" }
+        format.turbo_stream { redirect_to admin_settings_path, alert: "Webhook test error: #{e.message}" }
       end
-    rescue => e
-      redirect_to admin_settings_path, alert: "Webhook test error: #{e.message}"
     end
   end
 
   def clear_cache
     # Clear application cache
     Rails.cache.clear
-    redirect_to admin_settings_path, notice: "Cache cleared successfully!"
+    respond_to do |format|
+      format.html { redirect_to admin_settings_path, notice: "Cache cleared successfully!" }
+      format.turbo_stream { redirect_to admin_settings_path, notice: "Cache cleared successfully!" }
+    end
   end
 
   def system_info

@@ -142,14 +142,7 @@
           %path{"stroke-linecap": "round", "stroke-linejoin": "round", "stroke-width": "2", d: "M6 18L18 6M6 6l12 12"}
 
     = form_with(model: [:admin, @feature], html: { id: "featureForm" }) do |f|
-      - if @feature.errors.any?
-        .mb-4.border-l-4.p-3.sm:p-4.rounded-r{style: "background-color: #fee; border-color: #dc3545;"}
-          %h4.font-semibold.mb-2{style: "color: #dc3545;"}
-            = pluralize(@feature.errors.count, "error")
-            prohibited this feature from being saved:
-          %ul.list-disc.list-inside{style: "color: #dc3545;"}
-            - @feature.errors.full_messages.each do |message|
-              %li= message
+      = render 'shared/form_errors', object: @feature
 
       .mb-4
         = f.label :name, class: "block text-sm font-medium mb-2", style: "color: #3A6363;"

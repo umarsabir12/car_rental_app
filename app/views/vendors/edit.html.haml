@@ -14,6 +14,7 @@
         %p.text-red-700.font-medium= alert
 
     = form_with model: @vendor, local: true, class: 'space-y-8' do |f|
+      = render 'shared/form_errors', object: @vendor
       / Personal Information Section
       %h2.text-xl.font-bold.mb-6{style: 'color: #3a6363'} Personal Information
       .grid.grid-cols-1.md:grid-cols-2.gap-6

@@ -244,7 +244,7 @@
 
       / Modal Body
       .p-4.sm:p-6
-        = form_with(model: [:admin, @vendor, @vendor.invoices.build], local: true, html: { class: 'space-y-4 sm:space-y-6' }) do |f|
+        = form_with(model: [:admin, @vendor, @vendor.invoices.build], html: { class: 'space-y-4 sm:space-y-6' }) do |f|
           / Hidden field for total amount
           = f.hidden_field :amount, id: 'invoice_amount_field', value: '0'
 

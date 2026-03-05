@@ -28,6 +28,7 @@ RSpec.configure do |config|
   # Include Devise test helpers
   config.include Devise::Test::ControllerHelpers, type: :controller
   config.include Devise::Test::IntegrationHelpers, type: :request
+  config.include Devise::Test::IntegrationHelpers, type: :system
 
   # Include ActiveSupport::Testing::TimeHelpers for travel_to, travel_back, etc.
   config.include ActiveSupport::Testing::TimeHelpers

@@ -6,16 +6,8 @@
       %h1.text-2xl.sm:text-3xl.font-bold{style: "color: #3A6363;"} Edit Discount
 
     .bg-white.rounded-lg.shadow-md.p-6
-      = form_with model: [:admin, @discount], local: true, html: { class: 'space-y-6' } do |f|
-        - if @discount.errors.any?
-          .bg-red-50.border-l-4.border-red-500.p-4.mb-6
-            .text-sm.text-red-700
-              %h3.font-medium.mb-2
-                = pluralize(@discount.errors.count, "error")
-                prohibited this discount from being saved:
-              %ul.list-disc.list-inside
-                - @discount.errors.full_messages.each do |message|
-                  %li= message
+      = form_with model: [:admin, @discount], html: { class: 'space-y-6' } do |f|
+        = render 'shared/form_errors', object: @discount
 
         .field
           = f.label :vendor_id, 'Vendor (Optional)', class: 'block text-sm font-medium text-gray-700 mb-2'

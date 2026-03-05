@@ -9,17 +9,22 @@ class Admin::FeaturesController < ApplicationController
     @feature = Feature.new
   end
 
-  def create
-    @feature = Feature.new(feature_params)
-
-    if @feature.save
-      redirect_to admin_features_path, notice: "Feature was successfully created."
-    else
-      @common_features = Feature.where(common: true).order(:name)
-      @premium_features = Feature.where(common: false).order(:name)
-      render :index, status: :unprocessable_entity
+    respond_to do |format|
+      if @feature.save
+        format.html { redirect_to admin_features_path, notice: "Feature was successfully created." }
+      else
+        @common_features = Feature.where(common: true).order(:name)
+        @premium_features = Feature.where(common: false).order(:name)
+        flash.now[:alert] = "Error: #{@feature.errors.full_messages.to_sentence}"
+        format.html { render :index, status: :unprocessable_entity }
+        format.turbo_stream do
+          render turbo_stream: [
+            turbo_stream.replace('form-errors', partial: 'shared/form_errors', locals: { object: @feature }),
+            turbo_stream.replace('flash-container', partial: 'shared/flash_messages')
+          ]
+        end
+      end
     end
-  end
 
   def edit
     respond_to do |format|
@@ -28,13 +33,20 @@ class Admin::FeaturesController < ApplicationController
     end
   end
 
-  def update
-    if @feature.update(feature_params)
-      redirect_to admin_features_path, notice: "Feature was successfully updated."
-    else
-      render :edit, status: :unprocessable_entity
+    respond_to do |format|
+      if @feature.update(feature_params)
+        format.html { redirect_to admin_features_path, notice: "Feature was successfully updated." }
+      else
+        flash.now[:alert] = "Error: #{@feature.errors.full_messages.to_sentence}"
+        format.html { render :edit, status: :unprocessable_entity }
+        format.turbo_stream do
+          render turbo_stream: [
+            turbo_stream.replace('form-errors', partial: 'shared/form_errors', locals: { object: @feature }),
+            turbo_stream.replace('flash-container', partial: 'shared/flash_messages')
+          ]
+        end
+      end
     end
-  end
 
   def destroy
     @feature.destroy

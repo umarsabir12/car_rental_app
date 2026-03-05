@@ -20,21 +20,33 @@ class Admin::BookingsController < ApplicationController
 
   def update
     @booking = Booking.find(params[:id])
-    if @booking.update(booking_params)
-      redirect_to admin_booking_path(@booking), notice: "Vendor assignment updated successfully."
-    else
-      @vendors = Vendor.all.order(:company_name)
-      flash.now[:alert] = "Failed to update vendor assignment."
-      render :show
+    respond_to do |format|
+      if @booking.update(booking_params)
+        format.html { redirect_to admin_booking_path(@booking), notice: "Vendor assignment updated successfully." }
+      else
+        @vendors = Vendor.all.order(:company_name)
+        flash.now[:alert] = "Error: #{@booking.errors.full_messages.to_sentence}"
+        format.html { render :show, status: :unprocessable_entity }
+        format.turbo_stream do
+          render turbo_stream: [
+            turbo_stream.replace('form-errors', partial: 'shared/form_errors', locals: { object: @booking }),
+            turbo_stream.replace('flash-container', partial: 'shared/flash_messages')
+          ]
+        end
+      end
     end
   end
 
   def cancel
     @booking = Booking.find(params[:id])
-    if @booking.cancel_by_admin!("refund_pending")
-      redirect_to admin_booking_path(@booking), notice: "Booking has been cancelled successfully. Refund is pending."
-    else
-      redirect_to admin_booking_path(@booking), alert: "Failed to cancel booking. It may already be cancelled."
+    respond_to do |format|
+      if @booking.cancel_by_admin!("refund_pending")
+        format.html { redirect_to admin_booking_path(@booking), notice: "Booking has been cancelled successfully. Refund is pending." }
+        format.turbo_stream { redirect_to admin_booking_path(@booking), notice: "Booking has been cancelled successfully. Refund is pending." }
+      else
+        format.html { redirect_to admin_booking_path(@booking), alert: "Failed to cancel booking. It may already be cancelled." }
+        format.turbo_stream { redirect_to admin_booking_path(@booking), alert: "Failed to cancel booking. It may already be cancelled." }
+      end
     end
   end
 
@@ -42,10 +54,14 @@ class Admin::BookingsController < ApplicationController
     @booking = Booking.find(params[:id])
     new_status = params[:status]
 
-    if Booking::STATUSES.include?(new_status) && @booking.update(status: new_status)
-      redirect_to admin_booking_path(@booking), notice: "Booking status updated to #{new_status.titleize} successfully."
-    else
-      redirect_to admin_booking_path(@booking), alert: "Failed to update booking status."
+    respond_to do |format|
+      if Booking::STATUSES.include?(new_status) && @booking.update(status: new_status)
+        format.html { redirect_to admin_booking_path(@booking), notice: "Booking status updated to #{new_status.titleize} successfully." }
+        format.turbo_stream { redirect_to admin_booking_path(@booking), notice: "Booking status updated to #{new_status.titleize} successfully." }
+      else
+        format.html { redirect_to admin_booking_path(@booking), alert: "Failed to update booking status." }
+        format.turbo_stream { redirect_to admin_booking_path(@booking), alert: "Failed to update booking status." }
+      end
     end
   end
 
@@ -53,10 +69,14 @@ class Admin::BookingsController < ApplicationController
     @booking = Booking.find(params[:id])
     new_payment_status = params[:payment_status]
 
-    if Booking::PAYMENT_STATUSES.include?(new_payment_status) && @booking.update(payment_status: new_payment_status)
-      redirect_to admin_booking_path(@booking), notice: "Payment status updated to #{new_payment_status.titleize} successfully."
-    else
-      redirect_to admin_booking_path(@booking), alert: "Failed to update payment status."
+    respond_to do |format|
+      if Booking::PAYMENT_STATUSES.include?(new_payment_status) && @booking.update(payment_status: new_payment_status)
+        format.html { redirect_to admin_booking_path(@booking), notice: "Payment status updated to #{new_payment_status.titleize} successfully." }
+        format.turbo_stream { redirect_to admin_booking_path(@booking), notice: "Payment status updated to #{new_payment_status.titleize} successfully." }
+      else
+        format.html { redirect_to admin_booking_path(@booking), alert: "Failed to update payment status." }
+        format.turbo_stream { redirect_to admin_booking_path(@booking), alert: "Failed to update payment status." }
+      end
     end
   end
 

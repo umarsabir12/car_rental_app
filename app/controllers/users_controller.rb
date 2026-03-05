@@ -27,24 +27,32 @@ class UsersController < ApplicationController
 
   def update
     @user = current_user
-    if @user.update(user_params)
-      # Log profile update activity
-      Activity.log_activity(
-        user: @user,
-        subject: @user,
-        action: "profile_updated",
-        description: "#{@user.full_name} updated their profile",
-        metadata: {
-          updated_fields: user_params.keys,
-          nationality: @user.nationality,
-          whatsapp_number: @user.whatsapp_number
-        },
-        request: request
-      )
-      redirect_to user_path(@user), notice: "Profile updated successfully."
-    else
-      flash.now[:alert] = "Failed to update profile. Please check the errors below."
-      render :edit
+    respond_to do |format|
+      if @user.update(user_params)
+        # Log profile update activity
+        Activity.log_activity(
+          user: @user,
+          subject: @user,
+          action: "profile_updated",
+          description: "#{@user.full_name} updated their profile",
+          metadata: {
+            updated_fields: user_params.keys,
+            nationality: @user.nationality,
+            whatsapp_number: @user.whatsapp_number
+          },
+          request: request
+        )
+        format.html { redirect_to user_path(@user), notice: "Profile updated successfully." }
+      else
+        flash.now[:alert] = "Error: #{@user.errors.full_messages.to_sentence}"
+        format.html { render :edit, status: :unprocessable_entity }
+        format.turbo_stream do
+          render turbo_stream: [
+            turbo_stream.replace('form-errors', partial: 'shared/form_errors', locals: { object: @user }),
+            turbo_stream.replace('flash-container', partial: 'shared/flash_messages')
+          ]
+        end
+      end
     end
   end
 
