@@ -18,7 +18,7 @@ class CarRentalController < ApplicationController
     @car_models = normalize_filter_values(Car.distinct.pluck(:model).compact).map { |m| [ m, m ] }
 
     # Featured cars data (manually selected by admin)
-    @featured_cars = Car.featured.limit(10)
+    @featured_cars = Car.with_attached_images.featured.limit(10)
 
     # Brands data
     @brands = [
@@ -100,7 +100,8 @@ class CarRentalController < ApplicationController
     ]
 
     @category_cars = [ "SUV", "Luxury", "Sports", "Economy" ].flat_map do |category|
-      Car.with_approved_mulkiya
+      Car.with_attached_images
+         .with_approved_mulkiya
          .where(category: category)
          .left_joins(:bookings)
          .select("cars.*, COUNT(bookings.id) as total_bookings")
@@ -109,7 +110,8 @@ class CarRentalController < ApplicationController
     end
 
     # Fetch cars with driver
-    cars_with_driver = Car.with_approved_mulkiya
+    cars_with_driver = Car.with_attached_images
+                          .with_approved_mulkiya
                           .where(with_driver: true)
                           .left_joins(:bookings)
                           .select("cars.*, COUNT(bookings.id) as total_bookings")
