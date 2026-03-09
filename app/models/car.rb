@@ -213,7 +213,7 @@ class Car < ApplicationRecord
 
   # Regenerate slug when relevant fields change
   def should_generate_new_friendly_id?
-    brand_changed? || model_changed? || year_changed? || super
+    slug.blank?
   end
 
   private
