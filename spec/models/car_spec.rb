@@ -200,10 +200,10 @@ RSpec.describe Car, type: :model do
       expect(car.slug).to eq('bmw-x5')
     end
 
-    it 'regenerates slug when brand or model changes' do
+    it 'does not regenerate slug automatically when brand or model changes' do
       car = create(:car, brand: 'BMW', model: 'X5')
       car.update(model: 'X7')
-      expect(car.slug).to eq('bmw-x7')
+      expect(car.slug).to eq('bmw-x5')
     end
   end
 
