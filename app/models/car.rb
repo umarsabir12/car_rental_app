@@ -54,9 +54,12 @@ class Car < ApplicationRecord
     end
   end
 
+  attr_writer :applicable_discount
+
   # Get applicable discount for this car
   def applicable_discount
-    @applicable_discount ||= Discount.applicable_for_car(self)
+    return @applicable_discount if defined?(@applicable_discount)
+    @applicable_discount = Discount.applicable_for_car(self)
   end
 
   # Check if car has an active discount

@@ -48,6 +48,50 @@ class Discount < ApplicationRecord
       .first
   end
 
+  # Preload discounts for a collection of cars to prevent N+1 queries
+  def self.preload_for_cars(cars)
+    active_discounts = active.to_a
+    cars.each do |car|
+      car.applicable_discount = evaluate_for_car(car, active_discounts)
+    end
+  end
+
+  # In-memory evaluation of discounts to prevent N+1 queries
+  def self.evaluate_for_car(car, valid_discounts)
+    return nil unless car
+
+    # Filter applicable discounts for this car
+    applicable = valid_discounts.select do |d|
+      vendor_match = d.vendor_id.nil? || d.vendor_id == car.vendor_id
+
+      category_match = false
+      if d.category.blank? || d.category.empty?
+        category_match = true
+      elsif d.category.include?(car.category)
+        category_match = true
+      elsif car.with_driver? && d.category.include?("With Driver")
+        category_match = true
+      end
+
+      vendor_match && category_match
+    end
+
+    # Sort matching discounts as per the SQL query
+    applicable.sort_by do |d|
+      priority = 4
+      if d.vendor_id == car.vendor_id && (d.category.present? && (d.category.include?(car.category) || (car.with_driver? && d.category.include?("With Driver"))))
+        priority = 1
+      elsif d.vendor_id.nil? && (d.category.present? && (d.category.include?(car.category) || (car.with_driver? && d.category.include?("With Driver"))))
+        priority = 2
+      elsif d.vendor_id == car.vendor_id && (d.category.blank? || d.category.empty?)
+        priority = 3
+      end
+
+      # We want to sort by priority ascending, then discount percentage descending.
+      [ priority, -d.discount_percentage ]
+    end.first
+  end
+
   def applies_to_all_categories?
     category.blank? || category.empty?
   end
