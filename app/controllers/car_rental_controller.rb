@@ -107,6 +107,7 @@ class CarRentalController < ApplicationController
          .select("cars.*, COUNT(bookings.id) as total_bookings")
          .group("cars.id")
          .order("total_bookings DESC, cars.created_at DESC")
+         .limit(12)
     end
 
     # Fetch cars with driver
@@ -117,6 +118,7 @@ class CarRentalController < ApplicationController
                           .select("cars.*, COUNT(bookings.id) as total_bookings")
                           .group("cars.id")
                           .order("total_bookings DESC, cars.created_at DESC")
+                          .limit(12)
 
     # Needs to be formatted similarly to category cars if we want to use the same loop in view,
     # but the view logic filters by category name/slug.
@@ -126,6 +128,9 @@ class CarRentalController < ApplicationController
     # simpler: just add them to @category_cars and we update the view logic to filter correctly.
 
     @category_cars += cars_with_driver
+
+    # Preload discounts for all cars displayed on the homepage to prevent N+1 queries
+    Discount.preload_for_cars(@category_cars + @featured_cars)
 
     @company_features = [
       { title: "Luxury and Premium Cars", description: "Enjoy Dubai in style with our luxury car rentals, including BMW 7 Series, Mercedes S-Class, and Audi A8. Perfect for business meetings, VIP events, or exploring Dubai’s skyline with elegance." },
