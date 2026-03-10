@@ -88,7 +88,7 @@ class Discount < ApplicationRecord
       end
 
       # We want to sort by priority ascending, then discount percentage descending.
-      [priority, -d.discount_percentage]
+      [ priority, -d.discount_percentage ]
     end.first
   end
 
