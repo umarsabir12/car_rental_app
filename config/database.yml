@@ -24,10 +24,10 @@ production:
   <<: *default
   url: <%= ENV['DATABASE_URL'] %>
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 2 } %>
-  prepared_statements: true
-  advisory_locks: true
-  connect_timeout: 2
-  checkout_timeout: 5
+  prepared_statements: false
+  advisory_locks: false
+  connect_timeout: 10
+  checkout_timeout: 10
   reaping_frequency: 10
   variables:
-    statement_timeout: 5000
+    statement_timeout: 10000
