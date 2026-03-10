@@ -99,15 +99,19 @@ class CarRentalController < ApplicationController
       { name: "Cars with Driver", slug: "with-driver", with_driver: true, description: "Sit back and relax while our professional chauffeurs take you to your destination in comfort and style. Perfect for business trips, events, or stress-free sightseeing." }
     ]
 
-    @category_cars = [ "SUV", "Luxury", "Sports", "Economy" ].flat_map do |category|
-      Car.with_attached_images
-         .with_approved_mulkiya
-         .where(category: category)
-         .left_joins(:bookings)
-         .select("cars.*, COUNT(bookings.id) as total_bookings")
-         .group("cars.id")
-         .order("total_bookings DESC, cars.created_at DESC")
-         .limit(12)
+    # Fetch all category cars in ONE query instead of 4 separate queries.
+    # We gather up to 12 per category by fetching more and partitioning in Ruby.
+    all_categories = [ "SUV", "Luxury", "Sports", "Economy" ]
+    category_pool = Car.with_attached_images
+                       .with_approved_mulkiya
+                       .where(category: all_categories)
+                       .left_joins(:bookings)
+                       .select("cars.*, COUNT(bookings.id) as total_bookings")
+                       .group("cars.id")
+                       .order("total_bookings DESC, cars.created_at DESC")
+
+    @category_cars = all_categories.flat_map do |category|
+      category_pool.select { |car| car.category == category }.first(12)
     end
 
     # Fetch cars with driver

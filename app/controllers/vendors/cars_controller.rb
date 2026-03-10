@@ -4,7 +4,7 @@ class Vendors::CarsController < ApplicationController
   before_action :load_premium_features, only: [ :new, :edit ]
 
   def index
-    @cars = current_vendor.cars.includes(:features)
+    @cars = current_vendor.cars.with_attached_images.includes(:features)
 
     if params[:filter] == "with_driver"
       @cars = @cars.where(with_driver: true)

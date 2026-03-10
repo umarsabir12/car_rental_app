@@ -1,14 +1,14 @@
 module ApplicationHelper
-  def car_main_image(car, size: [ 400, 400 ], use_variant: true)
+  def car_main_image(car, size: [ 400, 300 ], use_variant: true)
     return safe_car_placeholder if car.nil?
 
     if car.images.attached? && car.images.any?
       image = car.images.first
 
       if use_variant && defined?(MiniMagick)
-        image_tag image.variant(resize_to_limit: size), class: "car-image w-full h-full object-cover"
+        image_tag image.variant(resize_to_limit: size), class: "car-image w-full h-full object-cover", loading: "lazy"
       else
-        image_tag url_for(image), class: "car-image w-full h-full object-cover"
+        image_tag url_for(image), class: "car-image w-full h-full object-cover", loading: "lazy"
       end
     else
       safe_car_placeholder
@@ -26,7 +26,7 @@ module ApplicationHelper
           slides = content_tag :div, class: "swiper-wrapper" do
             car.images.map do |image|
               content_tag :div, class: "swiper-slide flex items-center justify-center" do
-                image_tag url_for(image), class: "w-full h-full object-cover", alt: "#{car.brand} #{car.model}"
+                image_tag url_for(image), class: "w-full h-full object-cover", alt: "#{car.brand} #{car.model}", loading: "lazy"
               end
             end.join.html_safe
           end

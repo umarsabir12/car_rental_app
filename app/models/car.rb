@@ -183,9 +183,11 @@ class Car < ApplicationRecord
 
     return scope unless min && max
 
-    # We need to filter based on effective monthly price (after discount)
-    # and exclude "with driver" cars as requested.
-    matching_ids = scope.where(with_driver: [ false, nil ]).select do |car|
+    # Load the scoped cars once and bulk-preload discounts to prevent N+1.
+    cars_scope = scope.where(with_driver: [ false, nil ])
+    Discount.preload_for_cars(cars_scope)
+
+    matching_ids = cars_scope.select do |car|
       effective_price = car.discounted_monthly_price
       effective_price >= min && effective_price < max
     end.map(&:id)
@@ -194,15 +196,23 @@ class Car < ApplicationRecord
   end
 
   def self.max_effective_monthly_price
-    # Note: This scans all relevant cars to find the max effective price.
+    # Use DB-level MAX to avoid loading all cars into memory.
     # We exclude "with driver" cars as requested.
-    with_approved_mulkiya.where(with_driver: [ false, nil ]).map(&:discounted_monthly_price).compact.max || 0
+    with_approved_mulkiya
+      .where(with_driver: [ false, nil ])
+      .where.not(monthly_price: nil)
+      .maximum(:monthly_price)
+      .to_f
   end
 
   def self.min_effective_monthly_price
-    # Note: This scans all relevant cars to find the min effective price.
+    # Use DB-level MIN to avoid loading all cars into memory.
     # We exclude "with driver" cars as requested.
-    with_approved_mulkiya.where(with_driver: [ false, nil ]).map(&:discounted_monthly_price).compact.min || 0
+    with_approved_mulkiya
+      .where(with_driver: [ false, nil ])
+      .where.not(monthly_price: nil)
+      .minimum(:monthly_price)
+      .to_f
   end
 
   # Generate slug from multiple fields
