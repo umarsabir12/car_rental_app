@@ -3,7 +3,7 @@ class Admin::CarsController < ApplicationController
   before_action :authenticate_admin!
 
   def index
-    @cars = Car.all
+    @cars = Car.with_attached_images.all
     @cars = @cars.where("model ILIKE ?", "%#{params[:model]}%") if params[:model].present?
     @cars = @cars.where("brand ILIKE ?", "%#{params[:vendor]}%") if params[:vendor].present?
     @cars = @cars.where(year: params[:year]) if params[:year].present?

@@ -9,7 +9,7 @@ class CarsController < ApplicationController
     @car_models = normalize_filter_values(Car.distinct.pluck(:model))
 
     # Only show cars with approved mulkiya documents
-    @cars = Car.with_approved_mulkiya.includes(:vendor)
+    @cars = Car.with_attached_images.with_approved_mulkiya.includes(:vendor)
 
     # Apply filters
     @cars = apply_filters(@cars)
@@ -90,7 +90,8 @@ class CarsController < ApplicationController
       .sort
 
     @recommended_cars = [ "SUV", "Luxury", "Sports" ].flat_map do |category|
-      Car.with_approved_mulkiya
+      Car.with_attached_images
+         .with_approved_mulkiya
          .includes(:vendor)
          .where(category: category)
          .left_joins(:bookings)
