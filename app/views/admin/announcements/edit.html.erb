@@ -1,0 +1,57 @@
+<div class="p-6">
+  <div class="mb-8">
+    <h1 class="text-2xl font-bold text-gray-800">Manage Announcement Bar</h1>
+    <p class="text-gray-600">Update the eye-catching announcement bar that appears on every page.</p>
+  </div>
+
+  <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 max-w-2xl">
+    <%= form_with(model: @announcement, url: admin_announcement_path, method: :patch, local: true, id: "announcement-form") do |f| %>
+      <% if @announcement.errors.any? %>
+        <div class="mb-6 p-4 bg-red-50 border-l-4 border-red-500 text-red-700">
+          <h2 class="font-bold mb-1">Please fix the following errors:</h2>
+          <ul class="list-disc list-inside">
+            <% @announcement.errors.full_messages.each do |msg| %>
+              <li><%= msg %></li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
+
+      <div class="mb-6">
+        <%= f.label :message, "Announcement Message", class: "block text-sm font-semibold text-gray-700 mb-2" %>
+        <%= f.text_area :message, rows: 3, class: "w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-teal-500 focus:ring-2 focus:ring-teal-200 outline-none transition-all placeholder-gray-400", placeholder: "e.g. 🎉 Get 20% OFF on Monthly Car Rentals! Book Now." %>
+        <p class="mt-2 text-xs text-gray-500">Keep it short and catchy for the best impact.</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+        <div>
+          <%= f.label :ends_at, "Expiry Date & Time (Optional)", class: "block text-sm font-semibold text-gray-700 mb-2" %>
+          <%= f.datetime_local_field :ends_at, class: "w-full px-4 py-2 rounded-lg border border-gray-200 focus:border-teal-500 focus:ring-2 focus:ring-teal-200 outline-none transition-all" %>
+          <p class="mt-2 text-xs text-gray-500">Leave blank to keep it visible until manually cleared.</p>
+        </div>
+
+        <div>
+           <%= f.label :active, "Status", class: "block text-sm font-semibold text-gray-700 mb-2" %>
+           <div class="flex items-center mt-3">
+             <label class="relative inline-flex items-center cursor-pointer">
+               <%= f.check_box :active, class: "sr-only peer" %>
+               <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-teal-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-teal-600"></div>
+               <span class="ml-3 text-sm font-medium text-gray-700">Active</span>
+             </label>
+           </div>
+        </div>
+      </div>
+    <% end %>
+
+    <div class="mt-8 pt-4 border-t border-gray-100 flex items-center justify-between">
+      <% button_label = @announcement.message.present? ? "Update Announcement" : "Create Announcement" %>
+      <button type="submit" form="announcement-form" class="px-6 py-2.5 bg-teal-600 hover:bg-teal-700 text-white font-bold rounded-lg shadow-md hover:shadow-lg transition-all transform hover:-translate-y-0.5">
+        <%= button_label %>
+      </button>
+
+      <% if @announcement.message.present? %>
+        <%= button_to "Clear & Disable", admin_announcement_path, method: :delete, data: { confirm: "Are you sure you want to clear the announcement?" }, class: "px-6 py-2.5 bg-white border border-red-200 text-red-600 hover:bg-red-50 font-bold rounded-lg transition-all" %>
+      <% end %>
+    </div>
+  </div>
+</div>

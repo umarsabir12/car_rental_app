@@ -81,14 +81,15 @@
       .current-slide {
         font-weight: bold;
       }
-  %body.bg-white.text-gray-900
+  %body.bg-white.text-gray-900{ class: ("has-announcement" if Announcement.current&.visible?) }
     / Google Tag Manager (noscript)
     %noscript
       %iframe{ src: "https://www.googletagmanager.com/ns.html?id=GTM-KHNRX3WS", height: "0", width: "0", style: "display:none;visibility:hidden" }
     / End Google Tag Manager (noscript)
     / WhatsApp Floating Button - Visible on all pages
     = render 'shared/whatsapp_button'
-    %header{ role: "banner" }
+    %header.fixed.top-0.left-0.right-0.z-50{ role: "banner" }
+      = render 'layouts/announcement_bar'
       = render 'layouts/navbar'
     %main{ role: "main" }
       = render 'shared/flash_messages'

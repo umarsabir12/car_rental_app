@@ -151,6 +151,7 @@ Rails.application.routes.draw do
     resources :featured_cars, only: [ :index, :update ]
     resources :features, except: [ :show, :new ]
     resources :blogs, only: [ :index, :new, :create, :destroy, :edit, :update ]
+    resource :announcement, only: [ :show, :edit, :update, :destroy ]
   end
 
   namespace :vendors do
