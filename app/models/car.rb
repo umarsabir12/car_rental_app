@@ -2,8 +2,11 @@ class Car < ApplicationRecord
   extend FriendlyId
   friendly_id :slug_candidates, use: :slugged
 
+  has_many_attached :images do |attachable|
+    attachable.variant :thumb, resize_to_limit: [400, 300], preprocessed: true
+  end
+
   belongs_to :vendor, optional: true
-  has_many_attached :images
   has_many :bookings
   has_one :car_document, dependent: :destroy
   has_many :activities, as: :subject, dependent: :destroy
@@ -40,6 +43,11 @@ class Car < ApplicationRecord
       "cars.with_driver = ? OR car_documents.document_status = ?",
       true, 1
     )
+  }
+
+  scope :with_images_and_variants, -> {
+    with_attached_images
+      .includes(images_attachments: { blob: :variant_records })
   }
 
   def full_name

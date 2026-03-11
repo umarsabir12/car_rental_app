@@ -9,18 +9,19 @@ SitemapGenerator::Sitemap.create do
   Car.find_each do |car|
     add car_path(car),
         lastmod: car.updated_at,
-        changefreq: "weekly",
+        changefreq: "daily",
         priority: 0.8
   end
 
-  add blogs_path, priority: 0.7, changefreq: "weekly"
+  add blogs_path, priority: 0.7, changefreq: "daily"
   Blog.published.find_each do |blog|
     add blog_path(blog),
         lastmod: blog.updated_at,
-        changefreq: "weekly",
+        changefreq: "daily",
         priority: 0.7
   end
 
   add "/terms_of_use", priority: 0.4
   add "/list-your-car-rental-marketplace", priority: 0.6
+  add "/blogs", priority: 0.7, changefreq: "daily" 
 end

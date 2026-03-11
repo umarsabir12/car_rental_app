@@ -79,7 +79,7 @@ class CarsController < ApplicationController
   end
 
   def show
-    @car = Car.includes(:bookings, :features, :vendor).friendly.find(params[:id])
+    @car = Car.includes(:bookings, :features, :vendor).with_attached_images.friendly.find(params[:id])
     @booking_success = flash[:notice] if flash[:notice].present?
 
     @booked_dates = @car.bookings
@@ -89,17 +89,16 @@ class CarsController < ApplicationController
       .map(&:to_s)
       .sort
 
-    @recommended_cars = [ "SUV", "Luxury", "Sports" ].flat_map do |category|
-      Car.with_attached_images
-         .with_approved_mulkiya
-         .includes(:vendor)
-         .where(category: category)
-         .left_joins(:bookings)
-         .select("cars.*, COUNT(bookings.id) as total_bookings")
-         .group("cars.id")
-         .order("total_bookings DESC, cars.created_at DESC")
-         .limit(4)
-    end
+    
+    @recommended_cars = Car.with_attached_images
+                       .with_approved_mulkiya
+                       .includes(:vendor)
+                       .where(category: ["SUV", "Luxury", "Sports"])
+                       .left_joins(:bookings)
+                       .select("cars.*, COUNT(bookings.id) as total_bookings")
+                       .group("cars.id")
+                       .order("total_bookings DESC, cars.created_at DESC")
+                       .limit(12)
   end
 
   private

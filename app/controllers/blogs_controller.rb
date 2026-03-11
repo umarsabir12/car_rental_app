@@ -2,7 +2,7 @@ class BlogsController < ApplicationController
   before_action :set_blog, only: [ :show ]
 
   def index
-    @blogs = Blog.published.order(published_at: :desc).all
+    @blogs = Blog.published.order(published_at: :desc).with_attached_featured_image
   end
 
   def show
