@@ -1,0 +1,9 @@
+- announcement = Announcement.current
+- if announcement&.visible?
+  .announcement-bar-wrapper
+    .announcement-bar-content
+      .announcement-text
+        %span= announcement.message
+        %span= announcement.message
+        %span= announcement.message
+        %span= announcement.message
