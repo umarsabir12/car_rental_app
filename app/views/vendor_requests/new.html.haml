@@ -1,3 +1,9 @@
+- content_for :head do
+  %link{ rel: "preload", href: asset_path('hero.jpg'), as: "image" }
+  %link{ rel: "preload", href: asset_path('economy-car.png'), as: "image" }
+  %link{ rel: "preload", href: asset_path('luxury-car.png'), as: "image" }
+  %link{ rel: "preload", href: asset_path('custom.png'), as: "image" }
+
 %div.min-h-screen.bg-white
   = render 'vendor_requests/hero'
   = render 'vendor_requests/why_partner'
