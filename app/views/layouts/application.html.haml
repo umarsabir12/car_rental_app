@@ -94,6 +94,7 @@
     %main{ role: "main" }
       = render 'shared/flash_messages'
       = yield
+    = render 'shared/loader'
     %footer{ role: "contentinfo" }
       - if content_for?(:footer)
         = yield :footer

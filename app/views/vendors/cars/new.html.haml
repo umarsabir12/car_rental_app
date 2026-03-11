@@ -39,7 +39,7 @@
                   %li • Mulkiya document required
                   %li • First image becomes primary
 
-    = form_with model: @car, url: vendors_cars_path, html: { multipart: true, class: 'space-y-6 sm:space-y-8', id: 'car-creation-form' } do |f|
+    = form_with model: @car, url: vendors_cars_path, html: { multipart: true, class: 'space-y-6 sm:space-y-8', id: 'car-creation-form', data: { show_loader: true } } do |f|
       = render 'shared/form_errors', object: @car
       / With Driver Toggle at the top
       .field.space-y-1.sm:space-y-2.mb-6
