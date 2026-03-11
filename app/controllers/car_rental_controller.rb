@@ -105,10 +105,7 @@ class CarRentalController < ApplicationController
     category_pool = Car.with_images_and_variants
                    .with_approved_mulkiya
                    .where(category: all_categories)
-                   .left_joins(:bookings)
-                   .select("cars.*, COUNT(bookings.id) as total_bookings")
-                   .group("cars.id")
-                   .order("total_bookings DESC, cars.created_at DESC")
+                   .order(bookings_count: :desc, created_at: :desc)
 
     @category_cars = all_categories.flat_map do |category|
       category_pool.select { |car| car.category == category }.first(12)
@@ -118,10 +115,7 @@ class CarRentalController < ApplicationController
     cars_with_driver = Car.with_images_and_variants
                       .with_approved_mulkiya
                       .where(with_driver: true)
-                      .left_joins(:bookings)
-                      .select("cars.*, COUNT(bookings.id) as total_bookings")
-                      .group("cars.id")
-                      .order("total_bookings DESC, cars.created_at DESC")
+                      .order(bookings_count: :desc, created_at: :desc)
                       .limit(12)
 
     # Needs to be formatted similarly to category cars if we want to use the same loop in view,

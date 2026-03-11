@@ -92,107 +92,108 @@
           - category_cars = category_cars.presence || []
           
           - if category_cars.any?
-            .relative{id: "carousel-#{category[:slug]}"}
-              / Left Arrow (initially hidden)
-              %button.absolute.left-0.transform.z-10.w-12.h-12.rounded-full.shadow-lg.transition-all.duration-300.hidden.carousel-nav-btn.carousel-prev{class: 'top-1/2 -translate-y-1/2 -translate-x-4 hover:scale-110', style: 'background-color: #3a6363', data: { category: category[:slug] }}
-                %i.fas.fa-chevron-left.text-white.text-xl
-              
-              / Right Arrow (shown if more than 4 cars)
-              - if category_cars.length > @max_cards
-                %button.absolute.right-0.transform.z-10.w-12.h-12.rounded-full.shadow-lg.transition-all.duration-300.carousel-nav-btn.carousel-next{class: 'top-1/2 -translate-y-1/2 translate-x-4 hover:scale-110', style: 'background-color: #3a6363', data: { category: category[:slug] }}
-                  %i.fas.fa-chevron-right.text-white.text-xl
-              
-              / Carousel Viewport - Only shows 4 cards
-              .carousel-viewport.overflow-hidden.w-full
-                / Carousel Container - Contains all cards
-                .carousel-track.flex.transition-transform.duration-500.ease-in-out.py-1{data: { category: category[:slug], current: '0', total: category_cars.length }}
-                  - category_cars.each_with_index do |car, index|
-                    .carousel-item.flex-shrink-0.px-3
-                      = link_to car_path(car), class: 'block bg-white rounded-2xl shadow-xl overflow-hidden relative transition transform hover:scale-105 hover:shadow-2xl' do
-                        .bg-white.rounded-2xl.shadow-xl.overflow-hidden.flex.flex-col.justify-between.relative.transition.transform.hover:scale-105.hover:shadow-2xl
-                          / Car Image with Uniform Size
-                          .relative.h-48.bg-gray-100.overflow-hidden
-                            = car_main_image(car, size: [400, 300])
-
-                            / Badges Container - Left Side (Stacked & Compact)
-                            .absolute.top-2.left-2.z-10.flex.flex-col.gap-1.items-start
-                              / Featured Badge
-                              - if car.featured?
-                                %span{class: "inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-yellow-400 text-gray-900 shadow-sm"}
-                                  %i{class: "fas fa-star mr-1 text-[10px]"}
-                                  Featured
-
-                              / Discount Badge
-                              - if car.has_discount?
-                                .flex{class: "items-center gap-1 bg-gradient-to-r from-red-500 to-red-600 text-white px-2 py-0.5 rounded-full shadow-sm"}
-                                  %i{class: "fas fa-tag text-[10px]"}
-                                  %span{class: "text-[10px] font-bold"}= "#{car.discount_percentage}% OFF"
-
-                              / Driver Badge
-                              - if car.with_driver?
-                                .flex{class: "items-center gap-1 bg-blue-600 text-white px-2 py-0.5 rounded-full shadow-sm"}
-                                  %i{class: "fas fa-user-tie text-[10px]"}
-                                  %span{class: "text-[10px] font-bold"} With Driver
-
-
-                            .absolute.top-3.right-3.flex.flex-col.space-y-1
-                              - status_classes = {'Available' => 'bg-green-500 text-white','Rented' => 'bg-red-500 text-white'}[car.status] || 'bg-teal-600 text-white'
-                              %span.inline-block.rounded-full.text-xs.font-semibold.px-2.py-1{ class: status_classes }= car.status
-              
-                          .p-6.flex.flex-col.flex-1
-                            %div.flex.items-center.justify-between.mb-2
-                              %h3.text-lg.font-bold.text-gray-900.group-hover:text-blue-600.transition-colors
-                                - if car.category == 'Limousine'
-                                  = car.brand
-                                - else
-                                  = "#{car.brand} #{car.model}"
-                              - unless car.category == 'Limousine'
-                                %span.text-sm.text-gray-500= car.year
-                            
-                            - if car.category == 'Limousine'
-                              %div.text-gray-700.mb-3
-                                %span.text-gray-500 Limousine
-                            - else
-                              %div.text-gray-700.mb-3
-                                = car.color
+            - cache [ "v1", "category_carousel", category[:slug], @max_cards, category_cars.map(&:id), category_cars.map(&:updated_at).max ] do
+              .relative{id: "carousel-#{category[:slug]}"}
+                / Left Arrow (initially hidden)
+                %button.absolute.left-0.transform.z-10.w-12.h-12.rounded-full.shadow-lg.transition-all.duration-300.hidden.carousel-nav-btn.carousel-prev{class: 'top-1/2 -translate-y-1/2 -translate-x-4 hover:scale-110', style: 'background-color: #3a6363', data: { category: category[:slug] }}
+                  %i.fas.fa-chevron-left.text-white.text-xl
+                
+                / Right Arrow (shown if more than 4 cars)
+                - if category_cars.length > @max_cards
+                  %button.absolute.right-0.transform.z-10.w-12.h-12.rounded-full.shadow-lg.transition-all.duration-300.carousel-nav-btn.carousel-next{class: 'top-1/2 -translate-y-1/2 translate-x-4 hover:scale-110', style: 'background-color: #3a6363', data: { category: category[:slug] }}
+                    %i.fas.fa-chevron-right.text-white.text-xl
+                
+                / Carousel Viewport - Only shows 4 cards
+                .carousel-viewport.overflow-hidden.w-full
+                  / Carousel Container - Contains all cards
+                  .carousel-track.flex.transition-transform.duration-500.ease-in-out.py-1{data: { category: category[:slug], current: '0', total: category_cars.length }}
+                    - category_cars.each_with_index do |car, index|
+                      .carousel-item.flex-shrink-0.px-3
+                        = link_to car_path(car), class: 'block bg-white rounded-2xl shadow-xl overflow-hidden relative transition transform hover:scale-105 hover:shadow-2xl' do
+                          .bg-white.rounded-2xl.shadow-xl.overflow-hidden.flex.flex-col.justify-between.relative.transition.transform.hover:scale-105.hover:shadow-2xl
+                            / Car Image with Uniform Size
+                            .relative.h-48.bg-gray-100.overflow-hidden
+                              = car_main_image(car, size: [400, 300])
+  
+                              / Badges Container - Left Side (Stacked & Compact)
+                              .absolute.top-2.left-2.z-10.flex.flex-col.gap-1.items-start
+                                / Featured Badge
+                                - if car.featured?
+                                  %span{class: "inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-yellow-400 text-gray-900 shadow-sm"}
+                                    %i{class: "fas fa-star mr-1 text-[10px]"}
+                                    Featured
+  
+                                / Discount Badge
+                                - if car.has_discount?
+                                  .flex{class: "items-center gap-1 bg-gradient-to-r from-red-500 to-red-600 text-white px-2 py-0.5 rounded-full shadow-sm"}
+                                    %i{class: "fas fa-tag text-[10px]"}
+                                    %span{class: "text-[10px] font-bold"}= "#{car.discount_percentage}% OFF"
+  
+                                / Driver Badge
                                 - if car.with_driver?
-                                  %span.text-gray-500.ml-2 •
-                                  %span.text-gray-500= "#{car.seats || 5} Seats"
-                                  %span.text-gray-500.ml-2 •
-                                  %span.text-gray-500= "#{car.luggage_capacity || 0} Bags"
-                                - elsif car.category.present?
-                                  %span.text-gray-500.ml-2 •
-                                  %span.text-gray-500= car.category.capitalize
-
-                            %div.flex.items-baseline.justify-between
-                              %div.h-14.flex.flex-col.justify-end
-                                - if car.category == 'Limousine'
-                                  - if car.has_discount?
-                                    .flex.flex-col
-                                      %span.text-lg.text-gray-400.line-through= "AED #{car.hourly_price}"
-                                      %span.text-2xl.font-bold.text-red-600= "AED #{car.discounted_hourly_price.round(2)}"
+                                  .flex{class: "items-center gap-1 bg-blue-600 text-white px-2 py-0.5 rounded-full shadow-sm"}
+                                    %i{class: "fas fa-user-tie text-[10px]"}
+                                    %span{class: "text-[10px] font-bold"} With Driver
+  
+  
+                              .absolute.top-3.right-3.flex.flex-col.space-y-1
+                                - status_classes = {'Available' => 'bg-green-500 text-white','Rented' => 'bg-red-500 text-white'}[car.status] || 'bg-teal-600 text-white'
+                                %span.inline-block.rounded-full.text-xs.font-semibold.px-2.py-1{ class: status_classes }= car.status
+                
+                            .p-6.flex.flex-col.flex-1
+                              %div.flex.items-center.justify-between.mb-2
+                                %h3.text-lg.font-bold.text-gray-900.group-hover:text-blue-600.transition-colors
+                                  - if car.category == 'Limousine'
+                                    = car.brand
                                   - else
-                                    %span.text-2xl.font-bold{style: 'color: #3a6363'}= "AED #{car.hourly_price}"
-                                - elsif car.with_driver?
-                                  - if car.has_discount?
+                                    = "#{car.brand} #{car.model}"
+                                - unless car.category == 'Limousine'
+                                  %span.text-sm.text-gray-500= car.year
+                              
+                              - if car.category == 'Limousine'
+                                %div.text-gray-700.mb-3
+                                  %span.text-gray-500 Limousine
+                              - else
+                                %div.text-gray-700.mb-3
+                                  = car.color
+                                  - if car.with_driver?
+                                    %span.text-gray-500.ml-2 •
+                                    %span.text-gray-500= "#{car.seats || 5} Seats"
+                                    %span.text-gray-500.ml-2 •
+                                    %span.text-gray-500= "#{car.luggage_capacity || 0} Bags"
+                                  - elsif car.category.present?
+                                    %span.text-gray-500.ml-2 •
+                                    %span.text-gray-500= car.category.capitalize
+  
+                              %div.flex.items-baseline.justify-between
+                                %div.h-14.flex.flex-col.justify-end
+                                  - if car.category == 'Limousine'
+                                    - if car.has_discount?
+                                      .flex.flex-col
+                                        %span.text-lg.text-gray-400.line-through= "AED #{car.hourly_price}"
+                                        %span.text-2xl.font-bold.text-red-600= "AED #{car.discounted_hourly_price.round(2)}"
+                                    - else
+                                      %span.text-2xl.font-bold{style: 'color: #3a6363'}= "AED #{car.hourly_price}"
+                                  - elsif car.with_driver?
+                                    - if car.has_discount?
+                                      .flex.flex-col
+                                        %span.text-lg.text-gray-400.line-through= "AED #{car.five_hours_charge}"
+                                        %span.text-2xl.font-bold.text-red-600= "AED #{car.discounted_five_hours_charge.round(2)}"
+                                    - else
+                                      %span.text-2xl.font-bold{style: 'color: #3a6363'}= car.five_hours_charge ? "AED #{car.five_hours_charge}" : 'AED 0'
+                                  - elsif car.has_discount?
                                     .flex.flex-col
-                                      %span.text-lg.text-gray-400.line-through= "AED #{car.five_hours_charge}"
-                                      %span.text-2xl.font-bold.text-red-600= "AED #{car.discounted_five_hours_charge.round(2)}"
+                                      %span.text-lg.text-gray-400.line-through= number_to_currency(car.daily_price)
+                                      %span.text-2xl.font-bold.text-red-600= number_to_currency(car.discounted_daily_price)
                                   - else
-                                    %span.text-2xl.font-bold{style: 'color: #3a6363'}= car.five_hours_charge ? "AED #{car.five_hours_charge}" : 'AED 0'
-                                - elsif car.has_discount?
-                                  .flex.flex-col
-                                    %span.text-lg.text-gray-400.line-through= number_to_currency(car.daily_price)
-                                    %span.text-2xl.font-bold.text-red-600= number_to_currency(car.discounted_daily_price)
-                                - else
-                                  %span.text-2xl.font-bold{style: 'color: #3a6363'}= car.daily_price ? number_to_currency(car.daily_price) : 'N/A'
-                              %span.text-sm.text-gray-500
-                                - if car.category == 'Limousine'
-                                  \/hr
-                                - elsif car.with_driver?
-                                  \/5h Service
-                                - else
-                                  \/day
+                                    %span.text-2xl.font-bold{style: 'color: #3a6363'}= car.daily_price ? number_to_currency(car.daily_price) : 'N/A'
+                                %span.text-sm.text-gray-500
+                                  - if car.category == 'Limousine'
+                                    \/hr
+                                  - elsif car.with_driver?
+                                    \/5h Service
+                                  - else
+                                    \/day
           - else
             .text-center.py-12
               %p.text-gray-500.text-lg No cars available in this category at the moment.
