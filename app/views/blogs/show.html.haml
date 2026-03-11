@@ -82,10 +82,11 @@
         %i.far.fa-envelope
 
     / BLOG CONTENT
-    .prose.prose-lg.max-w-none.mb-12
-      .blog-content
-        = sanitize(@blog.content, tags: %w(p br strong em u h2 h3 h4 h5 h6 ul ol li blockquote a img div hr table thead tbody tr th td), 
-                                  attributes: %w(href src alt title id class style width height colspan rowspan))
+    - cache [@blog, 'blog_content'] do
+      .prose.prose-lg.max-w-none.mb-12
+        .blog-content
+          = sanitize(@blog.content, tags: %w(p br strong em u h2 h3 h4 h5 h6 ul ol li blockquote a img div hr table thead tbody tr th td), 
+                                    attributes: %w(href src alt title id class style width height colspan rowspan))
 
     / DIVIDER
     %hr.my-12{style: "border-color: #e5e5e5;"}

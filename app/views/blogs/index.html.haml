@@ -14,43 +14,44 @@
     .max-w-7xl.mx-auto.px-4.sm:px-6.lg:px-8.py-16
       .grid.grid-cols-1.md:grid-cols-2.lg:grid-cols-3.gap-8
         - @blogs.each do |blog|
-          = link_to blog_path(blog.slug), class: 'group cursor-pointer' do
-            .bg-white.rounded-lg.overflow-hidden.shadow-md.hover:shadow-xl.transition-shadow.duration-300
-              
-              / IMAGE CONTAINER
-              .relative.h-48.overflow-hidden.bg-gray-200
-                - if blog.featured_image.attached?
-                  %img.w-full.h-full.object-cover.group-hover:scale-105.transition-transform.duration-300{src: url_for(blog.featured_image), alt: blog.title}
-                - else
-                  .w-full.h-full.bg-gray-300.flex.items-center.justify-center
-                    %span.text-gray-400 No Image
+          - cache [blog, 'blog_card'] do
+            = link_to blog_path(blog.slug), class: 'group cursor-pointer' do
+              .bg-white.rounded-lg.overflow-hidden.shadow-md.hover:shadow-xl.transition-shadow.duration-300
                 
-                / CATEGORY BADGE
-                %span.absolute.top-4.left-4.px-3.py-1.rounded-full.text-sm.font-semibold.text-white{style: "background-color: #3A6363;"}
-                  = blog.category
+                / IMAGE CONTAINER
+                .relative.h-48.overflow-hidden.bg-gray-200
+                  - if blog.featured_image.attached?
+                    %img.w-full.h-full.object-cover.group-hover:scale-105.transition-transform.duration-300{src: url_for(blog.featured_image), alt: blog.title}
+                  - else
+                    .w-full.h-full.bg-gray-300.flex.items-center.justify-center
+                      %span.text-gray-400 No Image
+                  
+                  / CATEGORY BADGE
+                  %span.absolute.top-4.left-4.px-3.py-1.rounded-full.text-sm.font-semibold.text-white{style: "background-color: #3A6363;"}
+                    = blog.category
 
-              / CONTENT CONTAINER
-              .p-6
-                / DATE & AUTHOR
-                .flex.items-center.text-gray-500.text-sm.mb-3.space-x-4
-                  %span
-                    %i.far.fa-calendar.mr-1
-                    = blog.published_at.strftime('%b %d, %Y')
-                  %span
-                    %i.far.fa-user.mr-1
-                    = blog.author_name
+                / CONTENT CONTAINER
+                .p-6
+                  / DATE & AUTHOR
+                  .flex.items-center.text-gray-500.text-sm.mb-3.space-x-4
+                    %span
+                      %i.far.fa-calendar.mr-1
+                      = blog.published_at.strftime('%b %d, %Y')
+                    %span
+                      %i.far.fa-user.mr-1
+                      = blog.author_name
 
-                / TITLE
-                %h3.text-xl.font-bold.mb-3.line-clamp-2{style: "color: #3A6363;"}
-                  = blog.title
+                  / TITLE
+                  %h3.text-xl.font-bold.mb-3.line-clamp-2{style: "color: #3A6363;"}
+                    = blog.title
 
-                / CONTENT PREVIEW
-                %p.text-gray-600.text-sm.mb-4.line-clamp-3
-                  = truncate(strip_tags(blog.content), length: 150)
+                  / CONTENT PREVIEW
+                  %p.text-gray-600.text-sm.mb-4.line-clamp-3
+                    = truncate(strip_tags(blog.content), length: 150)
 
-                / READ MORE LINK
-                .font-semibold.text-sm{style: "color: #3A6363;"}
-                  Read More →
+                  / READ MORE LINK
+                  .font-semibold.text-sm{style: "color: #3A6363;"}
+                    Read More →
     
     / EMPTY STATE
     - if @blogs.empty?
