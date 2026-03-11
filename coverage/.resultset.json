@@ -401,7 +401,7 @@
           1,
           167,
           167,
-          390,
+          402,
           null,
           null,
           null,
@@ -411,7 +411,7 @@
           2,
           2,
           null,
-          3,
+          4,
           0,
           null,
           null,
@@ -1504,9 +1504,9 @@
           16,
           null,
           16,
-          83,
-          83,
-          83,
+          101,
+          101,
+          101,
           null,
           null,
           16,
@@ -3693,6 +3693,66 @@
           null
         ]
       },
+      "/home/tronsit/projects/car_rental_app/app/mailers/vendor_mailer.rb": {
+        "lines": [
+          1,
+          null,
+          null,
+          1,
+          1,
+          1,
+          null,
+          1,
+          1,
+          1,
+          null,
+          1,
+          null,
+          null,
+          null,
+          null,
+          null,
+          1,
+          0,
+          0,
+          null,
+          null,
+          null,
+          null,
+          null,
+          1,
+          0,
+          0,
+          null,
+          0,
+          0,
+          null,
+          0,
+          null,
+          null,
+          null,
+          null,
+          null,
+          1,
+          0,
+          0,
+          null,
+          0,
+          null,
+          null,
+          null,
+          null,
+          null
+        ]
+      },
+      "/home/tronsit/projects/car_rental_app/app/mailers/application_mailer.rb": {
+        "lines": [
+          1,
+          1,
+          1,
+          null
+        ]
+      },
       "/home/tronsit/projects/car_rental_app/app/controllers/admin/settings_controller.rb": {
         "lines": [
           1,
@@ -3847,66 +3907,6 @@
           null,
           null,
           null,
-          null
-        ]
-      },
-      "/home/tronsit/projects/car_rental_app/app/mailers/vendor_mailer.rb": {
-        "lines": [
-          1,
-          null,
-          null,
-          1,
-          1,
-          1,
-          null,
-          1,
-          1,
-          1,
-          null,
-          1,
-          null,
-          null,
-          null,
-          null,
-          null,
-          1,
-          0,
-          0,
-          null,
-          null,
-          null,
-          null,
-          null,
-          1,
-          0,
-          0,
-          null,
-          0,
-          0,
-          null,
-          0,
-          null,
-          null,
-          null,
-          null,
-          null,
-          1,
-          0,
-          0,
-          null,
-          0,
-          null,
-          null,
-          null,
-          null,
-          null
-        ]
-      },
-      "/home/tronsit/projects/car_rental_app/app/mailers/application_mailer.rb": {
-        "lines": [
-          1,
-          1,
-          1,
           null
         ]
       },
@@ -6585,6 +6585,6 @@
         "branches": {}
       }
     },
-    "timestamp": 1773247036
+    "timestamp": 1773247459
   }
 }
