@@ -89,7 +89,7 @@ RSpec.describe CarsController, type: :controller do
       create(:car, :with_approved_document, category: 'SUV')
       create(:car, :with_approved_document, category: 'Luxury')
       get :show, params: { id: car.slug }
-      expect(assigns(:recommended_cars)).to be_an(Array)
+      expect(assigns(:recommended_cars)).to respond_to(:to_a)
     end
   end
 

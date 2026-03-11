@@ -6,9 +6,15 @@ module ApplicationHelper
       image = car.images.first
 
       if use_variant && defined?(MiniMagick)
-        image_tag image.variant(resize_to_limit: size), class: "car-image w-full h-full object-cover", loading: "lazy"
+        image_tag image.variant(:thumb),
+                  class: "car-image w-full h-full object-cover",
+                  loading: "lazy",
+                  alt: "#{car.brand} #{car.model}"
       else
-        image_tag url_for(image), class: "car-image w-full h-full object-cover", loading: "lazy"
+        image_tag url_for(image),
+                  class: "car-image w-full h-full object-cover",
+                  loading: "lazy",
+                  alt: "#{car.brand} #{car.model}"
       end
     else
       safe_car_placeholder
