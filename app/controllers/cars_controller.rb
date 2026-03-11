@@ -89,11 +89,11 @@ class CarsController < ApplicationController
       .map(&:to_s)
       .sort
 
-    
+
     @recommended_cars = Car.with_attached_images
                        .with_approved_mulkiya
                        .includes(:vendor)
-                       .where(category: ["SUV", "Luxury", "Sports"])
+                       .where(category: [ "SUV", "Luxury", "Sports" ])
                        .left_joins(:bookings)
                        .select("cars.*, COUNT(bookings.id) as total_bookings")
                        .group("cars.id")

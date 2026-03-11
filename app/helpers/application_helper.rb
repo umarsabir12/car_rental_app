@@ -1,5 +1,5 @@
 module ApplicationHelper
-  def car_main_image(car, size: [400, 300], use_variant: true)
+  def car_main_image(car, size: [ 400, 300 ], use_variant: true)
     return safe_car_placeholder if car.nil?
 
     if car.images.attached? && car.images.any?

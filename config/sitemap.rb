@@ -23,5 +23,5 @@ SitemapGenerator::Sitemap.create do
 
   add "/terms_of_use", priority: 0.4
   add "/list-your-car-rental-marketplace", priority: 0.6
-  add "/blogs", priority: 0.7, changefreq: "daily" 
+  add "/blogs", priority: 0.7, changefreq: "daily"
 end

@@ -3,7 +3,7 @@ class Car < ApplicationRecord
   friendly_id :slug_candidates, use: :slugged
 
   has_many_attached :images do |attachable|
-    attachable.variant :thumb, resize_to_limit: [400, 300], preprocessed: true
+    attachable.variant :thumb, resize_to_limit: [ 400, 300 ], preprocessed: true
   end
 
   belongs_to :vendor, optional: true
