@@ -19,7 +19,7 @@
         %h3.text-xl.sm:text-2xl.font-bold.text-gray-900.mb-4.sm:mb-6
           Get Started Today
 
-        = form_with model: @vendor_request, url: vendor_requests_path, method: :post, class: 'space-y-4' do |f|
+        = form_with model: @vendor_request, url: vendor_requests_path, method: :post, class: 'space-y-4', data: { show_loader: true } do |f|
           = render 'shared/form_errors', object: @vendor_request
           .grid.grid-cols-1.sm:grid-cols-2.gap-4
             %div
