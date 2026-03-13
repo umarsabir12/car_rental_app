@@ -81,24 +81,10 @@ RSpec.describe Vendors::CarsController, type: :controller do
         }.to change(Car, :count).by(1)
       end
 
-      it 'redirects to vendors_car_thank_you_path' do
+      it 'redirects to vendors_car_path' do
         post :create, params: valid_params
-        expect(response).to redirect_to(vendors_car_thank_you_path)
+        expect(response).to redirect_to(vendors_car_path(Car.last))
       end
-    end
-  end
-
-  describe 'GET #thank_you' do
-    before { sign_in_vendor(vendor) }
-
-    it 'returns http success' do
-      get :thank_you
-      expect(response).to have_http_status(:success)
-    end
-
-    it 'renders the thank_you template' do
-      get :thank_you
-      expect(response).to render_template(:thank_you)
     end
   end
 end

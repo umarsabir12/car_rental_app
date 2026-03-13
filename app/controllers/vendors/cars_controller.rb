@@ -61,7 +61,7 @@ class Vendors::CarsController < ApplicationController
           @car.feature_ids = (@car.feature_ids + feature_ids).uniq
         end
 
-        format.html { redirect_to vendors_car_thank_you_path, notice: "Car was successfully created." }
+        format.html { redirect_to vendors_car_path(@car), notice: "Car was successfully created." }
       else
         load_premium_features
         flash.now[:alert] = "Error: #{@car.errors.full_messages.to_sentence}"
@@ -144,9 +144,6 @@ class Vendors::CarsController < ApplicationController
   def destroy
     @car.destroy
     redirect_to vendors_cars_path, notice: "Car was successfully deleted."
-  end
-
-  def thank_you
   end
 
   def remove_image
