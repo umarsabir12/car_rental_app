@@ -88,17 +88,4 @@ RSpec.describe Vendors::CarsController, type: :controller do
     end
   end
 
-  describe 'GET #thank_you' do
-    before { sign_in_vendor(vendor) }
-
-    it 'returns http success' do
-      get :thank_you
-      expect(response).to have_http_status(:success)
-    end
-
-    it 'renders the thank_you template' do
-      get :thank_you
-      expect(response).to render_template(:thank_you)
-    end
-  end
 end

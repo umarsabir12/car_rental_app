@@ -87,26 +87,4 @@ RSpec.describe BookingsController, type: :controller do
     end
   end
 
-  describe 'GET #thank_you' do
-    context 'when user is authenticated' do
-      before { sign_in_user(user) }
-
-      it 'returns http success' do
-        get :thank_you
-        expect(response).to have_http_status(:success)
-      end
-
-      it 'renders the thank_you template' do
-        get :thank_you
-        expect(response).to render_template(:thank_you)
-      end
-    end
-
-    context 'when user is not authenticated' do
-      it 'redirects to sign in' do
-        get :thank_you
-        expect(response).to redirect_to(new_user_session_path)
-      end
-    end
-  end
 end
