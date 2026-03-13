@@ -146,9 +146,6 @@ class Vendors::CarsController < ApplicationController
     redirect_to vendors_cars_path, notice: "Car was successfully deleted."
   end
 
-  def thank_you
-  end
-
   def remove_image
     # Handle both JSON and form parameters
     image_index = if request.content_type == "application/json"

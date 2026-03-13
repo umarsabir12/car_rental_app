@@ -167,7 +167,6 @@ Rails.application.routes.draw do
     # Cars routes to use slug
     get "cars", to: "cars#index", as: :cars_index
     get "cars/new", to: "cars#new", as: :new_car
-    get "cars/thank_you", to: "cars#thank_you", as: :car_thank_you
     post "cars", to: "cars#create"
     get "car/:id", to: "cars#show", as: :car  # Singular for show
     get "car/:id/edit", to: "cars#edit", as: :edit_car  # Singular for edit
@@ -177,9 +176,6 @@ Rails.application.routes.draw do
     delete "cars/:id/remove_image", to: "cars#remove_image", as: :remove_image_car
 
     resources :bookings do
-      collection do
-        get :thank_you
-      end
       member do
         patch :update_booking_status
         patch :update_payment_status
@@ -214,11 +210,7 @@ Rails.application.routes.draw do
   get "cars/:category/:brand/:model/:monthly_price", to: "cars#index", as: :cars_with_price
   get "car/:id", to: "cars#show", as: :car
 
-  resources :bookings, only: [ :new, :create ] do
-    collection do
-      get :thank_you
-    end
-  end
+  resources :bookings, only: [ :new, :create ]
 
   resources :vendor_requests, path: "list-your-car-rental-marketplace", only: [ :new, :create ] do
     collection do

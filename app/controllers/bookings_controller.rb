@@ -1,5 +1,5 @@
 class BookingsController < ApplicationController
-  before_action :authenticate_user!, only: [ :create, :thank_you ]
+  before_action :authenticate_user!, only: [ :create ]
 
   def create
     @booking = Booking.new(booking_params)
@@ -20,8 +20,6 @@ class BookingsController < ApplicationController
     end
   end
 
-  def thank_you
-  end
 
   private
 
