@@ -87,5 +87,4 @@ RSpec.describe Vendors::CarsController, type: :controller do
       end
     end
   end
-
 end

@@ -86,5 +86,4 @@ RSpec.describe BookingsController, type: :controller do
       end
     end
   end
-
 end
