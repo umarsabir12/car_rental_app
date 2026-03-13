@@ -21,9 +21,12 @@ class Users::RegistrationsController <  Devise::RegistrationsController
           status: "pending"
         )
         sign_in(user) unless user_signed_in?
-        redirect_to user_home_path and return
+        redirect_to user_registration_thank_you_path and return
       end
     end
+  end
+
+  def thank_you
   end
 
   protected

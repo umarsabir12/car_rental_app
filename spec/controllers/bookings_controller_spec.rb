@@ -37,9 +37,9 @@ RSpec.describe BookingsController, type: :controller do
           expect(Booking.last.payment_processed).to be false
         end
 
-        it 'redirects to thank_you_bookings_path' do
+        it 'redirects to users_bookings_path' do
           post :create, params: valid_params
-          expect(response).to redirect_to(thank_you_bookings_path)
+          expect(response).to redirect_to(users_bookings_path)
         end
 
         it 'sets a success notice' do

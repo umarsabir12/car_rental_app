@@ -13,7 +13,7 @@ class BookingsController < ApplicationController
     end
 
     if @booking.save
-      redirect_to thank_you_bookings_path, notice: "Booking created! Please complete your payment."
+      redirect_to users_bookings_path, notice: "Booking created! Please complete your payment."
     else
       # Redirect back to car show page with error message
       redirect_to car_path(@booking.car_id), alert: @booking.errors.full_messages.join(", ")

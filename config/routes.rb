@@ -8,12 +8,18 @@ Rails.application.routes.draw do
     registrations: "vendors/registrations",
     passwords: "vendors/passwords"
   }
+  devise_scope :vendor do
+    get "vendors/thank_you", to: "vendors/registrations#thank_you", as: :vendor_registration_thank_you
+  end
 
   devise_for :users, controllers: {
     sessions: "users/sessions",
     registrations: "users/registrations",
     passwords: "users/passwords"
   }
+  devise_scope :user do
+    get "users/thank_you", to: "users/registrations#thank_you", as: :user_registration_thank_you
+  end
 
   devise_for :admins, controllers: { sessions: "admins/sessions" }
 

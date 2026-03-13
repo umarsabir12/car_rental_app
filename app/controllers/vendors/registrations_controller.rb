@@ -20,10 +20,13 @@ class Vendors::RegistrationsController <  Devise::RegistrationsController
     if @vendor.save
       @invited_vendor.update(status: "accepted", invite_token: nil)
       sign_in(@vendor)
-      redirect_to vendor_path(@vendor), notice: "Vendor created successfully"
+      redirect_to vendor_registration_thank_you_path, notice: "Vendor created successfully"
     else
       render :new, alert: "Vendor creation failed"
     end
+  end
+
+  def thank_you
   end
 
   private

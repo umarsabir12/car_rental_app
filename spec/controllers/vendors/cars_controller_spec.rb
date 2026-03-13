@@ -81,9 +81,9 @@ RSpec.describe Vendors::CarsController, type: :controller do
         }.to change(Car, :count).by(1)
       end
 
-      it 'redirects to vendors_car_thank_you_path' do
+      it 'redirects to vendors_car_path' do
         post :create, params: valid_params
-        expect(response).to redirect_to(vendors_car_thank_you_path)
+        expect(response).to redirect_to(vendors_car_path(Car.last))
       end
     end
   end
