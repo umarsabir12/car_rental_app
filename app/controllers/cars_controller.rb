@@ -26,6 +26,9 @@ class CarsController < ApplicationController
 
     @cars = @cars.order(created_at: :desc)
 
+    # Preload discounts to prevent N+1 queries
+    Discount.preload_for_cars(@cars)
+
     set_meta_tags
   end
 
@@ -99,6 +102,9 @@ class CarsController < ApplicationController
                        .group("cars.id")
                        .order("total_bookings DESC, cars.created_at DESC")
                        .limit(12)
+
+    # Preload discounts for recommended cars
+    Discount.preload_for_cars(@recommended_cars)
   end
 
   private
