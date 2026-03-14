@@ -156,6 +156,11 @@
           .ml-3.flex-1.min-w-0
             %p.text-xs.font-semibold.text-gray-500.uppercase Daily Price
             %p.text-sm.sm:text-base.font-bold{style: "color: #3A6363;"}= number_to_currency(car.daily_price)
+    - else
+      .text-center.py-8
+        %i.fas.fa-car-crash.text-4xl.text-red-400.mb-3
+        %p.text-lg.font-bold.text-red-500 Deleted Car
+        %p.text-gray-500 This car is no longer available.
 
   / Action Buttons
   .flex.flex-col.sm:flex-row.gap-3.sm:gap-4

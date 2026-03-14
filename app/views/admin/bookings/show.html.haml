@@ -222,8 +222,9 @@
               %span View Car Details
       - else
         .text-center.py-6.sm:py-8
-          %i.fas.fa-car.text-3xl.sm:text-4xl.text-gray-300.mb-3
-          %p.text-sm.sm:text-base.text-gray-500 Car not found
+          %i.fas.fa-car-crash.text-3xl.sm:text-4xl.text-red-400.mb-3
+          %p.text-base.sm:text-lg.font-bold.text-red-500 Deleted Car
+          %p.text-xs.sm:text-sm.text-gray-500.mt-1 The car associated with this booking has been removed by the vendor
 
     / Vendor Info - Shows assigned vendor, not car owner
     .bg-white.shadow-lg.rounded-xl.overflow-hidden.p-4.sm:p-6.lg:p-8

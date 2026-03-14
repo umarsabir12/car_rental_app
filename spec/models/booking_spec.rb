@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe Booking, type: :model do
   describe 'associations' do
-    it { should belong_to(:car).counter_cache(true) }
+    it { should belong_to(:car).counter_cache(true).optional }
     it { should belong_to(:user) }
     it { should belong_to(:vendor).optional }
     it { should have_many(:activities).dependent(:destroy) }
@@ -19,7 +19,7 @@ RSpec.describe Booking, type: :model do
   end
 
   describe 'validations' do
-    it { should validate_presence_of(:car_id) }
+    it { should validate_presence_of(:car_id).on(:create) }
     it { should validate_presence_of(:user_id) }
     it { should validate_presence_of(:start_date) }
     it { should validate_presence_of(:end_date) }
@@ -92,6 +92,20 @@ RSpec.describe Booking, type: :model do
                                      start_date: Date.today + 7.days,
                                      end_date: Date.today + 12.days)
         expect(overlapping_booking).to be_valid
+      end
+
+      it 'skips check if car is missing' do
+        user = create(:user)
+        fresh_car = create(:car)
+        booking = build(:booking, car: nil, user: user, start_date: Date.today, end_date: Date.tomorrow)
+        # It's invalid on create because of: validates :car_id, presence: true, on: :create
+        expect(booking).not_to be_valid
+        expect(booking.errors[:car_id]).to include("can't be blank")
+
+        # But if it already exists (e.g. car was deleted), it should be valid
+        existing_booking = create(:booking, car: fresh_car, user: user)
+        existing_booking.car_id = nil
+        expect(existing_booking).to be_valid
       end
     end
   end

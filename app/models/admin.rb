@@ -14,6 +14,8 @@ class Admin < ApplicationRecord
   scope :super_admins, -> { where(role_type: "super_admin") }
   scope :admins, -> { where(role_type: "admin") }
 
+  has_many :notifications, dependent: :destroy
+
   # Instance methods
   def full_name
     "#{first_name} #{last_name}".strip

@@ -7,7 +7,7 @@ class Car < ApplicationRecord
   end
 
   belongs_to :vendor, optional: true
-  has_many :bookings
+  has_many :bookings, dependent: :nullify
   has_one :car_document, dependent: :destroy
   has_many :activities, as: :subject, dependent: :destroy
   has_many :car_features, dependent: :destroy
@@ -15,7 +15,8 @@ class Car < ApplicationRecord
 
   validates :images, presence: { message: "at least one image is required" }
   validate :images_presence_on_create, on: :create
-  validates :insurance_policy, presence: true
+  validates :insurance_policy, presence: true, unless: -> { with_driver? || category == "Limousine" }
+  validates :slug, uniqueness: { message: "has already been taken. A car with these exact details already exists. Please choose a different category or change model details." }
 
   # With Driver validations
   with_options if: -> { with_driver? || category == "Limousine" } do |car|

@@ -55,9 +55,12 @@
                     - current_user.unpaid_bookings.limit(3).each do |booking|
                       %li.flex.items-center.gap-1
                         %i.fas.fa-circle.text-xs
-                        %span.truncate #{booking.car.brand} #{booking.car.model} - #{booking.start_date.strftime('%b %d')}
+                        - if booking.car
+                          %span.truncate #{booking.car.brand} #{booking.car.model} - #{booking.start_date.strftime('%b %d')}
+                        - else
+                          %span.truncate Deleted Car - #{booking.start_date.strftime('%b %d')}
                     - if current_user.unpaid_bookings.count > 3
-                      %li.text-orange-500.font-semibold +#{current_user.unpaid_bookings.count - 2} more...
+                      %li.text-orange-500.font-semibold +#{current_user.unpaid_bookings.count - 3} more...
 
           / Failed Payments Notification
           - if current_user.failed_payments.any?
@@ -108,8 +111,11 @@
               .flex.flex-col.lg:flex-row
                 / Car Image Section
                 .relative.w-full.lg_w-33.bg-gray-50.flex.items-center.justify-center.p-4.lg:p-6
-                  .w-full.h-48.lg:h-full.bg-gray-100.rounded-lg.overflow-hidden
-                    = car_main_image(booking.car, size: [400, 300])
+                  .w-full.h-48.lg:h-full.bg-gray-100.rounded-lg.overflow-hidden.flex.items-center.justify-center
+                    - if booking.car
+                      = car_main_image(booking.car, size: [400, 300])
+                    - else
+                      %i.fas.fa-car-crash.text-4xl.text-gray-300
                   / Status Badge
                   .absolute.top-4.left-4
                     - badge_class = case booking.status
@@ -131,17 +137,21 @@
                   .flex.flex-col.h-full
                     / Car Info
                     %div
-                      %h3.text-xl.lg:text-2xl.font-bold.text-gray-900.mb-2= "#{booking.car&.brand} #{booking.car&.model}"
-                      .flex.flex-wrap.items-center.gap-x-3.lg:gap-x-6.gap-y-2.lg:gap-y-3.mb-4.text-sm.lg:text-base
-                        .flex.items-center.text-gray-600
-                          %i.fas.fa-calendar.mr-1.lg:mr-2.text-blue-500.text-sm
-                          = booking.car&.year
-                        .flex.items-center.text-gray-600
-                          %i.fas.fa-palette.mr-1.lg:mr-2.text-purple-500.text-sm
-                          = booking.car&.color
-                        .flex.items-center.text-gray-600
-                          %i.fas.fa-tag.mr-1.lg:mr-2.text-green-500.text-sm
-                          = booking.car&.category
+                      - if booking.car
+                        %h3.text-xl.lg:text-2xl.font-bold.text-gray-900.mb-2= "#{booking.car.brand} #{booking.car.model}"
+                        .flex.flex-wrap.items-center.gap-x-3.lg:gap-x-6.gap-y-2.lg:gap-y-3.mb-4.text-sm.lg:text-base
+                          .flex.items-center.text-gray-600
+                            %i.fas.fa-calendar.mr-1.lg:mr-2.text-blue-500.text-sm
+                            = booking.car.year
+                          .flex.items-center.text-gray-600
+                            %i.fas.fa-palette.mr-1.lg:mr-2.text-purple-500.text-sm
+                            = booking.car.color
+                          .flex.items-center.text-gray-600
+                            %i.fas.fa-tag.mr-1.lg:mr-2.text-green-500.text-sm
+                            = booking.car.category
+                      - else
+                        %h3.text-xl.lg:text-2xl.font-bold.text-red-500.italic.mb-2 Deleted Car
+                        .text-sm.text-gray-500.mb-4 This car is no longer available
                       .text-lg.lg:text-xl.font-semibold.text-blue-600.mb-4
                         = number_to_currency(booking.selected_price)
                         - if booking.selected_period == 'daily'
@@ -181,11 +191,11 @@
                       .flex.flex-col.gap-3.lg:gap-4
                         .flex-1
                           - duration_days = (booking.end_date - booking.start_date).to_i
-                          - daily_price = booking.car&.daily_price.to_f || 0
+                          - daily_price = booking.car&.daily_price.to_f || (booking.total_amount ? booking.total_amount / [duration_days, 1].max : 0)
 
                           / Pricing breakdown based on selected period
                           - if booking.selected_period == 'weekly'
-                            - weekly_price = booking.car&.weekly_price.to_f || 0
+                            - weekly_price = booking.car&.weekly_price.to_f || (daily_price * 7)
                             - full_weeks = duration_days / 7
                             - remaining_days = duration_days % 7
                             - total_amount = (full_weeks * weekly_price) + (remaining_days * daily_price)
@@ -198,7 +208,7 @@
                                   %span.ml-1 + #{remaining_days} day#{remaining_days == 1 ? '' : 's'} × AED #{daily_price.to_i}
 
                           - elsif booking.selected_period == 'monthly'
-                            - monthly_price = booking.car&.monthly_price.to_f || 0
+                            - monthly_price = booking.car&.monthly_price.to_f || (daily_price * 30)
                             - full_months = duration_days / 30
                             - remaining_days = duration_days % 30
                             - total_amount = (full_months * monthly_price) + (remaining_days * daily_price)

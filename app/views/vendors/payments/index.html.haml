@@ -104,7 +104,7 @@
           %tbody.divide-y.divide-gray-200
             - @paid_bookings.each do |booking|
               - total_days = (booking.end_date - booking.start_date).to_i
-              - total_amount = booking.car.daily_price ? booking.car.daily_price * total_days : 0
+              - total_amount = booking.car&.daily_price ? booking.car.daily_price * total_days : (booking.total_amount || 0)
               %tr.hover:bg-gray-50.transition
                 %td.px-3.sm:px-4.md:px-6.py-3.sm:py-4.whitespace-nowrap
                   %span.font-mono.text-xs.sm:text-sm.text-gray-900 ##{booking.id}
@@ -114,14 +114,18 @@
                     %span.text-xs.sm:text-sm.text-gray-500= booking.user&.email
                 %td.px-3.sm:px-4.md:px-6.py-3.sm:py-4.whitespace-nowrap
                   .flex.flex-col
-                    %span.font-medium.text-xs.sm:text-sm.text-gray-900= "#{booking.car.brand} #{booking.car.model}"
-                    %span.text-xs.sm:text-sm.text-gray-500= booking.car.year
+                    - if booking.car
+                      %span.font-medium.text-xs.sm:text-sm.text-gray-900= "#{booking.car.brand} #{booking.car.model}"
+                      %span.text-xs.sm:text-sm.text-gray-500= booking.car.year
+                    - else
+                      %span.font-medium.text-xs.sm:text-sm.text-red-500.italic Deleted Car
+                      %span.text-xs.sm:text-sm.text-gray-500 N/A
                 %td.px-3.sm:px-4.md:px-6.py-3.sm:py-4.whitespace-nowrap
                   .flex.flex-col
                     %span.text-xs.sm:text-sm.text-gray-900= booking.start_date.strftime('%b %d, %Y')
                     %span.text-xs.sm:text-sm.text-gray-900= booking.end_date.strftime('%b %d, %Y')
                 %td.px-3.sm:px-4.md:px-6.py-3.sm:py-4.whitespace-nowrap
-                  %span.text-xs.sm:text-sm.text-gray-900= booking.car.daily_price ? number_to_currency(booking.car.daily_price) : 'N/A'
+                  %span.text-xs.sm:text-sm.text-gray-900= booking.car&.daily_price ? number_to_currency(booking.car.daily_price) : 'N/A'
                 %td.px-3.sm:px-4.md:px-6.py-3.sm:py-4.whitespace-nowrap
                   %span.text-xs.sm:text-sm.text-gray-900= "#{total_days} days"
                 %td.px-3.sm:px-4.md:px-6.py-3.sm:py-4.whitespace-nowrap

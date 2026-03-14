@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_03_11_185354) do
+ActiveRecord::Schema[7.2].define(version: 2026_03_14_104729) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -101,7 +101,7 @@ ActiveRecord::Schema[7.2].define(version: 2026_03_11_185354) do
   end
 
   create_table "bookings", force: :cascade do |t|
-    t.bigint "car_id", null: false
+    t.bigint "car_id"
     t.date "start_date", null: false
     t.date "end_date", null: false
     t.string "status", default: "pending"
@@ -275,6 +275,17 @@ ActiveRecord::Schema[7.2].define(version: 2026_03_11_185354) do
     t.index ["vendor_id"], name: "index_invoices_on_vendor_id"
   end
 
+  create_table "notifications", force: :cascade do |t|
+    t.bigint "admin_id", null: false
+    t.string "title"
+    t.string "message"
+    t.string "related_path"
+    t.datetime "read_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["admin_id"], name: "index_notifications_on_admin_id"
+  end
+
   create_table "transactions", force: :cascade do |t|
     t.bigint "booking_id", null: false
     t.string "stripe_payment_intent_id"
@@ -391,6 +402,7 @@ ActiveRecord::Schema[7.2].define(version: 2026_03_11_185354) do
   add_foreign_key "documents", "users"
   add_foreign_key "invoice_items", "invoices"
   add_foreign_key "invoices", "vendors"
+  add_foreign_key "notifications", "admins"
   add_foreign_key "transactions", "bookings"
   add_foreign_key "vendor_documents", "vendors"
 end

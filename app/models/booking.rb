@@ -1,5 +1,5 @@
 class Booking < ApplicationRecord
-  belongs_to :car, counter_cache: true
+  belongs_to :car, counter_cache: true, optional: true
   belongs_to :user
   belongs_to :vendor, optional: true
   has_many :activities, as: :subject, dependent: :destroy
@@ -14,7 +14,8 @@ class Booking < ApplicationRecord
   # Payment statuses
   PAYMENT_STATUSES = %w[pending paid unpaid refunded refund_pending].freeze
 
-  validates :car_id, :user_id, :start_date, :end_date, :selected_period, presence: true
+  validates :user_id, :start_date, :end_date, :selected_period, presence: true
+  validates :car_id, presence: true, on: :create
   validates :delivery_option, inclusion: { in: %w[delivery pickup], allow_blank: true }
   validates :status, inclusion: { in: STATUSES }
   validates :payment_status, inclusion: { in: PAYMENT_STATUSES }
@@ -208,7 +209,7 @@ class Booking < ApplicationRecord
       metadata: {
         previous_status: status_before_last_save,
         new_status: status,
-        car: "#{car.brand} #{car.model}"
+        car: car ? "#{car.brand} #{car.model}" : "Deleted Car"
       }
     )
   end

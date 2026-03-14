@@ -81,8 +81,12 @@
               .flex.justify-between.items-start
                 %span.text-xs.text-gray-500 Car
                 .text-right
-                  %div.text-sm.font-medium.text-gray-900= "#{booking.car.brand} #{booking.car.model}"
-                  %div.text-xs.text-gray-500= "#{booking.car.year} • #{booking.car.color}"
+                  - if booking.car
+                    %div.text-sm.font-medium.text-gray-900= "#{booking.car.brand} #{booking.car.model}"
+                    %div.text-xs.text-gray-500= "#{booking.car.year} • #{booking.car.color}"
+                  - else
+                    %div.text-sm.font-medium.text-red-500.italic Deleted Car
+                    %div.text-xs.text-gray-500 N/A
 
               .flex.justify-between.items-center
                 %span.text-xs.text-gray-500 Dates
@@ -144,9 +148,13 @@
                     %span.font-medium.text-gray-900= booking.user&.full_name || 'N/A'
                 %td.px-6.py-4.whitespace-nowrap
                   .flex.flex-col
-                    %span.font-medium.text-gray-900= "#{booking.car.brand} #{booking.car.model}"
-                    %span.text-sm.text-gray-500= booking.car.year
-                    %span.text-xs.text-gray-400= booking.car.color
+                    - if booking.car
+                      %span.font-medium.text-gray-900= "#{booking.car.brand} #{booking.car.model}"
+                      %span.text-sm.text-gray-500= booking.car.year
+                      %span.text-xs.text-gray-400= booking.car.color
+                    - else
+                      %span.font-medium.text-red-500.italic Deleted Car
+                      %span.text-sm.text-gray-500 N/A
                 %td.px-6.py-4.whitespace-nowrap
                   .flex.flex-col
                     %span.text-sm.text-gray-900= booking.start_date.strftime('%b %d, %Y')

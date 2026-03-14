@@ -49,8 +49,12 @@
                   %span.text-xs.text-gray-500= transaction.booking.user.email
               %td.px-6.py-4.whitespace-nowrap.text-sm.text-gray-900
                 .flex.flex-col
-                  %span.font-medium= "#{transaction.booking.car.brand} #{transaction.booking.car.model}"
-                  %span.text-xs.text-gray-500= transaction.booking.car.year
+                  - if transaction.booking.car
+                    %span.font-medium= "#{transaction.booking.car.brand} #{transaction.booking.car.model}"
+                    %span.text-xs.text-gray-500= transaction.booking.car.year
+                  - else
+                    %span.font-medium.text-red-500.italic Deleted Car
+                    %span.text-xs.text-gray-500 N/A
               %td.px-6.py-4.whitespace-nowrap.text-sm.font-medium
                 - if transaction.transaction_type == 'refund'
                   %span.text-red-600= "-$#{transaction.amount}"
