@@ -53,16 +53,38 @@ class Vendors::CarsController < ApplicationController
     end
 
     respond_to do |format|
-      if @car.save
+      begin
+        if @car.save
 
-        # Assign selected premium features
-        if params[:car][:feature_ids].present?
-          feature_ids = params[:car][:feature_ids].reject(&:blank?).map(&:to_i)
-          @car.feature_ids = (@car.feature_ids + feature_ids).uniq
+          # Assign selected premium features
+          if params[:car][:feature_ids].present?
+            feature_ids = params[:car][:feature_ids].reject(&:blank?).map(&:to_i)
+            @car.feature_ids = (@car.feature_ids + feature_ids).uniq
+          end
+
+          # Notify all admins
+          Admin.find_each do |admin|
+            admin.notifications.create!(
+              title: "New Car Listed",
+              message: "Vendor #{current_vendor.company_name.presence || current_vendor.full_name} has listed a new car: #{@car.brand} #{@car.model}.",
+              related_path: admin_cars_path
+            )
+          end
+
+          format.html { redirect_to vendors_car_path(@car), notice: "Car was successfully created." }
+        else
+          load_premium_features
+          flash.now[:alert] = "Error: #{@car.errors.full_messages.to_sentence}"
+          format.html { render :new, status: :unprocessable_entity }
+          format.turbo_stream do
+            render turbo_stream: [
+              turbo_stream.replace("form-errors", partial: "shared/form_errors", locals: { object: @car }),
+              turbo_stream.replace("flash-container", partial: "shared/flash_messages")
+            ]
+          end
         end
-
-        format.html { redirect_to vendors_car_path(@car), notice: "Car was successfully created." }
-      else
+      rescue ActiveRecord::RecordNotUnique => e
+        @car.errors.add(:base, "A car with these exact details already exists. Please adjust the brand, model, year, or category.")
         load_premium_features
         flash.now[:alert] = "Error: #{@car.errors.full_messages.to_sentence}"
         format.html { render :new, status: :unprocessable_entity }
@@ -109,25 +131,38 @@ class Vendors::CarsController < ApplicationController
     update_car_features if params[:car][:feature_ids].present?
 
     respond_to do |format|
-      if @car.update(car_params.except(:mulkiya, :feature_ids))
-        # Attach/replace mulkiya if provided
-        if params[:car][:mulkiya].present?
-          if @car.car_document.present?
-            @car.car_document.mulkiya.purge if @car.car_document.mulkiya.attached?
-            @car.car_document.mulkiya.attach(params[:car][:mulkiya])
-            @car.car_document.document_status = :pending
-            @car.car_document.save!
-          else
-            car_document = CarDocument.new
-            car_document.mulkiya.attach(params[:car][:mulkiya])
-            car_document.document_status = :pending
-            car_document.car = @car
-            car_document.save!
+      begin
+        if @car.update(car_params.except(:mulkiya, :feature_ids))
+          # Attach/replace mulkiya if provided
+          if params[:car][:mulkiya].present?
+            if @car.car_document.present?
+              @car.car_document.mulkiya.purge if @car.car_document.mulkiya.attached?
+              @car.car_document.mulkiya.attach(params[:car][:mulkiya])
+              @car.car_document.document_status = :pending
+              @car.car_document.save!
+            else
+              car_document = CarDocument.new
+              car_document.mulkiya.attach(params[:car][:mulkiya])
+              car_document.document_status = :pending
+              car_document.car = @car
+              car_document.save!
+            end
+          end
+
+          format.html { redirect_to vendors_car_path(@car), notice: "Car was successfully updated." }
+        else
+          load_premium_features
+          flash.now[:alert] = "Error: #{@car.errors.full_messages.to_sentence}"
+          format.html { render :edit, status: :unprocessable_entity }
+          format.turbo_stream do
+            render turbo_stream: [
+              turbo_stream.replace("form-errors", partial: "shared/form_errors", locals: { object: @car }),
+              turbo_stream.replace("flash-container", partial: "shared/flash_messages")
+            ]
           end
         end
-
-        format.html { redirect_to vendors_car_path(@car), notice: "Car was successfully updated." }
-      else
+      rescue ActiveRecord::RecordNotUnique => e
+        @car.errors.add(:base, "A car with these exact details already exists. Please adjust the brand, model, year, or category.")
         load_premium_features
         flash.now[:alert] = "Error: #{@car.errors.full_messages.to_sentence}"
         format.html { render :edit, status: :unprocessable_entity }
@@ -142,7 +177,18 @@ class Vendors::CarsController < ApplicationController
   end
 
   def destroy
+    car_name = "#{@car.brand} #{@car.model}"
     @car.destroy
+
+    # Notify all admins
+    Admin.find_each do |admin|
+      admin.notifications.create!(
+        title: "Car Deleted",
+        message: "Vendor #{current_vendor.company_name.presence || current_vendor.full_name} has deleted their car: #{car_name}.",
+        related_path: admin_vendor_path(current_vendor)
+      )
+    end
+
     redirect_to vendors_cars_path, notice: "Car was successfully deleted."
   end
 

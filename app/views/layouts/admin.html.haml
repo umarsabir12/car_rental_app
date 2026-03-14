@@ -93,19 +93,48 @@
             %button#mobileMenuBtn.md:hidden.p-2.rounded-lg.focus:outline-none.transition-all.duration-200{style: "color: #3A6363; background-color: #e8f0f0;", onmouseover: "this.style.backgroundColor='#d1e0e0'; this.style.color='#2d4d4d'", onmouseout: "this.style.backgroundColor='#e8f0f0'; this.style.color='#3A6363'"}
               %i.fas.fa-bars.text-xl
             %span.text-lg.font-bold.md:hidden{style: "color: #3A6363;"} WheelsOnRent
-          .relative
-            %button#profileDropdownBtn.flex.items-center.focus:outline-none
-              -# %img.w-8.h-8.rounded-full.mr-2{:alt => "Profile", :src => "https://randomuser.me/api/portraits/men/32.jpg"}/
-              %span.hidden.md:block.font-medium.text-gray-700.text-lg
-                = current_admin.display_name.titleize
-              %svg.w-4.h-4.ml-1.text-gray-500{:fill => "none", :stroke => "currentColor", "stroke-width" => "2", :viewbox => "0 0 24 24"}
-                %path{:d => "M19 9l-7 7-7-7", "stroke-linecap" => "round", "stroke-linejoin" => "round"}
-            #profileDropdown.hidden.absolute.right-0.mt-2.w-40.bg-white.rounded.shadow-lg.py-2
-              = link_to "Edit Profile", edit_admins_path, class: "block px-4 py-2 text-gray-700 hover:bg-gray-100"
-              .border-t.my-1
-              = button_to "Logout", destroy_admin_session_path, method: :delete, class: "block w-full text-left px-4 py-2 text-red-600 hover:bg-gray-100"
+          .relative.flex.items-center.gap-4
+            / Notifications Bell
+            .relative
+              %button#notificationsDropdownBtn.relative.p-2.text-gray-600.hover:text-gray-800.focus:outline-none.transition-colors
+                %i.fas.fa-bell.text-xl
+                = render "admin/notifications/count", count: current_admin.notifications.unread.count
+              
+              / Notifications Dropdown
+              #notificationsDropdown.hidden.absolute.right-0.mt-2.w-80.sm:w-96.bg-white.rounded-lg.shadow-xl.overflow-hidden.z-50.border.border-gray-100
+                .flex.items-center.justify-between.px-4.py-3.border-b.bg-gray-50
+                  %h3.font-semibold.text-gray-700 Notifications
+                  - if current_admin.notifications.unread.count > 0
+                    = button_to "Mark all as read", mark_all_read_admin_notifications_path, method: :patch, class: "text-sm text-blue-600 hover:text-blue-800 font-medium"
+                
+                #notificationsList.max-h-96.overflow-y-auto.divide-y.divide-gray-100{ data: { controller: "infinite-scroll", action: "scroll->infinite-scroll#handleScroll" } }
+                  - notifications = current_admin.notifications.ordered.limit(6)
+                  - if notifications.any?
+                    = render partial: "admin/notifications/notification", collection: notifications
+                    - if current_admin.notifications.count > 6
+                      #notifications-pagination-frame.py-2.text-center
+                        = turbo_frame_tag "notifications_page_2", src: admin_notifications_path(page: 2, format: :turbo_stream), loading: :lazy do
+                          .text-sm.text-gray-500 Loading more...
+                  - else
+                    #empty-notifications-state.px-4.py-8.text-center.text-gray-500
+                      %i.fas.fa-bell-slash.text-3xl.mb-2.text-gray-300
+                      %p.text-sm No notifications yet
+
+            / Profile
+            .relative
+              %button#profileDropdownBtn.flex.items-center.focus:outline-none
+                -# %img.w-8.h-8.rounded-full.mr-2{:alt => "Profile", :src => "https://randomuser.me/api/portraits/men/32.jpg"}/
+                %span.hidden.md:block.font-medium.text-gray-700.text-lg
+                  = current_admin.display_name.titleize
+                %svg.w-4.h-4.ml-1.text-gray-500{:fill => "none", :stroke => "currentColor", "stroke-width" => "2", :viewbox => "0 0 24 24"}
+                  %path{:d => "M19 9l-7 7-7-7", "stroke-linecap" => "round", "stroke-linejoin" => "round"}
+              #profileDropdown.hidden.absolute.right-0.mt-2.w-40.bg-white.rounded.shadow-lg.py-2
+                = link_to "Edit Profile", edit_admins_path, class: "block px-4 py-2 text-gray-700 hover:bg-gray-100"
+                .border-t.my-1
+                = button_to "Logout", destroy_admin_session_path, method: :delete, class: "block w-full text-left px-4 py-2 text-red-600 hover:bg-gray-100"
         / Main content area
         .flex-1.bg-gray-50
+          = turbo_stream_from "admin_#{current_admin.id}_notifications"
           = render 'shared/flash_messages'
           .max-w-7xl.mx-auto
             = yield
@@ -121,17 +150,35 @@
       // Profile dropdown toggle
       var profileBtn = document.getElementById('profileDropdownBtn');
       var profileMenu = document.getElementById('profileDropdown');
+      
+      // Notifications dropdown toggle
+      var notifBtn = document.getElementById('notificationsDropdownBtn');
+      var notifMenu = document.getElementById('notificationsDropdown');
+
       if (profileBtn && profileMenu) {
         profileBtn.addEventListener('click', function(e) {
           e.stopPropagation();
           profileMenu.classList.toggle('hidden');
-        });
-        document.addEventListener('click', function(e) {
-          if (!profileBtn.contains(e.target) && !profileMenu.contains(e.target)) {
-            profileMenu.classList.add('hidden');
-          }
+          if (notifMenu) notifMenu.classList.add('hidden'); // Close other menu
         });
       }
+
+      if (notifBtn && notifMenu) {
+        notifBtn.addEventListener('click', function(e) {
+          e.stopPropagation();
+          notifMenu.classList.toggle('hidden');
+          if (profileMenu) profileMenu.classList.add('hidden'); // Close other menu
+        });
+      }
+
+      document.addEventListener('click', function(e) {
+        if (profileBtn && profileMenu && !profileBtn.contains(e.target) && !profileMenu.contains(e.target)) {
+          profileMenu.classList.add('hidden');
+        }
+        if (notifBtn && notifMenu && !notifBtn.contains(e.target) && !notifMenu.contains(e.target)) {
+          notifMenu.classList.add('hidden');
+        }
+      });
 
       // Mobile sidebar toggle
       var mobileMenuBtn = document.getElementById('mobileMenuBtn');

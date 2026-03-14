@@ -158,6 +158,11 @@ Rails.application.routes.draw do
     resources :features, except: [ :show, :new ]
     resources :blogs, only: [ :index, :new, :create, :destroy, :edit, :update ]
     resource :announcement, only: [ :show, :edit, :update, :destroy ]
+    resources :notifications, only: [ :index, :show ] do
+      collection do
+        patch :mark_all_read
+      end
+    end
   end
 
   namespace :vendors do

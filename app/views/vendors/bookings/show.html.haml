@@ -63,29 +63,35 @@
           %i.fas.fa-car{style: 'color:#3A6363'}
           Car Information
         .grid.grid-cols-1.md:grid-cols-2.gap-4
-          .flex.justify-between.py-2.border-b.border-gray-100
-            %span.font-medium.text-gray-600 Car
-            %span.text-gray-900= "#{@booking.car.brand} #{@booking.car.model}"
-          .flex.justify-between.py-2.border-b.border-gray-100
-            %span.font-medium.text-gray-600 Year
-            %span.text-gray-900= @booking.car.year
-          .flex.justify-between.py-2.border-b.border-gray-100
-            %span.font-medium.text-gray-600 Color
-            %span.text-gray-900= @booking.car.color
-          .flex.justify-between.py-2.border-b.border-gray-100
-            %span.font-medium.text-gray-600 Category
-            %span.text-gray-900= @booking.car.category.presence || 'N/A'
-          .flex.justify-between.py-2.border-b.border-gray-100
-            %span.font-medium.text-gray-600= @booking.car.with_driver? ? "Base Service Rate" : "Daily Rate"
-            %span.text-gray-900
-              - if @booking.car.with_driver?
-                = "#{@booking.car.five_hours_charge}/5h • #{@booking.car.ten_hours_charge}/10h"
-              - else
-                = @booking.car.daily_price ? number_to_currency(@booking.car.daily_price) : 'N/A'
-          .flex.justify-between.py-2.border-b.border-gray-100
-            %span.font-medium.text-gray-600 Car Status
-            - car_status_classes = {'available' => 'bg-green-100 text-green-700', 'rented' => 'bg-red-100 text-red-700', 'maintenance' => 'bg-yellow-100 text-yellow-700'}
-            %span.inline-block.rounded-full.text-xs.font-semibold.px-3.py-1{class: car_status_classes[@booking.car.status] || 'bg-gray-100 text-gray-700'}= @booking.car.status.titleize
+          - if @booking.car
+            .flex.justify-between.py-2.border-b.border-gray-100
+              %span.font-medium.text-gray-600 Car
+              %span.text-gray-900= "#{@booking.car.brand} #{@booking.car.model}"
+            .flex.justify-between.py-2.border-b.border-gray-100
+              %span.font-medium.text-gray-600 Year
+              %span.text-gray-900= @booking.car.year
+            .flex.justify-between.py-2.border-b.border-gray-100
+              %span.font-medium.text-gray-600 Color
+              %span.text-gray-900= @booking.car.color
+            .flex.justify-between.py-2.border-b.border-gray-100
+              %span.font-medium.text-gray-600 Category
+              %span.text-gray-900= @booking.car.category.presence || 'N/A'
+            .flex.justify-between.py-2.border-b.border-gray-100
+              %span.font-medium.text-gray-600= @booking.car.with_driver? ? "Base Service Rate" : "Daily Rate"
+              %span.text-gray-900
+                - if @booking.car.with_driver?
+                  = "#{@booking.car.five_hours_charge}/5h • #{@booking.car.ten_hours_charge}/10h"
+                - else
+                  = @booking.car.daily_price ? number_to_currency(@booking.car.daily_price) : 'N/A'
+            .flex.justify-between.py-2.border-b.border-gray-100
+              %span.font-medium.text-gray-600 Car Status
+              - car_status_classes = {'available' => 'bg-green-100 text-green-700', 'rented' => 'bg-red-100 text-red-700', 'maintenance' => 'bg-yellow-100 text-yellow-700'}
+              %span.inline-block.rounded-full.text-xs.font-semibold.px-3.py-1{class: car_status_classes[@booking.car.status] || 'bg-gray-100 text-gray-700'}= @booking.car.status.titleize
+          - else
+            .col-span-1.md:col-span-2.text-center.py-6
+              %i.fas.fa-car-crash.text-3xl.text-red-400.mb-2
+              %p.text-lg.font-bold.text-red-500 Deleted Car
+              %p.text-sm.text-gray-500 This car has been removed from your fleet
 
       / Booking Details Card
       .bg-white.rounded-xl.shadow-lg.p-6
@@ -225,9 +231,10 @@
           %i.fas.fa-bolt{style: 'color:#3A6363'}
           Quick Actions
         .space-y-3
-          = link_to vendors_car_path(@booking.car), class: 'w-full bg-blue-50 hover:bg-blue-100 text-blue-700 font-medium px-4 py-3 rounded-lg transition flex items-center justify-center gap-2' do
-            %i.fas.fa-car
-            View Car Details
+          - if @booking.car
+            = link_to vendors_car_path(@booking.car), class: 'w-full bg-blue-50 hover:bg-blue-100 text-blue-700 font-medium px-4 py-3 rounded-lg transition flex items-center justify-center gap-2' do
+              %i.fas.fa-car
+              View Car Details
           = link_to vendors_bookings_path, class: 'w-full bg-gray-50 hover:bg-gray-100 text-gray-700 font-medium px-4 py-3 rounded-lg transition flex items-center justify-center gap-2' do
             %i.fas.fa-arrow-left
             Back to Bookings

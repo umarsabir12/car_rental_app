@@ -33,7 +33,10 @@
           .flex.justify-between.items-start.mb-3
             %div.flex-1.min-w-0
               %h3.text-base.font-bold.text-gray-900
-                = "#{booking.car&.brand} #{booking.car&.model}"
+                - if booking.car
+                  = "#{booking.car.brand} #{booking.car.model}"
+                - else
+                  %span.text-red-500.italic Deleted Car
               %p.text-sm.text-gray-600.break-words
                 = booking.user&.full_name.presence || 'N/A'
             = link_to admin_booking_path(booking), class: 'flex-shrink-0 ml-2 text-white px-3 py-1.5 rounded-md text-sm', style: 'background-color: #3A6363;' do
@@ -114,8 +117,12 @@
                   %span.text-xs.text-gray-500= booking.user&.email
               %td.px-6.py-4.whitespace-nowrap.text-sm.text-gray-900
                 .flex.flex-col
-                  %span.font-medium= "#{booking.car&.brand} #{booking.car&.model}"
-                  %span.text-xs.text-gray-500= booking.car&.year
+                  - if booking.car
+                    %span.font-medium= "#{booking.car.brand} #{booking.car.model}"
+                    %span.text-xs.text-gray-500= booking.car.year
+                  - else
+                    %span.font-medium.text-red-500.italic Deleted Car
+                    %span.text-xs.text-gray-500 N/A
               %td.px-6.py-4.whitespace-nowrap.text-sm.text-gray-900= booking.car&.vendor&.company_name || 'N/A'
               %td.px-6.py-4.whitespace-nowrap.text-sm.text-gray-900= booking.start_date&.strftime('%b %d, %Y')
               %td.px-6.py-4.whitespace-nowrap.text-sm.text-gray-900= booking.end_date&.strftime('%b %d, %Y')

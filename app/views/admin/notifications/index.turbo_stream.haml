@@ -1,0 +1,19 @@
+= turbo_stream.append "notificationsList" do
+  = render partial: "admin/notifications/notification", collection: @notifications
+
+- if @pagy.present?
+  - if @pagy.next
+    = turbo_stream.replace "notifications-pagination-frame" do
+      #notifications-pagination-frame.py-2.text-center
+        = turbo_frame_tag "notifications_page_#{@pagy.next}", src: admin_notifications_path(page: @pagy.next, format: :turbo_stream), loading: :lazy do
+          .text-sm.text-gray-500 Loading more...
+  - else
+    = turbo_stream.remove "notifications-pagination-frame"
+- else
+  - if @notifications.length == 6
+    = turbo_stream.replace "notifications-pagination-frame" do
+      #notifications-pagination-frame.py-2.text-center
+        = turbo_frame_tag "notifications_page_#{(params[:page] || 1).to_i + 1}", src: admin_notifications_path(page: (params[:page] || 1).to_i + 1, format: :turbo_stream), loading: :lazy do
+          .text-sm.text-gray-500 Loading more...
+  - else
+    = turbo_stream.remove "notifications-pagination-frame"

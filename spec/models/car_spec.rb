@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe Car, type: :model do
   describe 'associations' do
     it { should belong_to(:vendor).optional }
-    it { should have_many(:bookings) }
+    it { should have_many(:bookings).dependent(:nullify) }
     it { should have_one(:car_document).dependent(:destroy) }
     it { should have_many(:activities).dependent(:destroy) }
     it { should have_many(:car_features).dependent(:destroy) }
@@ -257,6 +257,15 @@ RSpec.describe Car, type: :model do
 
         car.destroy
         expect(car.images).not_to be_attached
+      end
+
+      it 'nullifies associated bookings' do
+        car = create(:car)
+        booking = create(:booking, car: car)
+
+        expect {
+          car.destroy
+        }.to change { booking.reload.car_id }.from(car.id).to(nil)
       end
     end
   end

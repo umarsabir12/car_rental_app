@@ -11,6 +11,16 @@ class VendorRequestsController < ApplicationController
     respond_to do |format|
       if @vendor_request.save
         VendorMailer.request_email(@vendor_request.id).deliver_now
+
+        # Notify all admins
+        Admin.find_each do |admin|
+          admin.notifications.create!(
+            title: "New Vendor Request",
+            message: "#{@vendor_request.company_name}: (#{@vendor_request.first_name} #{@vendor_request.last_name}) has submitted a registration request.",
+            related_path: admin_vendor_requests_path
+          )
+        end
+
         format.html { redirect_to thank_you_vendor_requests_path, notice: "Registration request submitted successfully! We will contact you soon." }
       else
         error_message = "Error: #{@vendor_request.errors.full_messages.to_sentence}"
