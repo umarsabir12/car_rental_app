@@ -17,6 +17,7 @@ class GoogleReviewsService
     reviews
   rescue StandardError => e
     Rails.logger.error("Failed to fetch Google reviews: #{e.message}")
+    Sentry.capture_exception(e)
     []
   end
 
@@ -36,13 +37,23 @@ class GoogleReviewsService
 
     response = Net::HTTP.get_response(uri)
 
-    return [] unless response.is_a?(Net::HTTPSuccess)
+    unless response.is_a?(Net::HTTPSuccess)
+      msg = "Google Reviews API request failed: HTTP #{response.code}"
+      Rails.logger.error(msg)
+      Sentry.capture_message(msg, extra: { body: response.body })
+      return []
+    end
 
     data = JSON.parse(response.body)
 
-    return [] unless data["status"] == "OK" && data["result"].present?
+    if data["status"] != "OK"
+      msg = "Google Reviews API error: #{data['status']} - #{data['error_message']}"
+      Rails.logger.error(msg)
+      Sentry.capture_message(msg, level: :error, extra: { data: data })
+      return []
+    end
 
-    reviews = data["result"]["reviews"] || []
+    reviews = data.dig("result", "reviews") || []
 
     # Map to a simpler structure
     reviews.map do |review|
