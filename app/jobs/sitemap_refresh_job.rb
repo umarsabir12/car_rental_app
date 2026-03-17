@@ -2,11 +2,9 @@ class SitemapRefreshJob < ApplicationJob
   queue_as :default
 
   def perform
-    Rails.logger.info "[SitemapRefreshJob] Car count: #{Car.count}"
-    Rails.logger.info "[SitemapRefreshJob] Published Blog count: #{Blog.published.count}"
     Rails.logger.info "[SitemapRefreshJob] Starting sitemap refresh..."
 
-    SitemapGenerator::Interpreter.run(verbose: true)
+    SitemapGenerator::Interpreter.run(verbose: false)
 
     Rails.logger.info "[SitemapRefreshJob] Sitemap refresh completed successfully."
   rescue => e
