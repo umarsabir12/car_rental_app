@@ -29,8 +29,8 @@ SitemapGenerator::Sitemap.create do
   # Car listing page
   add cars_path, priority: 0.8, changefreq: "daily"
 
-  # Individual car pages — only available cars with approved mulkiya
-  Car.with_approved_mulkiya.available.find_each do |car|
+  # Individual car pages
+  Car.find_each do |car|
     add car_path(car),
         lastmod:     car.updated_at,
         changefreq:  "daily",
