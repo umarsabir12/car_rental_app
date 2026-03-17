@@ -7,7 +7,8 @@ SitemapGenerator::Sitemap.adapter = SitemapGenerator::AwsSdkAdapter.new(
   "wheels-on-rent-app",
   aws_access_key_id:     ENV["AWS_ACCESS_KEY_ID"],
   aws_secret_access_key: ENV["AWS_SECRET_ACCESS_KEY"],
-  aws_region:            "us-east-1"
+  aws_region:            "us-east-1",
+  acl:                   nil # Modern S3 buckets have ACLs disabled (Bucket Owner Enforced)
 )
 
 # Serve the sitemap through the app's public URL (not the raw S3 URL)
