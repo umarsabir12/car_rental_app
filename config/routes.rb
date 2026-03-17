@@ -237,5 +237,8 @@ Rails.application.routes.draw do
 
   get ":slug", to: "blogs#show", as: :blog
 
+  # Serve the sitemap from S3
+  get "/sitemap.xml.gz", to: redirect("https://wheels-on-rent-app.s3.amazonaws.com/sitemap.xml.gz", status: 301)
+
   root "car_rental#index"
 end
