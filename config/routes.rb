@@ -237,10 +237,9 @@ Rails.application.routes.draw do
 
   get ":slug", to: "blogs#show", as: :blog
 
-  # Serve the sitemap from S3
-  # Using 302 (Temporary Redirect) to prevent browsers from caching the redirect forever
-  get "/sitemap.xml.gz", to: redirect("https://wheels-on-rent-app.s3.amazonaws.com/sitemap.xml.gz", status: 302)
-  get "/sitemap.xml",    to: redirect("https://wheels-on-rent-app.s3.amazonaws.com/sitemap.xml.gz", status: 302)
+  # Serve the sitemap from S3 via Rails (handles private bucket access)
+  get "/sitemap.xml.gz", to: "sitemaps#show"
+  get "/sitemap.xml",    to: "sitemaps#show"
 
   root "car_rental#index"
 end
