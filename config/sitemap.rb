@@ -7,10 +7,11 @@ SitemapGenerator::Sitemap.adapter = SitemapGenerator::AwsSdkAdapter.new(
   "wheels-on-rent-app",
   aws_access_key_id:     ENV["AWS_ACCESS_KEY_ID"],
   aws_secret_access_key: ENV["AWS_SECRET_ACCESS_KEY"],
-  aws_region:            "us-east-1",
-  # Serve the sitemap through the app's public URL (not the raw S3 URL)
-  sitemaps_host: "https://www.wheelsonrent.ae/"
+  aws_region:            "us-east-1"
 )
+
+# Serve the sitemap through the app's public URL (not the raw S3 URL)
+SitemapGenerator::Sitemap.sitemaps_host = "https://www.wheelsonrent.ae/"
 
 # Sitemap stored at the root of the bucket → s3://wheels-on-rent-app/sitemap.xml.gz
 # This matches the URL declared in public/robots.txt
