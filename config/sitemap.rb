@@ -23,15 +23,17 @@ SitemapGenerator::Sitemap.search_engines = {
 }
 
 SitemapGenerator::Sitemap.create do
-  add root_path, priority: 1.0, changefreq: "daily"
+  # DEBUG: Adding explicit timestamp to root path to verify file is fresh
+  add root_path, priority: 1.0, changefreq: "daily", lastmod: Time.now
+  
   add cars_path, priority: 0.8, changefreq: "daily"
 
-  # Individual car pages — only available cars with approved mulkiya
+  # Individual car pages — using priority 0.85 to distinguish from old 0.5 versions
   Car.with_approved_mulkiya.available.find_each do |car|
     add car_path(car),
         lastmod:     car.updated_at,
         changefreq:  "daily",
-        priority:    0.8
+        priority:    0.85
   end
 
   # Blog listing page
