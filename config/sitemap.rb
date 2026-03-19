@@ -25,7 +25,7 @@ SitemapGenerator::Sitemap.search_engines = {
 SitemapGenerator::Sitemap.create do
   # DEBUG: Adding explicit timestamp to root path to verify file is fresh
   add root_path, priority: 1.0, changefreq: "daily", lastmod: Time.now
-  
+
   add cars_path, priority: 0.8, changefreq: "daily"
 
   # Individual car pages — using priority 0.85 to distinguish from old 0.5 versions
