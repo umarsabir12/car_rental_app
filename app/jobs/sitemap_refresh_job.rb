@@ -11,8 +11,8 @@ class SitemapRefreshJob < ApplicationJob
     else
       # Test S3 connectivity by listing objects (checks if bucket exists and is accessible)
       begin
-        s3 = Aws::S3::Client.new(region: 'us-east-1')
-        s3.list_objects_v2(bucket: 'wheels-on-rent-app', max_keys: 1)
+        s3 = Aws::S3::Client.new(region: "us-east-1")
+        s3.list_objects_v2(bucket: "wheels-on-rent-app", max_keys: 1)
         Rails.logger.info "[SitemapRefreshJob] S3 connection verified: bucket 'wheels-on-rent-app' is accessible."
       rescue => e
         Rails.logger.error "[SitemapRefreshJob] S3 connection FAILED: #{e.message}"
