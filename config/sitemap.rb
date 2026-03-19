@@ -29,7 +29,7 @@ SitemapGenerator::Sitemap.create do
   add cars_path, priority: 0.8, changefreq: "daily"
 
   # Individual car pages — using priority 0.85 to distinguish from old 0.5 versions
-  Car.with_approved_mulkiya.available.find_each do |car|
+  Car.find_each do |car|
     add car_path(car),
         lastmod:     car.updated_at,
         changefreq:  "daily",
@@ -47,7 +47,11 @@ SitemapGenerator::Sitemap.create do
         priority:    0.7
   end
 
+  # Add car category pages (e.g., /cars/suv, /cars/luxury)
+  AppConstants::CAR_CATEGORIES.each do |category|
+    add cars_by_category_path(category: category[0].parameterize), priority: 0.75, changefreq: "daily"
+  end
+
   # Static pages
-  add "/terms_of_use",                         priority: 0.4
   add "/list-your-car-rental-marketplace",     priority: 0.6
 end
