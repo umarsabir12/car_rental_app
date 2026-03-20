@@ -573,6 +573,7 @@ DEPENDENCIES
   redis (>= 4.0.1)
   rspec-rails (~> 8.0.2)
   rubocop-rails-omakase
+  ruby-vips
   selenium-webdriver
   sentry-rails
   sentry-ruby
