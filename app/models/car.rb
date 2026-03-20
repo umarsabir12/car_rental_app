@@ -4,8 +4,8 @@ class Car < ApplicationRecord
 
   has_many_attached :images do |attachable|
     attachable.variant :thumb, resize_to_limit: [ 400, 300 ], preprocessed: true
-    attachable.variant :thumb_webp, resize_to_limit: [400, 300], format: :webp, saver: { quality: 80 }, preprocessed: true
-    attachable.variant :large_webp, resize_to_limit: [1200, 800], format: :webp, saver: { quality: 85 }, preprocessed: true
+    attachable.variant :thumb_webp, resize_to_limit: [ 400, 300 ], format: :webp, saver: { quality: 80 }, preprocessed: true
+    attachable.variant :large_webp, resize_to_limit: [ 1200, 800 ], format: :webp, saver: { quality: 85 }, preprocessed: true
   end
 
   belongs_to :vendor, optional: true
