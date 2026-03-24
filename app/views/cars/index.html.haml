@@ -105,12 +105,14 @@
  
   / SEO Content Section
   - if params[:category].present? && params[:category] != 'all-categories'
-    - partial_name = "cars/#{params[:category].downcase}_description"
-    - if lookup_context.template_exists?(partial_name, [], true)
+    - cat = params[:category].to_s.downcase.gsub(/[^a-z0-9\-]/, '')
+    - partial_name = "cars/#{cat}_description"
+    - if cat.present? && lookup_context.template_exists?(partial_name, [], true)
       = render partial_name
   - elsif params[:brand].present?
-    - partial_name = "cars/#{params[:brand].downcase}_description"
-    - if lookup_context.template_exists?(partial_name, [], true)
+    - brand = params[:brand].to_s.downcase.gsub(/[^a-z0-9\-]/, '')
+    - partial_name = "cars/#{brand}_description"
+    - if brand.present? && lookup_context.template_exists?(partial_name, [], true)
       = render partial_name
 
 / FOOTER
