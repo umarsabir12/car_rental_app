@@ -542,6 +542,7 @@ DEPENDENCIES
   bootsnap
   brakeman (~> 8.0.4)
   capybara
+  connection_pool (>= 3.0.2)
   database_cleaner-active_record
   debug
   devise

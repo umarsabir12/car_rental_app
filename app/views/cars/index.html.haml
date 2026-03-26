@@ -107,13 +107,13 @@
   - allowed_categories = %w[convertible economy electric hybrid luxury sports suv truck van]
   - allowed_brands = %w[aston-martin audi bentley bmw cadillac chevrolet gmc kia lamborghini land-rover lexus mazda mini mitsubishi nissan rolls-royce]
   
-  - selected_category = allowed_categories.find { |c| c == params[:category].to_s.downcase }
-  - selected_brand = allowed_brands.find { |b| b == params[:brand].to_s.downcase }
+  - category_partials = allowed_categories.each_with_object({}) { |c, h| h[c] = "cars/#{c}_description" }
+  - brand_partials = allowed_brands.each_with_object({}) { |b, h| h[b] = "cars/#{b}_description" }
   
-  - if selected_category
-    = render "cars/#{selected_category}_description"
-  - elsif selected_brand
-    = render "cars/#{selected_brand}_description"
+  - if params[:category].present? && (partial = category_partials[params[:category].to_s.downcase])
+    = render partial
+  - elsif params[:brand].present? && (partial = brand_partials[params[:brand].to_s.downcase])
+    = render partial
 
 / FOOTER
 - content_for :footer do
