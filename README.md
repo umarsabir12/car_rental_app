@@ -27,7 +27,8 @@ A comprehensive car rental management system built with Ruby on Rails 7. This ap
 
 Ensure you have the following installed on your system:
 
-- **Ruby**: Version 3.x (check `.ruby-version` if available)
+- **Ruby**: Version 3.3.x (check `.ruby-version` if available)
+- **libvips**: Image processing library (e.g., `libvips42` or `libvips-dev` on Ubuntu, `vips` on macOS)
 - **PostgreSQL**: Database server
 - **Redis**: For caching and Action Cable
 - **Git**: Version control
@@ -100,10 +101,16 @@ bin/dev
 This uses `Procfile.dev` to start both the Rails server and the Tailwind watcher.
 Access the app at `http://localhost:3000`.
 
-## Testing
+## Testing and Security
 
 To run the test suite:
 
 ```bash
 bundle exec rspec
+```
+
+To run security static analysis with Brakeman:
+
+```bash
+bin/brakeman --no-pager
 ```
