@@ -104,14 +104,16 @@
                     \/day
  
   / SEO Content Section
-  - if params[:category].present? && params[:category] != 'all-categories'
-    - partial_name = "cars/#{params[:category].downcase}_description"
-    - if lookup_context.template_exists?(partial_name, [], true)
-      = render partial_name
-  - elsif params[:brand].present?
-    - partial_name = "cars/#{params[:brand].downcase}_description"
-    - if lookup_context.template_exists?(partial_name, [], true)
-      = render partial_name
+  - allowed_categories = %w[convertible economy electric hybrid luxury sports suv truck van]
+  - allowed_brands = %w[aston-martin audi bentley bmw cadillac chevrolet gmc kia lamborghini land-rover lexus mazda mini mitsubishi nissan rolls-royce]
+  
+  - category_partials = allowed_categories.each_with_object({}) { |c, h| h[c] = "cars/#{c}_description" }
+  - brand_partials = allowed_brands.each_with_object({}) { |b, h| h[b] = "cars/#{b}_description" }
+  
+  - if params[:category].present? && (partial = category_partials[params[:category].to_s.downcase])
+    = render partial
+  - elsif params[:brand].present? && (partial = brand_partials[params[:brand].to_s.downcase])
+    = render partial
 
 / FOOTER
 - content_for :footer do
