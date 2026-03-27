@@ -43,7 +43,7 @@ gem "stripe"
 gem "omniauth-google-oauth2"
 gem "omniauth-rails_csrf_protection"
 
-gem "connection_pool", ">= 3.0.2"
+gem "connection_pool", "< 3.0.0"
 
 gem "figaro"
 
