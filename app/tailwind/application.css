@@ -1,0 +1,10 @@
+@import "tailwindcss" source(none);
+
+@source "../views";
+@source "../helpers";
+@source "../javascript";
+
+@theme {
+  --color-primary: #3A6363;
+  --max-width-container: 86rem;
+}

@@ -26,7 +26,7 @@ Rails.application.configure do
   # Add far-future expires headers for static assets
   if ENV["RAILS_SERVE_STATIC_FILES"].present?
     config.public_file_server.headers = {
-      "Cache-Control" => "public, max-age=31536000",
+      "Cache-Control" => "public, max-age=31536000, immutable",
       "Expires" => 1.year.from_now.to_formatted_s(:rfc822)
     }
   end

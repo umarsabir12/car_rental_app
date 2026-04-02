@@ -5,9 +5,10 @@
     %meta{ name: "viewport", content: "width=device-width, initial-scale=1.0" }
     = csrf_meta_tags
     %title Admin Dashboard
-    %script{ src: "https://cdn.tailwindcss.com" }
     %link{ rel: "stylesheet", href: "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css", integrity: "sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==", crossorigin: "anonymous", referrerpolicy: "no-referrer" }
-    %link{ rel: "stylesheet", href: "https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css" }
+    = stylesheet_link_tag "tailwind", "data-turbo-track": "reload"
+    = stylesheet_link_tag "application", "data-turbo-track": "reload"
+    = stylesheet_link_tag "swiper-bundle.min"
     -# %style
       /* Custom styles for admin image sliders */
       .swiper-container {
@@ -140,7 +141,7 @@
             = yield
 
     = render 'shared/loader'
-    %script{ src: "https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js" }
+    = javascript_include_tag "swiper-bundle.min"
 
 :javascript
   (function() {
