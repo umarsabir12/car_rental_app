@@ -95,6 +95,12 @@ jobs:
           DATABASE_URL: postgres://postgres:postgres@localhost:5432/car_rental_test
         run: bin/rails db:test:prepare
 
+      - name: Precompile assets
+        env:
+          RAILS_ENV: test
+          DATABASE_URL: postgres://postgres:postgres@localhost:5432/car_rental_test
+        run: bin/rails assets:precompile
+
       - name: Run RSpec tests
         env:
           RAILS_ENV: test
