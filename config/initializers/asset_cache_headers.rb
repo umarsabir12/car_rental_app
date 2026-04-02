@@ -15,7 +15,7 @@ Rails.application.config.middleware.insert_before(
         headers["Cache-Control"] = "public, max-age=31536000, immutable"
       end
 
-      [status, headers, response]
+      [ status, headers, response ]
     end
   end
 )
