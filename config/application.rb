@@ -28,5 +28,8 @@ module CarRental
     config.active_job.queue_adapter = :inline
 
     config.active_storage.variant_processor = :vips
+
+    # Add builds directory to asset paths so Sprockets can find compiled Tailwind CSS
+    config.assets.paths << Rails.root.join("app/assets/builds")
   end
 end
