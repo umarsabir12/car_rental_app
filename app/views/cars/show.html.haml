@@ -571,7 +571,7 @@
 
   / Booking Modal
   #bookingModal.modal.fade{"aria-hidden" => "true", "aria-labelledby" => "bookingModalLabel", tabindex: "-1", "data-controller" => "modal booking", "data-booking-car-id-value" => @car.id, "data-booking-with-driver-value" => @car.with_driver?.to_s}
-    .modal-dialog.modal-dialog-centered.mt-16
+    .modal-dialog.modal-dialog-centered.mt-16{ style: 'max-width: 500px; width: 100%; margin-left: auto; margin-right: auto;' }
       .modal-content.rounded-2xl.shadow-xl.border{style: 'border-color: #cfe5e5'}
         .modal-header.flex.items-center.justify-between.px-6.py-4
           %h5#bookingModalLabel.modal-title.text-xl.font-bold{style: 'color: #2d4f4f'} Book This Car
