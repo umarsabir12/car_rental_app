@@ -1,23 +1,15 @@
 - content_for :head do
-  %link{ rel: "preload", href: asset_path('hero_cars/hero_1.jpg'), as: "image" }
-  %link{ rel: "preload", href: asset_path('hero_cars/hero_2.jpg'), as: "image" }
-  %link{ rel: "preload", href: asset_path('hero_cars/hero_3.jpg'), as: "image" }
-  %link{ rel: "preload", href: asset_path('hero_cars/hero_4.jpg'), as: "image" }
-  %link{ rel: "preload", href: asset_path('hero_cars/car3.png'), as: "image" }
-  %link{ rel: "preload", href: asset_path('hero_cars/car4.png'), as: "image" }
+  %link{ rel: "preload", href: asset_path('hero_cars/hero_1.jpg'), as: "image", fetchpriority: "high" }
   %link{ rel: "preload", href: asset_path('new_logo.png'), as: "image" }
-  %link{ rel: "preload", href: asset_path('tabby_banner.jpg'), as: "image" }
-  %link{ rel: "preload", href: asset_path('no_deposit_banner.jpg'), as: "image" }
-  %link{ rel: "preload", href: asset_path('join_us_image.png'), as: "image" }
 
 %div.min-h-screen.bg-white
   / Hero Section
   %section.relative.text-white.pt-16{style: 'height: 100vh; background: linear-gradient(135deg, #3a6363 0%, #2d4f4f 100%)'}
     #heroImageSlider.absolute.inset-0
-      %img.absolute.inset-0.w-full.h-full.object-cover.object-center.transition-opacity.duration-1000.opacity-100{src: asset_path('hero_cars/hero_1.jpg'), alt: 'Hero background 1', 'data-index' => '0'}
-      %img.absolute.inset-0.w-full.h-full.object-cover.object-center.transition-opacity.duration-1000.opacity-0{src: asset_path('hero_cars/hero_2.jpg'), alt: 'Hero background 2', 'data-index' => '1'}
-      %img.absolute.inset-0.w-full.h-full.object-cover.object-center.transition-opacity.duration-1000.opacity-0{src: asset_path('hero_cars/hero_3.jpg'), alt: 'Hero background 3', 'data-index' => '2'}
-      %img.absolute.inset-0.w-full.h-full.object-cover.object-center.transition-opacity.duration-1000.opacity-0{src: asset_path('hero_cars/hero_4.jpg'), alt: 'Hero background 4', 'data-index' => '3'}
+      %img.absolute.inset-0.w-full.h-full.object-cover.object-center.transition-opacity.duration-1000.opacity-100{src: asset_path('hero_cars/hero_1.jpg'), alt: 'Hero background 1', 'data-index' => '0', fetchpriority: 'high'}
+      %img.absolute.inset-0.w-full.h-full.object-cover.object-center.transition-opacity.duration-1000.opacity-0{src: asset_path('hero_cars/hero_2.jpg'), alt: 'Hero background 2', 'data-index' => '1', loading: 'lazy'}
+      %img.absolute.inset-0.w-full.h-full.object-cover.object-center.transition-opacity.duration-1000.opacity-0{src: asset_path('hero_cars/hero_3.jpg'), alt: 'Hero background 3', 'data-index' => '2', loading: 'lazy'}
+      %img.absolute.inset-0.w-full.h-full.object-cover.object-center.transition-opacity.duration-1000.opacity-0{src: asset_path('hero_cars/hero_4.jpg'), alt: 'Hero background 4', 'data-index' => '3', loading: 'lazy'}
   
     .max-w-container.mx-auto.px-4.sm:px-6.lg:px-8.relative.z-10
       .grid.grid-cols-1.lg:grid-cols-2.gap-8.items-center.pt-40.lg:pt-40.pb-14.lg:pb-20.h-full
@@ -52,8 +44,8 @@
     .max-w-7xl.mx-auto.px-3.sm:px-4.lg:px-8
       .relative.rounded-lg.sm:rounded-xl.md:rounded-2xl.overflow-hidden.border.border-gray-100.shadow-sm.hover:shadow-md.transition-shadow
         #promoSlider.relative.w-full{class: 'h-24 sm:h-32 md:h-40 lg:h-56', style: 'min-height: 6rem;'}
-          %img.absolute.inset-0.w-full.h-full.object-cover.transition-opacity.duration-700.opacity-100{ src: image_path('tabby_banner.jpg'), alt: 'Tabby banner', 'data-index' => '0' }
-          %img.absolute.inset-0.w-full.h-full.object-cover.transition-opacity.duration-700.opacity-0{ src: image_path('no_deposit_banner.jpg'), alt: 'No deposit banner', 'data-index' => '1' }
+          %img.absolute.inset-0.w-full.h-full.object-cover.transition-opacity.duration-700.opacity-100{ src: image_path('tabby_banner.jpg'), alt: 'Tabby banner', 'data-index' => '0', loading: 'lazy' }
+          %img.absolute.inset-0.w-full.h-full.object-cover.transition-opacity.duration-700.opacity-0{ src: image_path('no_deposit_banner.jpg'), alt: 'No deposit banner', 'data-index' => '1', loading: 'lazy' }
 
 
   / Select Class Section
@@ -65,7 +57,7 @@
         - (@car_classes || []).each do |car_class|
           = link_to cars_path(category: (car_class[:slug] || car_class[:name])), class: 'group relative rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition cursor-pointer hover:border-teal-300 overflow-hidden h-48' do
             .absolute.inset-0
-              %img.w-full.h-full.object-cover{src: car_class[:image], alt: car_class[:name]}
+              %img.w-full.h-full.object-cover{src: car_class[:image], alt: car_class[:name], loading: 'lazy'}
             %div{class: "absolute inset-0 bg-[rgba(0,0,0,0.3)] group-hover:bg-[rgba(0,0,0,0.4)] transition"}
             .absolute.inset-0.flex.items-center.justify-center
               %h3.text-xl.font-bold.text-white.text-center.px-4= car_class[:name]
@@ -243,7 +235,7 @@
           .p-6
             .grid.grid-cols-1.md:grid-cols-2.gap-6.items-center
               %div.flex.items-end.justify-center
-                %img{class: 'w-64 h-40 object-contain', src: asset_path('hero_cars/car3.png'), alt: 'UAE Resident documents'}
+                %img{class: 'w-64 h-40 object-contain', src: asset_path('hero_cars/car3.png'), alt: 'UAE Resident documents', loading: 'lazy'}
               %ul.space-y-4
                 %li.flex.items-start.gap-3
                   %span.inline-flex.items-center.justify-center.rounded-full.w-6.h-6{style: 'background-color: #e8f1f1; color: #3a6363'}
@@ -263,7 +255,7 @@
           .p-6
             .grid.grid-cols-1.md:grid-cols-2.gap-6.items-center
               %div.flex.items-end.justify-center
-                %img{class: 'w-64 h-40 object-contain', src: asset_path('hero_cars/car4.png'), alt: 'Tourist documents'}
+                %img{class: 'w-64 h-40 object-contain', src: asset_path('hero_cars/car4.png'), alt: 'Tourist documents', loading: 'lazy'}
               %ul.space-y-4
                 %li.flex.items-start.gap-3
                   %span.inline-flex.items-center.justify-center.rounded-full.w-6.h-6{style: 'background-color: #e8f1f1; color: #3a6363'}
@@ -354,7 +346,7 @@
         .grid.grid-cols-1.lg:grid-cols-2.items-center
           / Left image
           %div.relative.h-56.sm:h-64.lg:h-72
-            %img{class: 'absolute inset-0 w-full h-full object-cover fade-right', src: image_path('join_us_image.png'), alt: 'Work with us'}
+            %img{class: 'absolute inset-0 w-full h-full object-cover fade-right', src: image_path('join_us_image.png'), alt: 'Work with us', loading: 'lazy'}
           / Right content
           .p-8.lg:p-12
             %h3.text-3xl.font-bold.text-gray-900.mb-3 Are you a car rental company?

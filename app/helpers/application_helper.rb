@@ -4,9 +4,10 @@ module ApplicationHelper
 
     if car.images.attached? && car.images.any?
       image = car.images.first
+      variant_key = use_variant ? :thumb_webp : nil
 
-      if use_variant && defined?(MiniMagick)
-        image_tag image.variant(:thumb),
+      if variant_key && image.variable?
+        image_tag image.variant(variant_key),
                   class: "car-image w-full h-full object-cover",
                   loading: "lazy",
                   alt: "#{car.brand} #{car.model}"
