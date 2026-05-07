@@ -8,8 +8,7 @@ Rails.application.configure do
 
   # Set service URLs to use CDN if available
   if Rails.env.production?
-    # Enable direct uploads to S3 to bypass Rails server
-    config.active_storage.resolve_model_to_route = :rails_storage_proxy
+    config.active_storage.resolve_model_to_route = :rails_storage_redirect
 
     # Use public URLs when possible for better caching
     config.active_storage.track_variants = true

@@ -54,8 +54,8 @@ Rails.application.configure do
   # Store uploaded files on the local file system (see config/storage.yml for options).
   config.active_storage.service = :amazon
 
-  # Enable Active Storage direct uploads for faster performance
-  config.active_storage.resolve_model_to_route = :rails_storage_proxy
+  # Redirect directly to S3 — bypasses Rails dyno for image serving
+  config.active_storage.resolve_model_to_route = :rails_storage_redirect
 
   # Set asset host to S3 bucket URL for direct serving (faster image loading)
   # This serves images directly from S3 instead of proxying through Rails
