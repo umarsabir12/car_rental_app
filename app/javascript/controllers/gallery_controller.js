@@ -1,7 +1,5 @@
-console.log("Gallery controller file evaluation BASE START");
 import { Controller } from "@hotwired/stimulus"
-
-console.log("Gallery controller file evaluation start");
+import Swiper from "swiper"
 
 export default class extends Controller {
     static targets = ["container", "lightbox", "lightboxImage", "counter", "thumbnail", "lightboxCounter"]
@@ -12,8 +10,6 @@ export default class extends Controller {
     }
 
     initializeSwiper() {
-        if (!window.Swiper) return
-
         this.swiper = new Swiper(this.containerTarget, {
             loop: true,
             navigation: {
@@ -66,6 +62,7 @@ export default class extends Controller {
     }
 
     selectThumbnail(event) {
+        if (!this.swiper) return
         const index = parseInt(event.currentTarget.dataset.slideIndex)
         this.swiper.slideToLoop(index)
         this.updateThumbnails(index)
