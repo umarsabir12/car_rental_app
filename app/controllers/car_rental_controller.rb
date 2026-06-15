@@ -13,7 +13,7 @@ class CarRentalController < ApplicationController
     @car_models = normalize_filter_values(Car.distinct.pluck(:model).compact).map { |m| [ m, m ] }
 
     # Featured cars data (manually selected by admin)
-    @featured_cars = Car.with_images_and_variants.featured.limit(10)
+    @featured_cars = Car.with_images_and_variants.featured.limit(10).to_a.shuffle
 
     # Brands data
     @brands = [
@@ -59,7 +59,7 @@ class CarRentalController < ApplicationController
                    .order(bookings_count: :desc, created_at: :desc)
 
     @category_cars = all_categories.flat_map do |category|
-      category_pool.select { |car| car.category == category }.first(12)
+      category_pool.select { |car| car.category == category }.first(12).shuffle
     end
 
     # Fetch cars with driver
@@ -68,6 +68,8 @@ class CarRentalController < ApplicationController
                       .where(with_driver: true)
                       .order(bookings_count: :desc, created_at: :desc)
                       .limit(12)
+                      .to_a
+                      .shuffle
 
     # Needs to be formatted similarly to category cars if we want to use the same loop in view,
     # but the view logic filters by category name/slug.

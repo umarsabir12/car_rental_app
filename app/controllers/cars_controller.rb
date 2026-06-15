@@ -24,7 +24,7 @@ class CarsController < ApplicationController
     @selected_brand = @brand
     @selected_model = @model
 
-    @cars = @cars.order(created_at: :desc)
+    @cars = @cars.order(Arel.sql("RANDOM()"))
 
     # Preload discounts to prevent N+1 queries
     Discount.preload_for_cars(@cars)
