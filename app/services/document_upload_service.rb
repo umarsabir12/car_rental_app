@@ -12,12 +12,12 @@ class DocumentUploadService
       unless front.present? && back.present?
         return [ false, "Both front and back images are required." ]
       end
-      document.images.purge
+      old_blobs = document.images.blobs.to_a
       document.images.attach(front)
       document.images.attach(back)
       document.status = "pending"
-      if document.save!
-        # Log document upload activity
+      if document.save
+        old_blobs.each(&:purge_later)
         Activity.log_activity(
           user: document.user,
           subject: document,
@@ -27,6 +27,7 @@ class DocumentUploadService
         )
         [ true, "#{document.doc_name} uploaded successfully and is now pending review." ]
       else
+        document.images.where.not(id: old_blobs.map(&:id)).purge_later
         [ false, "Failed to upload #{document.doc_name}." ]
       end
     when "Passport and Visa copy"

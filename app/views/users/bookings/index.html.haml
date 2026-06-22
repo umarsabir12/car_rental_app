@@ -1,16 +1,16 @@
-.w-full.min-h-screen.bg-gradient-to-br.from-blue-50.to-blue-100
+.w-full.min-h-screen{style: 'background: linear-gradient(135deg, #f0f4f4, #e8f0f0)'}
   .px-4.md:px-12.lg:px-32
-    
+
     = render 'shared/user_header'
-    
+
     .mx-auto
       / Back Button
       .mb-6
-        = link_to user_home_path, class: 'inline-flex items-center text-blue-600 hover:text-blue-800 font-semibold transition-colors' do
+        = link_to user_home_path, class: 'inline-flex items-center font-semibold transition-colors', style: 'color: #3a6363' do
           %i.fas.fa-arrow-left.mr-2
           Back to Dashboard
-    
-  .bg-white.rounded-3xl.shadow-xl.p-8.mt-0.mx-auto
+
+  .bg-white.rounded-3xl.shadow-xl.p-8.mt-0.mx-auto.max-w-6xl
     / Flash messages
     - if flash[:alert]
       .mb-8.p-4.bg-red-50.border-l-4.border-red-500.rounded-lg.text-red-700.font-medium.flex.items-center
@@ -21,7 +21,7 @@
     .container
       .flex.flex-col.sm:flex-row.items-start.sm:items-center.justify-between.mb-8.gap-4
         %h2.text-2xl.sm:text-3xl.font-bold.text-gray-900.flex.items-center
-          %i.fas.fa-calendar-alt.mr-2.sm:mr-4.text-blue-600.text-xl.sm:text-2xl
+          %i.fas.fa-calendar-alt.mr-2.sm:mr-4.text-xl.sm:text-2xl{style: 'color: #3a6363'}
           - if params[:filter] == 'active'
             Active Bookings
           - elsif params[:filter] == 'cancelled'
@@ -35,7 +35,7 @@
               .relative.w-full
                 = f.select :filter,
                     options_for_select([['All Bookings', 'all'],['Active Bookings', 'active'],['Cancelled Bookings', 'cancelled']], params[:filter] || 'all'),{},
-                    { class: 'appearance-none bg-white border border-gray-300 rounded-lg px-4 py-2 pr-8 text-sm font-medium text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors shadow-sm hover:border-gray-400 w-full',id: 'booking-filter',onchange: 'this.form.submit()'}
+                    { class: 'appearance-none bg-white border border-gray-300 rounded-lg px-4 py-2 pr-8 text-sm font-medium text-gray-700 focus:outline-none focus:ring-2 transition-colors shadow-sm hover:border-gray-400 w-full', style: '--tw-ring-color: #3a6363', id: 'booking-filter', onchange: 'this.form.submit()'}
                 .absolute.inset-y-0.right-0.flex.items-center.pr-2.pointer-events-none
                   %i.fas.fa-chevron-down.text-gray-400.text-xs
 
@@ -78,11 +78,11 @@
 
       / Filter Summary
       - if @bookings.any? || params[:filter].present?
-        .mb-6.p-4.bg-blue-50.rounded-lg.border.border-blue-200
+        .mb-6.p-4.rounded-lg.border{style: 'background-color: #f0f4f4; border-color: #b0c8c8'}
           .flex.items-center.justify-between
             .flex.items-center
-              %i.fas.fa-filter.mr-2.text-blue-600
-              %span.text-sm.font-medium.text-blue-800
+              %i.fas.fa-filter.mr-2{style: 'color: #3a6363'}
+              %span.text-sm.font-medium{style: 'color: #2d4d4d'}
                 - case params[:filter]
                 - when 'active'
                   Showing #{@bookings.count} active booking#{@bookings.count == 1 ? '' : 's'} (pending and confirmed)
@@ -91,7 +91,7 @@
                 - else
                   Showing #{@bookings.count} booking#{@bookings.count == 1 ? '' : 's'} (all statuses)
             - if params[:filter].present? && params[:filter] != 'all'
-              = link_to 'Clear Filter', users_bookings_path, class: 'text-sm text-blue-600 hover:text-blue-800 underline'
+              = link_to 'Clear Filter', users_bookings_path, class: 'text-sm underline', style: 'color: #3a6363'
 
       / Bookings List
       - if @bookings.any?
@@ -141,7 +141,7 @@
                         %h3.text-xl.lg:text-2xl.font-bold.text-gray-900.mb-2= "#{booking.car.brand} #{booking.car.model}"
                         .flex.flex-wrap.items-center.gap-x-3.lg:gap-x-6.gap-y-2.lg:gap-y-3.mb-4.text-sm.lg:text-base
                           .flex.items-center.text-gray-600
-                            %i.fas.fa-calendar.mr-1.lg:mr-2.text-blue-500.text-sm
+                            %i.fas.fa-calendar.mr-1.lg:mr-2.text-sm{style: 'color: #3a6363'}
                             = booking.car.year
                           .flex.items-center.text-gray-600
                             %i.fas.fa-palette.mr-1.lg:mr-2.text-purple-500.text-sm
@@ -152,7 +152,7 @@
                       - else
                         %h3.text-xl.lg:text-2xl.font-bold.text-red-500.italic.mb-2 Deleted Car
                         .text-sm.text-gray-500.mb-4 This car is no longer available
-                      .text-lg.lg:text-xl.font-semibold.text-blue-600.mb-4
+                      .text-lg.lg:text-xl.font-semibold.mb-4{style: 'color: #3a6363'}
                         = number_to_currency(booking.selected_price)
                         - if booking.selected_period == 'daily'
                           %span.text-xs.lg:text-sm.font-normal.text-gray-500.ml-1 per day
@@ -170,21 +170,21 @@
                       .flex.flex-col.sm:flex-row.sm:items-center.sm:justify-between.gap-3.sm:gap-4.text-xs.sm:text-sm
                         .flex.flex-wrap.items-center.gap-2.sm:gap-4
                           .flex.items-center
-                            %i.fas.fa-calendar-day.mr-1.sm:mr-2.text-blue-500.text-sm
+                            %i.fas.fa-calendar-day.mr-1.sm:mr-2.text-sm{style: 'color: #3a6363'}
                             %span.font-medium= booking.start_date.strftime('%b %d, %Y')
                           
                           - unless ['5 Hours', '10 Hours'].include?(booking.selected_period)
                             %i.fas.fa-arrow-right.text-gray-400.text-xs
                             .flex.items-center
-                              %i.fas.fa-calendar-day.mr-1.sm:mr-2.text-blue-500.text-sm
+                              %i.fas.fa-calendar-day.mr-1.sm:mr-2.text-sm{style: 'color: #3a6363'}
                               %span.font-medium= booking.end_date.strftime('%b %d, %Y')
 
                         .flex.items-center.border-t.sm:border-t-0.sm:border-l.border-gray-200.pt-2.sm:pt-0.sm:pl-4
-                          %i.fas.fa-clock.mr-1.sm:mr-2.text-blue-500.text-sm
+                          %i.fas.fa-clock.mr-1.sm:mr-2.text-sm{style: 'color: #3a6363'}
                           - if ['5 Hours', '10 Hours'].include?(booking.selected_period)
-                            %span.font-bold.text-blue-600= booking.selected_period
+                            %span.font-bold{style: 'color: #3a6363'}= booking.selected_period
                           - else
-                            %span.font-bold.text-blue-600= pluralize((booking.end_date - booking.start_date).to_i, 'day')
+                            %span.font-bold{style: 'color: #3a6363'}= pluralize((booking.end_date - booking.start_date).to_i, 'day')
 
                     / Payment Section
                     .mt-auto.pt-3.lg:pt-4.border-t.border-gray-200
@@ -308,7 +308,7 @@
                               %i.fas.fa-lock.mr-2
                               Payment Disabled
                           - else
-                            = link_to users_payment_path(booking.id), class: 'bg-blue-600 hover:bg-blue-700 text-white px-4 sm:px-6 py-2 sm:py-3 rounded-lg text-sm sm:text-base font-semibold transition-all duration-200 shadow-md hover:shadow-lg flex items-center justify-center' do
+                            = link_to users_payment_path(booking.id), class: 'text-white px-4 sm:px-6 py-2 sm:py-3 rounded-lg text-sm sm:text-base font-semibold transition-all duration-200 shadow-md hover:shadow-lg flex items-center justify-center', style: 'background-color: #3a6363' do
                               %i.fas.fa-eye.mr-2
                               View/Pay Booking
                         
@@ -317,11 +317,11 @@
         .text-center.py-16
           .max-w-md.mx-auto
             .bg-gray-50.rounded-3xl.p-8.flex.flex-col.items-center
-              .w-20.h-20.rounded-full.bg-blue-50.flex.items-center.justify-center.mb-6
-                %i.fas.fa-calendar-times.text-3xl.text-blue-400
+              .w-20.h-20.rounded-full.flex.items-center.justify-center.mb-6{style: 'background-color: #f0f4f4'}
+                %i.fas.fa-calendar-times.text-3xl{style: 'color: #3a6363'}
               %h3.text-xl.font-semibold.text-gray-800.mb-3 No Bookings Yet
               %p.text-gray-600.mb-6 It looks like you haven't made any bookings yet. Browse our collection to find your perfect car.
-              = link_to cars_path, class: 'bg-gradient-to-r from-blue-600 to-blue-700 text-white font-semibold py-3 px-8 rounded-lg shadow hover:from-blue-700 hover:to-blue-800 transition-all duration-200 inline-flex items-center space-x-2' do
+              = link_to cars_path, class: 'text-white font-semibold py-3 px-8 rounded-lg shadow transition-all duration-200 inline-flex items-center space-x-2', style: 'background: linear-gradient(135deg, #3a6363, #2d4d4d)' do
                 %i.fas.fa-car
                 %span Explore Cars
 :javascript

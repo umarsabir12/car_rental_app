@@ -2,7 +2,7 @@ class Document < ApplicationRecord
   belongs_to :user
   has_many_attached :images, dependent: :purge_later
   has_many :activities, as: :subject, dependent: :destroy
-  # before_create :set_pending_status
+  after_commit :reset_status_if_no_images
 
   TOURIST =  [ "Home country driving license and IDP", "Passport Copy", "Copy of visa Entry Stamp" ]
   RESIDENT = [ "A Valid UAE driving license", "Emirates ID front and back" ]
@@ -25,8 +25,8 @@ class Document < ApplicationRecord
 
   private
 
-  def set_pending_status
-    self.status = "pending"
+  def reset_status_if_no_images
+    update_column(:status, "not uploaded") unless images.attached?
   end
 
   def update_user_bookings_status
